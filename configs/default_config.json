@@ -1,0 +1,43 @@
+{
+  "vllm_type": "openai",
+  "vllm_model": "gpt-4o",
+  "translator_type": "rule_based",
+  "environment_type": "pybullet",
+  "max_iterations": 100,
+  "timeout": 300.0,
+  "enable_logging": true,
+  "log_level": "INFO",
+  "feedback_history_size": 5,
+  "retry_attempts": 3,
+  "evaluation": {
+    "num_runs": 8,
+    "metrics": [
+      "accuracy",
+      "pass_at_k",
+      "distance_to_optimal",
+      "step_efficiency",
+      "time_efficiency",
+      "robustness"
+    ]
+  },
+  "tasks": {
+    "puzzle": {
+      "difficulty_levels": ["easy", "medium", "hard", "expert"],
+      "max_steps": 50,
+      "time_limit": 180.0,
+      "success_threshold": 0.9
+    },
+    "lego": {
+      "difficulty_levels": ["easy", "medium", "hard"],
+      "max_steps": 80,
+      "time_limit": 240.0,
+      "success_threshold": 0.8
+    },
+    "dominoes": {
+      "difficulty_levels": ["easy", "medium", "hard"],
+      "max_steps": 120,
+      "time_limit": 300.0,
+      "success_threshold": 0.85
+    }
+  }
+} 
