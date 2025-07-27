@@ -15,6 +15,8 @@ import time
 from dataclasses import dataclass
 from abc import ABC, abstractmethod
 from ..core.translator import EnvironmentCommand
+from ..core.action_descriptor import ActionDescriptor, ParsedAction
+from ..core.vllm_processor import VLLMProcessor, DecisionParser
 
 
 @dataclass
@@ -53,6 +55,47 @@ class ObjectInfo:
     orientation: Tuple[float, float, float, float]
     object_type: str
     properties: Dict[str, Any]
+
+
+@dataclass
+class TaskDefinition:
+    """Definition of a benchmark task."""
+    task_id: str
+    name: str
+    description: str
+    initial_setup: Dict[str, Any]
+    goal_conditions: Dict[str, Any]
+    max_steps: int = 50
+    time_limit: float = 300.0
+    difficulty_level: int = 1
+    task_type: str = "manipulation"
+
+
+@dataclass
+class ExecutionStep:
+    """A single step in task execution."""
+    step_id: int
+    vlm_input: Dict[str, Any]
+    vlm_response: str
+    parsed_action: Optional[ParsedAction]
+    environment_command: Optional[EnvironmentCommand]
+    execution_result: bool
+    environment_state: Dict[str, Any]
+    feedback: str
+    timestamp: float
+
+
+@dataclass
+class BenchmarkResult:
+    """Result of benchmark execution."""
+    task_id: str
+    success: bool
+    total_steps: int
+    execution_time: float
+    efficiency_score: float
+    steps_history: List[ExecutionStep]
+    error_message: Optional[str] = None
+    final_state: Optional[Dict[str, Any]] = None
 
 
 class PhysicsEnvironment(ABC):
