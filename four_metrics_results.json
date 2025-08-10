@@ -1,0 +1,20 @@
+{
+  "metrics": {
+    "acc_pass_8": 1.0,
+    "avg_step": 10.05,
+    "distance_to_optimal_ratio": 0.24815476190476193,
+    "token_efficiency": 8235.565217391304
+  },
+  "configuration": {
+    "num_tasks": 5,
+    "runs_per_task": 8,
+    "optimal_steps": [
+      6,
+      8,
+      10,
+      7,
+      9
+    ]
+  },
+  "openrouter_ready": false
+}
