@@ -18,13 +18,10 @@ from ..core.pipeline import PhysicalReasoningPipeline
 class MetricType(Enum):
     """Types of evaluation metrics."""
     ACCURACY = "accuracy"
-    PASS_AT_K = "pass_at_k"
-    DISTANCE_TO_OPTIMAL = "distance_to_optimal"
-    SUCCESS_RATE = "success_rate"
-    EFFICIENCY = "efficiency"
-    TIME_EFFICIENCY = "time_efficiency"
-    STEP_EFFICIENCY = "step_efficiency"
-    ROBUSTNESS = "robustness"
+    PASS_AT_8 = "pass_at_8"
+    AVG_STEP = "avg_step"
+    DISTANCE_TO_OPTIMAL_RATIO = "distance_to_optimal_ratio"
+    TOKEN_EFFICIENCY = "token_efficiency"
 
 
 @dataclass
@@ -36,6 +33,7 @@ class EvaluationResult:
     task_results: List[TaskResult]
     per_task_metrics: List[Dict[str, float]]
     metadata: Dict[str, Any]
+    token_usage: Optional[Dict[str, int]] = None
 
 
 class AccuracyMetric:
@@ -121,6 +119,29 @@ class PassAtKMetric:
         return successful_tasks / total_tasks if total_tasks > 0 else 0.0
 
 
+class AvgStepMetric:
+    """Average step metric evaluator."""
+    
+    def __init__(self):
+        self.name = "avg_step"
+    
+    def evaluate(self, results: List[TaskResult]) -> float:
+        """
+        Calculate average number of steps taken across all tasks.
+        
+        Args:
+            results: List of task results
+            
+        Returns:
+            Average number of steps
+        """
+        if not results:
+            return 0.0
+        
+        total_steps = sum(result.steps_taken for result in results)
+        return total_steps / len(results)
+
+
 class DistanceToOptimalMetric:
     """Distance to optimal solution metric."""
     
@@ -128,40 +149,64 @@ class DistanceToOptimalMetric:
         self.name = "distance_to_optimal"
     
     def evaluate(self, results: List[TaskResult], 
-                optimal_solutions: List[List[str]]) -> float:
+                optimal_solutions: Optional[Union[List[List[str]], List[int]]] = None) -> Tuple[float, float]:
         """
-        Calculate average distance to optimal solution.
+        Calculate average distance to optimal solution and ratio.
         
         Args:
             results: List of task results
-            optimal_solutions: List of optimal solutions for each task
+            optimal_solutions: List of optimal solutions for each task (can be step counts or action sequences)
             
         Returns:
-            Average distance to optimal (lower is better)
+            Tuple of (average distance to optimal, average ratio to optimal)
         """
-        if not results or not optimal_solutions:
-            return float('inf')
+        if not results:
+            return float('inf'), float('inf')
         
+        if optimal_solutions is None:
+            return float('inf'), float('inf')
+            
         if len(results) != len(optimal_solutions):
-            raise ValueError("Number of results must match number of optimal solutions")
+            # Handle multiple runs per task
+            num_runs = len(results) // len(optimal_solutions)
+            if num_runs > 0:
+                optimal_solutions = optimal_solutions * num_runs
+            else:
+                raise ValueError("Number of results must match number of optimal solutions")
         
         total_distance = 0.0
+        total_ratio = 0.0
         valid_tasks = 0
         
         for result, optimal_solution in zip(results, optimal_solutions):
-            if hasattr(result, 'action_sequence'):
+            if isinstance(optimal_solution, int):
+                # Direct step count comparison
+                optimal_steps = optimal_solution
+                actual_steps = result.steps_taken
+            elif hasattr(result, 'action_sequence'):
+                # Use edit distance for action sequences
                 distance = self._calculate_edit_distance(
                     result.action_sequence, optimal_solution
                 )
-                total_distance += distance
-                valid_tasks += 1
+                optimal_steps = len(optimal_solution)
+                actual_steps = len(result.action_sequence)
             else:
-                # If no action sequence, use step count as proxy
-                distance = abs(result.steps_taken - len(optimal_solution))
-                total_distance += distance
-                valid_tasks += 1
+                # Use step count as proxy
+                optimal_steps = len(optimal_solution) if isinstance(optimal_solution, list) else optimal_solution
+                actual_steps = result.steps_taken
+            
+            # Calculate distance and ratio
+            distance = abs(actual_steps - optimal_steps)
+            ratio = (actual_steps - optimal_steps) / optimal_steps if optimal_steps > 0 else float('inf')
+            
+            total_distance += distance
+            total_ratio += ratio
+            valid_tasks += 1
         
-        return total_distance / valid_tasks if valid_tasks > 0 else float('inf')
+        avg_distance = total_distance / valid_tasks if valid_tasks > 0 else float('inf')
+        avg_ratio = total_ratio / valid_tasks if valid_tasks > 0 else float('inf')
+        
+        return avg_distance, avg_ratio
     
     def _calculate_edit_distance(self, sequence1: List[str], 
                                sequence2: List[str]) -> float:
@@ -186,6 +231,41 @@ class DistanceToOptimalMetric:
                     dp[i][j] = 1 + min(dp[i-1][j], dp[i][j-1], dp[i-1][j-1])
         
         return float(dp[len1][len2])
+
+
+class TokenEfficiencyMetric:
+    """Token efficiency metric evaluator."""
+    
+    def __init__(self):
+        self.name = "token_efficiency"
+    
+    def evaluate(self, results: List[TaskResult]) -> float:
+        """
+        Calculate average token usage for successfully completed tasks.
+        
+        Args:
+            results: List of task results
+            
+        Returns:
+            Average tokens used for successful tasks
+        """
+        successful_results = [r for r in results if r.success]
+        if not successful_results:
+            return float('inf')
+        
+        total_tokens = 0
+        for result in successful_results:
+            # Check if result has token usage information
+            if hasattr(result, 'tokens_used'):
+                total_tokens += result.tokens_used
+            elif hasattr(result, 'metadata') and 'tokens_used' in result.metadata:
+                total_tokens += result.metadata['tokens_used']
+            else:
+                # If no token info available, estimate based on steps
+                # Rough estimate: ~500 tokens per step for VLM interactions
+                total_tokens += result.steps_taken * 500
+        
+        return total_tokens / len(successful_results)
 
 
 class EfficiencyMetric:
@@ -304,12 +384,10 @@ class ComprehensiveEvaluator:
     
     def __init__(self):
         self.metrics = {
-            MetricType.ACCURACY: AccuracyMetric(),
-            MetricType.PASS_AT_K: PassAtKMetric(k=8),
-            MetricType.DISTANCE_TO_OPTIMAL: DistanceToOptimalMetric(),
-            MetricType.STEP_EFFICIENCY: EfficiencyMetric("step"),
-            MetricType.TIME_EFFICIENCY: EfficiencyMetric("time"),
-            MetricType.ROBUSTNESS: RobustnessMetric()
+            MetricType.PASS_AT_8: PassAtKMetric(k=8),
+            MetricType.AVG_STEP: AvgStepMetric(),
+            MetricType.DISTANCE_TO_OPTIMAL_RATIO: DistanceToOptimalMetric(),
+            MetricType.TOKEN_EFFICIENCY: TokenEfficiencyMetric()
         }
     
     def evaluate_pipeline(self, pipeline: PhysicalReasoningPipeline,
@@ -349,12 +427,6 @@ class ComprehensiveEvaluator:
         overall_metrics = self._calculate_overall_metrics(
             all_results, tasks, optimal_solutions, num_runs
         )
-        
-        # Group results by difficulty for robustness
-        results_by_difficulty = self._group_by_difficulty(all_results, tasks)
-        if results_by_difficulty:
-            overall_metrics[MetricType.ROBUSTNESS.value] = \
-                self.metrics[MetricType.ROBUSTNESS].evaluate(results_by_difficulty)
         
         return EvaluationResult(
             total_tasks=len(tasks),
@@ -397,35 +469,28 @@ class ComprehensiveEvaluator:
         """Calculate overall metrics."""
         metrics = {}
         
-        # Accuracy
-        metrics[MetricType.ACCURACY.value] = \
-            self.metrics[MetricType.ACCURACY].evaluate(results)
-        
-        # Pass@K (using num_runs as K)
-        if num_runs > 1:
-            # Group results by task
+        # Pass@8 (always calculate for k=8)
+        if num_runs >= 8:
+            # Group results by task for Pass@8
             task_groups = []
             for i in range(0, len(results), num_runs):
-                task_groups.append(results[i:i+num_runs])
+                task_groups.append(results[i:i+min(num_runs, 8)])
             
-            pass_at_k_metric = PassAtKMetric(k=num_runs)
-            metrics[f"pass_at_{num_runs}"] = pass_at_k_metric.evaluate(task_groups)
+            metrics[MetricType.PASS_AT_8.value] = \
+                self.metrics[MetricType.PASS_AT_8].evaluate(task_groups)
         
-        # Distance to optimal
+        # Average steps
+        metrics[MetricType.AVG_STEP.value] = \
+            self.metrics[MetricType.AVG_STEP].evaluate(results)
+        
+        # Distance to optimal ratio
         if optimal_solutions:
-            metrics[MetricType.DISTANCE_TO_OPTIMAL.value] = \
-                self.metrics[MetricType.DISTANCE_TO_OPTIMAL].evaluate(results, optimal_solutions)
+            _, ratio = self.metrics[MetricType.DISTANCE_TO_OPTIMAL_RATIO].evaluate(results, optimal_solutions)
+            metrics[MetricType.DISTANCE_TO_OPTIMAL_RATIO.value] = ratio
         
-        # Efficiency metrics
-        optimal_steps = None
-        if optimal_solutions:
-            optimal_steps = [len(sol) for sol in optimal_solutions] * num_runs
-        
-        metrics[MetricType.STEP_EFFICIENCY.value] = \
-            self.metrics[MetricType.STEP_EFFICIENCY].evaluate(results, optimal_steps)
-        
-        metrics[MetricType.TIME_EFFICIENCY.value] = \
-            self.metrics[MetricType.TIME_EFFICIENCY].evaluate(results)
+        # Token efficiency
+        metrics[MetricType.TOKEN_EFFICIENCY.value] = \
+            self.metrics[MetricType.TOKEN_EFFICIENCY].evaluate(results)
         
         return metrics
     
@@ -459,26 +524,32 @@ class ComprehensiveEvaluator:
         # Summary
         report.append(f"\nSUMMARY:")
         report.append(f"Total Tasks: {evaluation_result.total_tasks}")
-        report.append(f"Successful Tasks: {evaluation_result.successful_tasks}")
-        report.append(f"Overall Success Rate: {evaluation_result.metrics.get('accuracy', 0.0):.3f}")
+        report.append(f"Successful Tasks (Pass@8): {evaluation_result.successful_tasks}")
         
-        # Metrics
-        report.append(f"\nMETRICS:")
-        for metric_name, value in evaluation_result.metrics.items():
-            if isinstance(value, float):
-                if value == float('inf'):
-                    report.append(f"{metric_name}: INF")
-                else:
-                    report.append(f"{metric_name}: {value:.3f}")
-            else:
-                report.append(f"{metric_name}: {value}")
+        # Core Metrics (Only the 4 required ones)
+        report.append(f"\nCORE METRICS:")
         
-        # Per-task summary
-        report.append(f"\nPER-TASK PERFORMANCE:")
-        for i, task_metrics in enumerate(evaluation_result.per_task_metrics):
-            report.append(f"Task {i+1}: Success={task_metrics.get('success', False)}, "
-                         f"Steps={task_metrics.get('avg_steps', 0):.1f}, "
-                         f"Time={task_metrics.get('avg_time', 0):.2f}s")
+        # 1. Pass@8
+        pass_at_8 = evaluation_result.metrics.get(MetricType.PASS_AT_8.value, 0.0)
+        report.append(f"1. Acc Pass@8: {pass_at_8:.3f}")
+        
+        # 2. Avg Step
+        avg_step = evaluation_result.metrics.get(MetricType.AVG_STEP.value, 0.0)
+        report.append(f"2. Avg Step: {avg_step:.2f}")
+        
+        # 3. Distance to Optimal Ratio
+        distance_ratio = evaluation_result.metrics.get(MetricType.DISTANCE_TO_OPTIMAL_RATIO.value, 0.0)
+        if distance_ratio == float('inf'):
+            report.append(f"3. Distance to Optimal: N/A (no optimal solution provided)")
+        else:
+            report.append(f"3. Distance to Optimal: {distance_ratio:.3f} ({distance_ratio*100:.1f}% deviation)")
+        
+        # 4. Token Efficiency
+        token_eff = evaluation_result.metrics.get(MetricType.TOKEN_EFFICIENCY.value, 0.0)
+        if token_eff == float('inf'):
+            report.append(f"4. Efficiency (Tokens): N/A (no successful tasks)")
+        else:
+            report.append(f"4. Efficiency (Tokens): {token_eff:.0f} tokens per successful task")
         
         # Metadata
         report.append(f"\nMETADATA:")

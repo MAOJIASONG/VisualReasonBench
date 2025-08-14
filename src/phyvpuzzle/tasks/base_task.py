@@ -67,10 +67,16 @@ class TaskResult:
     time_taken: float
     error_message: Optional[str] = None
     metrics: Dict[str, float] = None
+    tokens_used: Optional[int] = None
+    metadata: Optional[Dict[str, Any]] = None
+    action_sequence: Optional[List[str]] = None
+    task_id: Optional[str] = None
     
     def __post_init__(self):
         if self.metrics is None:
             self.metrics = {}
+        if self.metadata is None:
+            self.metadata = {}
 
 
 class BaseTask(ABC):
