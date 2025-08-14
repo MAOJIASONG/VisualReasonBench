@@ -16,6 +16,7 @@ from .action_descriptor import ActionDescriptor, ParsedAction
 from .translator import Translator, TranslationResult, create_translator
 from ..environment.physics_env import PhysicsEnvironment, create_environment
 from ..tasks.base_task import BaseTask, TaskResult
+from ..utils.logger import ExperimentLogger
 
 
 @dataclass
@@ -74,6 +75,7 @@ class PhysicalReasoningPipeline:
         self.feedback_history = []
         self.step_count = 0
         self.start_time = None
+        self.logger_io = ExperimentLogger()
         
     def setup_logging(self) -> None:
         """Setup logging configuration."""
@@ -91,9 +93,13 @@ class PhysicalReasoningPipeline:
         """Initialize all pipeline components."""
         try:
             # Initialize VLLM processor
+            # Read optional base_url from environment to support OpenRouter-compatible gateways
+            import os as _os
+            base_url = (_os.getenv("base_url") or _os.getenv("OPENAI_BASE_URL") or _os.getenv("OPENROUTER_BASE_URL"))
             self.vllm_processor = create_vllm_processor(
                 processor_type=self.config.vllm_type,
-                model_name=self.config.vllm_model
+                model_name=self.config.vllm_model,
+                base_url=base_url,
             )
             self.vllm_processor.load_model()
             
@@ -113,6 +119,10 @@ class PhysicalReasoningPipeline:
             
         except Exception as e:
             self.logger.error(f"Failed to initialize components: {e}")
+            try:
+                self.logger_io.log_error(e)
+            except Exception:
+                pass
             raise
     
     def execute_task(self, task: BaseTask) -> TaskResult:
@@ -141,6 +151,8 @@ class PhysicalReasoningPipeline:
                     time_taken=0.0,
                     error_message="Failed to setup task in environment"
                 )
+            # Start structured logging
+            trial_dir = self.logger_io.start_trial(self.config.vllm_model, task.__class__.__name__)
             
             # Main execution loop
             while (not task.is_task_finished() and 
@@ -160,6 +172,18 @@ class PhysicalReasoningPipeline:
             # Get final result
             result = task.get_result()
             result.time_taken = self._get_elapsed_time()
+            # Save trial info at end
+            self.logger_io.save_trial_info({
+                "model": self.config.vllm_model,
+                "task": task.__class__.__name__,
+                "result": {
+                    "success": result.success,
+                    "final_score": result.final_score,
+                    "steps_taken": result.steps_taken,
+                    "time_taken": result.time_taken,
+                    "metrics": result.metrics,
+                },
+            })
             
             self.logger.info(f"Task completed. Success: {result.success}, "
                            f"Score: {result.final_score:.3f}, "
@@ -170,6 +194,10 @@ class PhysicalReasoningPipeline:
             
         except Exception as e:
             self.logger.error(f"Task execution failed: {e}")
+            try:
+                self.logger_io.log_error(e)
+            except Exception:
+                pass
             return TaskResult(
                 success=False,
                 final_score=0.0,
@@ -203,14 +231,37 @@ class PhysicalReasoningPipeline:
         # Step 2: Get task context
         task_context = self.current_task.get_context()
         task_description = self.current_task.get_task_description()
+        # Prepare logging directory for this round
+        self.logger_io.start_round(self.step_count + 1)
+        # Save pre-action image
+        try:
+            self.logger_io.save_image(current_image, "pre_action.png")
+        except Exception:
+            pass
         
         # Step 3: Process with VLLM
         try:
-            vllm_response = self.vllm_processor.process_input(
+            # Provide tool schemas to model
+            tools = []
+            if hasattr(self.environment, "get_tool_schemas"):
+                try:
+                    tools = self.environment.get_tool_schemas()
+                except Exception:
+                    tools = []
+
+            vllm_result = self.vllm_processor.process_input(
                 image=current_image,
                 task_description=task_description,
-                context=task_context
+                context={**task_context, "feedback": self.feedback_history[-self.config.feedback_history_size:]},
+                tools=tools,
+                tool_choice={"type": "auto"} if tools else None,
             )
+            # Log input for this round
+            self.logger_io.log_input({
+                "messages": vllm_result.get("used_messages", []),
+                "tools": tools,
+            })
+            vllm_response = vllm_result.get("content", "")
         except Exception as e:
             return PipelineStep(
                 step_number=self.step_count,
@@ -221,8 +272,9 @@ class PhysicalReasoningPipeline:
                 error_message=f"VLLM processing failed: {e}"
             )
         
-        # Step 4: Parse decision
+        # Step 4: Parse decision and potential tool calls
         decision_type, decision_description = self.decision_parser.parse_decision(vllm_response)
+        tool_calls = vllm_result.get("tool_calls", []) if 'vllm_result' in locals() else []
         
         step = PipelineStep(
             step_number=self.step_count,
@@ -233,19 +285,54 @@ class PhysicalReasoningPipeline:
             execution_time=time.time() - step_start_time
         )
         
-        # Step 5: Handle decision
+        # Step 5: Handle decision and tool calls
         if decision_type == "finish":
             self.current_task.state.is_completed = True
             step.execution_success = True
             self.logger.info(f"Task finished at step {self.step_count}")
         
         elif decision_type == "action":
+            # Execute tool calls first if provided by model
+            if tool_calls:
+                try:
+                    for call in tool_calls:
+                        fn = call.get("function", {})
+                        name = fn.get("name")
+                        import json as _json
+                        args_raw = fn.get("arguments") or "{}"
+                        try:
+                            args = args_raw if isinstance(args_raw, dict) else _json.loads(args_raw)
+                        except Exception:
+                            args = {}
+                        _ = self.environment.call_tool(name, args)
+                except Exception as e:
+                    step.error_message = f"Tool execution failed: {e}"
+                    # Log output with error
+                    try:
+                        self.logger_io.log_output({
+                            "content": vllm_response,
+                            "tool_calls": tool_calls,
+                            "error": step.error_message,
+                        })
+                    except Exception:
+                        pass
+                    return step
+
             # Step 6: Parse action
             try:
                 parsed_action = self.action_descriptor.parse_action(decision_description)
                 step.parsed_action = parsed_action
             except Exception as e:
                 step.error_message = f"Action parsing failed: {e}"
+                # Log output on failure
+                try:
+                    self.logger_io.log_output({
+                        "content": vllm_response,
+                        "tool_calls": tool_calls,
+                        "error": step.error_message,
+                    })
+                except Exception:
+                    pass
                 return step
             
             # Step 7: Translate to environment commands
@@ -256,9 +343,26 @@ class PhysicalReasoningPipeline:
                 
                 if not translation_result.success:
                     step.error_message = f"Translation failed: {translation_result.error_message}"
+                    try:
+                        self.logger_io.log_output({
+                            "content": vllm_response,
+                            "tool_calls": tool_calls,
+                            "translation": translation_result.__dict__,
+                            "error": step.error_message,
+                        })
+                    except Exception:
+                        pass
                     return step
             except Exception as e:
                 step.error_message = f"Translation failed: {e}"
+                try:
+                    self.logger_io.log_output({
+                        "content": vllm_response,
+                        "tool_calls": tool_calls,
+                        "error": step.error_message,
+                    })
+                except Exception:
+                    pass
                 return step
             
             # Step 8: Execute commands in environment
@@ -282,6 +386,26 @@ class PhysicalReasoningPipeline:
                 step.error_message = f"Command execution failed: {e}"
                 step.execution_success = False
         
+        # Log model output and post-action image
+        try:
+            self.logger_io.log_output({
+                "content": vllm_response,
+                "tool_calls": tool_calls if 'tool_calls' in locals() else [],
+                "decision_type": decision_type,
+                "decision_description": decision_description,
+                "parsed_action": step.parsed_action.__dict__ if step.parsed_action else None,
+                "translation": step.translation_result.__dict__ if step.translation_result else None,
+                "execution_success": step.execution_success,
+                "error_message": step.error_message,
+            })
+        except Exception:
+            pass
+        try:
+            post_image = self.environment.render()
+            self.logger_io.save_image(post_image, "post_action.png")
+        except Exception:
+            pass
+
         # Step 9: Add to history
         self.execution_history.append(step)
         self._update_feedback_history(step)

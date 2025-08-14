@@ -13,6 +13,7 @@ import pybullet_data
 import os
 import time
 from dataclasses import dataclass
+import inspect
 from abc import ABC, abstractmethod
 from ..core.translator import EnvironmentCommand
 from ..core.action_descriptor import ActionDescriptor, ParsedAction
@@ -438,6 +439,193 @@ class PyBulletEnvironment(PhysicsEnvironment):
         
         print(f"Pushed object: {object_name}")
         return True
+
+    # --- Atomic tool functions exposed to VLM tool calls ---
+    def pick(self, object_id: str) -> Dict[str, Any]:
+        """
+        Pick an object by name into a virtual gripper.
+
+        Args:
+            object_id: Registered object name in environment
+
+        Returns:
+            Dict with success flag and held objects list
+        """
+        ok = self._pick_object({"object_id": object_id})
+        return {"success": ok, "held_objects": list(self.held_objects)}
+
+    def place(self, object_id: str, position: Tuple[float, float, float]) -> Dict[str, Any]:
+        """
+        Place a previously picked object at a target 3D position.
+
+        Args:
+            object_id: Object name
+            position: Target world position (x, y, z)
+
+        Returns:
+            Dict with success flag and new position
+        """
+        ok = self._place_object({"object_id": object_id, "target_position": position})
+        pos = None
+        if object_id in self.objects:
+            pos = self.objects[object_id].position
+        return {"success": ok, "position": pos}
+
+    def push(self, object_id: str, force: float = 10.0, direction: Tuple[float, float, float] = (1, 0, 0)) -> Dict[str, Any]:
+        """
+        Apply a pushing force to an object.
+
+        Args:
+            object_id: Object name
+            force: Magnitude of the push force (Newton)
+            direction: Unit direction vector (x, y, z)
+
+        Returns:
+            Dict with success flag
+        """
+        ok = self._push_object({
+            "object_id": object_id,
+            "push_force": float(force),
+            "push_direction": tuple(direction),
+        })
+        return {"success": ok}
+
+    def move(self, object_id: str, position: Tuple[float, float, float]) -> Dict[str, Any]:
+        """
+        Move an object to a specific 3D position.
+
+        Args:
+            object_id: Object name
+            position: Target world position (x, y, z)
+
+        Returns:
+            Dict with success flag and new position
+        """
+        ok = self._move_object({"object_id": object_id, "target_position": position})
+        pos = None
+        if object_id in self.objects:
+            pos = self.objects[object_id].position
+        return {"success": ok, "position": pos}
+
+    def observe(self, angle: float = 0.0) -> Dict[str, Any]:
+        """
+        Observe the scene possibly from a rotated camera angle.
+
+        Args:
+            angle: Yaw rotation (radians) to rotate camera around z-axis
+
+        Returns:
+            Dict with success flag and a note
+        """
+        # Simple camera yaw around target
+        cx, cy, cz = self.camera_config.position
+        tx, ty, tz = self.camera_config.target
+        # Very basic rotation around z, small radius change ignored for simplicity
+        # This keeps function side-effect small while enabling a different view
+        import math
+        r = math.hypot(cx - tx, cy - ty)
+        base_angle = math.atan2(cy - ty, cx - tx)
+        new_angle = base_angle + angle
+        self.camera_config.position = (tx + r * math.cos(new_angle), ty + r * math.sin(new_angle), cz)
+        return {"success": True, "angle": angle}
+
+    # --- Tool schema export ---
+    def get_tool_schemas(self) -> List[Dict[str, Any]]:
+        """
+        Generate JSON schema for exposed tool functions to pass into VLM.
+        """
+        def build_schema(func, name: str, desc: str, properties: Dict[str, Any], required: List[str]):
+            return {
+                "type": "function",
+                "function": {
+                    "name": name,
+                    "description": desc,
+                    "parameters": {
+                        "type": "object",
+                        "properties": properties,
+                        "required": required,
+                    },
+                },
+            }
+
+        return [
+            build_schema(
+                self.pick,
+                "pick",
+                "Pick an object by name into a virtual gripper.",
+                {
+                    "object_id": {"type": "string", "description": "Registered object name"},
+                },
+                ["object_id"],
+            ),
+            build_schema(
+                self.place,
+                "place",
+                "Place a previously picked object at a target 3D position.",
+                {
+                    "object_id": {"type": "string"},
+                    "position": {
+                        "type": "array",
+                        "items": {"type": "number"},
+                        "minItems": 3,
+                        "maxItems": 3,
+                    },
+                },
+                ["object_id", "position"],
+            ),
+            build_schema(
+                self.push,
+                "push",
+                "Apply a pushing force to an object.",
+                {
+                    "object_id": {"type": "string"},
+                    "force": {"type": "number", "default": 10.0},
+                    "direction": {
+                        "type": "array",
+                        "items": {"type": "number"},
+                        "minItems": 3,
+                        "maxItems": 3,
+                        "default": [1, 0, 0],
+                    },
+                },
+                ["object_id"],
+            ),
+            build_schema(
+                self.move,
+                "move",
+                "Move an object to a specific 3D position.",
+                {
+                    "object_id": {"type": "string"},
+                    "position": {
+                        "type": "array",
+                        "items": {"type": "number"},
+                        "minItems": 3,
+                        "maxItems": 3,
+                    },
+                },
+                ["object_id", "position"],
+            ),
+            build_schema(
+                self.observe,
+                "observe",
+                "Observe the scene from a rotated camera angle.",
+                {
+                    "angle": {"type": "number", "default": 0.0},
+                },
+                [],
+            ),
+        ]
+
+    def call_tool(self, name: str, arguments: Dict[str, Any]) -> Any:
+        """
+        Dynamically call a tool function by name with arguments.
+        """
+        if not hasattr(self, name):
+            raise AttributeError(f"Unknown tool: {name}")
+        func = getattr(self, name)
+        if not callable(func):
+            raise AttributeError(f"Attribute is not callable: {name}")
+        return func(**arguments)
     
     def _pull_object(self, params: Dict[str, Any]) -> bool:
         """Pull an object."""
