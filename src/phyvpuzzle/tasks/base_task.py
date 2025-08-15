@@ -21,6 +21,7 @@ class TaskType(Enum):
 
 class TaskDifficulty(Enum):
     """Task difficulty levels."""
+    VERY_EASY = "very-easy"  # New: single object tasks
     EASY = "easy"
     MEDIUM = "medium"
     HARD = "hard"

@@ -1,0 +1,25 @@
+<robot name="Domino_19" version="1.0">
+  <link name="Domino_19_link">
+    <collision name="Cube.018_collision">
+      <origin rpy="0.00000 0.00000 1.47573" xyz="-1.05195 0.83821 0.25000"/>
+      <geometry>
+        <box size="0.17598 0.27481 0.50000"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <inertia ixx="0.00234" ixy="0.00004" ixz="0.00000" iyy="0.00271" iyz="0.00000" izz="0.00089"/>
+      <origin rpy="0.00000 0.00000 0.00000" xyz="-1.05195 0.83821 0.25000"/>
+      <mass value="0.10000"/>
+    </inertial>
+    <visual name="Cube.018">
+      <material name="turnarrow"/>
+      <origin rpy="0.00000 0.00000 1.47573" xyz="-1.05195 0.83821 0.25000"/>
+      <geometry>
+        <box size="0.17598 0.27481 0.50000"/>
+      </geometry>
+    </visual>
+  </link>
+  <material name="turnarrow">
+    <color rgba="0.23137 0.44706 0.80000 1.00000"/>
+  </material>
+</robot>

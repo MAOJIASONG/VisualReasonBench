@@ -152,6 +152,7 @@ class PyBulletEnvironment(PhysicsEnvironment):
         self.table_id = None
         self.robot_config = None
         self.held_objects = []
+        self.domino_tools = None  # Will be set by domino task
         
     def setup_environment(self) -> None:
         """Setup PyBullet environment."""
@@ -258,10 +259,27 @@ class PyBulletEnvironment(PhysicsEnvironment):
             raise ValueError(f"Unknown shape type: {shape_type}")
         
         # Create visual shape
-        visual_shape = p.createVisualShape(
-            collision_shape,
-            rgbaColor=color
-        )
+        if shape_type == "box":
+            visual_shape = p.createVisualShape(
+                p.GEOM_BOX,
+                halfExtents=size,
+                rgbaColor=color
+            )
+        elif shape_type == "sphere":
+            visual_shape = p.createVisualShape(
+                p.GEOM_SPHERE,
+                radius=size[0],
+                rgbaColor=color
+            )
+        elif shape_type == "cylinder":
+            visual_shape = p.createVisualShape(
+                p.GEOM_CYLINDER,
+                radius=size[0],
+                length=size[1],
+                rgbaColor=color
+            )
+        else:
+            raise ValueError(f"Unknown shape type: {shape_type}")
         
         # Create multi-body
         object_id = p.createMultiBody(
@@ -713,38 +731,57 @@ class PyBulletEnvironment(PhysicsEnvironment):
         
         return state
     
-    def render(self) -> Image.Image:
-        """Render the environment and return an image."""
-        # Compute view matrix
-        view_matrix = p.computeViewMatrix(
-            cameraEyePosition=self.camera_config.position,
-            cameraTargetPosition=self.camera_config.target,
-            cameraUpVector=self.camera_config.up_vector
-        )
+    def render(self, multi_view: bool = True) -> Image.Image:
+        """Render the environment and return an image.
         
-        # Compute projection matrix
-        projection_matrix = p.computeProjectionMatrixFOV(
-            fov=self.camera_config.fov,
-            aspect=self.camera_config.aspect_ratio,
-            nearPlane=self.camera_config.near_plane,
-            farPlane=self.camera_config.far_plane
-        )
+        Args:
+            multi_view: If True, render from multiple viewpoints (2x2 grid)
+                       If False, render from single default viewpoint
         
-        # Capture image
-        width, height, rgb_img, depth_img, seg_img = p.getCameraImage(
-            width=self.camera_config.image_width,
-            height=self.camera_config.image_height,
-            viewMatrix=view_matrix,
-            projectionMatrix=projection_matrix,
-            renderer=p.ER_BULLET_HARDWARE_OPENGL
-        )
-        
-        # Convert to PIL Image
-        rgb_array = np.array(rgb_img, dtype=np.uint8)
-        rgb_array = rgb_array[:, :, :3]  # Remove alpha channel
-        rgb_array = rgb_array.reshape(height, width, 3)
-        
-        return Image.fromarray(rgb_array)
+        Returns:
+            PIL Image of the rendered scene
+        """
+        if multi_view:
+            # Use multi-view renderer
+            if not hasattr(self, '_multi_view_renderer'):
+                from ..utils.multi_view_renderer import MultiViewRenderer
+                self._multi_view_renderer = MultiViewRenderer(
+                    width=self.camera_config.image_width,
+                    height=self.camera_config.image_height
+                )
+            return self._multi_view_renderer.render_multi_view()
+        else:
+            # Single view rendering (original implementation)
+            # Compute view matrix
+            view_matrix = p.computeViewMatrix(
+                cameraEyePosition=self.camera_config.position,
+                cameraTargetPosition=self.camera_config.target,
+                cameraUpVector=self.camera_config.up_vector
+            )
+            
+            # Compute projection matrix
+            projection_matrix = p.computeProjectionMatrixFOV(
+                fov=self.camera_config.fov,
+                aspect=self.camera_config.aspect_ratio,
+                nearVal=self.camera_config.near_plane,
+                farVal=self.camera_config.far_plane
+            )
+            
+            # Capture image
+            width, height, rgb_img, depth_img, seg_img = p.getCameraImage(
+                width=self.camera_config.image_width,
+                height=self.camera_config.image_height,
+                viewMatrix=view_matrix,
+                projectionMatrix=projection_matrix,
+                renderer=p.ER_BULLET_HARDWARE_OPENGL
+            )
+            
+            # Convert to PIL Image
+            rgb_array = np.array(rgb_img, dtype=np.uint8)
+            rgb_array = rgb_array[:, :, :3]  # Remove alpha channel
+            rgb_array = rgb_array.reshape(height, width, 3)
+            
+            return Image.fromarray(rgb_array)
     
     def set_camera_config(self, camera_config: CameraConfig) -> None:
         """Set camera configuration."""
@@ -774,6 +811,18 @@ class PyBulletEnvironment(PhysicsEnvironment):
             self.client_id = None
         
         print("Environment closed")
+    
+    def get_tool_schemas(self) -> List[Dict[str, Any]]:
+        """Get tool schemas for the current task."""
+        if self.domino_tools:
+            return self.domino_tools.get_tool_schemas()
+        return []
+    
+    def execute_tool_call(self, tool_name: str, arguments: Dict[str, Any]) -> Dict[str, Any]:
+        """Execute a tool call."""
+        if self.domino_tools:
+            return self.domino_tools.execute_tool(tool_name, arguments)
+        return {"status": "error", "message": "No tools available"}
 
 
 def create_environment(env_type: str = "pybullet", **kwargs) -> PhysicsEnvironment:

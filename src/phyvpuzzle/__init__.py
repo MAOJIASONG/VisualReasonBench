@@ -72,7 +72,6 @@ from .evaluation.metrics import (
     PassAtKMetric,
     DistanceToOptimalMetric,
     EfficiencyMetric,
-    RobustnessMetric,
     ComprehensiveEvaluator,
     evaluate_model_performance
 )
@@ -211,7 +210,6 @@ __all__ = [
     "PassAtKMetric",
     "DistanceToOptimalMetric",
     "EfficiencyMetric",
-    "RobustnessMetric",
     "ComprehensiveEvaluator",
     "evaluate_model_performance",
     

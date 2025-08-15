@@ -23,11 +23,8 @@ def create_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  # Run evaluation on puzzle tasks
-  phyvpuzzle evaluate --task-type puzzle --difficulty medium --num-runs 8
-
-  # Run single task
-  phyvpuzzle run --task-type lego --difficulty easy --gui
+  # Run Domino task once with GUI
+  phyvpuzzle run --task-type dominoes --difficulty easy --gui
 
   # Generate sample tasks
   phyvpuzzle generate --task-type dominoes --count 10 --output tasks.json
@@ -41,15 +38,15 @@ Examples:
     
     # Evaluate command
     eval_parser = subparsers.add_parser('evaluate', help='Evaluate model performance')
-    eval_parser.add_argument('--task-type', choices=['puzzle', 'lego', 'dominoes'], 
+    eval_parser.add_argument('--task-type', choices=['dominoes'], 
                             required=True, help='Type of task to evaluate')
-    eval_parser.add_argument('--difficulty', choices=['easy', 'medium', 'hard', 'expert'],
+    eval_parser.add_argument('--difficulty', choices=['very-easy', 'easy', 'medium', 'hard', 'expert'],
                             default='medium', help='Task difficulty level')
     eval_parser.add_argument('--num-runs', type=int, default=8,
                             help='Number of runs per task for Pass@K metric')
     eval_parser.add_argument('--vllm-type', choices=['openai', 'huggingface'],
                             default='openai', help='Type of VLLM to use')
-    eval_parser.add_argument('--vllm-model', default='gpt-4-vision-preview',
+    eval_parser.add_argument('--vllm-model', default='gpt-4o',
                             help='VLLM model name')
     eval_parser.add_argument('--translator-type', choices=['rule_based', 'llm'],
                             default='rule_based', help='Type of translator to use')
@@ -60,30 +57,34 @@ Examples:
     
     # Run command
     run_parser = subparsers.add_parser('run', help='Run a single task')
-    run_parser.add_argument('--task-type', choices=['puzzle', 'lego', 'dominoes'],
+    run_parser.add_argument('--task-type', choices=['dominoes'],
                            required=True, help='Type of task to run')
-    run_parser.add_argument('--difficulty', choices=['easy', 'medium', 'hard', 'expert'],
+    run_parser.add_argument('--difficulty', choices=['very-easy', 'easy', 'medium', 'hard', 'expert'],
                            default='medium', help='Task difficulty level')
     run_parser.add_argument('--gui', action='store_true',
                            help='Show PyBullet GUI')
     run_parser.add_argument('--vllm-type', choices=['openai', 'huggingface'],
                            default='openai', help='Type of VLLM to use')
-    run_parser.add_argument('--vllm-model', default='gpt-4-vision-preview',
+    run_parser.add_argument('--vllm-model', default='gpt-4o',
                            help='VLLM model name')
-    run_parser.add_argument('--max-steps', type=int, default=100,
+    run_parser.add_argument('--config', help='Configuration file (JSON)')
+    run_parser.add_argument('--num-runs', type=int, default=1, help='Number of attempts for the task')
+    run_parser.add_argument('--max-steps', type=int, default=5,
                            help='Maximum number of steps')
     run_parser.add_argument('--timeout', type=float, default=300.0,
                            help='Timeout in seconds')
+    run_parser.add_argument('--physics-settle-time', type=float, default=2.0,
+                           help='Time to wait for physics to settle after actions (seconds)')
     run_parser.add_argument('--verbose', '-v', action='store_true',
                            help='Verbose output')
     
     # Generate command
     gen_parser = subparsers.add_parser('generate', help='Generate sample tasks')
-    gen_parser.add_argument('--task-type', choices=['puzzle', 'lego', 'dominoes'],
+    gen_parser.add_argument('--task-type', choices=['dominoes'],
                            required=True, help='Type of task to generate')
     gen_parser.add_argument('--count', type=int, default=10,
                            help='Number of tasks to generate')
-    gen_parser.add_argument('--difficulty', choices=['easy', 'medium', 'hard', 'expert'],
+    gen_parser.add_argument('--difficulty', choices=['very-easy', 'easy', 'medium', 'hard', 'expert'],
                            default='medium', help='Task difficulty level')
     gen_parser.add_argument('--output', '-o', required=True,
                            help='Output file for generated tasks')
@@ -134,8 +135,8 @@ def create_sample_tasks(task_type: str, difficulty: str, count: int) -> List[Bas
             from .tasks.lego_task import LegoTask
             task = LegoTask(config)
         elif task_type == "dominoes":
-            from .tasks.dominoes_task import DominoesTask
-            task = DominoesTask(config)
+            from .tasks.domino_task import DominoTask
+            task = DominoTask(config)
         else:
             raise ValueError(f"Unknown task type: {task_type}")
         
@@ -217,20 +218,42 @@ def run_evaluation(args) -> None:
 
 def run_single_task(args) -> None:
     """Run single task command."""
-    # Create pipeline configuration
+    # Load configuration
+    config_dict = {}
+    default_config_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), '..', 'configs', 'default_config.json')
+    default_config_path = os.path.abspath(default_config_path)
+    if os.path.exists(default_config_path):
+        try:
+            with open(default_config_path, 'r') as f:
+                config_dict = json.load(f)
+        except Exception:
+            config_dict = {}
+    if args.config:
+        try:
+            with open(args.config, 'r') as f:
+                config_dict.update(json.load(f))
+        except Exception:
+            pass
+
+    # Create pipeline configuration with defaults and overrides
     pipeline_config = PipelineConfig(
-        vllm_type=args.vllm_type,
-        vllm_model=args.vllm_model,
-        max_iterations=args.max_steps,
-        timeout=args.timeout,
-        environment_type="pybullet",
-        enable_logging=args.verbose,
-        log_level="DEBUG" if args.verbose else "INFO"
+        vllm_type=config_dict.get('vllm_type', args.vllm_type),
+        vllm_model=config_dict.get('vllm_model', args.vllm_model),
+        max_iterations=config_dict.get('max_iterations', args.max_steps),
+        timeout=config_dict.get('timeout', args.timeout),
+        physics_settle_time=config_dict.get('physics_settle_time', getattr(args, 'physics_settle_time', 2.0)),
+        environment_type=config_dict.get('environment_type', 'pybullet'),
+        gui=bool(args.gui),
+        enable_logging=bool(config_dict.get('enable_logging', args.verbose)),
+        log_level=config_dict.get('log_level', 'DEBUG' if args.verbose else 'INFO'),
+        feedback_history_size=config_dict.get('feedback_history_size', 5),
+        retry_attempts=config_dict.get('retry_attempts', 3),
     )
     
     print(f"Running single task: {args.task_type} ({args.difficulty})")
     print(f"VLLM: {pipeline_config.vllm_type} ({pipeline_config.vllm_model})")
     print(f"GUI: {'Enabled' if args.gui else 'Disabled'}")
+    print(f"Physics settle time: {pipeline_config.physics_settle_time}s")
     
     try:
         # Create pipeline

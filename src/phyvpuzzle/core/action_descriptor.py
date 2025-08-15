@@ -256,9 +256,12 @@ class ObjectExtractor:
     
     def __init__(self):
         self.object_patterns = [
-            r"(?:the\s+)?(\w+(?:\s+\w+)*?)(?:\s+(?:block|piece|object|item))?",
+            # Prefer capturing full noun phrases like "red block", "blue cube"
+            r"(?:the\s+)?([a-z]+\s+(?:block|cube|piece|object|item))",
+            # Generic multi-word capture, non-greedy to stop before prepositions
+            r"(?:the\s+)?(\w+(?:\s+\w+)*?)(?:\s+(?:block|cube|piece|object|item))?",
             r"object\s+(\d+)",
-            r"(\w+)\s+(?:block|piece|object|item)",
+            r"(\w+)\s+(?:block|cube|piece|object|item)",
         ]
     
     def extract_object_id(self, text: str) -> str:

@@ -12,6 +12,8 @@ from abc import ABC, abstractmethod
 import os
 from pathlib import Path
 import time
+import io
+import base64
 
 
 class VLLMProcessor(ABC):
@@ -117,46 +119,64 @@ class OpenAIVLLMProcessor(VLLMProcessor):
         
         Returns a dictionary with keys: 'content', 'tool_calls', 'raw_response', 'used_messages'.
         """
-        # Convert PIL Image to base64
-        import base64
-        import io
+        # Convert PIL Image to base64 with the correct format
         
         buffered = io.BytesIO()
         image.save(buffered, format="PNG")
-        img_str = base64.b64encode(buffered.getvalue()).decode()
+        buffered.seek(0)
+        img_str = base64.b64encode(buffered.getvalue()).decode('utf-8')
         
         # Create prompt with history context
         history_context = self._format_history_context()
         
+        # Build comprehensive task prompt
+        task_prompt = f"""You are controlling a robot to solve a physics puzzle.
+Task: {task_description}
+
+Current context:
+{context}
+
+History of actions:
+{history_context}
+
+IMPORTANT: Use the provided tools to interact with the environment. Available tools include:
+- push_domino: Push a specific domino by index to topple it
+- check_dominoes: Check the status of all dominoes  
+- finish_task: Complete the task when all dominoes are toppled
+
+Analyze the image and use the appropriate tool. If you see dominoes standing, use push_domino to push the first one to create a chain reaction."""
+
         messages: List[Dict[str, Any]] = [
-            {
-                "role": "system",
-                "content": (
-                    "You are an expert in physical visual reasoning. "
-                    f"Task: {task_description}\n"
-                    f"Context: {context}\n"
-                    f"History: {history_context}\n"
-                    "When appropriate, you may call available tools to act in the environment. "
-                    "Otherwise, choose either 'finish' if the task is complete, or 'action' followed by a description of the next action."
-                ),
-            },
             {
                 "role": "user",
                 "content": [
-                    {"type": "text", "text": "What should I do next?"},
-                    {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{img_str}"}},
+                    {
+                        "type": "text",
+                        "text": task_prompt
+                    },
+                    {
+                        "type": "image_url",
+                        "image_url": {
+                            "url": f"data:image/png;base64,{img_str}",
+                            "detail": "auto"
+                        }
+                    }
                 ],
-            },
+            }
         ]
         
         kwargs: Dict[str, Any] = {
             "model": self.model_name,
             "messages": messages,
-            "max_tokens": 300,
+            "max_tokens": 500,
+            "temperature": 0.7
         }
+        
+        # Add tools if provided
         if tools:
             kwargs["tools"] = tools
-            if tool_choice is not None:
+            # Don't set tool_choice if it's None or "auto" to avoid issues
+            if tool_choice and tool_choice != "auto":
                 kwargs["tool_choice"] = tool_choice
         
         response = self.client.chat.completions.create(**kwargs)
@@ -192,6 +212,83 @@ class OpenAIVLLMProcessor(VLLMProcessor):
             "tool_calls": tool_calls,
             "raw_response": response,
             "used_messages": messages,
+        }
+    
+    def process_completion_check(self, 
+                                images: List[Tuple[str, Image.Image]],
+                                prompt: str,
+                                tools: Optional[List[Dict]] = None) -> Dict[str, Any]:
+        """Process completion check with multiple images.
+        
+        Args:
+            images: List of (label, image) tuples
+            prompt: The prompt for checking completion
+            tools: Optional tool definitions
+            
+        Returns:
+            Dictionary with response and tool calls
+        """
+        # Prepare message with multiple images
+        content = [{"type": "text", "text": prompt}]
+        
+        for label, img in images:
+            # Add label before image
+            content.append({"type": "text", "text": f"\n{label}:"})
+            
+            # Convert image to base64
+            buffered = io.BytesIO()
+            img.save(buffered, format="PNG")
+            img_str = base64.b64encode(buffered.getvalue()).decode()
+            
+            # Add image
+            content.append({
+                "type": "image_url",
+                "image_url": {
+                    "url": f"data:image/png;base64,{img_str}",
+                    "detail": "auto"
+                }
+            })
+        
+        messages = [
+            {"role": "system", "content": "You are a task completion checker."},
+            {"role": "user", "content": content}
+        ]
+        
+        # Make API call
+        kwargs = {
+            "model": self.model_name,
+            "messages": messages,
+            "max_tokens": 300,
+            "temperature": 0.3,  # Lower temperature for more deterministic checking
+        }
+        
+        if tools:
+            kwargs["tools"] = tools
+            kwargs["tool_choice"] = "required"
+        
+        response = self.client.chat.completions.create(**kwargs)
+        
+        # Extract response
+        content = response.choices[0].message.content or ""
+        tool_calls = []
+        
+        if hasattr(response.choices[0].message, 'tool_calls'):
+            for tc in response.choices[0].message.tool_calls or []:
+                try:
+                    tool_calls.append({
+                        "id": getattr(tc, "id", None),
+                        "type": getattr(tc, "type", None),
+                        "function": {
+                            "name": getattr(tc.function, "name", None),
+                            "arguments": getattr(tc.function, "arguments", None),
+                        },
+                    })
+                except Exception:
+                    continue
+        
+        return {
+            "content": content,
+            "tool_calls": tool_calls,
         }
     
     def _format_history_context(self) -> str:

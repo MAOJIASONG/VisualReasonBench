@@ -17,6 +17,7 @@ from .translator import Translator, TranslationResult, create_translator
 from ..environment.physics_env import PhysicsEnvironment, create_environment
 from ..tasks.base_task import BaseTask, TaskResult
 from ..utils.logger import ExperimentLogger
+from ..utils.token_calculator import QwenTokenCalculator
 
 
 @dataclass
@@ -26,12 +27,14 @@ class PipelineConfig:
     vllm_model: str = "gpt-4-vision-preview"
     translator_type: str = "rule_based"
     environment_type: str = "pybullet"
-    max_iterations: int = 100
+    gui: bool = False
+    max_iterations: int = 5  # Default to 5 rounds of VLM-environment interaction
     timeout: float = 300.0
     enable_logging: bool = True
     log_level: str = "INFO"
     feedback_history_size: int = 5
     retry_attempts: int = 3
+    physics_settle_time: float = 2.0  # Time to wait for physics to settle after actions (seconds)
 
 
 @dataclass
@@ -76,6 +79,7 @@ class PhysicalReasoningPipeline:
         self.step_count = 0
         self.start_time = None
         self.logger_io = ExperimentLogger()
+        self.token_calculator = QwenTokenCalculator()
         
     def setup_logging(self) -> None:
         """Setup logging configuration."""
@@ -111,7 +115,7 @@ class PhysicalReasoningPipeline:
             # Initialize environment
             self.environment = create_environment(
                 env_type=self.config.environment_type,
-                gui=False
+                gui=bool(self.config.gui),
             )
             self.environment.setup_environment()
             
@@ -141,6 +145,9 @@ class PhysicalReasoningPipeline:
         self.execution_history.clear()
         self.feedback_history.clear()
         
+        # Reset token counter for this task
+        self.token_calculator.reset_counters()
+        
         try:
             # Setup task in environment
             if not task.setup_task(self.environment):
@@ -155,8 +162,7 @@ class PhysicalReasoningPipeline:
             trial_dir = self.logger_io.start_trial(self.config.vllm_model, task.__class__.__name__)
             
             # Main execution loop
-            while (not task.is_task_finished() and 
-                   self.step_count < self.config.max_iterations and
+            while (self.step_count < self.config.max_iterations and
                    self._get_elapsed_time() < self.config.timeout):
                 
                 step_result = self._execute_single_step()
@@ -168,10 +174,23 @@ class PhysicalReasoningPipeline:
                 
                 self.step_count += 1
                 task.state.elapsed_time = self._get_elapsed_time()
+                
+                # Check if task is finished using VLM if enabled
+                if self._check_task_completion_vlm(task):
+                    self.logger.info(f"Task completed at step {self.step_count} (VLM check)")
+                    task.state.is_completed = True
+                    break
+                elif task.is_task_finished():
+                    self.logger.info(f"Task completed at step {self.step_count}")
+                    break
             
             # Get final result
             result = task.get_result()
             result.time_taken = self._get_elapsed_time()
+            
+            # Add accumulated token usage to result
+            result.token_usage = self.token_calculator.get_total_usage()
+            
             # Save trial info at end
             self.logger_io.save_trial_info({
                 "model": self.config.vllm_model,
@@ -182,13 +201,15 @@ class PhysicalReasoningPipeline:
                     "steps_taken": result.steps_taken,
                     "time_taken": result.time_taken,
                     "metrics": result.metrics,
+                    "token_usage": getattr(result, 'token_usage', {}),
                 },
             })
             
             self.logger.info(f"Task completed. Success: {result.success}, "
                            f"Score: {result.final_score:.3f}, "
                            f"Steps: {result.steps_taken}, "
-                           f"Time: {result.time_taken:.2f}s")
+                           f"Time: {result.time_taken:.2f}s, "
+                           f"Tokens: {getattr(result, 'token_usage', {}).get('total_tokens', 0)}")
             
             return result
             
@@ -233,9 +254,18 @@ class PhysicalReasoningPipeline:
         task_description = self.current_task.get_task_description()
         # Prepare logging directory for this round
         self.logger_io.start_round(self.step_count + 1)
-        # Save pre-action image
+        
+        # Save pre-action images (multi-view if available)
         try:
+            # Save the main image used for VLM
             self.logger_io.save_image(current_image, "pre_action.png")
+            
+            # If multi-view renderer is available, save individual views
+            if hasattr(self.environment, '_multi_view_renderer'):
+                self.logger_io.save_multi_view_images(
+                    self.environment._multi_view_renderer, 
+                    prefix="pre_action"
+                )
         except Exception:
             pass
         
@@ -254,14 +284,35 @@ class PhysicalReasoningPipeline:
                 task_description=task_description,
                 context={**task_context, "feedback": self.feedback_history[-self.config.feedback_history_size:]},
                 tools=tools,
-                tool_choice={"type": "auto"} if tools else None,
+                tool_choice="auto" if tools else None,
             )
+            
+            # Calculate token usage for this interaction
+            used_messages = vllm_result.get("used_messages", [])
+            vllm_response = vllm_result.get("content", "")
+            tool_calls = vllm_result.get("tool_calls", [])
+            
+            # Calculate tokens for this step and accumulate
+            input_tokens = self.token_calculator.count_message_tokens(used_messages)
+            if tools:
+                input_tokens += self.token_calculator.count_tool_tokens(tools)
+            output_tokens = self.token_calculator.count_tokens(vllm_response or "")
+            if tool_calls:
+                import json as _json
+                output_tokens += self.token_calculator.count_tokens(_json.dumps(tool_calls))
+            
+            self.token_calculator.accumulate_tokens(input_tokens, output_tokens)
+            
             # Log input for this round
             self.logger_io.log_input({
-                "messages": vllm_result.get("used_messages", []),
+                "messages": used_messages,
                 "tools": tools,
+                "token_usage": {
+                    "input_tokens": input_tokens,
+                    "output_tokens": output_tokens,
+                    "total_tokens": input_tokens + output_tokens
+                },
             })
-            vllm_response = vllm_result.get("content", "")
         except Exception as e:
             return PipelineStep(
                 step_number=self.step_count,
@@ -304,9 +355,29 @@ class PhysicalReasoningPipeline:
                             args = args_raw if isinstance(args_raw, dict) else _json.loads(args_raw)
                         except Exception:
                             args = {}
-                        _ = self.environment.call_tool(name, args)
+                        result = self.environment.execute_tool_call(name, args)
+                        
+                        # Wait for physics to settle after environment interaction
+                        import time as _time
+                        _time.sleep(self.config.physics_settle_time)
+                        
+                        # Check if task should finish
+                        if result.get("status") == "finished":
+                            self.current_task.state.is_completed = True
+                            step.execution_success = True
+                            
+                    step.execution_success = True
+                    # Log successful output
+                    try:
+                        self.logger_io.log_output({
+                            "content": vllm_response,
+                            "tool_calls": tool_calls,
+                        })
+                    except Exception:
+                        pass
                 except Exception as e:
                     step.error_message = f"Tool execution failed: {e}"
+                    step.execution_success = False
                     # Log output with error
                     try:
                         self.logger_io.log_output({
@@ -316,75 +387,80 @@ class PhysicalReasoningPipeline:
                         })
                     except Exception:
                         pass
-                    return step
-
-            # Step 6: Parse action
-            try:
-                parsed_action = self.action_descriptor.parse_action(decision_description)
-                step.parsed_action = parsed_action
-            except Exception as e:
-                step.error_message = f"Action parsing failed: {e}"
-                # Log output on failure
-                try:
-                    self.logger_io.log_output({
-                        "content": vllm_response,
-                        "tool_calls": tool_calls,
-                        "error": step.error_message,
-                    })
-                except Exception:
-                    pass
-                return step
             
-            # Step 7: Translate to environment commands
-            try:
-                env_state = self.environment.get_state()
-                translation_result = self.translator.translate_action(parsed_action, env_state)
-                step.translation_result = translation_result
-                
-                if not translation_result.success:
-                    step.error_message = f"Translation failed: {translation_result.error_message}"
+            # Only try to parse action if no tool calls
+            elif decision_description:
+                try:
+                    parsed_action = self.action_descriptor.parse_action(decision_description)
+                    step.parsed_action = parsed_action
+                except Exception as e:
+                    step.error_message = f"Action parsing failed: {e}"
+                    # Log output on failure
                     try:
                         self.logger_io.log_output({
                             "content": vllm_response,
                             "tool_calls": tool_calls,
-                            "translation": translation_result.__dict__,
                             "error": step.error_message,
                         })
                     except Exception:
                         pass
                     return step
-            except Exception as e:
-                step.error_message = f"Translation failed: {e}"
+                
+                # Step 7: Translate to environment commands
                 try:
-                    self.logger_io.log_output({
-                        "content": vllm_response,
-                        "tool_calls": tool_calls,
-                        "error": step.error_message,
-                    })
-                except Exception:
-                    pass
-                return step
-            
-            # Step 8: Execute commands in environment
-            try:
-                execution_success = True
-                for command in translation_result.commands:
-                    if not self.environment.execute_command(command):
-                        execution_success = False
-                        break
-                
-                step.execution_success = execution_success
-                
-                if execution_success:
-                    self.current_task.update_state(decision_description, True)
-                    self.logger.info(f"Step {self.step_count}: Action executed successfully")
-                else:
-                    self.current_task.update_state(decision_description, False)
-                    step.error_message = "Command execution failed"
+                    env_state = self.environment.get_state()
+                    translation_result = self.translator.translate_action(parsed_action, env_state)
+                    step.translation_result = translation_result
                     
-            except Exception as e:
-                step.error_message = f"Command execution failed: {e}"
-                step.execution_success = False
+                    if not translation_result.success:
+                        step.error_message = f"Translation failed: {translation_result.error_message}"
+                        try:
+                            self.logger_io.log_output({
+                                "content": vllm_response,
+                                "tool_calls": tool_calls,
+                                "translation": translation_result.__dict__,
+                                "error": step.error_message,
+                            })
+                        except Exception:
+                            pass
+                        return step
+                except Exception as e:
+                    step.error_message = f"Translation failed: {e}"
+                    try:
+                        self.logger_io.log_output({
+                            "content": vllm_response,
+                            "tool_calls": tool_calls,
+                            "error": step.error_message,
+                        })
+                    except Exception:
+                        pass
+                    return step
+                
+                # Step 8: Execute commands in environment
+                try:
+                    execution_success = True
+                    for command in translation_result.commands:
+                        if not self.environment.execute_command(command):
+                            execution_success = False
+                            break
+                    
+                    # Wait for physics to settle after environment changes
+                    if execution_success:
+                        import time as _time
+                        _time.sleep(self.config.physics_settle_time)
+                    
+                    step.execution_success = execution_success
+                    
+                    if execution_success:
+                        self.current_task.update_state(decision_description, True)
+                        self.logger.info(f"Step {self.step_count}: Action executed successfully")
+                    else:
+                        self.current_task.update_state(decision_description, False)
+                        step.error_message = "Command execution failed"
+                        
+                except Exception as e:
+                    step.error_message = f"Command execution failed: {e}"
+                    step.execution_success = False
         
         # Log model output and post-action image
         try:
@@ -400,9 +476,18 @@ class PhysicalReasoningPipeline:
             })
         except Exception:
             pass
+        
+        # Save post-action images (multi-view if available)
         try:
             post_image = self.environment.render()
             self.logger_io.save_image(post_image, "post_action.png")
+            
+            # If multi-view renderer is available, save individual views
+            if hasattr(self.environment, '_multi_view_renderer'):
+                self.logger_io.save_multi_view_images(
+                    self.environment._multi_view_renderer,
+                    prefix="post_action"
+                )
         except Exception:
             pass
 
@@ -432,6 +517,110 @@ class PhysicalReasoningPipeline:
         if self.start_time is None:
             return 0.0
         return time.time() - self.start_time
+    
+    def _check_task_completion_vlm(self, task: BaseTask) -> bool:
+        """Check task completion using VLM.
+        
+        Args:
+            task: The current task
+            
+        Returns:
+            True if task is completed according to VLM
+        """
+        # Only use VLM check if enabled for the task
+        if not getattr(task, 'use_vlm_completion_check', False):
+            return False
+        
+        try:
+            # Get current environment image
+            current_image = self.environment.render()
+            
+            # Get initial image if stored
+            initial_image = getattr(task, 'initial_image', None)
+            
+            # Prepare images for VLM
+            if initial_image:
+                # Use initial + current for comparison
+                images = [
+                    ("Initial State", initial_image),
+                    ("Current State", current_image)
+                ]
+                prompt = f"""Task: {task.get_task_description()}
+
+You are shown two images:
+1. Initial State: The starting configuration
+2. Current State: The current configuration
+
+Please determine if the task has been completed. For dominoes, check if they have fallen over.
+"""
+            else:
+                # Use only current image
+                images = [("Current State", current_image)]
+                context = task.get_task_specific_context()
+                num_dominoes = context.get('num_dominoes', 0)
+                
+                prompt = f"""Task: {task.get_task_description()}
+
+You are shown the current state of the environment.
+"""
+                if num_dominoes == 1:
+                    prompt += "There is 1 domino. Check if it has fallen over (toppled)."
+                elif num_dominoes > 1:
+                    prompt += f"There are {num_dominoes} dominoes. Check if all have fallen over (toppled)."
+            
+            # Define completion check tool
+            tools = [{
+                "type": "function",
+                "function": {
+                    "name": "task_completion_status",
+                    "description": "Report whether the task is completed",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "is_completed": {
+                                "type": "boolean",
+                                "description": "True if task is completed, False otherwise"
+                            },
+                            "reason": {
+                                "type": "string",
+                                "description": "Brief explanation of the decision"
+                            }
+                        },
+                        "required": ["is_completed", "reason"]
+                    }
+                }
+            }]
+            
+            # Call VLM to check completion
+            result = self.vllm_processor.process_completion_check(
+                images=images,
+                prompt=prompt,
+                tools=tools
+            )
+            
+            # Parse response
+            if result.get("tool_calls"):
+                tool_call = result["tool_calls"][0]
+                args = tool_call.get("function", {}).get("arguments", {})
+                if isinstance(args, str):
+                    import json
+                    args = json.loads(args)
+                
+                is_completed = args.get("is_completed", False)
+                reason = args.get("reason", "")
+                
+                if is_completed:
+                    self.logger.info(f"VLM completion check: Task completed - {reason}")
+                else:
+                    self.logger.debug(f"VLM completion check: Not completed - {reason}")
+                
+                return is_completed
+            
+            return False
+            
+        except Exception as e:
+            self.logger.error(f"VLM completion check failed: {e}")
+            return False
     
     def _should_retry(self) -> bool:
         """Determine if we should retry after a failure."""

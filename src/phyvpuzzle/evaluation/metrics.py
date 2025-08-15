@@ -18,7 +18,7 @@ from ..core.pipeline import PhysicalReasoningPipeline
 class MetricType(Enum):
     """Types of evaluation metrics."""
     ACCURACY = "accuracy"
-    PASS_AT_8 = "pass_at_8"
+    PASS_AT_4 = "pass_at_4"
     AVG_STEP = "avg_step"
     DISTANCE_TO_OPTIMAL_RATIO = "distance_to_optimal_ratio"
     TOKEN_EFFICIENCY = "token_efficiency"
@@ -62,7 +62,7 @@ class AccuracyMetric:
 class PassAtKMetric:
     """Pass@K metric evaluator."""
     
-    def __init__(self, k: int = 8):
+    def __init__(self, k: int = 4):
         self.k = k
         self.name = f"pass_at_{k}"
     
@@ -145,8 +145,9 @@ class AvgStepMetric:
 class DistanceToOptimalMetric:
     """Distance to optimal solution metric."""
     
-    def __init__(self):
+    def __init__(self, default_optimal_steps: int = 1):
         self.name = "distance_to_optimal"
+        self.default_optimal_steps = default_optimal_steps
     
     def evaluate(self, results: List[TaskResult], 
                 optimal_solutions: Optional[Union[List[List[str]], List[int]]] = None) -> Tuple[float, float]:
@@ -156,6 +157,7 @@ class DistanceToOptimalMetric:
         Args:
             results: List of task results
             optimal_solutions: List of optimal solutions for each task (can be step counts or action sequences)
+                             If None, uses default_optimal_steps for all tasks
             
         Returns:
             Tuple of (average distance to optimal, average ratio to optimal)
@@ -163,8 +165,9 @@ class DistanceToOptimalMetric:
         if not results:
             return float('inf'), float('inf')
         
+        # Use default optimal steps if not provided
         if optimal_solutions is None:
-            return float('inf'), float('inf')
+            optimal_solutions = [self.default_optimal_steps] * len(results)
             
         if len(results) != len(optimal_solutions):
             # Handle multiple runs per task
@@ -336,47 +339,6 @@ class EfficiencyMetric:
         
         return total_efficiency / len(successful_results)
 
-
-class RobustnessMetric:
-    """Robustness metric evaluator."""
-    
-    def __init__(self):
-        self.name = "robustness"
-    
-    def evaluate(self, results_by_difficulty: Dict[str, List[TaskResult]]) -> float:
-        """
-        Calculate robustness across different difficulty levels.
-        
-        Args:
-            results_by_difficulty: Dictionary mapping difficulty level to results
-            
-        Returns:
-            Robustness score (0.0 to 1.0)
-        """
-        if not results_by_difficulty:
-            return 0.0
-        
-        difficulty_weights = {
-            "easy": 0.2,
-            "medium": 0.3,
-            "hard": 0.3,
-            "expert": 0.2
-        }
-        
-        weighted_score = 0.0
-        total_weight = 0.0
-        
-        for difficulty, results in results_by_difficulty.items():
-            if not results:
-                continue
-                
-            success_rate = sum(1 for r in results if r.success) / len(results)
-            weight = difficulty_weights.get(difficulty, 0.25)
-            
-            weighted_score += success_rate * weight
-            total_weight += weight
-        
-        return weighted_score / total_weight if total_weight > 0 else 0.0
 
 
 class ComprehensiveEvaluator:

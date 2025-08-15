@@ -84,9 +84,34 @@ class ExperimentLogger:
             json.dump(safe_data, f, ensure_ascii=False, indent=2)
 
     def save_image(self, image: Image.Image, name: str) -> None:
+        """Save an image to the current round directory.
+        
+        Args:
+            image: PIL Image to save
+            name: Filename for the image (e.g., "pre_action.png", "multi_view.png")
+        """
         assert self.current_round_dir is not None, "Call start_round() first"
         image_path = self.current_round_dir / name
         image.save(str(image_path))
+    
+    def save_multi_view_images(self, renderer, prefix: str = "view") -> None:
+        """Save individual views from multi-view renderer.
+        
+        Args:
+            renderer: MultiViewRenderer instance
+            prefix: Prefix for image names (e.g., "pre_action", "post_action")
+        """
+        assert self.current_round_dir is not None, "Call start_round() first"
+        
+        # Save combined multi-view image
+        multi_view = renderer.render_multi_view()
+        self.save_image(multi_view, f"{prefix}_multi.png")
+        
+        # Save individual views
+        views = ['top', 'front', 'front_top', 'side']
+        for view_name in views:
+            view_image = renderer.render_single_view(view_name)
+            self.save_image(view_image, f"{prefix}_{view_name}.png")
 
     def log_error(self, error: BaseException) -> None:
         assert self.trial_dir is not None, "Call start_trial() first"

@@ -3,21 +3,22 @@
   "vllm_model": "gpt-4o",
   "translator_type": "rule_based",
   "environment_type": "pybullet",
-  "max_iterations": 100,
+  "max_iterations": 5,
   "timeout": 300.0,
+  "physics_settle_time": 2.0,
   "enable_logging": true,
   "log_level": "INFO",
   "feedback_history_size": 5,
   "retry_attempts": 3,
   "evaluation": {
-    "num_runs": 8,
+    "num_runs": 4,
     "metrics": [
       "accuracy",
-      "pass_at_k",
+      "pass_at_4",
       "distance_to_optimal",
       "step_efficiency",
       "time_efficiency",
-      "robustness"
+      "token_efficiency"
     ]
   },
   "tasks": {
