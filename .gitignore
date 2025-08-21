@@ -194,3 +194,4 @@ cython_debug/
 .cursorindexingignorelogs/
 debug_tests/
 logs/
+bullet3/

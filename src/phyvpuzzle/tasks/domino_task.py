@@ -1,191 +1,200 @@
 """
-Domino Task Implementation
-
-Provides a simple domino toppling task for demonstration.
+Domino task implementation for falling domino puzzles.
 """
-from __future__ import annotations
 
-from typing import Any, Dict, List, Optional, Tuple
-from dataclasses import dataclass
-
-from .base_task import BaseTask, TaskConfiguration, TaskType, TaskDifficulty
-from .domino_tools import DominoTools
+from typing import Dict, Any
+from ..core.base import BaseEnvironment, TaskType, TaskDifficulty
+from ..environment.domino_env import DominoEnvironment, DominoConfig
+from .base_task import PuzzleTask
 
 
-class DominoTask(BaseTask):
-    """Domino toppling task using URDF domino models.
-
-    Goal: topple all dominoes on the table by applying pushes.
-    Supports procedural layouts via configuration parameters:
-    - parameters.num_dominoes: int, number of dominoes (default: 5)
-    - parameters.layout: str, layout name among {"line", "L", "S"} (default: "line")
-    - parameters.spacing: float, spacing between dominoes (default: 0.12)
-    """
-
-    def __init__(self, config: Optional[TaskConfiguration] = None):
-        # Adjust parameters based on difficulty
-        if config:
-            if config.difficulty == TaskDifficulty.VERY_EASY:
-                config.parameters = {"num_dominoes": 3, "layout": "line", "spacing": 0.12}
-                config.max_steps = 5  # Default to 5 rounds for very-easy
-            elif config.difficulty == TaskDifficulty.EASY:
-                config.parameters = config.parameters or {"num_dominoes": 5, "layout": "line", "spacing": 0.12}
-                config.max_steps = config.max_steps or 10
+class DominoTask(PuzzleTask):
+    """Task for domino falling chain reaction puzzles."""
+    
+    def __init__(self, difficulty: TaskDifficulty, config: Dict[str, Any]):
+        super().__init__(TaskType.DOMINO, difficulty, config)
         
-        cfg = config or TaskConfiguration(
-            task_type=TaskType.DOMINOES,
-            difficulty=TaskDifficulty.EASY,
-            max_steps=20,
-            time_limit=120.0,
-        )
-        super().__init__(cfg)
-        self.domino_names: List[str] = []
-        self.initial_upright_threshold = 0.95
-        self.tools = None  # Will be initialized in setup_task
-        self.use_vlm_completion_check = True  # Use VLM to check completion
-        self.target_image = None  # Will store the target/requirement image
-
-    def setup_task(self, environment) -> bool:
-        from math import pi
-        import pybullet as p
-        import os
-
-        self.environment = environment
-        self.domino_names = []
-
-        # Parameters
-        params = self.config.parameters or {}
-        num = int(params.get("num_dominoes", 5))
-        layout = str(params.get("layout", "line")).lower()
-        spacing = float(params.get("spacing", 0.12))
-
-        # Domino URDF path (reuse same URDF for all instances)
-        base_dir = os.path.dirname(os.path.dirname(__file__))  # .../phyvpuzzle
-        urdf_path = os.path.join(
-            base_dir,
-            "environment",
-            "phobos_models",
-            "domino",
-            "Domino_1",
-            "urdf",
-            "Domino_1.urdf",
-        )
-
-        # Layout generation
-        def positions_for_layout(n: int) -> List[Tuple[float, float, float]]:
-            x0, y0, z0 = 0.0, 0.0, 0.5
-            pts: List[Tuple[float, float, float]] = []
-            if layout == "line":
-                for i in range(n):
-                    pts.append((x0 + i * spacing, y0, z0))
-            elif layout == "l":
-                half = max(1, n // 2)
-                for i in range(half):
-                    pts.append((x0 + i * spacing, y0, z0))
-                for j in range(n - half):
-                    pts.append((x0 + (half - 1) * spacing, y0 + (j + 1) * spacing, z0))
-            elif layout == "s":
-                for i in range(n):
-                    dy = ((-1) ** i) * (spacing * 0.3)
-                    pts.append((x0 + i * spacing, y0 + dy, z0))
-            else:
-                # Fallback to line
-                for i in range(n):
-                    pts.append((x0 + i * spacing, y0, z0))
-            return pts
-
-        positions = positions_for_layout(num)
-
-        # Create dominoes as URDF instances
-        for i, pos in enumerate(positions):
-            name = f"domino_{i+1}"
-            # Always use primitive objects for now to avoid URDF issues
-            self.environment.create_primitive_object(
-                    object_name=name,
-                    shape_type="box",
-                    size=(0.15, 0.015, 0.25),
-                    position=pos,
-                    color=(0.9, 0.9, 0.1, 1.0),
-                    mass=0.2,
+        # Create domino-specific configuration
+        self.domino_config = DominoConfig.from_difficulty(difficulty)
+        
+        # Override with any config parameters
+        if "num_dominoes" in config:
+            self.domino_config.num_dominoes = config["num_dominoes"]
+        if "arrangement_pattern" in config:
+            self.domino_config.arrangement_pattern = config["arrangement_pattern"]
+        if "domino_spacing" in config:
+            self.domino_config.domino_spacing = config["domino_spacing"]
+            
+    def _configure_environment(self, environment: BaseEnvironment) -> None:
+        """Configure environment for domino task."""
+        # Ensure we have a domino environment
+        if not isinstance(environment, DominoEnvironment):
+            raise ValueError("DominoTask requires DominoEnvironment")
+            
+        # Configure domino-specific settings
+        environment.domino_config = self.domino_config
+        
+        # Set camera position for optimal domino viewing
+        if hasattr(environment, 'multi_view_renderer'):
+            # Adjust camera positions based on domino arrangement
+            if self.domino_config.arrangement_pattern == "line":
+                environment.multi_view_renderer.set_camera_config(
+                    "perspective", [0, -2.0, 1.0], [0, 0, 0.4]
                 )
-            self.current_objects[name] = {"type": "domino"}
-            self.domino_names.append(name)
-
-        # Initialize tools after dominoes are created
-        self.tools = DominoTools(self.environment)
-        self.tools.set_domino_names(self.domino_names)
+            elif self.domino_config.arrangement_pattern == "circle":
+                environment.multi_view_renderer.set_camera_config(
+                    "perspective", [2.0, 0, 1.5], [0, 0, 0.4]
+                )
+                
+    def _load_task_objects(self, environment: BaseEnvironment) -> None:
+        """Load dominoes into the environment."""
+        # This is handled by the DominoEnvironment's _setup_task_environment method
+        pass
         
-        # Make tools available to the environment
-        environment.domino_tools = self.tools
-
-        # A small cube to push
-        x0 = positions[0][0]
-        y0 = positions[0][1]
-        z0 = positions[0][2]
-        self.environment.create_primitive_object(
-            object_name="pusher",
-            shape_type="box",
-            size=(0.03, 0.03, 0.03),
-            position=(x0 - 0.2, y0, z0),
-            color=(0.2, 0.6, 0.9, 1.0),
-            mass=0.3,
-        )
+    def _set_initial_state(self, environment: BaseEnvironment) -> None:
+        """Set initial state for domino task."""
+        # Reset any previous state
+        environment.step_count = 0
         
-        # Capture initial state image for VLM comparison
-        if self.use_vlm_completion_check:
-            import time
-            import pybullet as p
-            # Let physics settle
-            for _ in range(10):
-                p.stepSimulation()
-            time.sleep(0.1)
-            # Capture initial image
-            self.initial_image = environment.render()
+        # Ensure dominoes are in upright position
+        if hasattr(environment, '_reset_dominoes'):
+            environment._reset_dominoes()
+            
+    def _get_base_system_prompt(self) -> str:
+        """Get base system prompt for domino tasks."""
+        return """You are an AI agent controlling a physics simulation to solve domino falling puzzles. 
+Your goal is to create a chain reaction by pushing the first domino, causing all dominoes to fall in sequence.
+
+You can observe the environment through images showing the current state of the domino setup from multiple viewpoints.
+The environment provides you with several tools to interact with the dominoes:
+
+AVAILABLE TOOLS:
+- push_domino(): Push the first domino to start the chain reaction
+- push_specific_domino(domino_id, force, direction): Push a specific domino
+- observe(angle): Change camera angle to observe from different viewpoints  
+- check_solution(): Check if the puzzle has been solved (all dominoes fallen)
+
+IMPORTANT GUIDELINES:
+1. Always observe the initial setup carefully before taking action
+2. Usually, pushing the first domino with appropriate force is sufficient
+3. The chain reaction should propagate through all dominoes automatically
+4. Success is measured by the percentage of dominoes that fall (typically >80%)
+5. Use observe() to get different viewpoints if needed to assess the situation
+6. Be patient - allow time for the physics simulation to propagate the chain reaction"""
         
-        return True
+    def _get_task_specific_prompt(self) -> str:
+        """Get domino-specific additions to system prompt."""
+        arrangement = self.domino_config.arrangement_pattern
+        num_dominoes = self.domino_config.num_dominoes
+        
+        prompt = f"""
+TASK SPECIFICS:
+- Number of dominoes: {num_dominoes}
+- Arrangement pattern: {arrangement}
+- Difficulty: {self.difficulty.value}
+"""
+        
+        if arrangement == "line":
+            prompt += "- The dominoes are arranged in a straight line. Push the first domino to start the chain."
+        elif arrangement == "curve":
+            prompt += "- The dominoes are arranged in a curved pattern. Consider the curve when pushing."
+        elif arrangement == "zigzag":
+            prompt += "- The dominoes are arranged in a zigzag pattern. The chain reaction follows the zigzag path."
+        elif arrangement == "circle":
+            prompt += "- The dominoes are arranged in a circle. The chain reaction should propagate around the circle."
+            
+        # Add difficulty-specific guidance
+        if self.difficulty == TaskDifficulty.VERY_EASY:
+            prompt += "\n- This is a very easy setup - a gentle push should be sufficient."
+        elif self.difficulty == TaskDifficulty.EASY:
+            prompt += "\n- This is an easy setup - standard force should work well."
+        elif self.difficulty == TaskDifficulty.MEDIUM:
+            prompt += "\n- This is a medium difficulty setup - you may need to adjust force or direction."
+        elif self.difficulty == TaskDifficulty.HARD:
+            prompt += "\n- This is a hard setup - careful observation and precise pushing may be needed."
+        elif self.difficulty == TaskDifficulty.VERY_HARD:
+            prompt += "\n- This is a very hard setup - you may need multiple pushes or strategic planning."
+            
+        return prompt
+        
+    def _get_task_description(self) -> str:
+        """Get description of the specific domino task instance."""
+        return f"""DOMINO FALLING PUZZLE
 
-    def get_task_description(self) -> str:
-        return "Topple all dominoes by interacting with the scene."
+You are presented with {self.domino_config.num_dominoes} dominoes arranged in a {self.domino_config.arrangement_pattern} pattern.
+Your objective is to create a chain reaction by pushing the first domino, causing all dominoes to fall in sequence.
 
-    def check_completion(self) -> bool:
-        # Consider domino toppled if its up-vector z is small; approximate via base orientation
-        import pybullet as p
-        toppled = 0
-        for name in self.domino_names:
-            obj = self.environment.objects.get(name)
-            if not obj:
-                continue
-            _, orn = p.getBasePositionAndOrientation(obj.object_id)
-            # Convert quaternion to up-vector z magnitude heuristic: squared z-axis dot world z
-            # For simplicity, check if height dropped below initial height
-            pos, _ = p.getBasePositionAndOrientation(obj.object_id)
-            if pos[2] < 0.2:
-                toppled += 1
-        return toppled == len(self.domino_names)
+Task Details:
+- Difficulty Level: {self.difficulty.value}
+- Number of Dominoes: {self.domino_config.num_dominoes}
+- Arrangement: {self.domino_config.arrangement_pattern}
+- Success Criteria: At least 80% of dominoes must fall
 
-    def evaluate_state(self) -> float:
-        import pybullet as p
-        toppled = 0
-        for name in self.domino_names:
-            obj = self.environment.objects.get(name)
-            if not obj:
-                continue
-            pos, _ = p.getBasePositionAndOrientation(obj.object_id)
-            if pos[2] < 0.2:
-                toppled += 1
-        return toppled / max(1, len(self.domino_names))
+The physics simulation will handle the chain reaction once you provide the initial push.
+Observe the setup carefully and determine the best approach to ensure maximum domino fall rate."""
+        
+    def _get_initial_instruction(self) -> str:
+        """Get initial instruction for starting the domino task."""
+        return """Please start by observing the domino setup. Look at the arrangement pattern, spacing, and orientation of the dominoes. 
+Once you understand the setup, push the first domino with appropriate force to start the chain reaction.
 
-    def get_optimal_solution(self) -> List[str]:
-        return ["push pusher towards domino_1"]
-
-    def reset_task(self) -> None:
-        if self.environment:
-            self.environment.reset()
-            self.setup_task(self.environment)
-
-    def get_task_specific_context(self) -> Dict[str, Any]:
+Remember to:
+1. First observe the scene to understand the domino layout
+2. Push the first domino (usually domino_1) to start the chain
+3. Wait for the chain reaction to complete
+4. Check the solution to see how many dominoes fell
+5. If needed, you can observe from different angles or make additional pushes"""
+        
+    def _calculate_optimal_steps(self) -> int:
+        """Calculate optimal steps for domino task."""
+        # Basic domino tasks typically require:
+        # 1. Observe initial setup
+        # 2. Push first domino  
+        # 3. Wait for chain reaction
+        # 4. Check solution
+        
+        base_steps = 4
+        
+        # Adjust based on difficulty and arrangement
+        if self.difficulty in [TaskDifficulty.HARD, TaskDifficulty.VERY_HARD]:
+            base_steps += 2  # May need additional observations or pushes
+            
+        if self.domino_config.arrangement_pattern in ["zigzag", "circle"]:
+            base_steps += 1  # More complex arrangements may need extra step
+            
+        return base_steps
+        
+    def get_expected_success_rate(self) -> float:
+        """Get expected success rate for this task configuration."""
+        base_rates = {
+            TaskDifficulty.VERY_EASY: 0.95,
+            TaskDifficulty.EASY: 0.90,
+            TaskDifficulty.MEDIUM: 0.80,
+            TaskDifficulty.HARD: 0.65,
+            TaskDifficulty.VERY_HARD: 0.50
+        }
+        
+        base_rate = base_rates.get(self.difficulty, 0.80)
+        
+        # Adjust based on arrangement complexity
+        arrangement_adjustments = {
+            "line": 0.0,
+            "curve": -0.05,
+            "zigzag": -0.10,
+            "circle": -0.15
+        }
+        
+        adjustment = arrangement_adjustments.get(self.domino_config.arrangement_pattern, 0.0)
+        
+        return max(0.1, min(1.0, base_rate + adjustment))
+        
+    def get_task_metrics(self) -> Dict[str, Any]:
+        """Get task-specific metrics for evaluation."""
         return {
-            "num_dominoes": len(self.domino_names),
-            "objects": list(self.domino_names),
-            "hint": "You can call tools: observe, move, push, pick, place.",
+            "num_dominoes": self.domino_config.num_dominoes,
+            "arrangement_pattern": self.domino_config.arrangement_pattern,
+            "domino_spacing": self.domino_config.domino_spacing,
+            "expected_success_rate": self.get_expected_success_rate(),
+            "optimal_steps": self.optimal_steps,
+            "difficulty_multiplier": self.get_difficulty_multiplier()
         }

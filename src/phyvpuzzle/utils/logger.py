@@ -1,129 +1,80 @@
-"""
-Experiment Logger Module
-
-Provides structured logging for VLM multi-turn interactions, including
-inputs, outputs, images, and errors. Directory layout:
-
-logs/{model_name}/{task_name}/{timestamp}/
-├── trial_info.json
-└── rounds/
-    ├── round_01/
-    │   ├── input.json
-    │   ├── output.json
-    │   ├── pre_action.png
-    │   └── post_action.png
-    └── ...
-"""
-
-from __future__ import annotations
-
-import json
 import os
-import time
-import traceback
-from dataclasses import asdict
-from pathlib import Path
-from typing import Any, Dict, Optional
+import json
+import pandas as pd
+from datetime import datetime
+from typing import Any, Dict, List
+
 from PIL import Image
 
 
 class ExperimentLogger:
-    """Structured experiment logger for multi-turn VLM interaction."""
-
-    def __init__(self, base_dir: str | Path = "logs") -> None:
-        self.base_dir = Path(base_dir)
-        self.model_name: Optional[str] = None
-        self.task_name: Optional[str] = None
-        self.timestamp: Optional[str] = None
-        self.current_round_dir: Optional[Path] = None
-        self.trial_dir: Optional[Path] = None
-        self.round_index: int = 0
-
-    @staticmethod
-    def _sanitize(name: str) -> str:
-        return "".join(c if c.isalnum() or c in ("-", "_", ".") else "_" for c in name)[:128]
-
-    def start_trial(self, model_name: str, task_name: str) -> Path:
-        self.model_name = self._sanitize(model_name)
-        self.task_name = self._sanitize(task_name)
-        self.timestamp = time.strftime("%Y%m%d-%H%M%S")
-
-        self.trial_dir = self.base_dir / self.model_name / self.task_name / self.timestamp
-        rounds_dir = self.trial_dir / "rounds"
-        rounds_dir.mkdir(parents=True, exist_ok=True)
-        return self.trial_dir
-
-    def start_round(self, round_index: int) -> Path:
-        assert self.trial_dir is not None, "Call start_trial() first"
-        self.round_index = round_index
-        self.current_round_dir = self.trial_dir / "rounds" / f"round_{round_index:02d}"
-        self.current_round_dir.mkdir(parents=True, exist_ok=True)
-        return self.current_round_dir
-
-    def log_input(self, data: Dict[str, Any]) -> None:
-        assert self.current_round_dir is not None, "Call start_round() first"
-        path = self.current_round_dir / "input.json"
-        with path.open("w", encoding="utf-8") as f:
-            json.dump(data, f, ensure_ascii=False, indent=2)
-
-    def log_output(self, data: Dict[str, Any]) -> None:
-        assert self.current_round_dir is not None, "Call start_round() first"
-        path = self.current_round_dir / "output.json"
-        # Avoid dumping non-serializable raw SDK objects
-        safe_data: Dict[str, Any] = {}
-        for k, v in data.items():
-            if k == "raw_response":
-                try:
-                    # Try to convert to plain dict if possible
-                    safe_data[k] = getattr(v, "model_dump", lambda: str(v))()
-                except Exception:
-                    safe_data[k] = str(v)
-            else:
-                safe_data[k] = v
-        with path.open("w", encoding="utf-8") as f:
-            json.dump(safe_data, f, ensure_ascii=False, indent=2)
-
-    def save_image(self, image: Image.Image, name: str) -> None:
-        """Save an image to the current round directory.
-        
-        Args:
-            image: PIL Image to save
-            name: Filename for the image (e.g., "pre_action.png", "multi_view.png")
+    def __init__(self, log_dir: str, experiment_name: str):
         """
-        assert self.current_round_dir is not None, "Call start_round() first"
-        image_path = self.current_round_dir / name
-        image.save(str(image_path))
-    
-    def save_multi_view_images(self, renderer, prefix: str = "view") -> None:
-        """Save individual views from multi-view renderer.
-        
+        Initializes the logger for an experiment.
+
         Args:
-            renderer: MultiViewRenderer instance
-            prefix: Prefix for image names (e.g., "pre_action", "post_action")
+            log_dir (str): The base directory for logs.
+            experiment_name (str): A unique name for the experiment.
         """
-        assert self.current_round_dir is not None, "Call start_round() first"
-        
-        # Save combined multi-view image
-        multi_view = renderer.render_multi_view()
-        self.save_image(multi_view, f"{prefix}_multi.png")
-        
-        # Save individual views
-        views = ['top', 'front', 'front_top', 'side']
-        for view_name in views:
-            view_image = renderer.render_single_view(view_name)
-            self.save_image(view_image, f"{prefix}_{view_name}.png")
+        self.timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        self.experiment_name = f"{experiment_name}_{self.timestamp}"
+        self.run_dir = os.path.join(log_dir, self.experiment_name)
+        self.images_dir = os.path.join(self.run_dir, "images")
+        self.logs = []
 
-    def log_error(self, error: BaseException) -> None:
-        assert self.trial_dir is not None, "Call start_trial() first"
-        error_path = self.trial_dir / "errors.log"
-        with error_path.open("a", encoding="utf-8") as f:
-            f.write("\n" + "=" * 80 + "\n")
-            f.write(time.strftime("%Y-%m-%d %H:%M:%S"))
-            f.write("\n")
-            traceback.print_exc(file=f)
+        # Create directories
+        os.makedirs(self.run_dir, exist_ok=True)
+        os.makedirs(self.images_dir, exist_ok=True)
 
-    def save_trial_info(self, info: Dict[str, Any]) -> None:
-        assert self.trial_dir is not None, "Call start_trial() first"
-        path = self.trial_dir / "trial_info.json"
-        with path.open("w", encoding="utf-8") as f:
-            json.dump(info, f, ensure_ascii=False, indent=2)
+    def log_step(self, step: int, data: Dict[str, Any]):
+        """
+        Logs a single step of the experiment.
+
+        Args:
+            step (int): The current step number.
+            data (Dict[str, Any]): A dictionary of data to log for the step.
+                                   This can include prompts, responses, state info, etc.
+        """
+        log_entry = {"step": step, **data}
+
+        # Handle image saving
+        if "image" in log_entry and isinstance(log_entry["image"], Image.Image):
+            image_path = os.path.join(self.images_dir, f"step_{step}.png")
+            log_entry["image"].save(image_path)
+            log_entry["image_path"] = image_path
+            del log_entry["image"]
+        
+        # TODO: Handle saving of three-view images if required.
+
+        self.logs.append(log_entry)
+
+    def save_logs(self):
+        """Saves all collected logs to a JSON file."""
+        log_file = os.path.join(self.run_dir, "experiment_log.json")
+        with open(log_file, "w") as f:
+            json.dump(self.logs, f, indent=4)
+        print(f"Logs saved to {log_file}")
+
+    def save_results_to_excel(self, results: Dict[str, Any], excel_path: str):
+        """
+        Saves the final evaluation results to an Excel file.
+        If the file exists, it appends the new results.
+
+        Args:
+            results (Dict[str, Any]): A dictionary of evaluation results.
+            excel_path (str): The path to the output Excel file.
+        """
+        results_df = pd.DataFrame([results])
+
+        if os.path.exists(excel_path):
+            try:
+                existing_df = pd.read_excel(excel_path)
+                updated_df = pd.concat([existing_df, results_df], ignore_index=True)
+            except Exception as e:
+                print(f"Could not read existing excel file: {e}. Creating a new one.")
+                updated_df = results_df
+        else:
+            updated_df = results_df
+
+        updated_df.to_excel(excel_path, index=False)
+        print(f"Results saved to {excel_path}")

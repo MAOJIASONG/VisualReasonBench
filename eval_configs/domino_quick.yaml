@@ -1,0 +1,49 @@
+# Configuration for Domino Falling Puzzle experiment
+
+runner:
+  experiment_name: domino_quick_test
+  log_dir: "logs"
+  results_excel_path: "logs/experiment_results.xlsx"
+  max_steps: 15
+  save_images: true
+  save_multi_view: true
+  save_trajectory: true
+
+agent:
+  model_name: "gpt-4o"
+  # api_key and base_url can be set as environment variables
+  # or directly here.
+  # api_key: "YOUR_API_KEY"
+  # base_url: "https://api.openai.com/v1"
+  temperature: 0.7
+  max_tokens: 500
+  timeout: 30.0
+
+judge_agent:
+  model_name: "gpt-4o"
+  # api_key: "YOUR_API_KEY"
+  # base_url: "https://api.openai.com/v1"
+  temperature: 0.1
+  max_tokens: 200
+  timeout: 30.0
+
+environment:
+  type: "pybullet"
+  gui: false
+  urdf_base_path: "src/phyvpuzzle/environment/phobos_models"
+  gravity: -9.81
+  render_width: 512
+  render_height: 512
+  multi_view: true
+  load_table: true
+
+task:
+  name: "domino_very_easy"
+  type: "domino"
+  difficulty: "very_easy"
+  max_steps: 10
+  time_limit: 120.0
+  parameters:
+    num_dominoes: 3
+    arrangement_pattern: "line"
+    domino_spacing: 0.08

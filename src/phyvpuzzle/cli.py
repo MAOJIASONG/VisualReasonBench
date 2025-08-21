@@ -1,364 +1,302 @@
 """
-Command Line Interface Module
-
-This module provides a command-line interface for the PhyVPuzzle benchmark.
+Command-line interface for PhyVPuzzle benchmark.
 """
 
 import argparse
 import sys
-import os
-from typing import List, Optional, Dict, Any
-import json
+from typing import Optional
 from pathlib import Path
 
-from .core.pipeline import PhysicalReasoningPipeline, PipelineConfig, create_pipeline
-from .tasks.base_task import BaseTask, create_task_config
-from .evaluation.metrics import evaluate_model_performance, ComprehensiveEvaluator
+from .core.config import Config, load_config, create_default_config, validate_config
+from .core.base import TaskType, TaskDifficulty
+from .runner import BenchmarkRunner
+from .evaluation.evaluator import BenchmarkEvaluator
+from .evaluation.metrics import MetricsCalculator
 
 
 def create_parser() -> argparse.ArgumentParser:
-    """Create command line argument parser."""
+    """Create command-line argument parser."""
     parser = argparse.ArgumentParser(
-        description="PhyVPuzzle: Physical Visual Reasoning Benchmark",
+        description="PhyVPuzzle: Physics-based Visual Reasoning Benchmark",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  # Run Domino task once with GUI
-  phyvpuzzle run --task-type dominoes --difficulty easy --gui
-
-  # Generate sample tasks
-  phyvpuzzle generate --task-type dominoes --count 10 --output tasks.json
-
-  # Evaluate with custom configuration
-  phyvpuzzle evaluate --config config.json --output results.json
+  # Run single domino task
+  phyvpuzzle run --config domino_config.yaml
+  
+  # Run benchmark with multiple trials
+  phyvpuzzle benchmark --config config.yaml --num-runs 5
+  
+  # Evaluate existing results
+  phyvpuzzle evaluate --results-dir logs/
+  
+  # Create default config
+  phyvpuzzle create-config --output config.yaml
         """
     )
     
-    subparsers = parser.add_subparsers(dest='command', help='Available commands')
-    
-    # Evaluate command
-    eval_parser = subparsers.add_parser('evaluate', help='Evaluate model performance')
-    eval_parser.add_argument('--task-type', choices=['dominoes'], 
-                            required=True, help='Type of task to evaluate')
-    eval_parser.add_argument('--difficulty', choices=['very-easy', 'easy', 'medium', 'hard', 'expert'],
-                            default='medium', help='Task difficulty level')
-    eval_parser.add_argument('--num-runs', type=int, default=8,
-                            help='Number of runs per task for Pass@K metric')
-    eval_parser.add_argument('--vllm-type', choices=['openai', 'huggingface'],
-                            default='openai', help='Type of VLLM to use')
-    eval_parser.add_argument('--vllm-model', default='gpt-4o',
-                            help='VLLM model name')
-    eval_parser.add_argument('--translator-type', choices=['rule_based', 'llm'],
-                            default='rule_based', help='Type of translator to use')
-    eval_parser.add_argument('--output', '-o', help='Output file for results')
-    eval_parser.add_argument('--config', help='Configuration file (JSON)')
-    eval_parser.add_argument('--verbose', '-v', action='store_true',
-                            help='Verbose output')
+    subparsers = parser.add_subparsers(dest="command", help="Available commands")
     
     # Run command
-    run_parser = subparsers.add_parser('run', help='Run a single task')
-    run_parser.add_argument('--task-type', choices=['dominoes'],
-                           required=True, help='Type of task to run')
-    run_parser.add_argument('--difficulty', choices=['very-easy', 'easy', 'medium', 'hard', 'expert'],
-                           default='medium', help='Task difficulty level')
-    run_parser.add_argument('--gui', action='store_true',
-                           help='Show PyBullet GUI')
-    run_parser.add_argument('--vllm-type', choices=['openai', 'huggingface'],
-                           default='openai', help='Type of VLLM to use')
-    run_parser.add_argument('--vllm-model', default='gpt-4o',
-                           help='VLLM model name')
-    run_parser.add_argument('--config', help='Configuration file (JSON)')
-    run_parser.add_argument('--num-runs', type=int, default=1, help='Number of attempts for the task')
-    run_parser.add_argument('--max-steps', type=int, default=5,
-                           help='Maximum number of steps')
-    run_parser.add_argument('--timeout', type=float, default=300.0,
-                           help='Timeout in seconds')
-    run_parser.add_argument('--physics-settle-time', type=float, default=2.0,
-                           help='Time to wait for physics to settle after actions (seconds)')
-    run_parser.add_argument('--verbose', '-v', action='store_true',
-                           help='Verbose output')
+    run_parser = subparsers.add_parser("run", help="Run single task instance")
+    run_parser.add_argument("--config", "-c", required=True, help="Path to configuration file")
+    run_parser.add_argument("--gui", action="store_true", help="Enable physics simulation GUI")
+    run_parser.add_argument("--task-type", choices=[t.value for t in TaskType], help="Override task type")
+    run_parser.add_argument("--difficulty", choices=[d.value for d in TaskDifficulty], help="Override difficulty")
+    run_parser.add_argument("--model", help="Override model name")
+    run_parser.add_argument("--output-dir", help="Override output directory")
     
-    # Generate command
-    gen_parser = subparsers.add_parser('generate', help='Generate sample tasks')
-    gen_parser.add_argument('--task-type', choices=['dominoes'],
-                           required=True, help='Type of task to generate')
-    gen_parser.add_argument('--count', type=int, default=10,
-                           help='Number of tasks to generate')
-    gen_parser.add_argument('--difficulty', choices=['very-easy', 'easy', 'medium', 'hard', 'expert'],
-                           default='medium', help='Task difficulty level')
-    gen_parser.add_argument('--output', '-o', required=True,
-                           help='Output file for generated tasks')
+    # Benchmark command
+    benchmark_parser = subparsers.add_parser("benchmark", help="Run complete benchmark")
+    benchmark_parser.add_argument("--config", "-c", required=True, help="Path to configuration file")
+    benchmark_parser.add_argument("--num-runs", "-n", type=int, default=1, help="Number of task runs")
+    benchmark_parser.add_argument("--gui", action="store_true", help="Enable physics simulation GUI")
+    benchmark_parser.add_argument("--model", help="Override model name")
+    benchmark_parser.add_argument("--output-dir", help="Override output directory")
+    
+    # Evaluate command
+    eval_parser = subparsers.add_parser("evaluate", help="Evaluate existing results")
+    eval_parser.add_argument("--results-dir", required=True, help="Directory containing result files")
+    eval_parser.add_argument("--output", help="Output file for evaluation results")
+    eval_parser.add_argument("--compare-models", nargs="+", help="Compare specific models")
+    
+    # Create config command
+    config_parser = subparsers.add_parser("create-config", help="Create default configuration file")
+    config_parser.add_argument("--output", "-o", default="config.yaml", help="Output configuration file")
+    config_parser.add_argument("--task-type", choices=[t.value for t in TaskType], default="domino", help="Default task type")
+    config_parser.add_argument("--difficulty", choices=[d.value for d in TaskDifficulty], default="very_easy", help="Default difficulty")
+    
+    # Validate config command
+    validate_parser = subparsers.add_parser("validate-config", help="Validate configuration file")
+    validate_parser.add_argument("config", help="Configuration file to validate")
     
     return parser
 
 
-def load_config(config_path: str) -> Dict[str, Any]:
-    """Load configuration from JSON file."""
+def run_command(args) -> int:
+    """Execute run command."""
     try:
-        with open(config_path, 'r') as f:
-            return json.load(f)
-    except FileNotFoundError:
-        print(f"Error: Configuration file '{config_path}' not found.")
-        sys.exit(1)
-    except json.JSONDecodeError as e:
-        print(f"Error: Invalid JSON in configuration file: {e}")
-        sys.exit(1)
-
-
-def save_results(results: Dict[str, Any], output_path: str) -> None:
-    """Save results to JSON file."""
-    try:
-        with open(output_path, 'w') as f:
-            json.dump(results, f, indent=2, default=str)
-        print(f"Results saved to {output_path}")
-    except Exception as e:
-        print(f"Error saving results: {e}")
-
-
-def create_sample_tasks(task_type: str, difficulty: str, count: int) -> List[BaseTask]:
-    """Create sample tasks for testing."""
-    tasks = []
-    
-    for i in range(count):
-        config = create_task_config(
-            task_type=task_type,
-            difficulty=difficulty,
-            max_steps=100,
-            parameters={"task_id": f"{task_type}_{difficulty}_{i}"}
-        )
+        # Load configuration
+        config = load_config(args.config)
         
-        # Create task based on type
-        if task_type == "puzzle":
-            from .tasks.puzzle_task import PuzzleTask
-            task = PuzzleTask(config)
-        elif task_type == "lego":
-            from .tasks.lego_task import LegoTask
-            task = LegoTask(config)
-        elif task_type == "dominoes":
-            from .tasks.domino_task import DominoTask
-            task = DominoTask(config)
-        else:
-            raise ValueError(f"Unknown task type: {task_type}")
-        
-        tasks.append(task)
-    
-    return tasks
-
-
-def run_evaluation(args) -> None:
-    """Run evaluation command."""
-    # Load configuration
-    config_dict = {}
-    if args.config:
-        config_dict = load_config(args.config)
-    
-    # Create pipeline configuration
-    pipeline_config = PipelineConfig(
-        vllm_type=args.vllm_type,
-        vllm_model=args.vllm_model,
-        translator_type=args.translator_type,
-        enable_logging=args.verbose,
-        log_level="DEBUG" if args.verbose else "INFO"
-    )
-    
-    # Override with config file values
-    for key, value in config_dict.items():
-        if hasattr(pipeline_config, key):
-            setattr(pipeline_config, key, value)
-    
-    print(f"Starting evaluation: {args.task_type} tasks, {args.difficulty} difficulty")
-    print(f"VLLM: {pipeline_config.vllm_type} ({pipeline_config.vllm_model})")
-    print(f"Translator: {pipeline_config.translator_type}")
-    print(f"Runs per task: {args.num_runs}")
-    
-    try:
-        # Create pipeline
-        with create_pipeline(pipeline_config) as pipeline:
-            # Create tasks
-            tasks = create_sample_tasks(args.task_type, args.difficulty, 10)
+        # Apply command line overrides
+        if args.gui:
+            config.environment.gui = True
+        if args.task_type:
+            config.task.type = TaskType(args.task_type)
+        if args.difficulty:
+            config.task.difficulty = TaskDifficulty(args.difficulty)
+        if args.model:
+            config.agent.model_name = args.model
+        if args.output_dir:
+            config.runner.log_dir = args.output_dir
             
-            # Run evaluation
-            print(f"Evaluating on {len(tasks)} tasks...")
-            evaluation_result = evaluate_model_performance(
-                pipeline, tasks, num_runs=args.num_runs
-            )
-            
-            # Generate report
-            evaluator = ComprehensiveEvaluator()
-            report = evaluator.generate_report(evaluation_result)
-            print(report)
-            
-            # Save results if requested
-            if args.output:
-                results_dict = {
-                    "configuration": {
-                        "task_type": args.task_type,
-                        "difficulty": args.difficulty,
-                        "num_runs": args.num_runs,
-                        "vllm_type": pipeline_config.vllm_type,
-                        "vllm_model": pipeline_config.vllm_model,
-                        "translator_type": pipeline_config.translator_type
-                    },
-                    "results": {
-                        "total_tasks": evaluation_result.total_tasks,
-                        "successful_tasks": evaluation_result.successful_tasks,
-                        "metrics": evaluation_result.metrics,
-                        "metadata": evaluation_result.metadata
-                    }
-                }
-                save_results(results_dict, args.output)
+        # Validate configuration
+        issues = validate_config(config)
+        for issue in issues:
+            if issue.startswith("ERROR"):
+                print(f"Configuration error: {issue}")
+                return 1
+            else:
+                print(f"Configuration warning: {issue}")
                 
+        # Create and run benchmark
+        runner = BenchmarkRunner(config)
+        runner.setup()
+        
+        result = runner.run_single_task()
+        
+        print(f"\nTask Result:")
+        print(f"Success: {result.success}")
+        print(f"Steps: {result.total_steps}")
+        print(f"Time: {result.execution_time:.2f}s")
+        
+        if result.error_message:
+            print(f"Error: {result.error_message}")
+            return 1
+            
+        return 0
+        
     except Exception as e:
-        print(f"Error during evaluation: {e}")
-        if args.verbose:
-            import traceback
-            traceback.print_exc()
-        sys.exit(1)
+        print(f"Error running task: {e}")
+        return 1
 
 
-def run_single_task(args) -> None:
-    """Run single task command."""
-    # Load configuration
-    config_dict = {}
-    default_config_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), '..', 'configs', 'default_config.json')
-    default_config_path = os.path.abspath(default_config_path)
-    if os.path.exists(default_config_path):
-        try:
-            with open(default_config_path, 'r') as f:
-                config_dict = json.load(f)
-        except Exception:
-            config_dict = {}
-    if args.config:
-        try:
-            with open(args.config, 'r') as f:
-                config_dict.update(json.load(f))
-        except Exception:
-            pass
-
-    # Create pipeline configuration with defaults and overrides
-    pipeline_config = PipelineConfig(
-        vllm_type=config_dict.get('vllm_type', args.vllm_type),
-        vllm_model=config_dict.get('vllm_model', args.vllm_model),
-        max_iterations=config_dict.get('max_iterations', args.max_steps),
-        timeout=config_dict.get('timeout', args.timeout),
-        physics_settle_time=config_dict.get('physics_settle_time', getattr(args, 'physics_settle_time', 2.0)),
-        environment_type=config_dict.get('environment_type', 'pybullet'),
-        gui=bool(args.gui),
-        enable_logging=bool(config_dict.get('enable_logging', args.verbose)),
-        log_level=config_dict.get('log_level', 'DEBUG' if args.verbose else 'INFO'),
-        feedback_history_size=config_dict.get('feedback_history_size', 5),
-        retry_attempts=config_dict.get('retry_attempts', 3),
-    )
-    
-    print(f"Running single task: {args.task_type} ({args.difficulty})")
-    print(f"VLLM: {pipeline_config.vllm_type} ({pipeline_config.vllm_model})")
-    print(f"GUI: {'Enabled' if args.gui else 'Disabled'}")
-    print(f"Physics settle time: {pipeline_config.physics_settle_time}s")
-    
+def benchmark_command(args) -> int:
+    """Execute benchmark command."""
     try:
-        # Create pipeline
-        with create_pipeline(pipeline_config) as pipeline:
-            # Create single task
-            tasks = create_sample_tasks(args.task_type, args.difficulty, 1)
-            task = tasks[0]
+        # Load configuration
+        config = load_config(args.config)
+        
+        # Apply command line overrides
+        if args.gui:
+            config.environment.gui = True
+        if args.model:
+            config.agent.model_name = args.model
+        if args.output_dir:
+            config.runner.log_dir = args.output_dir
             
-            # Run task
-            print("Starting task execution...")
-            result = pipeline.execute_task(task)
-            
-            # Display results
-            print(f"\nTask completed!")
-            print(f"Success: {result.success}")
-            print(f"Final Score: {result.final_score:.3f}")
-            print(f"Steps Taken: {result.steps_taken}")
-            print(f"Time Taken: {result.time_taken:.2f}s")
-            
-            if result.error_message:
-                print(f"Error: {result.error_message}")
-            
-            # Show execution summary
-            summary = pipeline.get_execution_summary()
-            print(f"\nExecution Summary:")
-            print(f"Total Steps: {summary['total_steps']}")
-            print(f"Successful Steps: {summary['successful_steps']}")
-            print(f"Success Rate: {summary['success_rate']:.3f}")
-            print(f"Average Step Time: {summary['avg_step_time']:.3f}s")
-            
+        # Validate configuration
+        issues = validate_config(config)
+        for issue in issues:
+            if issue.startswith("ERROR"):
+                print(f"Configuration error: {issue}")
+                return 1
+            else:
+                print(f"Configuration warning: {issue}")
+                
+        # Create and run benchmark
+        runner = BenchmarkRunner(config)
+        runner.setup()
+        
+        runner.run_benchmark(num_runs=args.num_runs)
+        
+        return 0
+        
     except Exception as e:
-        print(f"Error during task execution: {e}")
-        if args.verbose:
-            import traceback
-            traceback.print_exc()
-        sys.exit(1)
+        print(f"Error running benchmark: {e}")
+        return 1
 
 
-def generate_tasks(args) -> None:
-    """Generate sample tasks command."""
-    print(f"Generating {args.count} {args.task_type} tasks ({args.difficulty})")
-    
+def evaluate_command(args) -> int:
+    """Execute evaluate command."""
     try:
-        # Create tasks
-        tasks = create_sample_tasks(args.task_type, args.difficulty, args.count)
+        import json
+        import os
+        import glob
         
-        # Convert to serializable format
-        task_data = []
-        for i, task in enumerate(tasks):
-            task_info = {
-                "id": i,
-                "type": args.task_type,
-                "difficulty": args.difficulty,
-                "description": task.get_task_description(),
-                "max_steps": task.config.max_steps,
-                "time_limit": task.config.time_limit,
-                "parameters": task.config.parameters
-            }
-            task_data.append(task_info)
+        results_dir = Path(args.results_dir)
         
-        # Save to file
-        output_data = {
-            "metadata": {
-                "task_type": args.task_type,
-                "difficulty": args.difficulty,
-                "count": args.count,
-                "generated_at": str(Path(__file__).stat().st_mtime)
-            },
-            "tasks": task_data
-        }
+        if not results_dir.exists():
+            print(f"Results directory not found: {results_dir}")
+            return 1
+            
+        # Find result files
+        result_files = list(results_dir.glob("**/benchmark_result.json"))
+        result_files.extend(results_dir.glob("**/*_evaluation_report.json"))
         
-        save_results(output_data, args.output)
-        print(f"Generated {len(task_data)} tasks successfully!")
+        if not result_files:
+            print(f"No result files found in {results_dir}")
+            return 1
+            
+        print(f"Found {len(result_files)} result files")
+        
+        # Load and evaluate results
+        all_task_results = []
+        
+        for result_file in result_files:
+            try:
+                with open(result_file, 'r') as f:
+                    data = json.load(f)
+                    
+                # Extract task results (implementation would depend on file format)
+                # This is a simplified version
+                print(f"Loaded results from: {result_file}")
+                
+            except Exception as e:
+                print(f"Error loading {result_file}: {e}")
+                continue
+                
+        # Calculate metrics
+        calculator = MetricsCalculator()
+        
+        if all_task_results:
+            evaluation_result = calculator.calculate_comprehensive_metrics(all_task_results)
+            
+            # Print results
+            print("\nEvaluation Results:")
+            print(f"Accuracy: {evaluation_result.accuracy:.1%}")
+            
+            if evaluation_result.pass_at_k:
+                for k, rate in evaluation_result.pass_at_k.items():
+                    print(f"Pass@{k}: {rate:.1%}")
+                    
+            # Save results if output specified
+            if args.output:
+                evaluator = BenchmarkEvaluator({})
+                evaluator.export_results_to_excel(evaluation_result, args.output)
+                print(f"Results saved to: {args.output}")
+        else:
+            print("No task results to evaluate")
+            
+        return 0
         
     except Exception as e:
-        print(f"Error generating tasks: {e}")
-        sys.exit(1)
+        print(f"Error evaluating results: {e}")
+        return 1
 
 
-def main() -> None:
+def create_config_command(args) -> int:
+    """Execute create-config command."""
+    try:
+        config = create_default_config(args.output)
+        
+        # Apply overrides
+        config.task.type = TaskType(args.task_type)
+        config.task.difficulty = TaskDifficulty(args.difficulty)
+        
+        print(f"Created default configuration: {args.output}")
+        print("Please edit the configuration file to set your API keys and other preferences.")
+        
+        return 0
+        
+    except Exception as e:
+        print(f"Error creating config: {e}")
+        return 1
+
+
+def validate_config_command(args) -> int:
+    """Execute validate-config command."""
+    try:
+        config = load_config(args.config)
+        issues = validate_config(config)
+        
+        if issues:
+            print("Configuration validation results:")
+            for issue in issues:
+                print(f"  {issue}")
+                
+            # Check if there are any errors
+            errors = [issue for issue in issues if issue.startswith("ERROR")]
+            if errors:
+                print(f"\n{len(errors)} error(s) found. Please fix before running.")
+                return 1
+            else:
+                print(f"\n{len(issues)} warning(s) found, but configuration is valid.")
+        else:
+            print("Configuration is valid!")
+            
+        return 0
+        
+    except Exception as e:
+        print(f"Error validating config: {e}")
+        return 1
+
+
+def main() -> int:
     """Main CLI entry point."""
     parser = create_parser()
+    
+    if len(sys.argv) == 1:
+        parser.print_help()
+        return 1
+        
     args = parser.parse_args()
     
-    if not args.command:
-        parser.print_help()
-        sys.exit(1)
-    
-    # Set up environment
-    if args.command in ['evaluate', 'run']:
-        # Check for required environment variables
-        if args.vllm_type == 'openai' and not os.getenv('OPENAI_API_KEY'):
-            print("Warning: OPENAI_API_KEY environment variable not set")
-    
-    # Execute command
-    if args.command == 'evaluate':
-        run_evaluation(args)
-    elif args.command == 'run':
-        run_single_task(args)
-    elif args.command == 'generate':
-        generate_tasks(args)
+    if args.command == "run":
+        return run_command(args)
+    elif args.command == "benchmark":
+        return benchmark_command(args)
+    elif args.command == "evaluate":
+        return evaluate_command(args)
+    elif args.command == "create-config":
+        return create_config_command(args)
+    elif args.command == "validate-config":
+        return validate_config_command(args)
     else:
         parser.print_help()
-        sys.exit(1)
+        return 1
 
 
 if __name__ == "__main__":
-    main() 
+    sys.exit(main())
