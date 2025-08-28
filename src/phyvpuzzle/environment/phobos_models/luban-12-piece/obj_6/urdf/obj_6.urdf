@@ -1,0 +1,37 @@
+<robot name="obj_6" version="1.0">
+  <link name="obj_6_link">
+    <collision name="obj_6_collision_1">
+      <origin rpy="-0.00000 -0.00000 -3.14159" xyz="-1.22922 1.87792 0.61074"/>
+      <geometry>
+        <mesh filename="../meshes/obj/Cube.017.obj" scale="0.53984 0.52905 0.53984"/>
+      </geometry>
+    </collision>
+    <collision name="obj_6_collision_2">
+      <origin rpy="-0.00000 -0.00000 -3.14159" xyz="-1.22899 0.25021 0.61074"/>
+      <geometry>
+        <mesh filename="../meshes/obj/Cube.018.obj" scale="0.53984 0.52905 0.53984"/>
+      </geometry>
+    </collision>
+    <collision name="obj_6_collision_3">
+      <origin rpy="0.00000 -0.00000 -3.14159" xyz="-1.22934 1.06479 0.50947"/>
+      <geometry>
+        <mesh filename="../meshes/obj/Cube.019.obj" scale="1.07969 3.28225 0.53984"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <inertia ixx="0.56523" ixy="-0.00000" ixz="-0.00000" iyy="0.04113" iyz="0.00000" izz="0.55966"/>
+      <origin rpy="0.00000 0.00000 0.00000" xyz="-1.22991 1.06409 0.56620"/>
+      <mass value="5.00000"/>
+    </inertial>
+    <visual name="obj_6">
+      <material name="turnarrow"/>
+      <origin rpy="-0.00000 -0.00000 -3.14159" xyz="-1.22991 1.06409 0.56620"/>
+      <geometry>
+        <mesh filename="../meshes/obj/luban-lock-sliding.005.obj" scale="0.02699 0.02699 0.02699"/>
+      </geometry>
+    </visual>
+  </link>
+  <material name="turnarrow">
+    <color rgba="0.23137 0.44706 0.80000 1.00000"/>
+  </material>
+</robot>
