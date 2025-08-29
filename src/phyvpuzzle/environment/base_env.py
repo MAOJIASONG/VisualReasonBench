@@ -138,14 +138,8 @@ except ImportError:
 
 from ..core.base import BaseEnvironment, Action, State, Observation
 
-# Import SecondHandManager for automatic holding (optional)
-try:
-    from ..manipulation.second_hand_manager import SecondHandManager
-
-    SECOND_HAND_AVAILABLE = True
-except ImportError:
-    SECOND_HAND_AVAILABLE = False
-    SecondHandManager = None
+# Note: Global automatic holding (SecondHandManager) has been removed. Tools
+# operate explicitly; placement can apply a local temporary hold on the target.
 
 
 @dataclass
@@ -228,8 +222,7 @@ class PhysicsEnvironment(BaseEnvironment):
         self.active_constraints = {}  # {object_name: constraint_id}
         self.picked_objects = set()  # Track which objects are currently picked
 
-        # Second hand manager for automatic holding (set by subclasses)
-        self.second_hand_manager = None
+        # No global automatic holding; some tools may apply local stabilization
 
         # Camera configuration
         self.camera_config = CameraConfig(
@@ -386,6 +379,7 @@ class PhysicsEnvironment(BaseEnvironment):
             "pick",
             "release",
             "move",
+            "place",
             "push",
             "pull",
             "rotate",
@@ -459,6 +453,59 @@ class PhysicsEnvironment(BaseEnvironment):
                     },
                 },
                 ["object_id", "position"],
+            ),
+            build_schema(
+                "place",
+                "Place a picked object on top of a target object's top surface with optional stabilization.",
+                {
+                    "object_id": {"type": "string", "description": "Picked object to place"},
+                    "target_id": {"type": "string", "description": "Target object to place onto"},
+                    "offset_xy": {
+                        "type": "array",
+                        "items": {"type": "number"},
+                        "minItems": 2,
+                        "maxItems": 2,
+                        "default": [0.0, 0.0],
+                        "description": "Lateral offset on target top plane [dx, dy]",
+                    },
+                    "offset_local": {
+                        "type": "boolean",
+                        "default": True,
+                        "description": "Interpret offset_xy in target local frame",
+                    },
+                    "align_orientation": {
+                        "type": "string",
+                        "enum": ["keep", "align_target", "snap_90"],
+                        "default": "align_target",
+                        "description": "Yaw alignment policy",
+                    },
+                    "clearance": {
+                        "type": "number",
+                        "default": 0.001,
+                        "description": "Vertical clearance above target (m)",
+                    },
+                    "release_after": {
+                        "type": "boolean",
+                        "default": False,
+                        "description": "Release after placement (free-physics only)",
+                    },
+                    "stabilize_target": {
+                        "type": "boolean",
+                        "default": True,
+                        "description": "Temporarily hold target to world during placement",
+                    },
+                    "hold_max_force": {
+                        "type": "number",
+                        "default": 300.0,
+                        "description": "Max force for temporary target hold",
+                    },
+                    "hold_erp": {
+                        "type": "number",
+                        "default": 0.4,
+                        "description": "ERP for temporary target hold",
+                    },
+                },
+                ["object_id", "target_id"],
             ),
             build_schema(
                 "push",
@@ -556,7 +603,7 @@ class PhysicsEnvironment(BaseEnvironment):
         Args:
             tool_name: Name of the tool to execute
             arguments: Tool arguments
-            disable_second_hand: If True, skip automatic holding for this action
+            disable_second_hand: Deprecated and ignored.
         """
         try:
             # Base tool implementations
@@ -568,24 +615,29 @@ class PhysicsEnvironment(BaseEnvironment):
             elif tool_name == "release":
                 return self._tool_release(arguments.get("object_id"))
             elif tool_name == "move":
-                return self._tool_move(
+                return self._tool_move(arguments.get("object_id"), arguments.get("position"))
+            elif tool_name == "place":
+                return self._tool_place(
                     arguments.get("object_id"),
-                    arguments.get("position"),
-                    disable_second_hand,
+                    arguments.get("target_id"),
+                    arguments.get("offset_xy", [0.0, 0.0]),
+                    arguments.get("offset_local", True),
+                    arguments.get("align_orientation", "align_target"),
+                    arguments.get("clearance", 0.001),
+                    arguments.get("release_after", False),
+                    arguments.get("stabilize_target", True),
+                    arguments.get("hold_max_force", 300.0),
+                    arguments.get("hold_erp", 0.4),
                 )
             elif tool_name == "push":
                 return self._tool_push(
                     arguments.get("object_id"),
                     arguments.get("force", 10.0),
                     arguments.get("direction", [1, 0, 0]),
-                    disable_second_hand,
                 )
             elif tool_name == "rotate":
                 return self._tool_rotate(
-                    arguments.get("object_id"),
-                    arguments.get("axis", "z"),
-                    arguments.get("angle", 0.0),
-                    disable_second_hand,
+                    arguments.get("object_id"), arguments.get("axis", "z"), arguments.get("angle", 0.0)
                 )
             elif tool_name == "observe":
                 return self._tool_observe(arguments.get("angle", 0.0))
@@ -859,43 +911,198 @@ class PhysicsEnvironment(BaseEnvironment):
             "picked_objects": list(self.picked_objects),
         }
 
-    def _tool_place(self, object_id: str, position: List[float]) -> Dict[str, Any]:
-        """Place tool implementation."""
+    def _tool_place(
+        self,
+        object_id: str,
+        target_id: str,
+        offset_xy: List[float] = None,
+        offset_local: bool = True,
+        align_orientation: str = "align_target",
+        clearance: float = 0.001,
+        release_after: bool = False,
+        stabilize_target: bool = True,
+        hold_max_force: float = 300.0,
+        hold_erp: float = 0.4,
+    ) -> Dict[str, Any]:
+        """Place a picked object on top of a target object's top surface.
+
+        Applies a temporary world-fixed hold on the target during placement when
+        stabilize_target is true. No auto-release; uses release_after flag.
+        """
         if not object_id or object_id not in self.objects:
             return {"status": "error", "message": f"Object {object_id} not found"}
+        if not target_id or target_id not in self.objects:
+            return {"status": "error", "message": f"Target {target_id} not found"}
+        if object_id not in self.picked_objects:
+            return {
+                "status": "error",
+                "message": f"Object {object_id} must be picked before placing",
+            }
 
-        if not position or len(position) != 3:
-            return {"status": "error", "message": "Invalid position"}
+        if offset_xy is None:
+            offset_xy = [0.0, 0.0]
 
         obj_info = self.objects[object_id]
-        p.resetBasePositionAndOrientation(
-            obj_info.object_id, position, obj_info.orientation
-        )
+        tgt_info = self.objects[target_id]
 
-        # Update object info
-        obj_info.position = tuple(position)
+        # Get target top (AABB max.z) and XY center
+        t_min, t_max = p.getAABB(tgt_info.object_id)
+        top_z = t_max[2]
+        t_xy = [(t_min[0] + t_max[0]) / 2.0, (t_min[1] + t_max[1]) / 2.0]
 
-        # Remove from held objects
-        if object_id in self.held_objects:
-            self.held_objects.remove(object_id)
+        # Object AABB and origin-offset correction
+        o_min, o_max = p.getAABB(obj_info.object_id)
+        half_h = (o_max[2] - o_min[2]) / 2.0
+        o_center = [
+            (o_min[0] + o_max[0]) / 2.0,
+            (o_min[1] + o_max[1]) / 2.0,
+            (o_min[2] + o_max[2]) / 2.0,
+        ]
+        o_pos, o_orn = p.getBasePositionAndOrientation(obj_info.object_id)
+        delta_xy = [o_pos[0] - o_center[0], o_pos[1] - o_center[1]]
+        delta_z = o_pos[2] - o_center[2]
 
-        return {"status": "success", "message": f"Placed {object_id} at {position}"}
+        # Target yaw for local offset and orientation alignment
+        t_pos, t_orn = p.getBasePositionAndOrientation(tgt_info.object_id)
+        t_euler = p.getEulerFromQuaternion(t_orn)
+        t_yaw = t_euler[2]
 
-    def _tool_move(
-        self, object_id: str, position: List[float], disable_second_hand: bool = False
-    ) -> Dict[str, Any]:
-        """Move tool implementation with optional automatic holding."""
+        # Compute world offset
+        dx, dy = float(offset_xy[0]), float(offset_xy[1])
+        if offset_local:
+            import math
+            cos_y = math.cos(t_yaw)
+            sin_y = math.sin(t_yaw)
+            wx = dx * cos_y - dy * sin_y
+            wy = dx * sin_y + dy * cos_y
+        else:
+            wx, wy = dx, dy
+
+        place_xy_world = [t_xy[0] + wx, t_xy[1] + wy]
+        pivot_xy = [place_xy_world[0] + delta_xy[0], place_xy_world[1] + delta_xy[1]]
+        pivot_z = top_z + half_h + float(clearance) + delta_z
+
+        # Orientation policy (yaw only)
+        import math
+
+        def set_yaw(base_quat, yaw):
+            cur_euler = p.getEulerFromQuaternion(base_quat, physicsClientId=self.client_id)
+            new_euler = [cur_euler[0], cur_euler[1], yaw]
+            return p.getQuaternionFromEuler(new_euler, physicsClientId=self.client_id)
+
+        if align_orientation == "keep":
+            new_orn = o_orn
+        elif align_orientation == "align_target":
+            new_orn = set_yaw(o_orn, t_yaw)
+        elif align_orientation == "snap_90":
+            cur_euler = p.getEulerFromQuaternion(o_orn, physicsClientId=self.client_id)
+            rel = cur_euler[2] - t_yaw
+            snapped = round(rel / (math.pi / 2)) * (math.pi / 2) + t_yaw
+            new_orn = set_yaw(o_orn, snapped)
+        else:
+            return {"status": "error", "message": f"Invalid align_orientation: {align_orientation}"}
+
+        # Optional target stabilization
+        temp_hold_cid = None
+        try:
+            if stabilize_target:
+                temp_hold_cid = p.createConstraint(
+                    parentBodyUniqueId=tgt_info.object_id,
+                    parentLinkIndex=-1,
+                    childBodyUniqueId=-1,
+                    childLinkIndex=-1,
+                    jointType=p.JOINT_FIXED,
+                    jointAxis=[0, 0, 0],
+                    parentFramePosition=[0, 0, 0],
+                    childFramePosition=t_pos,
+                    parentFrameOrientation=[0, 0, 0, 1],
+                    childFrameOrientation=t_orn,
+                    physicsClientId=self.client_id,
+                )
+                p.changeConstraint(
+                    temp_hold_cid,
+                    maxForce=float(hold_max_force),
+                    erp=float(hold_erp),
+                    physicsClientId=self.client_id,
+                )
+
+            # Move picked object via its constraint
+            constraint_id = self.active_constraints.get(object_id)
+            if constraint_id is None:
+                return {
+                    "status": "error",
+                    "message": f"No pick constraint found for {object_id}",
+                }
+
+            p.changeConstraint(
+                userConstraintUniqueId=constraint_id,
+                jointChildPivot=[pivot_xy[0], pivot_xy[1], pivot_z],
+                jointChildFrameOrientation=new_orn,
+                maxForce=100000,
+                physicsClientId=self.client_id,
+            )
+
+            # Simple penetration guard and settle
+            def penetration_sum():
+                contacts = p.getContactPoints(physicsClientId=self.client_id)
+                return sum(abs(c[8]) for c in contacts if c[8] < 0)
+
+            prev_pen = penetration_sum()
+            for _ in range(10):
+                p.stepSimulation(physicsClientId=self.client_id)
+                if self.gui:
+                    time.sleep(0.01)
+            cur_pen = penetration_sum()
+            if cur_pen > prev_pen + 1e-6:
+                pivot_z += max(0.0005, float(clearance) * 0.5)
+                p.changeConstraint(
+                    userConstraintUniqueId=constraint_id,
+                    jointChildPivot=[pivot_xy[0], pivot_xy[1], pivot_z],
+                    jointChildFrameOrientation=new_orn,
+                    maxForce=100000,
+                    physicsClientId=self.client_id,
+                )
+                for _ in range(10):
+                    p.stepSimulation(physicsClientId=self.client_id)
+                    if self.gui:
+                        time.sleep(0.01)
+
+        finally:
+            if temp_hold_cid is not None:
+                try:
+                    p.removeConstraint(temp_hold_cid, physicsClientId=self.client_id)
+                except Exception:
+                    pass
+
+        # Optionally release after placement
+        released = False
+        if release_after:
+            rel = self._tool_release(object_id)
+            released = rel.get("status") == "success"
+
+        # Update cached pose
+        obj_info.position = (pivot_xy[0], pivot_xy[1], pivot_z)
+        obj_info.orientation = tuple(new_orn)
+
+        msg = f"Placed {object_id} on top of {target_id}"
+        if released:
+            msg += " and released"
+        return {
+            "status": "success",
+            "message": msg,
+            "final_position": obj_info.position,
+            "final_orientation": obj_info.orientation,
+        }
+
+    def _tool_move(self, object_id: str, position: List[float]) -> Dict[str, Any]:
+        """Move tool implementation."""
         if not object_id or object_id not in self.objects:
             return {"status": "error", "message": f"Object {object_id} not found"}
 
         if not position or len(position) != 3:
             return {"status": "error", "message": "Invalid position"}
 
-        # Check if we have automatic holding enabled and not disabled
-        if self.second_hand_manager and not disable_second_hand:
-            return self._tool_move_with_holding(object_id, position)
-        else:
-            return self._tool_move_simple(object_id, position)
+        return self._tool_move_simple(object_id, position)
 
     def _tool_move_simple(
         self, object_id: str, position: List[float]
@@ -936,59 +1143,16 @@ class PhysicsEnvironment(BaseEnvironment):
         # In free-physics mode, keep the pick active; VLM should call release explicitly
         return {"status": "success", "message": f"Moved {object_id} to {position}"}
 
-    def _tool_move_with_holding(
-        self, object_id: str, position: List[float]
-    ) -> Dict[str, Any]:
-        """Move with automatic holding support."""
-        puzzle_state = self.get_puzzle_state_for_holding()
-
-        # Step 1: Automatically select and apply hold
-        hold_info = self.second_hand_manager.auto_hold_for_action(
-            action="move",
-            target_piece=object_id,
-            action_params={"position": position},
-            puzzle_state=puzzle_state,
-        )
-
-        # Step 2: Execute the move
-        try:
-            result = self._tool_move_simple(object_id, position)
-
-            # Add holding info to result
-            if hold_info and hold_info.get("used"):
-                result["second_hand"] = {
-                    "used": True,
-                    "held_piece": hold_info["piece"],
-                    "selection_time_ms": hold_info.get("selection_time_ms", 0),
-                    "hold_type": hold_info.get("type", "auto"),
-                    "mode": hold_info.get("mode", "intelligent"),
-                    "hold_strength": hold_info.get("hold_strength"),
-                }
-            else:
-                result["second_hand"] = {"used": False}
-
-        finally:
-            if hold_info:
-                self.second_hand_manager.auto_release_hold(hold_info["hold_id"])
-
-        return result
+    # Removed legacy _tool_move_with_holding
 
     def _tool_push(
-        self,
-        object_id: str,
-        force: float,
-        direction: List[float],
-        disable_second_hand: bool = False,
+        self, object_id: str, force: float, direction: List[float]
     ) -> Dict[str, Any]:
-        """Push tool implementation with optional automatic holding."""
+        """Push tool implementation."""
         if not object_id or object_id not in self.objects:
             return {"status": "error", "message": f"Object {object_id} not found"}
 
-        # Check if we have automatic holding enabled and not disabled
-        if self.second_hand_manager and not disable_second_hand:
-            return self._tool_push_with_holding(object_id, force, direction)
-        else:
-            return self._tool_push_simple(object_id, force, direction)
+        return self._tool_push_simple(object_id, force, direction)
 
     def _tool_push_simple(
         self, object_id: str, force: float, direction: List[float]
@@ -1017,55 +1181,13 @@ class PhysicsEnvironment(BaseEnvironment):
             "message": f"Pushed {object_id} with force {force}",
         }
 
-    def _tool_push_with_holding(
-        self, object_id: str, force: float, direction: List[float]
-    ) -> Dict[str, Any]:
-        """Push with automatic holding support."""
-        puzzle_state = self.get_puzzle_state_for_holding()
+    # Removed legacy automatic holding for push
 
-        # Step 1: Automatically select and apply hold
-        hold_info = self.second_hand_manager.auto_hold_for_action(
-            action="push",
-            target_piece=object_id,
-            action_params={"force": force, "direction": direction},
-            puzzle_state=puzzle_state,
-        )
-
-        # Step 2: Execute the push
-        try:
-            result = self._tool_push_simple(object_id, force, direction)
-
-            # Add holding info to result
-            if hold_info and hold_info.get("used"):
-                result["second_hand"] = {
-                    "used": True,
-                    "held_piece": hold_info["piece"],
-                    "selection_time_ms": hold_info.get("selection_time_ms", 0),
-                    "hold_type": hold_info.get("type", "auto"),
-                    "mode": hold_info.get("mode", "intelligent"),
-                    "hold_strength": hold_info.get("hold_strength"),
-                }
-            else:
-                result["second_hand"] = {"used": False}
-
-        finally:
-            if hold_info:
-                self.second_hand_manager.auto_release_hold(hold_info["hold_id"])
-
-        return result
-
-    def _tool_rotate(
-        self, object_id: str, axis: str, angle: float, disable_second_hand: bool = False
-    ) -> Dict[str, Any]:
-        """Rotate tool implementation with optional automatic holding."""
+    def _tool_rotate(self, object_id: str, axis: str, angle: float) -> Dict[str, Any]:
+        """Rotate tool implementation."""
         if not object_id or object_id not in self.objects:
             return {"status": "error", "message": f"Object {object_id} not found"}
-
-        # Check if we have automatic holding enabled and not disabled
-        if self.second_hand_manager and not disable_second_hand:
-            return self._tool_rotate_with_holding(object_id, axis, angle)
-        else:
-            return self._tool_rotate_simple(object_id, axis, angle)
+        return self._tool_rotate_simple(object_id, axis, angle)
 
     def _tool_rotate_simple(
         self, object_id: str, axis: str, angle: float
@@ -1130,42 +1252,7 @@ class PhysicsEnvironment(BaseEnvironment):
             "message": f"Rotated {object_id} {angle} radians around {axis}-axis",
         }
 
-    def _tool_rotate_with_holding(
-        self, object_id: str, axis: str, angle: float
-    ) -> Dict[str, Any]:
-        """Rotate with automatic holding support."""
-        puzzle_state = self.get_puzzle_state_for_holding()
-
-        # Step 1: Automatically select and apply hold
-        hold_info = self.second_hand_manager.auto_hold_for_action(
-            action="rotate",
-            target_piece=object_id,
-            action_params={"axis": axis, "angle": angle},
-            puzzle_state=puzzle_state,
-        )
-
-        # Step 2: Execute the rotation
-        try:
-            result = self._tool_rotate_simple(object_id, axis, angle)
-
-            # Add holding info to result
-            if hold_info and hold_info.get("used"):
-                result["second_hand"] = {
-                    "used": True,
-                    "held_piece": hold_info["piece"],
-                    "selection_time_ms": hold_info.get("selection_time_ms", 0),
-                    "hold_type": hold_info.get("type", "auto"),
-                    "mode": hold_info.get("mode", "intelligent"),
-                    "hold_strength": hold_info.get("hold_strength"),
-                }
-            else:
-                result["second_hand"] = {"used": False}
-
-        finally:
-            if hold_info:
-                self.second_hand_manager.auto_release_hold(hold_info["hold_id"])
-
-        return result
+    # Removed legacy automatic holding for rotate
 
     def _tool_observe(self, angle: float) -> Dict[str, Any]:
         """Observe tool implementation."""
@@ -1260,21 +1347,4 @@ class PhysicsEnvironment(BaseEnvironment):
 
         return contact_list
 
-    def get_puzzle_state_for_holding(self) -> Dict[str, Any]:
-        """
-        Get current puzzle state information for SecondHandManager.
-
-        Returns:
-            Dictionary with puzzle state information
-        """
-        piece_objects = {
-            name: obj_info.object_id for name, obj_info in self.objects.items()
-        }
-
-        return {
-            "all_pieces": list(self.objects.keys()),
-            "piece_objects": piece_objects,
-            "physics_client": self.client_id,
-            "step_count": getattr(self, "step_count", 0),
-            "max_steps": self.max_steps,
-        }
+    # Legacy holding state helpers removed

@@ -478,8 +478,8 @@ class LubanEnvironment(PhysicsEnvironment):
         Callers should handle the error and re-plan.
         """
         if not self.luban_constrained_enabled:
-            # Fall back to base behavior (free-physics). `disable_second_hand` is supported there.
-            return super()._tool_rotate(object_id, axis, angle, disable_second_hand)
+            # Fall back to base behavior (free-physics).
+            return super()._tool_rotate(object_id, axis, angle)
 
         if object_id not in self.picked_objects:
             return {
