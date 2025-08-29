@@ -933,16 +933,8 @@ class PhysicsEnvironment(BaseEnvironment):
         # Update object info
         obj_info.position = tuple(position)
 
-        # Auto-release the object after moving (reduces VLM steps)
-        release_result = self._tool_release(object_id)
-
-        success_msg = f"Moved {object_id} to {position}"
-        if release_result.get("status") == "success":
-            success_msg += " and auto-released"
-        else:
-            success_msg += f" (auto-release failed: {release_result.get('message', 'unknown error')})"
-
-        return {"status": "success", "message": success_msg}
+        # In free-physics mode, keep the pick active; VLM should call release explicitly
+        return {"status": "success", "message": f"Moved {object_id} to {position}"}
 
     def _tool_move_with_holding(
         self, object_id: str, position: List[float]
@@ -1132,16 +1124,11 @@ class PhysicsEnvironment(BaseEnvironment):
         # Update object info
         obj_info.orientation = new_orientation
 
-        # Auto-release the object after rotating (reduces VLM steps)
-        release_result = self._tool_release(object_id)
-
-        success_msg = f"Rotated {object_id} {angle} radians around {axis}-axis"
-        if release_result.get("status") == "success":
-            success_msg += " and auto-released"
-        else:
-            success_msg += f" (auto-release failed: {release_result.get('message', 'unknown error')})"
-
-        return {"status": "success", "message": success_msg}
+        # In free-physics mode, keep the pick active; VLM should call release explicitly
+        return {
+            "status": "success",
+            "message": f"Rotated {object_id} {angle} radians around {axis}-axis",
+        }
 
     def _tool_rotate_with_holding(
         self, object_id: str, axis: str, angle: float

@@ -469,14 +469,17 @@ class LubanEnvironment(PhysicsEnvironment):
             "picked_objects": list(self.picked_objects),
         }
 
-    def _tool_rotate(self, object_id: str, axis: str, angle: float) -> Dict[str, Any]:
+    def _tool_rotate(
+        self, object_id: str, axis: str, angle: float, disable_second_hand: bool = False
+    ) -> Dict[str, Any]:
         """Rotate tool override for constrained mode with interpolation.
 
         Note: if guard_contacts aborts, intermediate pose is not rolled back.
         Callers should handle the error and re-plan.
         """
         if not self.luban_constrained_enabled:
-            return super()._tool_rotate(object_id, axis, angle)
+            # Fall back to base behavior (free-physics). `disable_second_hand` is supported there.
+            return super()._tool_rotate(object_id, axis, angle, disable_second_hand)
 
         if object_id not in self.picked_objects:
             return {
