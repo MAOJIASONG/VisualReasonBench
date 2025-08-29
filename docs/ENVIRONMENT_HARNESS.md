@@ -15,7 +15,7 @@ This guide explains how the physics “environment harness” is structured, the
 - `src/phyvpuzzle/environment/luban_env.py`: Luban environment with constrained‑mode overrides.
 - `src/phyvpuzzle/runner.py`: Wires config → environment → task → agent; drives the loop and logging.
 - `src/phyvpuzzle/utils/multi_view_renderer.py`: Camera presets and multi‑view rendering used by environments.
-- `SECOND_HAND_MANAGER.md`: Design for automatic holding and strategy hooks.
+  (Deprecated: no separate second-hand manager module.)
 - `docs/luban_constrained_mode_spec.md`: Detailed spec for Luban constrained mode behavior and configuration.
 
 ## Lifecycle & State
@@ -30,10 +30,10 @@ This guide explains how the physics “environment harness” is structured, the
 ## Tool System (Design Decisions)
 
 - **JSON schemas:** `get_tool_schemas()` returns standard tools for all envs; subclasses add task‑specific tools with `_get_task_specific_tool_schemas()`.
-- **Execution:** `execute_tool_call(tool_name, arguments, disable_second_hand=False)` dispatches to `_tool_*` handlers. Subclasses can override `_execute_task_specific_tool()`.
+- **Execution:** `execute_tool_call(tool_name, arguments)` dispatches to `_tool_*` handlers. Subclasses can override `_execute_task_specific_tool()`.
 - **Single‑pick invariant:** Exactly one piece may be picked. Calling `pick` auto‑releases an existing pick before creating a new one (auto‑swap).
 - **Auto‑release:** Only in Luban constrained mode. In free‑physics environments (e.g., Domino), `move/rotate` keep the pick active and the VLM should call `release`.
-- **Automatic holding:** If a `SecondHandManager` is present, `move/rotate/push` transparently apply/remove a second‑hand hold. Tool results include `second_hand` metadata. Pass `disable_second_hand=True` to skip it per call.
+- **Placement‑only stabilization:** No automatic holding for `move/rotate/push`. The `place` tool can optionally apply a temporary world‑fixed hold on the target piece during placement for stability; the hold is always removed after the operation.
 - **Common tools (base_env):**
   - `pick(object_id, reset_orientation=False)`
   - `release(object_id)`
@@ -43,16 +43,17 @@ This guide explains how the physics “environment harness” is structured, the
   - `observe(angle=radians)`
   - `wait(duration=seconds)`
   - `check_solution()`
-- **Returns:** All tools return a dict with `status` (`success|error`) and `message`. Many also return `picked_objects`, `constraint_id`, and conditional `second_hand` info.
+- **Returns:** All tools return a dict with `status` (`success|error`) and `message`. Some also return `picked_objects` and/or `constraint_id`.
 
 Note on agent wiring: `OpenAIAgent` supports native tools but `_get_available_tools()` currently returns `[]`. The runner can be extended to inject `environment.get_tool_schemas()` so the model uses native function‑calling instead of text parsing.
 
 ## Place Tool (Plan)
 
 - **Intent:** Provide a simple way to place a picked object directly on top of a target object under free‑physics.
-- **API:** `place(object_id, target_id, offset_xy=[0,0], offset_local=true, align_orientation='align_target'|'keep'|'snap_90', clearance=0.001, release_after=false)`.
+- **API:** `place(object_id, target_id, offset_xy=[0,0], offset_local=true, align_orientation='align_target'|'keep'|'snap_90', clearance=0.001, release_after=false, stabilize_target=true, hold_max_force=300.0, hold_erp=0.4)`.
 - **Semantics:**
   - Requires `object_id` to be currently picked; `target_id` must exist.
+  - If `stabilize_target=true`: create a temporary world‑fixed `JOINT_FIXED` constraint on `target_id` at its current pose (`changeConstraint(maxForce=hold_max_force, erp=hold_erp)`), then remove it in a finally block after placement.
   - Computes target top Z from `getAABB(target_id)`, object half‑height from `getAABB(object_id)`; places at `top_z + half_height + clearance`.
   - `offset_xy` applies on target’s top plane; when `offset_local=true`, offset is rotated by target yaw.
   - `align_orientation`: keep yaw, copy target yaw, or snap yaw to nearest 90°.
@@ -83,7 +84,7 @@ Note on agent wiring: `OpenAIAgent` supports native tools but `_get_available_to
   - `reset_dominoes()`: restore initial upright pose.
 - **Success:** `_count_fallen_dominoes()` classifies fallen via tilt; success when ≥80% fall (`_evaluate_success`).
 - **Config surface:** `DominoConfig.from_difficulty(...)` maps `TaskDifficulty` to counts/patterns; environment reads `urdf_base_path`, `gravity`, render settings, and `load_table`.
-- **Holding:** Domino runs in free physics; automatic holding can be enabled via `SecondHandManager` (transparent to the VLM).
+- **Holding:** Domino runs in free physics; there is no automatic holding.
 
 ## Luban Environment (Constrained Mode)
 
@@ -104,7 +105,7 @@ Note on agent wiring: `OpenAIAgent` supports native tools but `_get_available_to
   - `erp` (for `changeConstraint(..., erp=...)`)
   - `settle_steps` (simulation steps between increments)
   - `guard_contacts` (abort if penetration increases)
-- **Free‑physics fallback:** If `enabled: false`, Luban inherits base behavior; pushes work and SecondHandManager may be used (if set by the env).
+- **Free‑physics fallback:** If `enabled: false`, Luban inherits base behavior; pushes work and there is no automatic holding.
 
 Example YAML snippet:
 
@@ -122,12 +123,9 @@ environment:
     guard_contacts: true
 ```
 
-## Automatic Holding (Second Hand)
+## Automatic Holding
 
-- **Where:** `src/phyvpuzzle/manipulation/second_hand_manager.py` and `SECOND_HAND_MANAGER.md`.
-- **When used:** Enabled in free‑physics environments (e.g., Domino). Disabled by design in Luban constrained mode.
-- **Behavior:** Before `move/rotate/push`, the manager may apply a temporary soft hold on a stabilizing piece, then always auto‑releases it. Tool results include `{second_hand: {used, held_piece, selection_time_ms, ...}}`.
-- **Bypass:** Pass `disable_second_hand=True` to any tool call via `execute_tool_call` if you need precise control.
+- There is no global automatic holding. The `place` tool can optionally stabilize the target piece with a temporary world‑fixed hold during placement; this hold is always removed after the operation.
 
 ## Runner & Wiring Notes
 
@@ -159,7 +157,7 @@ environment:
 - Domino env: `src/phyvpuzzle/environment/domino_env.py`
 - Luban env: `src/phyvpuzzle/environment/luban_env.py`
 - Runner: `src/phyvpuzzle/runner.py`
-- Second hand: `src/phyvpuzzle/manipulation/second_hand_manager.py`
+  (No separate second-hand module; placement stabilization is inline.)
 - Renderer: `src/phyvpuzzle/utils/multi_view_renderer.py`
 - Agent (OpenAI): `src/phyvpuzzle/agents/openai_agent.py` (tools injection TODO)
 
