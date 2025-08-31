@@ -5,11 +5,41 @@
 - Install Blender 4.2.11 LTS
 - Download the [Phobos Add-on](https://github.com/dfki-ric/phobos/releases) and import it into Blender
 
+## Pre-existing Blender Files
+
+The existing blender files used to create all environments will be located under `blender/`, the files are already named accordingly to the environments listed under `src/phyvpuzzle/environment/phobos_models/`
+
 ## Visuals
 
 1. Look for `.stl` files online, so that you don't have to deal with creating the visuals at the very least
 1. Load `.stl` files inside and make sure the import scale is set to `0.005`, this is usually a good size (keeps it under 1x1m box)
 1. Set the *Phobostype* to **visual** and then set *Geometry* to **mesh**
+
+### Color
+
+1. Select the item that you want the set the color for (make sure you're selecting the visual object) in the Outliner.
+1. Select sphere with the checkered-pattern in the "Context-Menu" (this is below your "Outliner", shows the list of all objects currently in the file)
+1. Click the "+" button and this will create for you a Material Index
+  - Set "Surface" to Principled BSDF
+  - Set the "Base Color" to what you want
+  - Ensure to name it to the color that you've set so it will be easier to select
+
+It is important to select colors that are easily differentiated by the VLM, so try to select colors that are distinguishable. GPT-5's recommendations are:
+
+- Orange #E69F00
+- Sky Blue #56B4E9
+- Bluish Green #009E73
+- Yellow #F0E442
+- Blue #0072B2
+- Vermillion #D55E00
+- Reddish Purple #CC79A7
+- Medium Gray #7F7F7F (GPT-5's original choice for this was Black, but I'm against using black as it will have problems with showing the numbering on the pieces when we do require it)
+
+### Numbering (IMPORTANT)
+
+Numbering on the pieces are only required **IF** the number of colors selected won't be enough for the VLM to easily differentiate which piece to select.
+
+The best way (in my opinion) to do this, is to carve the numbers into the visual pieces itself. I have not tried this myself, but what you could do is brainstorm with GPT-5 / Gemini 2.5 Pro and ask it if there's a better way to do this "numbering" on the pieces themselves.
 
 ## Collisions
 
