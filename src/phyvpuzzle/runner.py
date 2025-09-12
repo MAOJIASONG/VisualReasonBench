@@ -1,0 +1,508 @@
+"""
+Main runner for PhyVPuzzle benchmark execution.
+
+This module coordinates the execution of benchmark tasks, bringing together
+environments, agents, tasks, and evaluation components.
+"""
+
+import json
+import os
+import time
+from typing import List, Optional, Dict, Tuple
+from phyvpuzzle.agents import VLMAgent
+from phyvpuzzle.core import Config, ENVIRONMENT_REGISTRY, TASK_REGISTRY, AGENT_REGISTRY
+from phyvpuzzle.core.base import Observation, State, TaskResult, Action, EvaluationResult
+from phyvpuzzle.environment import PhysicsEnvironment
+from phyvpuzzle.evaluation import BenchmarkEvaluator
+from phyvpuzzle.tasks import PhysicsTask
+from phyvpuzzle.utils.logger import ExperimentLogger
+from phyvpuzzle.utils.display import ProgressDisplay, StatusDisplay, LiveLogger
+
+
+class BenchmarkRunner:
+    """Main runner for PhyVPuzzle benchmark execution."""
+    
+    def __init__(self, config: Config):
+        self.config = config
+        self.logger = ExperimentLogger(
+            log_dir=config.runner.log_dir,
+            experiment_name=config.runner.experiment_name
+        )
+
+        # Initialize components
+        self.environment: Optional[PhysicsEnvironment] = None
+        self.task: Optional[PhysicsTask] = None
+        self.agent: Optional[VLMAgent] = None
+        self.evaluator: Optional[BenchmarkEvaluator] = None
+        
+        # Execution state
+        self.interaction_history: List[Tuple[Action, Observation]] = []
+        self.start_time = None
+        
+        # Display utilities
+        self.live_logger = LiveLogger(verbose=True)
+        self.progress_display = None
+        
+    def setup(self) -> None:
+        """Setup all components for benchmark execution."""
+        
+        # Create task first (required for environment configuration)
+        self.task = self._create_task()
+        
+        # Create environment based on task configuration
+        self.environment = self._create_environment()
+        
+        # Create agent
+        self.agent = self._create_agent()
+        
+        # Create evaluator
+        self.evaluator = self._create_evaluator()
+        
+        self.live_logger.log_info("Benchmark setup complete")
+
+    def _create_task(self) -> PhysicsTask:
+        """Create task based on configuration."""
+        task_cls = TASK_REGISTRY.get(self.config.task.type)
+        if task_cls is None:
+            raise RuntimeError(f"Unknown or unsupported task type: {self.config.task.type}")
+        return task_cls(self.config.task)
+        
+    def _create_environment(self) -> PhysicsEnvironment:
+        """Create physics environment based on task type."""
+        # Create environment based on task type
+        env_cls = ENVIRONMENT_REGISTRY.get(self.config.environment.type)
+        if env_cls is None:
+            raise RuntimeError(f"Unknown or unsupported environment type: {self.config.environment.type}")
+        return env_cls(self.config.environment)
+            
+    def _create_agent(self) -> VLMAgent:
+        """Create VLM agent based on configuration."""
+        agent_cls = AGENT_REGISTRY.get(self.config.agent.type)
+        if agent_cls is None:
+            raise RuntimeError(f"Unknown or unsupported agent type: {self.config.agent.type}")
+        return agent_cls(self.config.agent)
+            
+    def _create_evaluator(self) -> BenchmarkEvaluator:
+        """Create evaluator with judge if configured."""
+        return BenchmarkEvaluator(self.config.judgement)
+        
+    def run_single_task(self) -> TaskResult:
+        """Run a single task instance."""
+        self._validate_components()
+        StatusDisplay.print_header(f"Starting Task: {self.task.task_id}")
+        
+        self.interaction_history = []
+        self.start_time = time.time()
+        
+        try:
+            # Initialize task execution
+            observation = self._initialize_task_execution()
+            
+            # Main interaction loop
+            step = self._execute_interaction_loop(observation)
+            
+            # Create and return task result
+            return self._create_task_result(step)
+            
+        except Exception as e:
+            return self._handle_task_failure(e)
+            
+        finally:
+            self._cleanup_environment()
+            
+    def _validate_components(self) -> None:
+        """Validate that all required components are initialized."""
+        if not all([self.environment, self.task, self.agent]):
+            raise RuntimeError("Components not properly initialized. Call setup() first.")
+    
+    def _initialize_task_execution(self) -> Observation:
+        """Initialize environment and set up task prompts."""
+        # Reset environment
+        self.live_logger.log_action("Initializing environment")
+        observation = self.task.configure_environment(self.environment)
+        self.interaction_history.append((Action(action_type="reset", parameters={}), observation))
+        self.live_logger.log_result("Environment ready")
+        
+        # Setup task prompts
+        self.live_logger.log_action("Preparing task prompts")
+        self.agent.set_system_prompt(self.task.get_system_prompt())
+        self.live_logger.log_result("Prompts ready")
+        
+        # Log initial state
+        self.live_logger.log_action("Logging initial state")
+        self.logger.log_step(0, {
+            "step_type": "initialisation",
+            "observation": observation.to_dict(),
+            "system_prompt": self.agent.system_prompt,
+            "user_prompt": self.task.get_user_prompt(),
+            "image": observation.image,
+        })
+        self.live_logger.log_result("Initial state logged")
+        
+        return observation
+    
+    def _execute_interaction_loop(self, observation: Observation) -> int:
+        """Execute the main agent-environment interaction loop."""
+        max_steps = self.environment.config.max_steps
+        StatusDisplay.print_section(f"Starting Interaction Loop (max {max_steps} steps)")
+        
+        self.progress_display = ProgressDisplay(max_steps)
+        
+        for step in range(1, max_steps + 1):
+            self.progress_display.update(step, f"Step {step}/{max_steps}: Processing agent response")
+            
+            # Check token limit before processing
+            if self._is_token_limit_exceeded():
+                return self._handle_token_limit_exceeded(step)
+            
+            # Build prompt and get agent response
+            prompt_history = self._build_prompt_history()
+            response, tool_calls = self._get_agent_response(step, prompt_history)
+            
+            self.live_logger.log_info(f"Step {step}:")
+            self.live_logger.log_info(f"Prompt history: {prompt_history}")
+            self.live_logger.log_info(f"Agent response: {response}")
+            self.live_logger.log_info(f"Tool calls: {tool_calls}")
+
+            # Check if agent wants to finish
+            if self._should_finish_task(tool_calls):
+                break
+                
+            # Execute tools or log response
+            if tool_calls:
+                self._execute_tool_calls(step, tool_calls, response)
+            else:
+                self._log_text_response(step, response, observation)
+            
+            self.live_logger.log_info(f"Step {step}, Token count: {self.agent.get_token_count()}")
+        
+        # Finish progress display
+        task_completed = step < max_steps
+        self.progress_display.finish(success=task_completed)
+        
+        if not task_completed:
+            self.live_logger.log_info("Step limit reached")
+        else:
+            self.live_logger.log_info("Task completed")
+            
+        return step
+    
+    def _build_prompt_history(self) -> str:
+        """Build prompt history from interaction history."""
+        user_prompt = self.task.get_user_prompt()
+        
+        prompt_history = ""
+        for idx, (action, observation) in enumerate(self.interaction_history):
+            if observation.description:
+                prompt_history += f"Step {idx+1}:\n{observation.description}"
+            
+        return f"{user_prompt}\n\nInteraction History:\n{prompt_history}\n\nWhat's your next action?"
+    
+    def _get_agent_response(self, step: int, prompt_history: str) -> tuple:
+        """Get response from agent."""
+        self.live_logger.log_step_start(step, "Getting agent response")
+        
+        recent_observations = [obs for _, obs in self.interaction_history[-self.config.runner.history_length:]]
+        response, tool_calls = self.agent.process_observation(
+            recent_observations, prompt_history, self.environment.get_tool_schemas()
+        )
+        
+        # Log agent's intention
+        if tool_calls:
+            self.live_logger.log_info(f"Agent wants to execute {len(tool_calls)} tool(s)")
+        else:
+            self.live_logger.log_info("Agent provided text response only")
+            
+        return response, tool_calls
+    
+    def _should_finish_task(self, tool_calls: list) -> bool:
+        """Check if agent wants to finish the task."""
+        if not tool_calls:
+            return False
+            
+        tool_names = [tool_call.get("function", {}).get("name", "") for tool_call in tool_calls]
+        if "finish" in tool_names:
+            self.live_logger.log_info("Agent called 'finish' tool. Task complete.")
+            return True
+            
+        return False
+    
+    def _execute_tool_calls(self, step: int, tool_calls: list, response: str) -> None:
+        """Execute all tool calls from the agent."""
+        for i, tool_call in enumerate(tool_calls, 1):
+            try:
+                self._execute_single_tool(step, i, len(tool_calls), tool_call, response)
+            except Exception as e:
+                self._log_tool_error(step, tool_call, response, e)
+    
+    def _execute_single_tool(self, step: int, tool_index: int, total_tools: int, 
+                           tool_call: dict, response: str) -> None:
+        """Execute a single tool call."""
+        tool_name = tool_call["function"]["name"]
+        arguments = json.loads(tool_call["function"]["arguments"])
+        
+        self.live_logger.log_action(f"Executing tool {tool_index}/{total_tools}: {tool_name}")
+        
+        # Create and execute action
+        action = Action(action_type=tool_name, parameters=arguments)
+        observation = self.environment.step(action)
+        
+        # Record in trajectory
+        self.interaction_history.append((action, observation))
+        
+        # Log results
+        self.live_logger.log_result(f"Tool completed: {observation.state.metadata['tool_result']}")
+        
+        self.logger.log_step(step, {
+            "step_type": "action",
+            "agent_response": response,
+            "action": action.to_dict(),
+            "observation": observation.to_dict(),
+            "tool_result": observation.state.metadata['tool_result'],
+            "image": observation.image,
+        })
+    
+    def _log_tool_error(self, step: int, tool_call: dict, response: str, error: Exception) -> None:
+        """Log tool execution error."""
+        tool_name = tool_call.get('function', {}).get('name', 'unknown')
+        error_msg = f"Error executing tool {tool_name}: {error}"
+        
+        self.live_logger.log_error(f"Tool failed: {error_msg}")
+        
+        self.logger.log_step(step, {
+            "step_type": "tool_error",
+            "error": error_msg,
+            "tool_call": tool_call,
+            "agent_response": response
+        })
+    
+    def _log_text_response(self, step: int, response: str, observation: Observation) -> None:
+        """Log agent text response when no tools are called."""
+        truncated_response = f"{response[:100]}{'...' if len(response) > 100 else ''}"
+        self.live_logger.log_info(f"Agent response: {truncated_response}")
+        
+        self.logger.log_step(step, {
+            "step_type": "response",
+            "agent_response": response,
+            "observation": observation.to_dict()
+        })
+    
+    def _is_token_limit_exceeded(self) -> bool:
+        """Check if token count exceeds the configured limit."""
+        return self.agent.get_token_count() > self.config.agent.max_content_size
+    
+    def _handle_token_limit_exceeded(self, step: int) -> int:
+        """Handle case when token limit is exceeded."""
+        token_count = self.agent.get_token_count()
+        max_tokens = self.config.agent.max_content_size
+        
+        self.live_logger.log_warning(f"Token count exceeded: {token_count}/{max_tokens}")
+        self.progress_display.finish(success=False)
+        
+        raise RuntimeError(f"Token count exceeded max content size: {token_count}, Max: {max_tokens}")
+    
+    def _create_task_result(self, step: int) -> TaskResult:
+        """Create the final task result."""
+        execution_time = time.time() - self.start_time
+        
+        # Display completion results
+        StatusDisplay.print_section("Task Execution Completed")
+        results = {
+            "Execution Time": f"{execution_time:.2f}s",
+            "Total Steps": step,
+            "Total Tokens": self.agent.get_token_count()
+        }
+        StatusDisplay.print_results(results, "Execution Summary")
+        
+        task_result = TaskResult(
+            task_id=self.task.task_id,
+            task_type=self.config.task.type,
+            total_steps=step,
+            execution_time=execution_time,
+            trajectory=self.interaction_history,
+            success=False,  # Success determined during evaluation
+            metadata={
+                "difficulty": self.config.task.difficulty.value,
+                "optimal_steps": self.task.optimal_steps,
+                "total_tokens": self.agent.get_token_count(),
+                "agent_model": self.config.agent.model_name,
+            }
+        )
+        
+        # Save logs
+        self.live_logger.log_action("Saving experiment logs")
+        self.logger.save_logs()
+        self.live_logger.log_result("Logs saved successfully")
+        
+        return task_result
+    
+    def _handle_task_failure(self, error: Exception) -> TaskResult:
+        """Handle task execution failure."""
+        execution_time = time.time() - self.start_time if self.start_time else 0
+        
+        # Cleanup progress display
+        if self.progress_display:
+            self.progress_display.finish(success=False)
+        
+        # Display error information
+        StatusDisplay.print_section("Task Execution Failed")
+        error_info = {
+            "Error": str(error),
+            "Execution Time": f"{execution_time:.2f}s",
+            "Steps Completed": len(self.interaction_history)
+        }
+        StatusDisplay.print_results(error_info, "Error Summary")
+        self.live_logger.log_error(f"Task execution failed: {error}")
+        
+        # Create error result
+        error_result = TaskResult(
+            task_id=self.task.task_id,
+            task_type=self.config.task.type,
+            total_steps=len(self.interaction_history),
+            execution_time=execution_time,
+            trajectory=self.interaction_history,
+            success=False,
+            error_message=str(error),
+            metadata={
+                "difficulty": self.config.task.difficulty.value,
+                "total_tokens": self.agent.get_token_count() if self.agent else 0,
+                "agent_model": self.config.agent.model_name if self.agent else "unknown",
+            }
+        )
+        
+        # Save error logs
+        self._save_error_logs()
+        
+        return error_result
+    
+    def _save_error_logs(self) -> None:
+        """Attempt to save error logs."""
+        try:
+            self.live_logger.log_action("Saving error logs")
+            self.logger.save_logs()
+            self.live_logger.log_result("Error logs saved")
+        except Exception:
+            self.live_logger.log_error("Could not save error logs")
+    
+    def _cleanup_environment(self) -> None:
+        """Clean up environment resources."""
+        if self.environment:
+            self.environment.close()
+                
+    def run_multiple_tasks(self, num_runs: int = 1) -> List[TaskResult]:
+        """Run multiple instances of the same task."""
+        results = []
+        
+        if num_runs > 1:
+            StatusDisplay.print_header(f"Running Multiple Tasks ({num_runs} instances)")
+            # Create progress display for multiple runs
+            multi_run_progress = ProgressDisplay(num_runs)
+        
+        for i in range(num_runs):
+            if num_runs > 1:
+                multi_run_progress.update(i, f"Running task instance {i+1}/{num_runs}")
+                self.live_logger.log_step_start(i+1, f"Running task instance {i+1}/{num_runs}")
+            else:
+                self.live_logger.log_info(f"Running single task instance")
+            
+            # Reinitialize for each run
+            self.setup()
+            
+            result = self.run_single_task()
+            results.append(result)
+                
+            if num_runs > 1:
+                self.live_logger.log_step_end(i+1, f"Task instance {i+1} completed", result.success)
+        
+        if num_runs > 1:
+            multi_run_progress.finish(success=True)
+            
+        return results
+        
+    def evaluate(self, task_results: List[TaskResult]) -> EvaluationResult:
+        """
+        Evaluate one or more task results using task-specific success criteria,
+        and return comprehensive metrics.
+        """
+        StatusDisplay.print_section("Starting Task Evaluation")
+        self.live_logger.log_action("Getting task-specific success criteria")
+        self.live_logger.log_result("Success criteria defined")
+
+        try:
+            evaluation_result = self.task.evaluate_tasks(self.evaluator, task_results)
+        except Exception as e:
+            self.live_logger.log_warning(f"Evaluator failed during task evaluation: {e}")
+            evaluation_result = None
+        return evaluation_result
+        
+    def run_benchmark(self, num_runs: int = 1) -> EvaluationResult:
+        """Run complete benchmark with evaluation."""
+        StatusDisplay.print_header(f"PhyVPuzzle Benchmark - {num_runs} Run{'s' if num_runs > 1 else ''}")
+        
+        # Display configuration
+        config_info = {
+            "Agent Model": self.config.agent.model_name,
+            "Task Type": self.config.task.type,
+            "Task Name": self.config.task.name,
+            "Difficulty": self.config.task.difficulty.value,
+            "Number of Runs": num_runs
+        }
+        StatusDisplay.print_config(config_info, "Benchmark Configuration")
+        
+        # Run tasks
+        task_results = self.run_multiple_tasks(num_runs)
+        
+        # Evaluate results with task-specific criteria
+        evaluation_result = self.evaluate(task_results)
+        
+        # Export results to Excel
+        self.evaluator.export_results_to_excel(
+            evaluation_result,
+            os.path.join(self.logger.run_dir, self.config.runner.results_excel_path),
+            self.config.agent.model_name
+        )
+        
+        # Export detailed report
+        self.evaluator.export_detailed_report(
+            evaluation_result,
+            os.path.join(self.logger.run_dir, "detailed_reports"),
+            self.config.agent.model_name
+        )
+        
+        # Print summary
+        self._print_benchmark_summary(evaluation_result)
+
+        return evaluation_result
+        
+    def _print_benchmark_summary(self, evaluation_result) -> None:
+        """Print benchmark summary to console."""
+        StatusDisplay.print_header("BENCHMARK SUMMARY")
+        
+        # Basic information
+        basic_info = {
+            "Model": self.config.agent.model_name,
+            "Task": f"{self.config.task.name} ({self.config.task.difficulty.value})",
+            "Total Tasks": len(evaluation_result.task_results),
+            "Successful": sum(1 for r in evaluation_result.task_results if r.success),
+            "Accuracy": evaluation_result.accuracy
+        }
+        StatusDisplay.print_results(basic_info, "Basic Results")
+        
+        # Advanced metrics
+        advanced_metrics = {}
+        if evaluation_result.pass_at_k:
+            for k, rate in evaluation_result.pass_at_k.items():
+                advanced_metrics[f"Pass@{k}"] = rate
+                
+        if evaluation_result.distance_to_optimal != float('inf'):
+            advanced_metrics["Distance to Optimal"] = evaluation_result.distance_to_optimal
+            
+        if evaluation_result.token_efficiency != float('inf'):
+            advanced_metrics["Token Efficiency"] = f"{evaluation_result.token_efficiency:.0f} tokens/success"
+        
+        if advanced_metrics:
+            StatusDisplay.print_results(advanced_metrics, "Advanced Metrics")
+        
+        StatusDisplay.print_section("Output Files")
+        self.live_logger.log_info(f"Results saved to: {self.config.runner.results_excel_path}")
+        StatusDisplay.print_separator("=", 60)
