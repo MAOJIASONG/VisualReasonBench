@@ -10,9 +10,11 @@ visual observations and generate actions, including:
 from phyvpuzzle.agents.base_agent import VLMAgent
 from phyvpuzzle.agents.openai_agent import OpenAIAgent
 from phyvpuzzle.agents.transformers_agent import TransformersAgent
+from phyvpuzzle.agents.human_agent import HumanAgent
 
 __all__ = [
     "VLMAgent",
     "OpenAIAgent", 
-    "TransformersAgent"
+    "TransformersAgent",
+    "HumanAgent"
 ]

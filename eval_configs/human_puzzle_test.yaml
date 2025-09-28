@@ -1,0 +1,62 @@
+# Configuration for Human Agent Puzzle Test
+# This example allows human users to interactively control the puzzle assembly task.
+
+runner:
+  experiment_name: human_puzzle_test
+  log_dir: "logs"
+  results_excel_path: "experiment_results.xlsx"
+  save_images: true
+  save_multi_view: true
+  save_trajectory: true
+  history_length: 3  # Reduced history for human readability
+
+agent:
+  type: "human"
+  model_name: "human-interactive"
+  # Human agent uses dummy values for config validation
+  api_key: "dummy-key-for-human-agent"
+  base_url: "https://api.openai.com/v1"
+  temperature: 0.0
+  max_tokens: 300  # Dummy value for validation
+  max_content_size: 999999  # No limit for human agent
+  timeout: 300.0
+
+judgement:
+  type: "openai"
+  model_name: "gpt-4o-mini"
+  api_key: "dummy-key-for-judgement"
+  base_url: "https://api.openai.com/v1"
+  temperature: 0.1
+  max_tokens: 500
+  timeout: 300.0
+
+environment:
+  type: "puzzle"
+  gui: false
+  urdf_local_path: "src/phyvpuzzle/environment/phobos_models"
+  render_width: 512
+  render_height: 512
+  multi_view: true
+  load_table: false
+  max_steps: 50  # More steps for human interaction
+  num_pieces: 7  # 7 complex pieces + 1 container
+  puzzle_size: [3, 3, 3]  # Target 3x3x3 cube
+  piece_size: 0.08
+  piece_thickness: 0.01
+  completion_tolerance: 0.05
+  target_area_center: [0, 0, 0.41]  # Container position
+  scatter_radius: 0.3
+  is_3d: true  # 3D stacking puzzle
+  container_based: true  # Pieces go into container
+
+task:
+  type: "puzzle_assembly"
+  name: "3d_cube_stacking_puzzle"
+  difficulty: medium
+  num_pieces: 7  # 7 complex pieces + 1 container
+  puzzle_size: [3, 3, 3]  # Target 3x3x3 cube
+  piece_size: 0.08
+  completion_threshold: 1.0  # All pieces must fit in container
+  allow_auto_solve: false
+  ruled_evaluation: false
+  container_based: true  # Container-based puzzle

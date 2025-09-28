@@ -107,6 +107,10 @@ class MetricsCalculator:
                     # Normalized distance: (actual - optimal) / optimal
                     distance = max(0, result.total_steps - optimal_steps) / optimal_steps
                     distances.append(distance)
+                elif optimal_steps == 0 and result.total_steps > 0:
+                    # Handle edge case where optimal is 0 but actual > 0
+                    distances.append(float('inf'))
+                # If both optimal and actual are 0, distance is 0 (perfect)
                     
         return np.mean(distances) if distances else float('inf')
         
