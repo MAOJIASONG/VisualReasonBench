@@ -588,14 +588,14 @@
       <mass value="0.05000"/>
     </inertial>
     <visual name="obj_2">
-      <material name="turnarrow"/>
+      <material name="turnarraw_skyblue"/>
       <origin rpy="-3.14159 1.57080 0.00000" xyz="-0.47734 0.54432 0.15940"/>
       <geometry>
         <mesh filename="../meshes/obj/bt_cube3x3_bricks.001.obj" scale="0.00500 0.00500 0.00500"/>
       </geometry>
     </visual>
   </link>
-  <material name="turnarrow">
-    <color rgba="0.23137 0.80000 0.68627 1.00000"/>
+  <material name="turnarraw_skyblue">
+    <color rgba="0.09020 0.45490 0.81176 1.00000"/>
   </material>
 </robot>
