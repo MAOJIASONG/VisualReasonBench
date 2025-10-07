@@ -13,11 +13,14 @@ from phyvpuzzle.agents import VLMAgent
 from phyvpuzzle.core import Config, ENVIRONMENT_REGISTRY, TASK_REGISTRY, AGENT_REGISTRY
 from phyvpuzzle.core.base import Observation, State, TaskResult, Action, EvaluationResult
 from phyvpuzzle.environment import PhysicsEnvironment
+try:
+    import pybullet as p
+except ImportError:
+    from phyvpuzzle.environment.base_env import p
 from phyvpuzzle.evaluation import BenchmarkEvaluator
 from phyvpuzzle.tasks import PhysicsTask
 from phyvpuzzle.utils.logger import ExperimentLogger
 from phyvpuzzle.utils.display import ProgressDisplay, StatusDisplay, LiveLogger
-
 
 class BenchmarkRunner:
     """Main runner for PhyVPuzzle benchmark execution."""
@@ -36,7 +39,8 @@ class BenchmarkRunner:
         self.evaluator: Optional[BenchmarkEvaluator] = None
         
         # Execution state
-        self.interaction_history: List[Tuple[Action, Observation]] = []
+        # Each entry: {"response": str, "actions": List[Action], "observations": List[Observation]}
+        self.interaction_history: List[Dict] = []
         self.start_time = None
         
         # Display utilities
@@ -99,10 +103,10 @@ class BenchmarkRunner:
             observation = self._initialize_task_execution()
             
             # Main interaction loop
-            step = self._execute_interaction_loop(observation)
+            total_steps = self._execute_interaction_loop(observation)
             
             # Create and return task result
-            return self._create_task_result(step)
+            return self._create_task_result(total_steps)
             
         except Exception as e:
             return self._handle_task_failure(e)
@@ -120,7 +124,12 @@ class BenchmarkRunner:
         # Reset environment
         self.live_logger.log_action("Initializing environment")
         observation = self.task.configure_environment(self.environment)
-        self.interaction_history.append((Action(action_type="reset", parameters={}), observation))
+        # Record initial reset action
+        self.interaction_history.append({
+            "response": "",
+            "actions": [Action(action_type="reset", parameters={})],
+            "observations": [observation]
+        })
         self.live_logger.log_result("Environment ready")
         
         # Setup task prompts
@@ -131,11 +140,12 @@ class BenchmarkRunner:
         # Log initial state
         self.live_logger.log_action("Logging initial state")
         self.logger.log_step(0, {
-            "step_type": "initialisation",
+            "step_type": "initial",
             "observation": observation.to_dict(),
             "system_prompt": self.agent.system_prompt,
             "user_prompt": self.task.get_user_prompt(),
-            "image": observation.image,
+            "tools": self.environment.get_tool_schemas(),
+            "image": observation.image, 
         })
         self.live_logger.log_result("Initial state logged")
         
@@ -160,9 +170,9 @@ class BenchmarkRunner:
             response, tool_calls = self._get_agent_response(step, prompt_history)
             
             self.live_logger.log_info(f"Step {step}:")
-            self.live_logger.log_info(f"Prompt history: {prompt_history}")
-            self.live_logger.log_info(f"Agent response: {response}")
-            self.live_logger.log_info(f"Tool calls: {tool_calls}")
+            self.live_logger.log_info(f"Prompt history: \n{prompt_history}")
+            self.live_logger.log_info(f"Agent response: \n{response}")
+            self.live_logger.log_info(f"Tool calls: \n{tool_calls}")
 
             # Check if agent wants to finish
             if self._should_finish_task(tool_calls):
@@ -172,7 +182,18 @@ class BenchmarkRunner:
             if tool_calls:
                 self._execute_tool_calls(step, tool_calls, response)
             else:
-                self._log_text_response(step, response, observation)
+                # Record text-only response in interaction history
+                self.interaction_history.append({
+                    "response": response,
+                    "actions": [],
+                    "observations": []
+                })
+                
+                self.logger.log_step(step, {
+                    "step_type": "response",
+                    "agent_response": response,
+                    "observation": observation.to_dict()
+                })
             
             self.live_logger.log_info(f"Step {step}, Token count: {self.agent.get_token_count()}")
         
@@ -191,25 +212,127 @@ class BenchmarkRunner:
         """Build prompt history from interaction history."""
         user_prompt = self.task.get_user_prompt()
         
+        # Add object mapping information so the agent knows which object_id corresponds to which color/object
+        object_mapping = self.get_object_mapping()
+        
         prompt_history = ""
-        for idx, (action, observation) in enumerate(self.interaction_history):
-            if observation.description:
-                prompt_history += f"Step {idx+1}:\n{observation.description}"
+        for idx, step_data in enumerate(self.interaction_history):
+            if idx == 0:  # Skip initial reset step
+                continue
+                
+            prompt_history += f"\n{'='*60}\nStep {idx}:\n"
             
-        return f"{user_prompt}\n\nInteraction History:\n{prompt_history}\n\nWhat's your next action?"
+            # Add agent response if present
+            response = step_data.get("response", "")
+            if response:
+                prompt_history += f"\n[Agent Response]:\n{response}\n"
+            
+            # Add actions if present
+            actions = step_data.get("actions", [])
+            if actions:
+                prompt_history += f"\n[Actions]:\n"
+                for i, action in enumerate(actions, 1):
+                    # Handle both Action objects and dicts
+                    if hasattr(action, 'action_type'):
+                        action_type = action.action_type
+                        parameters = action.parameters
+                    else:
+                        action_type = action.get("action_type", "unknown")
+                        parameters = action.get("parameters", {})
+                    prompt_history += f"  {i}. {action_type}({parameters})\n"
+            
+            # Add observations (tool results)
+            observations = step_data.get("observations", [])
+            if observations:
+                prompt_history += f"\n[Results]:\n"
+                for i, obs in enumerate(observations, 1):
+                    # Handle both Observation objects and dicts
+                    if hasattr(obs, 'description'):
+                        description = obs.description
+                    else:
+                        description = obs.get("description", "")
+                    if description:
+                        prompt_history += f"  {i}. {description}\n"
+        
+        # Include object mapping at the beginning so agent can reference it
+        full_prompt = f"{user_prompt}\n\n{object_mapping}\n"
+        
+        if prompt_history:
+            full_prompt += f"\nInteraction History:{prompt_history}\n"
+            
+        full_prompt += "\nNow, what's your next action?"
+        
+        return full_prompt
+    
+    def get_object_mapping(self) -> str:
+        """
+        Returns a string describing the mapping of object_id to its visual properties (color, name, type).
+        Uses p.getVisualShapeData to retrieve color information dynamically.
+        
+        Returns:
+            str: Human-readable description of all objects with their colors for the LLM to understand.
+        """
+        
+        lines = ["OBJECT MAPPING (object_id → properties):"]
+        lines.append("=" * 60)
+        
+        non_container_count = 0
+        
+        for obj_info in self.environment.objects:
+            # Skip container objects
+            if obj_info.properties.get('is_container', False):
+                continue
+                
+            obj_id = obj_info.object_id
+            # obj_name = obj_info.name
+            # obj_type = obj_info.object_type
+            non_container_count += 1
+            
+            # Get visual shape data to retrieve color
+            try:
+                visual_shapes = p.getVisualShapeData(obj_id)
+                
+                if visual_shapes:
+                    # Get color from the first visual shape (most objects have one main shape)
+                    # visual_shapes is a list of tuples: (objectUniqueId, linkIndex, visualGeometryType, 
+                    #                                      dimensions, filename, meshScale, rgbaColor, ...)
+                    rgba_color = visual_shapes[0][7]  # Index 7 is rgbaColor
+                    
+                    # Format color as RGB values (0-255 scale for readability)
+                    r = int(rgba_color[0] * 255)
+                    g = int(rgba_color[1] * 255)
+                    b = int(rgba_color[2] * 255)
+                    
+                    lines.append(f"object_id={obj_id}, RGB=({r}, {g}, {b})")
+                else:
+                    lines.append(f"object_id={obj_id}, color=unknown")
+                    
+            except Exception as e:
+                lines.append(f"object_id={obj_id}, color=error ({str(e)})")
+        
+        lines.append("=" * 60)
+        lines.append(f"Total movable objects: {non_container_count}")
+        # lines.append("\nTo interact with an object, use its object_id (integer) in tool calls.")
+        
+        return "\n".join(lines)
     
     def _get_agent_response(self, step: int, prompt_history: str) -> tuple:
         """Get response from agent."""
         self.live_logger.log_step_start(step, "Getting agent response")
         
-        recent_observations = [obs for _, obs in self.interaction_history[-self.config.runner.history_length:]]
+        # Get recent observations with images from interaction_history
+        recent_obs = []
+        for step_data in self.interaction_history[-self.config.runner.history_length:]:
+            observations = step_data.get("observations", [])
+            recent_obs.extend(observations)
+        
         response, tool_calls = self.agent.process_observation(
-            recent_observations, prompt_history, self.environment.get_tool_schemas()
+            recent_obs, prompt_history, self.environment.get_tool_schemas()
         )
         
         # Log agent's intention
         if tool_calls:
-            self.live_logger.log_info(f"Agent wants to execute {len(tool_calls)} tool(s)")
+            self.live_logger.log_info(f"Agent wants to execute {len(tool_calls)} tool(s): {tool_calls}")
         else:
             self.live_logger.log_info("Agent provided text response only")
             
@@ -229,15 +352,27 @@ class BenchmarkRunner:
     
     def _execute_tool_calls(self, step: int, tool_calls: list, response: str) -> None:
         """Execute all tool calls from the agent."""
+        step_actions = []
+        step_observations = []
+        
         for i, tool_call in enumerate(tool_calls, 1):
             try:
-                self._execute_single_tool(step, i, len(tool_calls), tool_call, response)
+                action, observation = self._execute_single_tool(step, i, len(tool_calls), tool_call, response)
+                step_actions.append(action)
+                step_observations.append(observation)
             except Exception as e:
                 self._log_tool_error(step, tool_call, response, e)
+        
+        # Record the complete step in interaction history (with actual objects)
+        self.interaction_history.append({
+            "response": response,
+            "actions": step_actions,
+            "observations": step_observations
+        })
     
     def _execute_single_tool(self, step: int, tool_index: int, total_tools: int, 
-                           tool_call: dict, response: str) -> None:
-        """Execute a single tool call."""
+                           tool_call: dict, response: str) -> Tuple[Action, Observation]:
+        """Execute a single tool call and return the action and observation."""
         tool_name = tool_call["function"]["name"]
         arguments = json.loads(tool_call["function"]["arguments"])
         
@@ -247,20 +382,20 @@ class BenchmarkRunner:
         action = Action(action_type=tool_name, parameters=arguments)
         observation = self.environment.step(action)
         
-        # Record in trajectory
-        self.interaction_history.append((action, observation))
-        
         # Log results
         self.live_logger.log_result(f"Tool completed: {observation.state.metadata['tool_result']}")
         
         self.logger.log_step(step, {
             "step_type": "action",
             "agent_response": response,
+            "tool_call": tool_call,
             "action": action.to_dict(),
             "observation": observation.to_dict(),
             "tool_result": observation.state.metadata['tool_result'],
             "image": observation.image,
         })
+        
+        return action, observation
     
     def _log_tool_error(self, step: int, tool_call: dict, response: str, error: Exception) -> None:
         """Log tool execution error."""
@@ -274,17 +409,6 @@ class BenchmarkRunner:
             "error": error_msg,
             "tool_call": tool_call,
             "agent_response": response
-        })
-    
-    def _log_text_response(self, step: int, response: str, observation: Observation) -> None:
-        """Log agent text response when no tools are called."""
-        truncated_response = f"{response[:100]}{'...' if len(response) > 100 else ''}"
-        self.live_logger.log_info(f"Agent response: {truncated_response}")
-        
-        self.logger.log_step(step, {
-            "step_type": "response",
-            "agent_response": response,
-            "observation": observation.to_dict()
         })
     
     def _is_token_limit_exceeded(self) -> bool:
@@ -301,7 +425,7 @@ class BenchmarkRunner:
         
         raise RuntimeError(f"Token count exceeded max content size: {token_count}, Max: {max_tokens}")
     
-    def _create_task_result(self, step: int) -> TaskResult:
+    def _create_task_result(self, total_steps: int) -> TaskResult:
         """Create the final task result."""
         execution_time = time.time() - self.start_time
         
@@ -309,7 +433,7 @@ class BenchmarkRunner:
         StatusDisplay.print_section("Task Execution Completed")
         results = {
             "Execution Time": f"{execution_time:.2f}s",
-            "Total Steps": step,
+            "Total Steps": total_steps,
             "Total Tokens": self.agent.get_token_count()
         }
         StatusDisplay.print_results(results, "Execution Summary")
@@ -317,7 +441,7 @@ class BenchmarkRunner:
         task_result = TaskResult(
             task_id=self.task.task_id,
             task_type=self.config.task.type,
-            total_steps=step,
+            total_steps=total_steps,
             execution_time=execution_time,
             trajectory=self.interaction_history,
             success=False,  # Success determined during evaluation

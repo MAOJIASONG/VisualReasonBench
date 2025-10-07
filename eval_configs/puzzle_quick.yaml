@@ -5,28 +5,25 @@ runner:
   experiment_name: puzzle_assembly_quick_test
   log_dir: "logs"
   results_excel_path: "experiment_results.xlsx"
-  save_images: true
-  save_multi_view: true
-  save_trajectory: true
   history_length: 5
 
 agent:
   type: "openai"
-  model_name: "gpt-4o"
+  model_name: "gpt-5-mini"
   # API key and base URL are loaded from environment variables (.env file or system export)
   # Example .env file:
   # OPENAI_API_KEY="your_api_key_here"
   # OPENAI_BASE_URL="https://api.openai.com/v1"
   api_key: null
   base_url: null
-  temperature: 0.3
-  max_tokens: 300
-  max_content_size: 128000
+  temperature: 0.7
+  max_tokens: 5000
+  # max_content_size: 128000
   timeout: 300.0
 
 judgement:
   type: "openai"
-  model_name: "gpt-4o-mini"
+  model_name: "gpt-5-mini"
   api_key: null
   base_url: null
   temperature: 0.1
@@ -42,24 +39,12 @@ environment:
   multi_view: true
   load_table: false
   max_steps: 30
-  num_pieces: 7  # 7 complex pieces + 1 container
-  puzzle_size: [3, 3, 3]  # Target 3x3x3 cube
-  piece_size: 0.08
-  piece_thickness: 0.01
-  completion_tolerance: 0.05
-  target_area_center: [0, 0, 0.41]  # Container position
-  scatter_radius: 0.3
-  is_3d: true  # 3D stacking puzzle
-  container_based: true  # Pieces go into container
 
 task:
-  type: "puzzle_assembly"
-  name: "3d_cube_stacking_puzzle"
+  type: "3x3_stacking"
+  name: "3x3_stacking_puzzle"
   difficulty: medium
-  num_pieces: 7  # 7 complex pieces + 1 container
-  puzzle_size: [3, 3, 3]  # Target 3x3x3 cube
+  num_pieces: 9  # 9 complex pieces + 1 container
+  puzzle_size: [3, 3]  # Target 3x3 cube
   piece_size: 0.08
-  completion_threshold: 1.0  # All pieces must fit in container
-  allow_auto_solve: false
   ruled_evaluation: false
-  container_based: true  # Container-based puzzle

@@ -159,7 +159,7 @@ class PhysicsEnvironment(BaseEnvironment):
         # Optionally load a table
         if self.config.load_table:
             try:
-                self.table_id = p.loadURDF("table/table.urdf", basePosition=[0, 0, 0], globalScaling=1.0, physicsClientId=self.client_id)
+                self.table_id = p.loadURDF("table/table.urdf", basePosition=self.config.table_position, globalScaling=1.0, physicsClientId=self.client_id)
                 p.changeDynamics(self.table_id, -1, lateralFriction=1.0, spinningFriction=0.002, rollingFriction=0.002, linearDamping=0.02, angularDamping=0.02)
             except:
                 # Create simple table if default doesn't exist
@@ -173,7 +173,6 @@ class PhysicsEnvironment(BaseEnvironment):
         table_width = 1.5
         table_length = 1.5 
         table_height = 0.02
-        table_z = 0.4
         
         # Create table collision shape
         collision_shape = p.createCollisionShape(
@@ -193,7 +192,7 @@ class PhysicsEnvironment(BaseEnvironment):
             baseMass=0,  # Static
             baseCollisionShapeIndex=collision_shape,
             baseVisualShapeIndex=visual_shape,
-            basePosition=[0, 0, table_z]
+            basePosition=self.config.table_position
         )
     
     def _create_observation(self) -> Observation:
@@ -284,81 +283,41 @@ class PhysicsEnvironment(BaseEnvironment):
         # Base tool schemas available to all environments
         base_schemas = [
             build_schema(
-                "pick",
-                "Pick an object by name into a virtual gripper.",
+                "move_object",
+                "Move an object to a specific 3D position in the workspace. The object will be teleported to the target position instantly. CONSTRAINTS: Position coordinates should be within the workspace bounds (typically -2.0 to 2.0 meters for x and y, 0.0 to 2.0 meters for z). Objects moved above ground (z > 0) will fall under gravity.",
                 {
-                    "object_id": {"type": "string", "description": "Name of object to pick"},
-                },
-                ["object_id"],
-            ),
-            build_schema(
-                "place",
-                "Place a previously picked object at a target 3D position.",
-                {
-                    "object_id": {"type": "string", "description": "Name of object to place"},
+                    "object_id": {"type": "integer", "description": "Unique object_id (integer) of the object to move. Get this from the observation state."},
                     "position": {
                         "type": "array",
                         "items": {"type": "number"},
                         "minItems": 3,
                         "maxItems": 3,
-                        "description": "Target position [x, y, z]"
+                        "description": "Target position [x, y, z] in meters. Example: [0.5, 0.2, 0.1]. Ensure z >= 0 to keep objects above ground."
                     },
                 },
                 ["object_id", "position"],
             ),
             build_schema(
-                "move",
-                "Move an object to a specific 3D position.",
+                "rotate_object",
+                "Rotate an object around a specified axis by a given angle. The rotation is applied relative to the object's current orientation. CONSTRAINTS: Angle should typically be between -180 and 180 degrees. Common angles: 90° for quarter turn, 180° for half turn.",
                 {
-                    "object_id": {"type": "string", "description": "Name of object to move"},
-                    "position": {
-                        "type": "array",
-                        "items": {"type": "number"},
-                        "minItems": 3,
-                        "maxItems": 3,
-                        "description": "Target position [x, y, z]"
-                    },
-                },
-                ["object_id", "position"],
-            ),
-            build_schema(
-                "push",
-                "Apply a pushing force to an object.",
-                {
-                    "object_id": {"type": "string", "description": "Name of object to push"},
-                    "force": {"type": "number", "default": 10.0, "description": "Push force magnitude"},
-                    "direction": {
-                        "type": "array",
-                        "items": {"type": "number"},
-                        "minItems": 3,
-                        "maxItems": 3,
-                        "default": [1, 0, 0],
-                        "description": "Push direction [x, y, z]"
-                    },
-                },
-                ["object_id", "force", "direction"],
-            ),
-            build_schema(
-                "rotate",
-                "Rotate an object to a specific orientation.",
-                {
-                    "object_id": {"type": "string", "description": "Name of object to rotate"},
-                    "axis": {"type": "string", "enum": ["x", "y", "z"], "description": "Rotation axis"},
-                    "angle": {"type": "number", "description": "Rotation angle in radians"},
+                    "object_id": {"type": "integer", "description": "Unique object_id (integer) of the object to rotate. Get this from the observation state."},
+                    "axis": {"type": "string", "enum": ["x", "y", "z"], "description": "Rotation axis: 'x' for pitch, 'y' for yaw, 'z' for roll"},
+                    "angle": {"type": "number", "description": "Rotation angle in degrees (positive = counter-clockwise when viewing along the axis). Typical range: -180 to 180."},
                 },
                 ["object_id", "axis", "angle"],
             ),
             build_schema(
                 "observe",
-                "Observe the scene from a rotated camera angle.",
+                "Change camera viewpoint to observe the scene from a different angle. The camera rotates around the center of the scene at a fixed distance. Use this to inspect objects from different perspectives. CONSTRAINTS: Angle wraps around at 360 degrees (0° = front view, 90° = right side, 180° = back, 270° = left side).",
                 {
-                    "angle": {"type": "number", "default": 0.0, "description": "Camera rotation angle in radians"},
+                    "angle": {"type": "number", "default": 0.0, "description": "Camera rotation angle in degrees around the scene center. 0° = front, 90° = right, 180° = back, 270° = left. Range: 0-360 (wraps around)."},
                 },
                 ["angle"],
             ),
             build_schema(
                 "finish",
-                "Finish the task.",
+                "Signal that you have completed the task successfully. ONLY call this when you believe all task objectives have been fully achieved. The system will evaluate your result after this call.",
                 {},
                 [],
             ),
@@ -370,60 +329,24 @@ class PhysicsEnvironment(BaseEnvironment):
         return base_schemas + task_specific_schemas
     
     def get_object_by_id(self, object_id: int) -> Optional[ObjectInfo]:
-        """Get object by name from the objects list."""
+        """Get object by its unique object_id (integer) from the objects list."""
         for obj in self.objects:
             if obj.object_id == object_id:
                 return obj
         return None
 
     # Tool implementations
-    @BaseEnvironment.register_tool("pick")
-    def _tool_pick(self, object_id: int) -> Dict[str, Any]:
-        """Pick tool implementation."""
+    @BaseEnvironment.register_tool("move_object")    
+    def _tool_move_object(self, object_id: int, position: List[float]) -> Dict[str, Any]:
+        """Move an object to a specific 3D position."""
         obj_info = self.get_object_by_id(object_id)
         if not obj_info:
-            return {"status": "error", "message": f"Object {object_id} not found"}
-        
-        # Add to held objects
-        if object_id not in self.held_object_ids:
-            self.held_object_ids.append(object_id)
-        
-        return {"status": "success", "message": f"Picked up {object_id}", "held_object_ids": self.held_object_ids}
-
-    @BaseEnvironment.register_tool("place")    
-    def _tool_place(self, object_id: int, position: List[float]) -> Dict[str, Any]:
-        """Place tool implementation."""
-        obj_info = self.get_object_by_id(object_id)
-        if not obj_info:
-            return {"status": "error", "message": f"Object {object_id} not found"}
+            return {"status": "error", "message": f"Object with object_id {object_id} not found"}
             
         if not position or len(position) != 3:
-            return {"status": "error", "message": "Invalid position"}
-            
-        p.resetBasePositionAndOrientation(obj_info.object_id, position, obj_info.orientation)
+            return {"status": "error", "message": "Invalid position. Must provide [x, y, z]"}
         
-        # Update object info
-        obj_info.position = tuple(position)
-        
-        # Remove from held objects
-        try:
-            self.held_object_ids.remove(object_id)
-        except ValueError:
-            pass
-        
-        return {"status": "success", "message": f"Placed {object_id} at {position}"}
-    
-    @BaseEnvironment.register_tool("move")    
-    def _tool_move(self, object_id: int, position: List[float]) -> Dict[str, Any]:
-        """Move tool implementation."""
-        obj_info = self.get_object_by_id(object_id)
-        if not obj_info:
-            return {"status": "error", "message": f"Object {object_id} not found"}
-            
-        if not position or len(position) != 3:
-            return {"status": "error", "message": "Invalid position"}
-        
-        # Directly move object to target position
+        # Move object to target position
         p.resetBasePositionAndOrientation(
             obj_info.object_id,
             position,
@@ -433,37 +356,18 @@ class PhysicsEnvironment(BaseEnvironment):
         # Update object info
         obj_info.position = tuple(position)
         
-        return {"status": "success", "message": f"Moved {object_id} to {position}"}
-        
-    @BaseEnvironment.register_tool("push")    
-    def _tool_push(self, object_id: int, force: float, direction: List[float]) -> Dict[str, Any]:
-        """Push tool implementation."""
-        obj_info = self.get_object_by_id(object_id)
-        if not obj_info:
-            return {"status": "error", "message": f"Object {object_id} not found"}
-        
-        # Normalize direction
-        direction = np.array(direction)
-        if np.linalg.norm(direction) > 0:
-            direction = direction / np.linalg.norm(direction)
-        else:
-            direction = np.array([1, 0, 0])
-        
-        # Apply force
-        p.applyExternalForce(
-            obj_info.object_id, -1,
-            [force * direction[0], force * direction[1], force * direction[2]],
-            obj_info.position, p.WORLD_FRAME
-        )
-        
-        return {"status": "success", "message": f"Pushed {object_id} with force {force}"}
+        return {"status": "success", "message": f"Moved object_id {object_id} to position {position}"}
     
-    @BaseEnvironment.register_tool("rotate")    
-    def _tool_rotate(self, object_id: int, axis: str, angle: float) -> Dict[str, Any]:
-        """Rotate tool implementation."""
+    @BaseEnvironment.register_tool("rotate_object")    
+    def _tool_rotate_object(self, object_id: int, axis: str, angle: float) -> Dict[str, Any]:
+        """Rotate an object around a specified axis."""
         obj_info = self.get_object_by_id(object_id)
         if not obj_info:
-            return {"status": "error", "message": f"Object {object_id} not found"}
+            return {"status": "error", "message": f"Object with object_id {object_id} not found"}
+        
+        # Convert angle from degrees to radians
+        import math
+        angle_rad = math.radians(angle)
         
         # Get current orientation
         current_orient = obj_info.orientation
@@ -471,13 +375,13 @@ class PhysicsEnvironment(BaseEnvironment):
         
         # Apply rotation
         if axis.lower() == "x":
-            new_euler = [current_euler[0] + angle, current_euler[1], current_euler[2]]
+            new_euler = [current_euler[0] + angle_rad, current_euler[1], current_euler[2]]
         elif axis.lower() == "y":
-            new_euler = [current_euler[0], current_euler[1] + angle, current_euler[2]]
+            new_euler = [current_euler[0], current_euler[1] + angle_rad, current_euler[2]]
         elif axis.lower() == "z":
-            new_euler = [current_euler[0], current_euler[1], current_euler[2] + angle]
+            new_euler = [current_euler[0], current_euler[1], current_euler[2] + angle_rad]
         else:
-            return {"status": "error", "message": f"Invalid axis: {axis}"}
+            return {"status": "error", "message": f"Invalid axis: {axis}. Must be 'x', 'y', or 'z'"}
         
         new_orientation = p.getQuaternionFromEuler(new_euler)
         
@@ -491,21 +395,23 @@ class PhysicsEnvironment(BaseEnvironment):
         # Update object info
         obj_info.orientation = new_orientation
         
-        return {"status": "success", "message": f"Rotated {object_id} {angle} radians around {axis}-axis"}
+        return {"status": "success", "message": f"Rotated object_id {object_id} by {angle}° around {axis}-axis"}
         
     @BaseEnvironment.register_tool("observe")    
-    def _tool_observe(self, angle: float) -> Dict[str, Any]:
-        """Observe tool implementation."""
-        # Rotate camera view
+    def _tool_observe(self, angle: float = 0.0) -> Dict[str, Any]:
+        """Change camera viewpoint to observe from different angle."""
         import math
+        # Convert angle from degrees to radians
+        angle_rad = math.radians(angle)
+        
         radius = 1.5
         height = 1.0
-        x = radius * math.cos(angle)
-        y = radius * math.sin(angle)
+        x = radius * math.cos(angle_rad)
+        y = radius * math.sin(angle_rad)
         
         self.multi_view_renderer.set_camera_config("perspective", [x, y, height], [0, 0, 0.3])
         
-        return {"status": "success", "message": f"Observing from angle {angle:.2f} radians"}
+        return {"status": "success", "message": f"Camera moved to {angle}° viewpoint"}
 
     @BaseEnvironment.register_tool("finish")    
     def _tool_finish(self) -> Dict[str, Any]:
@@ -535,15 +441,27 @@ class PhysicsEnvironment(BaseEnvironment):
                   position: Tuple[float, float, float],
                   orientation: Tuple[float, float, float, float] = (0, 0, 0, 1),
                   object_type: str = "block",
-                  properties: Dict[str, Any] = None) -> int:
-        """Add object to the environment."""
+                  properties: Dict[str, Any] = None,
+                  scale: float = 1.0) -> int:
+        """Add object to the environment.
+        
+        Args:
+            object_name: Name of the object
+            urdf_path: Path to URDF file
+            position: Initial position (x, y, z)
+            orientation: Initial orientation quaternion (x, y, z, w)
+            object_type: Type of object (e.g., "block", "puzzle_piece")
+            properties: Additional properties dictionary
+            scale: Global scaling factor for the URDF model (default: 1.0)
+        """
         if properties is None:
             properties = {}
         try:
             object_id = p.loadURDF(
                 urdf_path,
                 basePosition=position,
-                baseOrientation=orientation
+                baseOrientation=orientation,
+                globalScaling=scale
             )
 
             p.changeDynamics(object_id, -1, lateralFriction=1.0, spinningFriction=0.002, rollingFriction=0.002, linearDamping=0.04, angularDamping=0.04)

@@ -4,11 +4,11 @@ Domino task implementation for falling domino puzzles.
 
 import os
 from dataclasses import dataclass
-from typing import Any, Dict, List, Set, Tuple
+from typing import List, Set, Tuple
 
 from phyvpuzzle.core import (TaskConfig, register_task,
                              register_task_config)
-from phyvpuzzle.core.base import (Action, ObjectInfo, State, TaskDifficulty,
+from phyvpuzzle.core.base import (Action, ObjectInfo, TaskDifficulty,
                                   TaskResult, Observation)
 from phyvpuzzle.environment.domino_env import DominoEnvironment, p
 from phyvpuzzle.tasks.base_task import PhysicsTask
@@ -28,7 +28,7 @@ class DominoDontFallTaskConfig(TaskConfig):
 class DominoDontFallTask(PhysicsTask):
     """Task for domino falling chain reaction puzzles."""
     
-    def __init__(self, config: TaskConfig):
+    def __init__(self, config: DominoDontFallTaskConfig):
         super().__init__(config)
 
     def _calculate_optimal_steps(self) -> int:
@@ -257,11 +257,26 @@ class DominoDontFallTask(PhysicsTask):
                 task_result.success = False
         return task_results
 
-    def _find_fallen_dominoes(self, trajectory: List[Tuple[Action, Observation]]) -> Tuple[Set[str], int]:
-        """Find fallen dominoes."""
+    def _find_fallen_dominoes(self, trajectory) -> Tuple[Set[str], int]:
+        """Find fallen dominoes (supports both old and new trajectory formats)."""
         fallen_count = 0
         fallen_dominoes = set()
-        for obj in trajectory[-1][-1].objects:  # (action, tool_response, resulting_state)
+        
+        # Get objects from the last step (support both formats)
+        last_step = trajectory[-1]
+        if isinstance(last_step, dict):
+            # New format: {"response": str, "actions": List[Action], "observations": List[Observation]}
+            observations = last_step.get("observations", [])
+            if not observations:
+                return fallen_dominoes, 0
+            final_observation = observations[-1]
+            # observations are now Observation objects
+            objects = final_observation.state.objects
+        else:
+            # Old format: (action, observation)
+            objects = last_step[-1].objects if hasattr(last_step[-1], 'objects') else last_step[1].state.objects
+        
+        for obj in objects:
             orient = obj.orientation
             
             # Convert quaternion to euler angles
@@ -281,31 +296,25 @@ class DominoDontFallTask(PhysicsTask):
         arrangement = self.config.arrangement_pattern
         difficulty = self.config.difficulty.value
 
-        task_success_criteria = f"""
-DOMINO FALLING TASK SUCCESS EVALUATION
+        task_success_criteria = f"""This is a domino chain-reaction puzzle task.
 
-Task Setup:
+Task Configuration:
 - Total dominoes: {num_dominoes}
-- Arrangement: {arrangement}
-- Difficulty: {difficulty}
+- Arrangement pattern: {arrangement}
+- Difficulty level: {difficulty}
 
-Success Criteria:
-1. PRIMARY GOAL: At least 80% of dominoes must have fallen over
-2. The dominoes should form a clear chain reaction pattern
-3. Most dominoes should be lying horizontally or at a steep angle (not upright)
+Objective:
+Create a continuous chain reaction where dominoes fall in sequence, with at least 80% of all dominoes successfully falling over.
 
-What to look for in the final image:
-- Count how many dominoes are clearly fallen (lying down)
-- Check if there's a clear progression of the chain reaction
-- Upright dominoes indicate failure at that point in the chain
+Success Indicators:
+- At least 80% of dominoes are lying horizontally or at a steep angle (clearly fallen)
+- A clear chain reaction pattern is visible in the domino positions
+- The fallen dominoes show sequential progression from the starting point
 
-Evaluation Guidelines:
-- If 80% or more dominoes are fallen: SUCCESS
-- If 60-79% dominoes are fallen: PARTIAL SUCCESS (judge as success if chain reaction clearly occurred)
-- If less than 60% dominoes are fallen: FAILURE
-
-Please analyze the final image and determine if the chain reaction was successful based on the domino positions.
-"""  
+Failure Indicators:
+- More than 20% of dominoes remain upright
+- Chain reaction was broken or incomplete
+- Dominoes are still standing in their original positions"""  
         for task_result in task_results:
             try:
                 judge_metrics = self.evaluator._evaluate_with_judge(task_result, task_success_criteria)
@@ -320,74 +329,86 @@ Please analyze the final image and determine if the chain reaction was successfu
         return task_results
     
     def _get_initial_system_prompt(self) -> str:
-        """Get base system prompt for domino tasks."""
-        base_prompt = """You are an AI agent controlling a physics simulation to solve domino falling puzzles. 
-Your goal is to create a chain reaction by pushing the first domino, causing all dominoes to fall in sequence.
-You can observe the environment through images showing the current state of the domino setup from multiple viewpoints.
-You may use the available tools to interact with the dominoes as needed.
-
-IMPORTANT GUIDELINES:
-1. Always observe the initial setup carefully before taking action
-2. Usually, pushing the first domino with appropriate force is sufficient
-3. The chain reaction should propagate through all dominoes automatically
-4. Success is measured by the percentage of dominoes that fall (typically >80%)
-5. Get different viewpoints if needed to assess the situation
-6. Be patient - allow time for the physics simulation to propagate the chain reaction"""
-
-
-        arrangement = self.config.arrangement_pattern
-        num_dominoes = self.config.num_dominoes
+        """Get base system prompt for domino chain-reaction tasks."""
         
-        prompt = base_prompt + "\n\n" + f"""
-        TASK SPECIFICS:
-        - Number of dominoes: {num_dominoes}
-        - Arrangement pattern: {arrangement}
-        - Difficulty: {self.config.difficulty.value}
-        """
-        
-        if arrangement == "line":
-            prompt += "- The dominoes are arranged in a straight line. Push the first domino to start the chain."
-        elif arrangement == "curve":
-            prompt += "- The dominoes are arranged in a curved pattern. Consider the curve when pushing."
-        elif arrangement == "zigzag":
-            prompt += "- The dominoes are arranged in a zigzag pattern. The chain reaction follows the zigzag path."
-        elif arrangement == "circle":
-            prompt += "- The dominoes are arranged in a circle. The chain reaction should propagate around the circle."
-            
-        # Add difficulty-specific guidance
-        if self.config.difficulty == TaskDifficulty.EASY:
-            prompt += "\n- This is an easy setup - standard force should work well."
-        elif self.config.difficulty == TaskDifficulty.MEDIUM:
-            prompt += "\n- This is a medium difficulty setup - you may need to adjust force or direction."
-        elif self.config.difficulty == TaskDifficulty.HARD:
-            prompt += "\n- This is a hard setup - careful observation and precise pushing may be needed."
-        
-        return prompt
+        return """You are an AI agent operating inside a physics-based 3D simulation environment.
+Your mission is to solve domino chain-reaction puzzles by initiating a successful sequence of falling dominoes.
+
+ROLE AND BEHAVIOR:
+- You act as a reasoning and control agent capable of planning and executing physical interactions.
+- You can observe the environment, assess the domino setup, and decide where and how to act.
+- You should analyze the initial configuration before taking any action.
+- Think logically and strategically, ensuring your actions follow realistic physical behavior.
+
+PRIMARY OBJECTIVE:
+- Create a continuous chain reaction where all dominoes fall in sequence.
+- Achieve the maximum possible fall success rate (ideally all dominoes).
+
+GUIDING PRINCIPLES:
+1. Observe the full domino setup before applying any force.
+2. Typically, a single well-placed push on the first domino is enough to start the sequence.
+3. Choose the push direction and magnitude based on the arrangement pattern.
+4. Allow the physics simulation to naturally propagate the motion.
+5. Evaluate success based on how many dominoes fall.
+6. Maintain patience and precision — small mistakes in force or angle can break the chain.
+
+You will now receive detailed task instructions describing the current domino setup and success conditions.
+"""
+
         
     def _get_initial_instruction(self) -> str:
-        """Get description of the specific domino task instance."""
-        return f"""DOMINO FALLING PUZZLE
+        """Get specific task instruction for the current domino setup."""
+    
+        num_dominoes = self.config.num_dominoes
+        arrangement = self.config.arrangement_pattern
+        difficulty = self.config.difficulty.value
 
-You are presented with {self.config.num_dominoes} dominoes arranged in a {self.config.arrangement_pattern} pattern.
-Your objective is to create a chain reaction by pushing the first domino, causing all dominoes to fall in sequence.
+        # 基础任务描述
+        instruction = f"""DOMINO CHAIN-REACTION TASK
 
-Task Details:
-- Difficulty Level: {self.config.difficulty.value}
-- Number of Dominoes: {self.config.num_dominoes}
-- Arrangement: {self.config.arrangement_pattern}
-- Success Criteria: At least 80% of dominoes must fall
+You are presented with {num_dominoes} dominoes arranged in a {arrangement} pattern.
+Your objective is to start a chain reaction that causes all dominoes to fall sequentially.
 
-The physics simulation will handle the chain reaction once you provide the initial push.
-Observe the setup carefully and determine the best approach to ensure maximum domino fall rate.
+TASK DETAILS:
+- Number of Dominoes: {num_dominoes}
+- Arrangement Pattern: {arrangement}
+- Difficulty Level: {difficulty}
+- Success Criteria: At least 80% of dominoes must fall in sequence
 
-Please start by observing the domino setup. Look at the arrangement pattern, spacing, and orientation of the dominoes. 
-Once you understand the setup, push the first domino with appropriate force to start the chain reaction.
+ENVIRONMENT CONTEXT:
+- The dominoes are standing upright on a flat surface.
+- You can observe the setup from multiple viewpoints.
+- Once you trigger the first domino, the physics simulation will naturally propagate the reaction.
+"""
 
-Remember to:
-1. First observe the scene to understand the domino layout
-2. Push the first domino (usually domino_1) to start the chain
-3. Wait for the chain reaction to complete
-4. Check the solution to see how many dominoes fell
-5. If needed, you can observe from different angles or make additional pushes"""
-            
-        
+        # 根据排列模式补充提示
+        if arrangement == "line":
+            instruction += "\nPattern Hint: The dominoes are aligned in a straight line — a simple forward push is typically effective."
+        elif arrangement == "curve":
+            instruction += "\nPattern Hint: The dominoes follow a curved path — ensure your push follows the curve direction."
+        elif arrangement == "zigzag":
+            instruction += "\nPattern Hint: The dominoes form a zigzag pattern — adjust your push angle carefully to maintain the chain."
+        elif arrangement == "circle":
+            instruction += "\nPattern Hint: The dominoes are arranged in a circle — the chain should travel around the circle smoothly."
+
+        # 根据难度增加提示
+        if self.config.difficulty.name == "EASY":
+            instruction += "\nDifficulty Note: The setup is simple — a moderate push should be sufficient."
+        elif self.config.difficulty.name == "MEDIUM":
+            instruction += "\nDifficulty Note: Requires attention to push strength and direction."
+        elif self.config.difficulty.name == "HARD":
+            instruction += "\nDifficulty Note: The setup is complex — precise timing and force are critical."
+
+        # 操作指导
+        instruction += """
+STRATEGY TIPS:
+1. Observe the entire setup before interacting.
+2. Plan the best point of contact for the initial push.
+3. Apply an appropriate amount of force — not too weak or too strong.
+4. Allow time for the chain reaction to complete before evaluating results.
+5. Observe from different viewpoints if needed to verify success.
+
+Once complete, check the percentage of dominoes that have fallen to determine success.
+"""
+        return instruction
+

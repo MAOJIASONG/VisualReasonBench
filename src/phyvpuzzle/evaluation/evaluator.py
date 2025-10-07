@@ -32,12 +32,23 @@ class BenchmarkEvaluator(BaseEvaluator):
         if not task_result.trajectory:
             return {}
             
-        # Get final image from trajectory
+        # Get final image from trajectory (support both old and new formats)
         final_image = None
         if task_result.trajectory:
-            # Try to get image from final state
-            final_observation = task_result.trajectory[-1][1]  # (action, observation)
-            final_image = getattr(final_observation, 'image', None)
+            last_step = task_result.trajectory[-1]
+            
+            # Check if new format (dict) or old format (tuple)
+            if isinstance(last_step, dict):
+                # New format: {"response": str, "actions": List[Action], "observations": List[Observation]}
+                observations = last_step.get("observations", [])
+                if observations:
+                    final_observation = observations[-1]
+                    # observations are now Observation objects, can get image directly
+                    final_image = getattr(final_observation, 'image', None)
+            else:
+                # Old format: (action, observation)
+                final_observation = last_step[1]
+                final_image = getattr(final_observation, 'image', None)
             
         if not final_image:
             return {}
@@ -50,10 +61,22 @@ class BenchmarkEvaluator(BaseEvaluator):
             if task_result.metadata.get("description"):
                 task_description += f". {task_result.metadata['description']}"
             
-        # Create trajectory summary
+        # Create trajectory summary (support both formats)
         trajectory_summary = []
-        for i, (action, observation) in enumerate(task_result.trajectory):
-            trajectory_summary.append(f"Step {i+1}: {action.action_type} - {observation.description}")
+        for i, step_data in enumerate(task_result.trajectory):
+            if isinstance(step_data, dict):
+                # New format: actions and observations are objects
+                actions = step_data.get("actions", [])
+                observations = step_data.get("observations", [])
+                for j, (action, obs) in enumerate(zip(actions, observations)):
+                    # Handle Action and Observation objects
+                    action_type = action.action_type if hasattr(action, 'action_type') else action.get("action_type", "unknown")
+                    obs_desc = obs.description if hasattr(obs, 'description') else obs.get("description", "")
+                    trajectory_summary.append(f"Step {i+1}.{j+1}: {action_type} - {obs_desc}")
+            else:
+                # Old format: (action, observation)
+                action, observation = step_data
+                trajectory_summary.append(f"Step {i+1}: {action.action_type} - {observation.description}")
             
         # Get judge evaluation
         judge_success, confidence, reasoning = self.judge.judge_success(
@@ -176,11 +199,34 @@ class BenchmarkEvaluator(BaseEvaluator):
         
         for task_result in evaluation_result.task_results:
             trajectory = []
-            for action, observation in task_result.trajectory:
-                trajectory.append({
-                    "action": action.to_dict(),
-                    "observation": observation.to_dict(),
-                })
+            
+            # Support both old and new trajectory formats
+            for step_data in task_result.trajectory:
+                if isinstance(step_data, dict):
+                    # New format: dict with Action and Observation objects
+                    step_dict = {
+                        "response": step_data.get("response", ""),
+                        "actions": [],
+                        "observations": []
+                    }
+                    
+                    # Serialize actions
+                    for action in step_data.get("actions", []):
+                        step_dict["actions"].append(action.to_dict() if hasattr(action, 'to_dict') else action)
+                    
+                    # Serialize observations
+                    for obs in step_data.get("observations", []):
+                        step_dict["observations"].append(obs.to_dict() if hasattr(obs, 'to_dict') else obs)
+                    
+                    trajectory.append(step_dict)
+                else:
+                    # Old format: (action, observation) tuple
+                    action, observation = step_data
+                    trajectory.append({
+                        "action": action.to_dict() if hasattr(action, 'to_dict') else action,
+                        "observation": observation.to_dict() if hasattr(observation, 'to_dict') else observation,
+                    })
+            
             trajectories_data[task_result.task_id] = trajectory
             
         with open(trajectories_path, 'w') as f:

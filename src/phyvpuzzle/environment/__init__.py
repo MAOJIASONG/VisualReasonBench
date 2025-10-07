@@ -9,7 +9,6 @@ PhysicsEnvironment base class and add task-specific functionality.
 # Normal imports to ensure proper environment registration
 from phyvpuzzle.environment.base_env import PhysicsEnvironment
 from phyvpuzzle.environment.domino_env import DominoEnvironment, DominoConfig
-from phyvpuzzle.environment.lego_env import LegoEnvironment, LegoConfig
 from phyvpuzzle.environment.puzzle_env import PuzzleEnvironment, PuzzleConfig
 
 __all__ = [

@@ -5,14 +5,11 @@ runner:
   experiment_name: domino_quick_test
   log_dir: "logs"
   results_excel_path: "experiment_results.xlsx"
-  save_images: true
-  save_multi_view: true
-  save_trajectory: true
   history_length: 5
 
 agent:
   type: "openai"
-  model_name: "gpt-4o"
+  model_name: "gpt-5-mini"
   # API key and base URL are loaded from environment variables (.env file or system export)
   # Example .env file:
   # OPENAI_API_KEY="your_api_key_here"

@@ -245,12 +245,24 @@ class MetricsCalculator:
         trajectory_lengths = [len(result.trajectory) for result in task_results]
         analysis["avg_trajectory_length"] = np.mean(trajectory_lengths)
         
-        # Analyze first actions
+        # Analyze first actions (support both old and new formats)
         first_actions = defaultdict(int)
         for result in task_results:
             if result.trajectory:
-                first_action = result.trajectory[0][0].action_type  # (action, state, feedback)
-                first_actions[first_action] += 1
+                first_step = result.trajectory[0]
+                
+                if isinstance(first_step, dict):
+                    # New format: {"response": str, "actions": List[Action], "observations": List[Observation]}
+                    actions = first_step.get("actions", [])
+                    if actions:
+                        first_action = actions[0]
+                        first_action_type = first_action.action_type if hasattr(first_action, 'action_type') else first_action.get("action_type", "unknown")
+                        first_actions[first_action_type] += 1
+                else:
+                    # Old format: (action, observation)
+                    first_action = first_step[0]
+                    first_action_type = first_action.action_type if hasattr(first_action, 'action_type') else str(first_action.get("action_type", "unknown"))
+                    first_actions[first_action_type] += 1
                 
         total_results = len(task_results)
         analysis["common_first_actions"] = {

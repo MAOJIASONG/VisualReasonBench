@@ -11,15 +11,11 @@ This package contains specific puzzle task implementations including:
 
 # Normal imports to ensure proper task registration
 from phyvpuzzle.tasks.base_task import PhysicsTask
-from phyvpuzzle.tasks.domino_dont_fall_task import DominoDontFallTask
-from phyvpuzzle.tasks.luban_task import LubanTask
-from phyvpuzzle.tasks.pagoda_task import PagodaTask
-from phyvpuzzle.tasks.puzzle_task import PuzzleAssemblyTask
+from phyvpuzzle.tasks.domino_dont_fall import DominoDontFallTask
+from phyvpuzzle.tasks.three_by_three_stacking import ThreeByThreeStackingTask
 
 __all__ = [
     "PhysicsTask",
     "DominoDontFallTask",
-    "LubanTask",
-    "PagodaTask",
-    "PuzzleAssemblyTask"
+    "ThreeByThreeStackingTask"
 ]

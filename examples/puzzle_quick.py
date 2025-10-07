@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """A quick demonstration of the PhyVPuzzle system using a jigsaw puzzle assembly task."""
-
-import sys
+# import debugpy;debugpy.connect(("localhost", 9501))
 import os
 from pathlib import Path
 
@@ -49,9 +48,6 @@ def main():
         print(f"  Experiment Name   : {config.runner.experiment_name}")
         print(f"  Agent (subject)   : {config.agent.model_name}")
         print(f"  Task Type         : {config.task.type} ({config.task.difficulty.value})")
-        print(f"  Puzzle Grid Size  : {config.task.puzzle_size[0]}x{config.task.puzzle_size[1]}")
-        print(f"  Number of Pieces  : {config.task.num_pieces}")
-        print(f"  Success Threshold : {config.task.completion_threshold*100}%")
         print(f"  Max Steps         : {config.environment.max_steps}")
         print("-" * 50)
         
@@ -63,12 +59,11 @@ def main():
         print("  • Assemble scattered puzzle pieces into correct positions")
         print("  • Each piece has a unique color for identification")
         print("  • Use available tools to place and align pieces")
-        print(f"  • Success requires {config.task.completion_threshold*100}% completion")
         print("\n" + "🎮 Starting Puzzle Challenge...".center(60, "-"))
         
         # --- BENCHMARK ---
         try:
-            evaluation_result = runner.run_benchmark()
+            evaluation_result = runner.run_benchmark(num_runs=1)
         except Exception as benchmark_error:
             print(f"\n❌ Benchmark execution failed: {benchmark_error}")
             import traceback

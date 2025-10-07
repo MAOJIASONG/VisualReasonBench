@@ -98,26 +98,58 @@ class TaskResult:
     task_type: str
     total_steps: int
     execution_time: float
-    trajectory: List[Tuple[Action, Observation]]  # (action, observation)
+    trajectory: Union[List[Tuple[Action, Observation]], List[Dict[str, Any]]]  # Support both old and new formats
     success: bool = False
     metadata: Dict[str, Any] = field(default_factory=dict)
     error_message: Optional[str] = None
     
     def to_dict(self) -> Dict[str, Any]:
         """Convert task result to dictionary representation."""
+        # Handle trajectory based on format
+        trajectory_dict = []
+        
+        if self.trajectory:
+            first_item = self.trajectory[0]
+            
+            if isinstance(first_item, dict):
+                # New format: dict with response, actions (Action objects), observations (Observation objects)
+                for step_data in self.trajectory:
+                    step_dict = {
+                        "response": step_data.get("response", ""),
+                        "actions": [],
+                        "observations": []
+                    }
+                    
+                    # Serialize actions
+                    for action in step_data.get("actions", []):
+                        if hasattr(action, "to_dict"):
+                            step_dict["actions"].append(action.to_dict())
+                        else:
+                            step_dict["actions"].append(action)
+                    
+                    # Serialize observations (excluding images for JSON compatibility)
+                    for obs in step_data.get("observations", []):
+                        if hasattr(obs, "to_dict"):
+                            step_dict["observations"].append(obs.to_dict())
+                        else:
+                            step_dict["observations"].append(obs)
+                    
+                    trajectory_dict.append(step_dict)
+            else:
+                # Old format: list of (action, observation) tuples
+                for action, observation in self.trajectory:
+                    trajectory_dict.append({
+                        "action": action.to_dict() if hasattr(action, "to_dict") else action,
+                        "observation": observation.to_dict() if hasattr(observation, "to_dict") else observation,
+                    })
+        
         return {
             "task_id": self.task_id,
             "task_type": str(self.task_type),  # Ensure string conversion for enum types
             "total_steps": self.total_steps,
             "execution_time": self.execution_time,
             "success": bool(self.success),
-            "trajectory": [
-                {
-                    "action": action.to_dict() if hasattr(action, "to_dict") else action,
-                    "observation": observation.to_dict() if hasattr(observation, "to_dict") else observation,
-                }
-                for action, observation in self.trajectory
-            ],
+            "trajectory": trajectory_dict,
             "metadata": self.metadata,
             "error_message": self.error_message,
         }

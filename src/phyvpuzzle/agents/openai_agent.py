@@ -75,6 +75,9 @@ class OpenAIAgent(VLMAgent):
             if tools:
                 kwargs["tools"] = tools
                 kwargs["tool_choice"] = "auto"
+                
+            if "gpt-5" in self.config.model_name:
+                kwargs["reasoning_effort"] = "high"
             
             # print(messages)
             response = self.client.chat.completions.create(**kwargs)
@@ -87,7 +90,12 @@ class OpenAIAgent(VLMAgent):
             message = response.choices[0].message
             if not message:
                 raise RuntimeError("Empty message in OpenAI API response")
-            content = message.content or ""
+            if hasattr(message, "reasoning") and message.reasoning:
+                content = message.reasoning.strip()
+                if message.content:
+                    content += "\n\n" + message.content.strip()
+            else:
+                content = message.content.strip()
             
             # Extract tool calls
             tool_calls = []

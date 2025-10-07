@@ -99,6 +99,8 @@ class PhysicsTask(BaseTask):
         self.environment = environment
         self.environment.reset()
         self._configure_environment()
+        settle_used = self.environment._wait_until_stable()
+        print(f"Settle used: {settle_used}")
         observation = self.environment._create_observation()
         return observation
 

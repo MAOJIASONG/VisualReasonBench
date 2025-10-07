@@ -117,15 +117,16 @@ class EnvironmentConfig:
     type: str
     gui: bool = False
     urdf_local_path: str = str(Path(__file__).resolve().parent / "environment" / "phobos_models")
+    table_position: Tuple[float, float, float] = (0, 0, 0.4)
     real_time: bool = False
     gravity: float = -9.81
     time_step: float = 1.0/240.0
     render_width: int = 512
     render_height: int = 512
     multi_view: bool = True
-    load_table: bool = True
+    load_table: bool = False
     max_steps: int = 50
-    max_settle_steps: int = 1000
+    max_settle_steps: int = 2000
     lin_vel_tol: float = 1e-3
     ang_vel_tol: float = 1e-3
     
@@ -135,6 +136,8 @@ class EnvironmentConfig:
             raise ValueError("urdf_local_path must be a non-empty string")
         if not os.path.isabs(self.urdf_local_path):
             self.urdf_local_path = os.path.abspath(self.urdf_local_path)
+        if not isinstance(self.table_position, (tuple, list)) or len(self.table_position) != 3:
+            raise ValueError("table_position must be a tuple of 3 floats")
         if not isinstance(self.time_step, (float, int)) or self.time_step <= 0:
             raise ValueError("time_step must be a positive number")
         if not isinstance(self.gravity, (float, int)):
@@ -183,9 +186,6 @@ class RunnerConfig:
     log_dir: str = "logs"
     results_excel_path: str = "experiment_results.xlsx"
     max_steps: int = 50
-    save_images: bool = True
-    save_multi_view: bool = True
-    save_trajectory: bool = True
     history_length: int = 5
     
     def __post_init__(self):

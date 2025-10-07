@@ -2,7 +2,7 @@
   {
     "step": 0,
     "timestamp": "2025-09-12T11:07:49.799750",
-    "step_type": "initialisation",
+    "step_type": "initial",
     "observation": {
       "state": {
         "step": 0,
