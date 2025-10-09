@@ -43,11 +43,11 @@ class PuzzleEnvironment(PhysicsEnvironment):
         )
     
     def _get_state_description(self) -> str:
-        """Get textual description of puzzle state."""
+        """Get textual description of puzzle state with detailed object information."""
         
-        # desc = f"Puzzle Environment - Step {self.step_count}:\n"
         desc = ""
         
+        # 1. Tool call result (if any)
         metadata = self.current_state.metadata
         if metadata.get("tool_call") and metadata.get("tool_result"):
             tool_call = metadata['tool_call']
@@ -58,6 +58,86 @@ class PuzzleEnvironment(PhysicsEnvironment):
             status = tool_result.get('status', 'unknown status')
             message = tool_result.get('message', 'Unknown error')
             desc += f"Tool Call Result - Status: {status}, Message: {message}.\n"
+        
+        # 2. Detailed object information for the model
+        desc += "\n=== OBJECTS IN SCENE ===\n"
+        
+        movable_objs = []
+        container_obj = None
+        
+        for obj_info in self.objects:
+            if obj_info.properties.get('is_container', False):
+                container_obj = obj_info
+            else:
+                movable_objs.append(obj_info)
+        
+        # Container info first (if exists)
+        if container_obj:
+            desc += f"\nCONTAINER (object_id={container_obj.object_id}):\n"
+            desc += f"  Name: {container_obj.name}\n"
+            try:
+                pos, _ = p.getBasePositionAndOrientation(container_obj.object_id)
+                desc += f"  Position: x={pos[0]:.4f}, y={pos[1]:.4f}, z={pos[2]:.4f}\n"
+                
+                aabb_min, aabb_max = p.getAABB(container_obj.object_id)
+                width = aabb_max[0] - aabb_min[0]
+                depth = aabb_max[1] - aabb_min[1]
+                height = aabb_max[2] - aabb_min[2]
+                desc += f"  Size: width={width:.4f}m, depth={depth:.4f}m, height={height:.4f}m\n"
+            except Exception as e:
+                desc += f"  (Position/Size info unavailable: {e})\n"
+        
+        # Movable objects info
+        desc += f"\nMOVABLE OBJECTS ({len(movable_objs)} pieces):\n"
+        
+        for idx, obj_info in enumerate(movable_objs, 1):
+            obj_id = obj_info.object_id
+            desc += f"\n[{idx}] Object ID: {obj_id}\n"
+            desc += f"    Name: {obj_info.name}\n"
+            
+            # Position
+            try:
+                pos, orn = p.getBasePositionAndOrientation(obj_id)
+                desc += f"    Position: x={pos[0]:.4f}, y={pos[1]:.4f}, z={pos[2]:.4f}\n"
+            except Exception as e:
+                desc += f"    Position: (unavailable: {e})\n"
+            
+            # Bounding Box (Size)
+            try:
+                aabb_min, aabb_max = p.getAABB(obj_id)
+                width = aabb_max[0] - aabb_min[0]
+                depth = aabb_max[1] - aabb_min[1]
+                height = aabb_max[2] - aabb_min[2]
+                desc += f"    Size: width={width:.4f}m, depth={depth:.4f}m, height={height:.4f}m\n"
+            except Exception as e:
+                desc += f"    Size: (unavailable: {e})\n"
+            
+            # Color
+            try:
+                visual_shapes = p.getVisualShapeData(obj_id)
+                if visual_shapes:
+                    rgba = visual_shapes[0][7]
+                    r = int(rgba[0] * 255)
+                    g = int(rgba[1] * 255)
+                    b = int(rgba[2] * 255)
+                    desc += f"    Color: RGB({r}, {g}, {b}) #{r:02x}{g:02x}{b:02x}\n"
+                else:
+                    desc += f"    Color: (unknown)\n"
+            except Exception:
+                desc += f"    Color: (unavailable)\n"
+            
+            # Status flags
+            is_placed = obj_info.properties.get('is_placed', False)
+            in_container = obj_info.properties.get('in_container', False)
+            if is_placed or in_container:
+                status_flags = []
+                if is_placed:
+                    status_flags.append("placed")
+                if in_container:
+                    status_flags.append("in_container")
+                desc += f"    Status: {', '.join(status_flags)}\n"
+        
+        desc += "\n=== END OBJECTS ===\n"
             
         return desc
     

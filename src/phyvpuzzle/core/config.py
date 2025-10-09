@@ -130,6 +130,18 @@ class EnvironmentConfig:
     lin_vel_tol: float = 1e-3
     ang_vel_tol: float = 1e-3
     
+    # Collision softening parameters
+    enable_soft_collision: bool = True
+    soft_collision_damping: float = 0.8  # 更大阻尼快速消能
+    soft_collision_erp: float = 0.05     # 更低 ERP 减少暴力修正
+    contact_breaking_threshold: float = 0.001  # 1mm 内自动断开接触
+    
+    # Overlap resolution (gentle separation after move)
+    enable_overlap_resolution: bool = True
+    overlap_threshold: float = -0.0005  # 检测 >0.5mm 的穿透
+    overlap_separation_step: float = 0.001  # 每次分离 1mm
+    overlap_max_iterations: int = 10    # 最多尝试 10 次
+    
     def __post_init__(self):
         # Convert to absolute path if relative
         if not isinstance(self.urdf_local_path, str) or not self.urdf_local_path:

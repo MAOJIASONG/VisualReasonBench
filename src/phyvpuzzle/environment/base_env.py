@@ -145,22 +145,83 @@ class PhysicsEnvironment(BaseEnvironment):
         p.resetSimulation(physicsClientId=self.client_id)  
           
         p.setGravity(0, 0, self.config.gravity, physicsClientId=self.client_id)
+        # 更细时间步与子步
         p.setTimeStep(self.config.time_step, physicsClientId=self.client_id)
+        try:
+            # 同步设置固定步长与子步，以及迭代次数
+            p.setPhysicsEngineParameter(
+                fixedTimeStep=self.config.time_step,
+                numSubSteps=self.config.num_sub_steps,
+                numSolverIterations=self.config.num_solver_iterations,
+                physicsClientId=self.client_id,
+            )
+        except Exception:
+            pass
         p.setRealTimeSimulation(1 if self.config.real_time else 0, physicsClientId=self.client_id)
         
         # Add search paths using pybullet_data
         p.setAdditionalSearchPath(pybullet_data.getDataPath())
 
+        # 全局稳定性参数：Split Impulse 与 ERP
+        try:
+            params = {
+                "physicsClientId": self.client_id,
+            }
+            # 若启用软碰撞模式，则覆盖 ERP 与断裂阈值
+            if getattr(self.config, "enable_soft_collision", False):
+                params["erp"] = self.config.soft_collision_erp
+                params["contactERP"] = self.config.soft_collision_erp
+                params["frictionERP"] = self.config.soft_collision_erp
+                params["contactBreakingThreshold"] = self.config.contact_breaking_threshold
+            else:
+                # 使用原先的 ERP 参数（如果有）
+                if hasattr(self.config, "global_erp"):
+                    params["erp"] = self.config.global_erp
+                if hasattr(self.config, "contact_erp"):
+                    params["contactERP"] = self.config.contact_erp
+                if hasattr(self.config, "friction_erp"):
+                    params["frictionERP"] = self.config.friction_erp
+            
+            # Split Impulse（如果有）
+            if hasattr(self.config, "enable_split_impulse"):
+                params["enableSplitImpulse"] = 1 if self.config.enable_split_impulse else 0
+            if hasattr(self.config, "split_impulse_penetration_threshold"):
+                params["splitImpulsePenetrationThreshold"] = self.config.split_impulse_penetration_threshold
+            
+            p.setPhysicsEngineParameter(**params)
+        except Exception:
+            pass
+
         # Load ground plane as basis
         self.plane_id = p.loadURDF("plane.urdf", physicsClientId=self.client_id)
-        p.changeDynamics(self.plane_id, -1, lateralFriction=1.0, spinningFriction=0.002, rollingFriction=0.002, linearDamping=0.02, angularDamping=0.02)
+        p.changeDynamics(
+            self.plane_id,
+            -1,
+            lateralFriction=1.0,
+            spinningFriction=0.002,
+            rollingFriction=0.002,
+            linearDamping=0.04,
+            angularDamping=0.04,
+            restitution=0.0,
+            contactProcessingThreshold=0.0,
+        )
 
         
         # Optionally load a table
         if self.config.load_table:
             try:
                 self.table_id = p.loadURDF("table/table.urdf", basePosition=self.config.table_position, globalScaling=1.0, physicsClientId=self.client_id)
-                p.changeDynamics(self.table_id, -1, lateralFriction=1.0, spinningFriction=0.002, rollingFriction=0.002, linearDamping=0.02, angularDamping=0.02)
+                p.changeDynamics(
+                    self.table_id,
+                    -1,
+                    lateralFriction=1.0,
+                    spinningFriction=0.002,
+                    rollingFriction=0.002,
+                    linearDamping=0.04,
+                    angularDamping=0.04,
+                    restitution=0.0,
+                    contactProcessingThreshold=0.0,
+                )
             except:
                 # Create simple table if default doesn't exist
                 self._create_simple_table()
@@ -215,6 +276,11 @@ class PhysicsEnvironment(BaseEnvironment):
         settle_used = self._wait_until_stable()
         tool_result["settle_steps"] = settle_used
         
+        # 轻柔分离重叠物体（如果启用）
+        overlap_resolved = self._resolve_overlaps()
+        if overlap_resolved > 0:
+            tool_result["overlap_resolved"] = overlap_resolved
+        
         # Update state
         self.current_state = self._get_current_state(
             metadata={
@@ -253,6 +319,74 @@ class PhysicsEnvironment(BaseEnvironment):
             if all_ok:
                 break
         return used
+    
+    def _resolve_overlaps(self) -> int:
+        """
+        轻柔地分离重叠的物体：检测穿透深度 > 阈值的接触对，沿法向施加小位移分离。
+        返回执行的分离次数。
+        """
+        if not getattr(self.config, "enable_overlap_resolution", False):
+            return 0
+        
+        threshold = getattr(self.config, "overlap_threshold", -0.0005)
+        sep_step = getattr(self.config, "overlap_separation_step", 0.001)
+        max_iter = getattr(self.config, "overlap_max_iterations", 10)
+        
+        resolved_count = 0
+        for _ in range(max_iter):
+            # 获取所有接触点
+            contacts = p.getContactPoints(physicsClientId=self.client_id)
+            deep_contacts = []
+            
+            for contact in contacts:
+                body_a = contact[1]
+                body_b = contact[2]
+                penetration_depth = contact[8]  # 负值表示穿透
+                contact_normal = contact[7]     # 从 B 指向 A 的法向
+                
+                # 跳过静态物体（地面、桌子）
+                if body_a in [self.plane_id, self.table_id] or body_b in [self.plane_id, self.table_id]:
+                    continue
+                
+                # 仅处理穿透深度超过阈值的接触
+                if penetration_depth < threshold:
+                    deep_contacts.append((body_a, body_b, penetration_depth, contact_normal))
+            
+            if not deep_contacts:
+                break  # 没有深度穿透，退出
+            
+            # 对每个穿透对，沿法向轻微分离
+            for body_a, body_b, depth, normal in deep_contacts:
+                # 法向指向 A，所以 A 沿 +normal 移，B 沿 -normal 移
+                pos_a, orn_a = p.getBasePositionAndOrientation(body_a)
+                pos_b, orn_b = p.getBasePositionAndOrientation(body_b)
+                
+                # 每个物体分担一半分离距离
+                half_sep = sep_step / 2.0
+                new_pos_a = (pos_a[0] + normal[0] * half_sep,
+                             pos_a[1] + normal[1] * half_sep,
+                             pos_a[2] + normal[2] * half_sep)
+                new_pos_b = (pos_b[0] - normal[0] * half_sep,
+                             pos_b[1] - normal[1] * half_sep,
+                             pos_b[2] - normal[2] * half_sep)
+                
+                p.resetBasePositionAndOrientation(body_a, new_pos_a, orn_a)
+                p.resetBasePositionAndOrientation(body_b, new_pos_b, orn_b)
+                
+                # 更新 ObjectInfo 记录
+                for obj in self.objects:
+                    if obj.object_id == body_a:
+                        obj.position = new_pos_a
+                    elif obj.object_id == body_b:
+                        obj.position = new_pos_b
+            
+            # 分离后做短暂稳定（几步即可）
+            for _ in range(5):
+                p.stepSimulation()
+            
+            resolved_count += len(deep_contacts)
+        
+        return resolved_count
         
     def render(self, multi_view: Optional[bool] = None) -> Union[Image.Image, Dict[str, Image.Image]]:
         """Render the current environment state."""
@@ -464,7 +598,20 @@ class PhysicsEnvironment(BaseEnvironment):
                 globalScaling=scale
             )
 
-            p.changeDynamics(object_id, -1, lateralFriction=1.0, spinningFriction=0.002, rollingFriction=0.002, linearDamping=0.04, angularDamping=0.04)
+            # 使用软碰撞模式的更大阻尼
+            lin_damp = self.config.soft_collision_damping if getattr(self.config, "enable_soft_collision", False) else 0.04
+            ang_damp = self.config.soft_collision_damping if getattr(self.config, "enable_soft_collision", False) else 0.04
+            p.changeDynamics(
+                object_id,
+                -1,
+                lateralFriction=1.0,
+                spinningFriction=0.002,
+                rollingFriction=0.002,
+                linearDamping=lin_damp,
+                angularDamping=ang_damp,
+                restitution=0.0,
+                contactProcessingThreshold=0.0,
+            )
             
             obj_info = ObjectInfo(
                 object_id=object_id,
@@ -540,7 +687,20 @@ class PhysicsEnvironment(BaseEnvironment):
             basePosition=position
         )
 
-        p.changeDynamics(object_id, -1, lateralFriction=1.0, spinningFriction=0.002, rollingFriction=0.002, linearDamping=0.04, angularDamping=0.04)
+        # 使用软碰撞模式的更大阻尼
+        lin_damp = self.config.soft_collision_damping if getattr(self.config, "enable_soft_collision", False) else 0.04
+        ang_damp = self.config.soft_collision_damping if getattr(self.config, "enable_soft_collision", False) else 0.04
+        p.changeDynamics(
+            object_id,
+            -1,
+            lateralFriction=1.0,
+            spinningFriction=0.002,
+            rollingFriction=0.002,
+            linearDamping=lin_damp,
+            angularDamping=ang_damp,
+            restitution=0.0,
+            contactProcessingThreshold=0.0,
+        )
         
         # Store object info
         obj_info = ObjectInfo(
