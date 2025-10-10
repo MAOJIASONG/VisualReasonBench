@@ -266,16 +266,49 @@ class BenchmarkRunner:
     
     def get_object_mapping(self) -> str:
         """
-        Returns a string describing the mapping of object_id to its visual properties (color, name, type).
-        Uses p.getVisualShapeData to retrieve color information dynamically.
+        Returns a string describing the complete object information including position, color, and properties.
+        This information is updated dynamically at each step.
         
         Returns:
-            str: Human-readable description of all objects with their colors for the LLM to understand.
+            str: Human-readable description of all objects with their properties for the LLM to understand.
         """
         
-        lines = ["OBJECT MAPPING (object_id → properties):"]
-        lines.append("=" * 60)
+        lines = ["🧩 OBJECT MAPPING (Complete object information - updated this step):"]
+        lines.append("=" * 80)
         
+        # First, show container information
+        container_info = None
+        for obj_info in self.environment.objects:
+            if obj_info.properties.get('is_container', False):
+                container_info = obj_info
+                pos = obj_info.position
+                
+                # Get container AABB size
+                try:
+                    aabb_min, aabb_max = p.getAABB(obj_info.object_id)
+                    width = aabb_max[0] - aabb_min[0]
+                    depth = aabb_max[1] - aabb_min[1]
+                    height = aabb_max[2] - aabb_min[2]
+                    container_size_str = f"({width:.3f}, {depth:.3f}, {height:.3f})"
+                    
+                    # Also show internal volume bounds for reference
+                    lines.append(f"📦 Container:")
+                    lines.append(f"   - object_id: {obj_info.object_id}")
+                    lines.append(f"   - name: {obj_info.name}")
+                    lines.append(f"   - position: ({pos[0]:.3f}, {pos[1]:.3f}, {pos[2]:.3f})")
+                    lines.append(f"   - size: {container_size_str}")
+                    lines.append(f"   - internal bounds: x[{aabb_min[0]:.3f}, {aabb_max[0]:.3f}], y[{aabb_min[1]:.3f}, {aabb_max[1]:.3f}], z[{aabb_min[2]:.3f}, {aabb_max[2]:.3f}]")
+                except Exception as e:
+                    lines.append(f"📦 Container:")
+                    lines.append(f"   - object_id: {obj_info.object_id}")
+                    lines.append(f"   - name: {obj_info.name}")
+                    lines.append(f"   - position: ({pos[0]:.3f}, {pos[1]:.3f}, {pos[2]:.3f})")
+                    lines.append(f"   - size: unknown")
+                
+                lines.append("")
+                break
+        
+        # Then show all movable objects
         non_container_count = 0
         
         for obj_info in self.environment.objects:
@@ -283,12 +316,12 @@ class BenchmarkRunner:
             if obj_info.properties.get('is_container', False):
                 continue
                 
-            obj_id = obj_info.object_id
-            # obj_name = obj_info.name
-            # obj_type = obj_info.object_type
             non_container_count += 1
+            obj_id = obj_info.object_id
+            pos = obj_info.position
             
             # Get visual shape data to retrieve color
+            color_str = "unknown"
             try:
                 visual_shapes = p.getVisualShapeData(obj_id)
                 
@@ -303,16 +336,41 @@ class BenchmarkRunner:
                     g = int(rgba_color[1] * 255)
                     b = int(rgba_color[2] * 255)
                     
-                    lines.append(f"object_id={obj_id}, RGB=({r}, {g}, {b})")
-                else:
-                    lines.append(f"object_id={obj_id}, color=unknown")
+                    color_str = f"RGB=({r}, {g}, {b})"
                     
             except Exception as e:
-                lines.append(f"object_id={obj_id}, color=error ({str(e)})")
+                color_str = f"error ({str(e)})"
+            
+            # Get AABB (bounding box) to calculate object size
+            try:
+                aabb_min, aabb_max = p.getAABB(obj_id)
+                # Calculate actual dimensions
+                width = aabb_max[0] - aabb_min[0]   # x dimension
+                depth = aabb_max[1] - aabb_min[1]   # y dimension
+                height = aabb_max[2] - aabb_min[2]  # z dimension
+                size_str = f"({width:.3f}, {depth:.3f}, {height:.3f})"
+            except Exception as e:
+                size_str = "unknown"
+            
+            # Format object information - ID, color, position, and size
+            lines.append(f"🧩 Object #{non_container_count} (object_id: {obj_id}):")
+            #lines.append(f"   - name: {obj_info.name}")
+            lines.append(f"   - color: {color_str}")
+            lines.append(f"   - position: ({pos[0]:.3f}, {pos[1]:.3f}, {pos[2]:.3f})")
+            lines.append(f"   - size: {size_str}")  # AABB size: (width, depth, height) in meters
+            lines.append("")
         
-        lines.append("=" * 60)
+        lines.append("=" * 80)
         lines.append(f"Total movable objects: {non_container_count}")
-        # lines.append("\nTo interact with an object, use its object_id (integer) in tool calls.")
+        lines.append("\n💡 IMPORTANT:")
+        lines.append("   - Use object_id (integer) to interact with objects in tool calls")
+        lines.append("   - Position format: (x, y, z) in meters, where z is height")
+        lines.append("   - Size format: (width, depth, height) in meters - the actual dimensions of the object")
+        lines.append("   - Positions and sizes are updated after each action - always check current values!")
+        lines.append("\n📏 SIZE USAGE:")
+        lines.append("   - Use object size to calculate if it fits inside the container")
+        lines.append("   - Compare object size with container bounds to plan placement")
+        lines.append("   - Consider object height when stacking on top of another object")
         
         return "\n".join(lines)
     

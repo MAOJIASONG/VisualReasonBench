@@ -160,9 +160,6 @@ task:
 ### 方式一：运行脚本（examples）
 
 ```bash
-# 推荐先设置 PYTHONPATH，或在 IDE 中以项目根为工作目录
-export PYTHONPATH=src
-
 # 运行 Domino 快速示例（会自动读取 eval_configs/domino_quick.yaml）
 python examples/domino_quick.py
 ```
@@ -177,19 +174,19 @@ python examples/domino_quick.py
 
 ```bash
 # 单次运行（Run）
-PYTHONPATH=src python -m phyvpuzzle.cli run --config eval_configs/domino_quick.yaml
+python -m phyvpuzzle.cli run --config eval_configs/domino_quick.yaml
 
 # 基准评测（Benchmark）
-PYTHONPATH=src python -m phyvpuzzle.cli benchmark --config eval_configs/domino_quick.yaml --num-runs 5
+python -m phyvpuzzle.cli benchmark --config eval_configs/domino_quick.yaml --num-runs 5
 
 # 校验配置
-PYTHONPATH=src python -m phyvpuzzle.cli validate-config eval_configs/domino_quick.yaml
+python -m phyvpuzzle.cli validate-config eval_configs/domino_quick.yaml
 
 # 列出可用组件（任务/环境/Agent）
-PYTHONPATH=src python -m phyvpuzzle.cli list-components
+python -m phyvpuzzle.cli list-components
 
 # 查看组件详情（例如 domino_dont_fall 任务）
-PYTHONPATH=src python -m phyvpuzzle.cli show-component --type task --name domino_dont_fall
+python -m phyvpuzzle.cli show-component --type task --name domino_dont_fall
 ```
 
 可选覆盖项（部分）：

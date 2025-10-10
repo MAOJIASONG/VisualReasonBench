@@ -418,7 +418,7 @@ class PhysicsEnvironment(BaseEnvironment):
         base_schemas = [
             build_schema(
                 "move_object",
-                "Move an object to a specific 3D position in the workspace. The object will be teleported to the target position instantly. CONSTRAINTS: Position coordinates should be within the workspace bounds (typically -2.0 to 2.0 meters for x and y, 0.0 to 2.0 meters for z). Objects moved above ground (z > 0) will fall under gravity.",
+                "Move an object to a specific 3D position in the workspace. The object will be teleported to the target position instantly. By default, other objects are temporarily frozen during the move to prevent unwanted collisions and displacement. CONSTRAINTS: Position coordinates should be within the workspace bounds (typically -2.0 to 2.0 meters for x and y, 0.0 to 2.0 meters for z). Objects moved above ground (z > 0) will fall under gravity.",
                 {
                     "object_id": {"type": "integer", "description": "Unique object_id (integer) of the object to move. Get this from the observation state."},
                     "position": {
@@ -427,6 +427,11 @@ class PhysicsEnvironment(BaseEnvironment):
                         "minItems": 3,
                         "maxItems": 3,
                         "description": "Target position [x, y, z] in meters. Example: [0.5, 0.2, 0.1]. Ensure z >= 0 to keep objects above ground."
+                    },
+                    "freeze_others": {
+                        "type": "boolean",
+                        "description": "If True (default), temporarily freeze all other objects during the move to prevent them from being displaced by collision. Recommended: True for precise placement.",
+                        "default": True
                     },
                 },
                 ["object_id", "position"],
@@ -471,8 +476,15 @@ class PhysicsEnvironment(BaseEnvironment):
 
     # Tool implementations
     @BaseEnvironment.register_tool("move_object")    
-    def _tool_move_object(self, object_id: int, position: List[float]) -> Dict[str, Any]:
-        """Move an object to a specific 3D position."""
+    def _tool_move_object(self, object_id: int, position: List[float], freeze_others: bool = True) -> Dict[str, Any]:
+        """Move an object to a specific 3D position.
+        
+        Args:
+            object_id: ID of the object to move
+            position: Target position [x, y, z]
+            freeze_others: If True, freeze all other objects during the move and keep them frozen 
+                          until the moved object is completely stable (default: True)
+        """
         obj_info = self.get_object_by_id(object_id)
         if not obj_info:
             return {"status": "error", "message": f"Object with object_id {object_id} not found"}
@@ -480,17 +492,81 @@ class PhysicsEnvironment(BaseEnvironment):
         if not position or len(position) != 3:
             return {"status": "error", "message": "Invalid position. Must provide [x, y, z]"}
         
-        # Move object to target position
+        # Freeze other objects if requested
+        frozen_objects = []
+        if freeze_others:
+            for obj in self.objects:
+                # Skip the object being moved and containers
+                if obj.object_id == object_id or obj.properties.get('is_container', False):
+                    continue
+                
+                # Freeze the object completely
+                p.changeDynamics(
+                    obj.object_id,
+                    -1,
+                    mass=0.0,  # Zero mass = immovable
+                    linearDamping=0.0,
+                    angularDamping=0.0,
+                )
+                # Also reset velocity to ensure it's completely still
+                p.resetBaseVelocity(obj.object_id, [0, 0, 0], [0, 0, 0])
+                frozen_objects.append(obj.object_id)
+        
+        # Move object to target position and reset its velocity
         p.resetBasePositionAndOrientation(
             obj_info.object_id,
             position,
             obj_info.orientation
         )
+        # Ensure the moved object starts with zero velocity
+        p.resetBaseVelocity(obj_info.object_id, [0, 0, 0], [0, 0, 0])
         
         # Update object info
         obj_info.position = tuple(position)
         
-        return {"status": "success", "message": f"Moved object_id {object_id} to position {position}"}
+        # Simulate physics until the moved object is completely stable
+        # Check velocity to ensure it has stopped moving
+        max_simulation_steps = 240  # Maximum 2.4 seconds (240 steps * 0.01s)
+        velocity_threshold = 0.001  # Very small velocity threshold (m/s)
+        
+        for step in range(max_simulation_steps):
+            p.stepSimulation()
+            
+            # Check if moved object is stable (velocity near zero)
+            if step > 20:  # Wait at least 20 steps before checking
+                linear_vel, angular_vel = p.getBaseVelocity(obj_info.object_id)
+                
+                # Calculate velocity magnitude
+                lin_speed = sum(v**2 for v in linear_vel) ** 0.5
+                ang_speed = sum(v**2 for v in angular_vel) ** 0.5
+                
+                # If both velocities are below threshold, object is stable
+                if lin_speed < velocity_threshold and ang_speed < velocity_threshold:
+                    break
+        
+        # Restore dynamics of frozen objects ONLY after moved object is stable
+        if freeze_others:
+            for frozen_id in frozen_objects:
+                obj = self.get_object_by_id(frozen_id)
+                if obj:
+                    # Restore to movable state with original mass and high damping
+                    mass = obj.properties.get('mass', 0.5)
+                    p.changeDynamics(
+                        frozen_id,
+                        -1,
+                        mass=mass,
+                        linearDamping=0.95,  # Keep high damping
+                        angularDamping=0.95,
+                    )
+                    # Ensure restored objects start with zero velocity
+                    p.resetBaseVelocity(frozen_id, [0, 0, 0], [0, 0, 0])
+        
+        # Run a few more steps to ensure complete stability
+        for _ in range(10):
+            p.stepSimulation()
+        
+        freeze_msg = f" (stabilized in {step+1} steps, other objects frozen)" if freeze_others else ""
+        return {"status": "success", "message": f"Moved object_id {object_id} to position {position}{freeze_msg}"}
     
     @BaseEnvironment.register_tool("rotate_object")    
     def _tool_rotate_object(self, object_id: int, axis: str, angle: float) -> Dict[str, Any]:
@@ -590,28 +666,51 @@ class PhysicsEnvironment(BaseEnvironment):
         """
         if properties is None:
             properties = {}
+        
+        # Check if this is a container - containers should be fixed
+        is_container = properties.get('is_container', False)
+        
         try:
             object_id = p.loadURDF(
                 urdf_path,
                 basePosition=position,
                 baseOrientation=orientation,
-                globalScaling=scale
+                globalScaling=scale,
+                useFixedBase=is_container  # Fix container in place
             )
 
-            # 使用软碰撞模式的更大阻尼
-            lin_damp = self.config.soft_collision_damping if getattr(self.config, "enable_soft_collision", False) else 0.04
-            ang_damp = self.config.soft_collision_damping if getattr(self.config, "enable_soft_collision", False) else 0.04
-            p.changeDynamics(
-                object_id,
-                -1,
-                lateralFriction=1.0,
-                spinningFriction=0.002,
-                rollingFriction=0.002,
-                linearDamping=lin_damp,
-                angularDamping=ang_damp,
-                restitution=0.0,
-                contactProcessingThreshold=0.0,
-            )
+            # 使用极高的阻尼来最大限度减少碰撞反弹，让物体几乎立即停止
+            lin_damp = self.config.soft_collision_damping if getattr(self.config, "enable_soft_collision", False) else 0.95  # 从0.5提升到0.95，接近最大值
+            ang_damp = self.config.soft_collision_damping if getattr(self.config, "enable_soft_collision", False) else 0.95  # 从0.5提升到0.95
+            
+            # For containers, set mass to 0 to ensure they stay fixed
+            if is_container:
+                p.changeDynamics(
+                    object_id,
+                    -1,
+                    mass=0.0,  # Zero mass ensures container stays fixed
+                    lateralFriction=1.0,
+                    spinningFriction=0.0,
+                    rollingFriction=0.0,
+                    linearDamping=0.0,
+                    angularDamping=0.0,
+                    restitution=0.0,
+                )
+            else:
+                # 非容器物体：极高阻尼和摩擦力，碰撞几乎无反弹，极其柔和
+                p.changeDynamics(
+                    object_id,
+                    -1,
+                    lateralFriction=2.5,      # 大幅增加摩擦力（从1.5到2.5），几乎无滑动
+                    spinningFriction=0.02,    # 显著增加旋转摩擦
+                    rollingFriction=0.02,     # 显著增加滚动摩擦
+                    linearDamping=lin_damp,   # 极高线性阻尼（0.95），几乎立即停止
+                    angularDamping=ang_damp,  # 极高角度阻尼（0.95），几乎立即停止旋转
+                    restitution=0.0,          # 完全无弹性，碰撞后不反弹
+                    contactProcessingThreshold=0.01,  # 增大接触阈值（从0.001到0.01），大幅软化碰撞
+                    contactStiffness=1000.0,  # 柔性接触刚度，值越小越柔软
+                    contactDamping=100.0,     # 柔性接触阻尼，抑制碰撞振动
+                )
             
             obj_info = ObjectInfo(
                 object_id=object_id,
@@ -687,29 +786,46 @@ class PhysicsEnvironment(BaseEnvironment):
             basePosition=position
         )
 
-        # 使用软碰撞模式的更大阻尼
-        lin_damp = self.config.soft_collision_damping if getattr(self.config, "enable_soft_collision", False) else 0.04
-        ang_damp = self.config.soft_collision_damping if getattr(self.config, "enable_soft_collision", False) else 0.04
-        p.changeDynamics(
-            object_id,
-            -1,
-            lateralFriction=1.0,
-            spinningFriction=0.002,
-            rollingFriction=0.002,
-            linearDamping=lin_damp,
-            angularDamping=ang_damp,
-            restitution=0.0,
-            contactProcessingThreshold=0.0,
-        )
+        # For fixed objects (mass=0), use special dynamics settings
+        if mass == 0.0:
+            p.changeDynamics(
+                object_id,
+                -1,
+                mass=0.0,  # Ensure it's truly fixed
+                lateralFriction=1.0,
+                spinningFriction=0.0,
+                rollingFriction=0.0,
+                linearDamping=0.0,
+                angularDamping=0.0,
+                restitution=0.0,
+            )
+        else:
+            # 使用极高的阻尼来最大限度减少碰撞反弹，让物体几乎立即停止
+            lin_damp = self.config.soft_collision_damping if getattr(self.config, "enable_soft_collision", False) else 0.95  # 从0.5提升到0.95
+            ang_damp = self.config.soft_collision_damping if getattr(self.config, "enable_soft_collision", False) else 0.95  # 从0.5提升到0.95
+            p.changeDynamics(
+                object_id,
+                -1,
+                lateralFriction=2.5,      # 大幅增加摩擦力（从1.5到2.5），几乎无滑动
+                spinningFriction=0.02,    # 显著增加旋转摩擦
+                rollingFriction=0.02,     # 显著增加滚动摩擦
+                linearDamping=lin_damp,   # 极高线性阻尼（0.95），几乎立即停止
+                angularDamping=ang_damp,  # 极高角度阻尼（0.95），几乎立即停止旋转
+                restitution=0.0,          # 完全无弹性，碰撞后不反弹
+                contactProcessingThreshold=0.01,  # 增大接触阈值（从0.001到0.01），大幅软化碰撞
+                contactStiffness=1000.0,  # 柔性接触刚度，值越小越柔软
+                contactDamping=100.0,     # 柔性接触阻尼，抑制碰撞振动
+            )
         
-        # Store object info
+        # Store object info with mass for later restoration
+        properties = {"mass": mass, "color": color, "size": size}
         obj_info = ObjectInfo(
             object_id=object_id,
             name=object_name,
             position=position,
             orientation=(0, 0, 0, 1),
             object_type=shape_type,
-            properties={"mass": mass, "color": color, "size": size}
+            properties=properties
         )
         self.objects.append(obj_info)
         

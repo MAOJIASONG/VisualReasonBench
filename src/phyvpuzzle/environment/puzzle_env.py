@@ -78,7 +78,6 @@ class PuzzleEnvironment(PhysicsEnvironment):
             try:
                 pos, _ = p.getBasePositionAndOrientation(container_obj.object_id)
                 desc += f"  Position: x={pos[0]:.4f}, y={pos[1]:.4f}, z={pos[2]:.4f}\n"
-                
                 aabb_min, aabb_max = p.getAABB(container_obj.object_id)
                 width = aabb_max[0] - aabb_min[0]
                 depth = aabb_max[1] - aabb_min[1]
@@ -101,8 +100,7 @@ class PuzzleEnvironment(PhysicsEnvironment):
                 desc += f"    Position: x={pos[0]:.4f}, y={pos[1]:.4f}, z={pos[2]:.4f}\n"
             except Exception as e:
                 desc += f"    Position: (unavailable: {e})\n"
-            
-            # Bounding Box (Size)
+
             try:
                 aabb_min, aabb_max = p.getAABB(obj_id)
                 width = aabb_max[0] - aabb_min[0]
