@@ -56,18 +56,18 @@
     </collision>
     <inertial>
       <inertia ixx="0.00024" ixy="0.00000" ixz="0.00000" iyy="0.00024" iyz="0.00000" izz="0.00002"/>
-      <origin rpy="0.00000 0.00000 0.00000" xyz="-0.26570 0.30600 0.25000"/>
+      <origin rpy="0.00000 0.00000 0.00000" xyz="0.00000 0.00000 0.00000"/>
       <mass value="0.01000"/>
     </inertial>
     <visual name="obj_5_vis">
-      <material name="turnarrow"/>
+      <material name="turnarrow_blue"/>
       <origin rpy="-0.00000 1.57080 0.00000" xyz="-0.25663 0.30275 0.25000"/>
       <geometry>
         <mesh filename="../meshes/obj/obj_1_LUBAANSUO2.stp.004.obj" scale="0.00500 0.00500 0.00500"/>
       </geometry>
     </visual>
   </link>
-  <material name="turnarrow">
-    <color rgba="0.39608 0.53725 0.79608 1.00000"/>
+  <material name="turnarrow_blue">
+    <color rgba="0.00000 0.16471 0.44314 1.00000"/>
   </material>
 </robot>

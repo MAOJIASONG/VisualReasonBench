@@ -92,18 +92,18 @@
     </collision>
     <inertial>
       <inertia ixx="0.00023" ixy="-0.00000" ixz="-0.00000" iyy="0.00023" iyz="-0.00000" izz="0.00002"/>
-      <origin rpy="0.00000 0.00000 0.00000" xyz="-0.26764 0.19796 0.24412"/>
+      <origin rpy="0.00000 0.00000 0.00000" xyz="0.00000 0.00000 0.00000"/>
       <mass value="0.01000"/>
     </inertial>
     <visual name="obj_2_vis">
-      <material name="turnarrow"/>
+      <material name="turnarrow_skyblue"/>
       <origin rpy="-3.14159 -1.57080 0.00000" xyz="-0.26242 0.20250 0.26750"/>
       <geometry>
         <mesh filename="../meshes/obj/obj_1_LUBAANSUO2.stp.001.obj" scale="0.00500 0.00500 0.00500"/>
       </geometry>
     </visual>
   </link>
-  <material name="turnarrow">
-    <color rgba="0.39608 0.53725 0.79608 1.00000"/>
+  <material name="turnarrow_skyblue">
+    <color rgba="0.09020 0.45490 0.81176 1.00000"/>
   </material>
 </robot>
