@@ -27,8 +27,10 @@ class LLMJudge(BaseJudge):
                 api_key=config.api_key,
                 base_url=config.base_url
             )
-            self.tokenizer = tiktoken.encoding_for_model(config.model_name)
-            # self.tokenizer = tiktoken.get_encoding("o200k_base")
+            try:
+                self.tokenizer = tiktoken.encoding_for_model(config.model_name)
+            except KeyError:
+                self.tokenizer = tiktoken.get_encoding("o200k_base")
         elif config.type == "transformers":
             # For transformers, we expect a model and tokenizer to be provided in config
             self.clinet = AutoModelForCausalLM.from_pretrained(config.model_name, torch_dtype="auto", device_map="auto")

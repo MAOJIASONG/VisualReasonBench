@@ -38,7 +38,7 @@ judgement:
 
 environment:
   type: "puzzle"
-  gui: false
+  gui: true
   urdf_local_path: "src/phyvpuzzle/environment/phobos_models"
   render_width: 512
   render_height: 512
