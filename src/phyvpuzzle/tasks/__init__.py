@@ -15,11 +15,13 @@ from phyvpuzzle.tasks.domino_dont_fall import DominoDontFallTask
 from phyvpuzzle.tasks.three_by_three_stacking import ThreeByThreeStackingTask
 from phyvpuzzle.tasks.simple_stacking import SimpleStackingTask
 from phyvpuzzle.tasks.luban_task import LubanDisassemblyTask
+from phyvpuzzle.tasks.stacking_game_task import StackingGameTask
 
 __all__ = [
     "PhysicsTask",
     "DominoDontFallTask",
     "ThreeByThreeStackingTask",
     "SimpleStackingTask",
-    "LubanDisassemblyTask"
+    "LubanDisassemblyTask",
+    "StackingGameTask",
 ]

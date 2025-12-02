@@ -272,7 +272,13 @@ class BenchmarkRunner:
         Returns:
             str: Human-readable description of all objects with their properties for the LLM to understand.
         """
-        
+        # Allow environment-specific summaries (non-PyBullet environments).
+        if hasattr(self.environment, "describe_objects"):
+            try:
+                return self.environment.describe_objects()  # type: ignore[attr-defined]
+            except Exception:
+                pass
+
         lines = ["🧩 OBJECT MAPPING (Complete object information - updated this step):"]
         lines.append("=" * 80)
         
