@@ -17,8 +17,12 @@ class MetricsCalculator:
         self.supported_metrics = [
             "accuracy",
             "pass_at_k", 
+            "avg_at_k",
             "distance_to_optimal",
             "token_efficiency",
+            "tokens_per_step",
+            "cost_total",
+            "usd_per_solved",
             "step_efficiency",
             "time_efficiency",
             "success_rate_by_difficulty"
@@ -84,6 +88,40 @@ class MetricsCalculator:
             pass_at_k[k] = np.mean(success_rates) if success_rates else 0.0
             
         return pass_at_k
+
+    def calculate_avg_at_k(self, task_results: List[TaskResult], k_values: List[int] = None) -> Dict[int, float]:
+        """
+        Calculate Avg@k metrics (average success rate across k attempts per task group).
+
+        Args:
+            task_results: List of task execution results
+            k_values: List of k values to calculate (default: [1, 3, 5])
+
+        Returns:
+            Dictionary mapping k to Avg@k rate
+        """
+        if k_values is None:
+            k_values = [1, 3, 5]
+
+        if not task_results:
+            return {k: 0.0 for k in k_values}
+
+        grouped_results = defaultdict(list)
+        for result in task_results:
+            key = (result.task_type, result.metadata.get("difficulty", "unknown"))
+            grouped_results[key].append(result)
+
+        avg_at_k = {}
+        for k in k_values:
+            group_avgs = []
+            for group_results in grouped_results.values():
+                if len(group_results) >= k:
+                    top_k_results = sorted(group_results, key=lambda x: x.total_steps)[:k]
+                    group_avg = sum(1.0 for r in top_k_results if r.success) / k
+                    group_avgs.append(group_avg)
+            avg_at_k[k] = np.mean(group_avgs) if group_avgs else 0.0
+
+        return avg_at_k
         
     def calculate_distance_to_optimal(self, task_results: List[TaskResult]) -> float:
         """
@@ -137,6 +175,67 @@ class MetricsCalculator:
                 token_counts.append(tokens)
                 
         return np.mean(token_counts) if token_counts else float('inf')
+
+    def calculate_tokens_per_step(self, task_results: List[TaskResult]) -> float:
+        """
+        Calculate tokens per step across all tasks.
+
+        Args:
+            task_results: List of task execution results
+
+        Returns:
+            Average tokens per step
+        """
+        total_steps = sum(result.total_steps for result in task_results)
+        if total_steps == 0:
+            return float('inf')
+        total_tokens = sum(result.metadata.get("total_tokens", 0) for result in task_results)
+        return total_tokens / total_steps
+
+    def calculate_cost(self, task_results: List[TaskResult], price_in: float = 0.0, price_out: float = 0.0) -> float:
+        """
+        Calculate total cost in USD.
+
+        Args:
+            task_results: List of task execution results
+            price_in: USD per 1K input tokens
+            price_out: USD per 1K output tokens
+
+        Returns:
+            Total cost in USD
+        """
+        total_cost = 0.0
+        for result in task_results:
+            tokens_in = result.metadata.get("tokens_in")
+            tokens_out = result.metadata.get("tokens_out")
+            total_tokens = result.metadata.get("total_tokens", 0)
+            if tokens_in is None and tokens_out is None:
+                tokens_in = total_tokens
+                tokens_out = 0
+            elif tokens_in is None:
+                tokens_in = max(0, total_tokens - int(tokens_out or 0))
+            elif tokens_out is None:
+                tokens_out = max(0, total_tokens - int(tokens_in or 0))
+            total_cost += (price_in * int(tokens_in or 0) + price_out * int(tokens_out or 0)) / 1000.0
+        return total_cost
+
+    def calculate_usd_per_solved(self, task_results: List[TaskResult], price_in: float = 0.0, price_out: float = 0.0) -> float:
+        """
+        Calculate USD per solved task.
+
+        Args:
+            task_results: List of task execution results
+            price_in: USD per 1K input tokens
+            price_out: USD per 1K output tokens
+
+        Returns:
+            Average USD per solved task
+        """
+        solved = [r for r in task_results if r.success]
+        if not solved:
+            return float('inf')
+        total_cost = self.calculate_cost(task_results, price_in, price_out)
+        return total_cost / len(solved)
         
     def calculate_step_efficiency(self, task_results: List[TaskResult]) -> float:
         """
@@ -286,7 +385,12 @@ class MetricsCalculator:
             
         return analysis
         
-    def calculate_comprehensive_metrics(self, task_results: List[TaskResult]) -> EvaluationResult:
+    def calculate_comprehensive_metrics(
+        self,
+        task_results: List[TaskResult],
+        price_in: float = 0.1,
+        price_out: float = 0.1,
+    ) -> EvaluationResult:
         """
         Calculate all metrics and return comprehensive evaluation result.
         
@@ -299,11 +403,19 @@ class MetricsCalculator:
         # Basic metrics
         accuracy = self.calculate_accuracy(task_results)
         pass_at_k = self.calculate_pass_at_k(task_results)
+        avg_at_k = self.calculate_avg_at_k(task_results)
         distance_to_optimal = self.calculate_distance_to_optimal(task_results)
         token_efficiency = self.calculate_token_efficiency(task_results)
+        tokens_per_step = self.calculate_tokens_per_step(task_results)
+        cost_total = self.calculate_cost(task_results, price_in, price_out)
+        usd_per_solved = self.calculate_usd_per_solved(task_results, price_in, price_out)
         
         # Detailed metrics
         detailed_metrics = {
+            "avg_at_k": avg_at_k,
+            "tokens_per_step": tokens_per_step,
+            "cost_total": cost_total,
+            "usd_per_solved": usd_per_solved,
             "step_efficiency": self.calculate_step_efficiency(task_results),
             "time_efficiency": self.calculate_time_efficiency(task_results),
             "success_by_difficulty": self.calculate_success_rate_by_difficulty(task_results),
