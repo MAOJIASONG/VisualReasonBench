@@ -75,24 +75,43 @@ class StackingGameTask(PhysicsTask):
 
     def _get_initial_system_prompt(self) -> str:
         """Provide system instructions tailored for stacking_game."""
-        return (
-            "You are a precise 3D packing assistant inside a discrete grid box. "
-            "All coordinates are 1-based integers (x,y,z). Use the provided tools:\n"
-            "- list_puzzles(size?): inspect available puzzles.\n"
-            "- load_puzzle(size, puzzle_id, seed?): load/reset a level.\n"
-            "- get_piece_info(piece_id): inspect voxel layout and rotations.\n"
-            "- place_piece(piece_id, rotation, position): place by rotation index (0-23) and minimum corner.\n"
-            "- place_piece_by_cells(piece_id, cells): place by explicit cell list when rotations are unclear.\n"
-            "- pickup_piece(piece_id): remove a placed piece.\n"
-            "- finish(): call only when you believe the box is fully filled.\n"
-            "Avoid floating pieces: every placement must be supported by the floor (z=1) or other pieces."
-        )
+        # return (
+        #     "You are a 3D stacking game player. "
+        # )
+        return ""
 
     def _get_initial_instruction(self) -> str:
         """User-facing task instruction."""
         cfg = self.config
-        return (
-            f"Pack every piece into the {cfg.puzzle_size} box for puzzle '{cfg.puzzle_id}'. "
-            "You must fill all cells without collisions. "
-            "Inspect pieces, plan a feasible order, place them, and call finish once solved."
-        )
+
+        instruction = f"""
+You are solving a 3D packing puzzle.
+
+**Goal:** Pack every piece into the **{cfg.puzzle_size}** box for puzzle **`{cfg.puzzle_id}`**. You must fill **all {len(self.environment.game_state.spec.box)} cells** with **no collisions** and **no out-of-bounds** placements.
+
+**Critical rules:**
+
+1. **First, carefully read the list of available tools** (their names, required arguments, and what state they return).
+2. **Use the current image / board progress** as the ground-truth state of what is already placed and what remains.
+3. Work in a safe order: **inspect pieces → plan a feasible sequence → place pieces step-by-step**, verifying after each placement.
+4. If a placement fails (collision / invalid), **undo or adjust** and try a different orientation/order.
+5. Only call **`finish`** when the box is fully filled and valid.
+
+**Output format constraints:**
+
+* Do **not** output multiple actions.
+* Your response must end with **exactly one tool call** wrapped as:
+
+  * `<action> XXX </action>`
+* `XXX` must be the **exact tool invocation content** (use the tool’s required schema/arguments).
+
+**Now do the next step:** based on the current image/board, start by inspecting the remaining pieces (or the most ambiguous piece) to plan the packing order.
+
+<action>{{"tool":"inspect_pieces","puzzle_id":"puzzle_001"}}</action>        
+        """
+        # return (
+        #     f"Pack every piece into the {cfg.puzzle_size} box for puzzle '{cfg.puzzle_id}'. "
+        #     "You must fill all cells without collisions. "
+        #     "Inspect pieces, plan a feasible order, place them, and call finish once solved."
+        # )
+        return instruction

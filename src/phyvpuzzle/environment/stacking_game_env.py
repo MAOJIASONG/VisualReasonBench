@@ -8,6 +8,7 @@ This environment wraps the discrete polycube stacking game from
 from __future__ import annotations
 
 import io
+import os
 import sys
 from dataclasses import dataclass
 from pathlib import Path
@@ -31,18 +32,22 @@ if STACKING_GAME_ROOT.exists() and str(STACKING_GAME_ROOT) not in sys.path:
 
 STACKING_IMPORT_ERROR: Optional[Exception] = None
 try:
+    os.environ.setdefault("MPLBACKEND", "Agg")
+    try:
+        import matplotlib
+        matplotlib.use("Agg")
+    except Exception:
+        pass
     from game_core import GameState, LevelSpec, PieceDef, Vec3  # type: ignore
     from initialization import initialize_pieces_on_ground  # type: ignore
     from loader import (  # type: ignore
         create_game_state,
-        find_all_puzzles,
         load_puzzle_by_name,
         preprocess_piece,
     )
     from placement import (  # type: ignore
         pickup_piece,
         place_piece_by_cells,
-        place_piece_by_transform,
     )
     from visualizer_3d import visualize_state_3d  # type: ignore
 except Exception as exc:  # pragma: no cover - fallback when dependency missing
@@ -111,13 +116,10 @@ class StackingGameEnvironment(BaseEnvironment):
         self._task_seed: Optional[int] = config.init_seed
         self._used_fallback: bool = False
         self._tool_handlers = {
-            "list_puzzles": self._tool_list_puzzles,
-            "load_puzzle": self._tool_load_puzzle,
-            "place_piece": self._tool_place_piece,
-            "place_piece_by_cells": self._tool_place_piece_by_cells,
-            "pickup_piece": self._tool_pickup_piece,
+            "state": self._tool_state,
+            "place": self._tool_place,
+            "pickup": self._tool_pickup,
             "get_piece_info": self._tool_get_piece_info,
-            "finish": self._tool_finish,
         }
         self.current_size = config.default_size
         self.current_puzzle_id = config.default_puzzle_id
@@ -187,48 +189,15 @@ class StackingGameEnvironment(BaseEnvironment):
 
         return [
             build_schema(
-                "list_puzzles",
-                "List available puzzles in the dataset. Use before loading to see valid size/puzzle_id pairs.",
-                {"size": {"type": "string", "description": "Optional size filter like '2x2x2'."}},
+                "state",
+                "Show current game state (same as CLI 'state'): box size, occupancy, and placed/unplaced pieces.",
+                {},
                 [],
             ),
             build_schema(
-                "load_puzzle",
-                "Load a puzzle by size and id. This resets the board and places all pieces outside the box.",
-                {
-                    "size": {"type": "string", "description": "Puzzle size, e.g., '2x2x2'."},
-                    "puzzle_id": {"type": "string", "description": "Puzzle folder name, e.g., 'puzzle_001'."},
-                    "seed": {
-                        "type": "integer",
-                        "description": "Optional seed for initial random rotations/positions.",
-                    },
-                },
-                ["size", "puzzle_id"],
-            ),
-            build_schema(
-                "place_piece",
-                "Place a piece using rotation index (0-23) and the minimum-corner position inside the box "
-                "(1-based coordinates). Fails on collisions, out-of-bounds, or unsupported floating placement.",
-                {
-                    "piece_id": {"type": "string", "description": "Piece identifier, e.g., '0' or '1'."},
-                    "rotation": {
-                        "type": "integer",
-                        "description": "Rotation index in [0,23] following stacking_game's rotation matrices.",
-                    },
-                    "position": {
-                        "type": "array",
-                        "items": {"type": "integer"},
-                        "minItems": 3,
-                        "maxItems": 3,
-                        "description": "1-based [x,y,z] for the piece's minimum corner after placement.",
-                    },
-                },
-                ["piece_id", "rotation", "position"],
-            ),
-            build_schema(
-                "place_piece_by_cells",
-                "Place a piece by explicitly providing every occupied cell inside the box. "
-                "Useful when shape matching is easier than reasoning about rotations.",
+                "place",
+                "Place a piece (CLI 'place <id>') using explicit cells. "
+                "Provide all occupied cells in 1-based coordinates; length must match the piece voxel count.",
                 {
                     "piece_id": {"type": "string", "description": "Piece identifier to place."},
                     "cells": {
@@ -245,23 +214,17 @@ class StackingGameEnvironment(BaseEnvironment):
                 ["piece_id", "cells"],
             ),
             build_schema(
-                "pickup_piece",
-                "Remove a placed piece from the box so it can be repositioned.",
+                "pickup",
+                "Pick up a placed piece (CLI 'pickup <id>') so it can be repositioned.",
                 {"piece_id": {"type": "string", "description": "Piece identifier to remove."}},
                 ["piece_id"],
             ),
-            build_schema(
-                "get_piece_info",
-                "Inspect a piece: voxel count, coordinates, rotation count, and whether it is currently placed.",
-                {"piece_id": {"type": "string", "description": "Piece identifier to query."}},
-                ["piece_id"],
-            ),
-            build_schema(
-                "finish",
-                "Signal that you believe the puzzle is solved. Only call this when all cells are filled.",
-                {},
-                [],
-            ),
+            # build_schema(
+            #     "get_piece_info",
+            #     "Inspect a piece (CLI 'piece <id>'): voxel count, local coords, and placement if present.",
+            #     {"piece_id": {"type": "string", "description": "Piece identifier to query."}},
+            #     ["piece_id"],
+            # ),
         ]
 
     def execute_tool_call(self, tool_name: str, arguments: Dict[str, Any]) -> Dict[str, Any]:
@@ -434,48 +397,26 @@ class StackingGameEnvironment(BaseEnvironment):
     # ------------------------------------------------------------------ #
     # Tool implementations
     # ------------------------------------------------------------------ #
-    def _tool_list_puzzles(self, size: Optional[str] = None) -> Dict[str, Any]:
-        base_path = Path(self.config.puzzle_dir)
-        if not base_path.exists():
-            return {
-                "status": "error",
-                "message": f"Puzzle directory not found at {base_path}. Using built-in demo level instead.",
-                "puzzles": [],
-            }
-        puzzles = find_all_puzzles(str(base_path))
-        filtered = [(n, p) for n, p in puzzles if (not size or n.startswith(size))]
-        return {
-            "status": "success",
-            "message": f"Found {len(filtered)} puzzle(s)",
-            "puzzles": [name for name, _ in filtered][:50],
-        }
-
-    def _tool_load_puzzle(self, size: str, puzzle_id: str, seed: Optional[int] = None) -> Dict[str, Any]:
-        self._task_seed = seed
-        self._load_game_state(size=size, puzzle_id=puzzle_id)
-        self.current_state = self._get_current_state()
-        suffix = " (fallback demo level)" if self._used_fallback else ""
-        return {
-            "status": "success",
-            "message": f"Loaded puzzle {size}/{puzzle_id}{suffix}",
-            "puzzle": {"size": size, "puzzle_id": puzzle_id},
-        }
-
-    def _tool_place_piece(self, piece_id: str, rotation: int, position: List[int]) -> Dict[str, Any]:
+    def _tool_state(self) -> Dict[str, Any]:
         if not self.game_state:
             return {"status": "error", "message": "No puzzle loaded"}
-        pos_vec = Vec3(int(position[0]), int(position[1]), int(position[2]))
-        result = place_piece_by_transform(self.game_state, piece_id, rotation, pos_vec)
-        if result.success:
-            self._update_objects()
-            return {
-                "status": "success",
-                "message": result.message,
-                "transform": {"rotation": rotation, "position": pos_vec.to_tuple()},
-            }
-        return {"status": "error", "message": result.message, "error": result.error.value}
+        A, B, C = self.game_state.spec.box
+        placed = sorted(self.game_state.placed.keys())
+        unplaced = sorted(self.game_state.unplaced)
+        return {
+            "status": "success",
+            "message": "State retrieved",
+            "state": {
+                "box": [A, B, C],
+                "occupied": len(self.game_state.occupied),
+                "total_cells": A * B * C,
+                "placed_pieces": placed,
+                "unplaced_pieces": unplaced,
+                "is_complete": self.game_state.is_complete(),
+            },
+        }
 
-    def _tool_place_piece_by_cells(self, piece_id: str, cells: List[List[int]]) -> Dict[str, Any]:
+    def _tool_place(self, piece_id: str, cells: List[List[int]]) -> Dict[str, Any]:
         if not self.game_state:
             return {"status": "error", "message": "No puzzle loaded"}
         coords = _to_vec3_list(cells)
@@ -492,7 +433,7 @@ class StackingGameEnvironment(BaseEnvironment):
             }
         return {"status": "error", "message": result.message, "error": result.error.value}
 
-    def _tool_pickup_piece(self, piece_id: str) -> Dict[str, Any]:
+    def _tool_pickup(self, piece_id: str) -> Dict[str, Any]:
         if not self.game_state:
             return {"status": "error", "message": "No puzzle loaded"}
         result = pickup_piece(self.game_state, piece_id)
@@ -511,20 +452,14 @@ class StackingGameEnvironment(BaseEnvironment):
         info = {
             "piece_id": piece_id,
             "voxel_count": len(piece.local_voxels),
-            "rotations": len(piece.rotation_signatures),
-            "placed": bool(placed),
             "voxels_local": [v.to_tuple() for v in piece.local_voxels],
+            "placed": bool(placed),
         }
         if placed:
             info["world_cells"] = [c.to_tuple() for c in placed.world_cells]
             info["rotation"] = placed.transform.rot
             info["position"] = placed.transform.t.to_tuple()
         return {"status": "success", "message": "Piece info retrieved", "info": info}
-
-    def _tool_finish(self) -> Dict[str, Any]:
-        is_complete = self.game_state.is_complete() if self.game_state else False
-        msg = "Marked as finished" + (" (puzzle complete)" if is_complete else " (puzzle not fully filled)")
-        return {"status": "success", "message": msg, "is_complete": is_complete}
 
     # ------------------------------------------------------------------ #
     # Extra helpers for prompt building
