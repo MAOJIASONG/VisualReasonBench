@@ -46,7 +46,7 @@ class MetricsCalculator:
         
     def calculate_pass_at_k(self, task_results: List[TaskResult], k_values: List[int] = None) -> Dict[int, float]:
         """
-        Calculate pass@k metrics.
+        Calculate pass@k metrics directly over all task results (no grouping).
         
         Args:
             task_results: List of task execution results
@@ -60,38 +60,13 @@ class MetricsCalculator:
             
         if not task_results:
             return {k: 0.0 for k in k_values}
-            
-        # Group results by task type/configuration
-        grouped_results = defaultdict(list)
-        for result in task_results:
-            # Group by task type and difficulty
-            key = (result.task_type, result.metadata.get("difficulty", "unknown"))
-            grouped_results[key].append(result)
-            
-        pass_at_k = {}
-        
-        for k in k_values:
-            if k > len(task_results):
-                pass_at_k[k] = self.calculate_accuracy(task_results)
-                continue
-                
-            success_rates = []
-            
-            for group_results in grouped_results.values():
-                if len(group_results) >= k:
-                    # Calculate pass@k for this group
-                    # Take top k results and check if any succeeded
-                    top_k_results = sorted(group_results, key=lambda x: x.total_steps)[:k]
-                    success = any(result.success for result in top_k_results)
-                    success_rates.append(1.0 if success else 0.0)
-                    
-            pass_at_k[k] = np.mean(success_rates) if success_rates else 0.0
-            
-        return pass_at_k
+
+        accuracy = self.calculate_accuracy(task_results)
+        return {k: accuracy for k in k_values}
 
     def calculate_avg_at_k(self, task_results: List[TaskResult], k_values: List[int] = None) -> Dict[int, float]:
         """
-        Calculate Avg@k metrics (average success rate across k attempts per task group).
+        Calculate Avg@k metrics directly over all task results (no grouping).
 
         Args:
             task_results: List of task execution results
@@ -106,22 +81,8 @@ class MetricsCalculator:
         if not task_results:
             return {k: 0.0 for k in k_values}
 
-        grouped_results = defaultdict(list)
-        for result in task_results:
-            key = (result.task_type, result.metadata.get("difficulty", "unknown"))
-            grouped_results[key].append(result)
-
-        avg_at_k = {}
-        for k in k_values:
-            group_avgs = []
-            for group_results in grouped_results.values():
-                if len(group_results) >= k:
-                    top_k_results = sorted(group_results, key=lambda x: x.total_steps)[:k]
-                    group_avg = sum(1.0 for r in top_k_results if r.success) / k
-                    group_avgs.append(group_avg)
-            avg_at_k[k] = np.mean(group_avgs) if group_avgs else 0.0
-
-        return avg_at_k
+        accuracy = self.calculate_accuracy(task_results)
+        return {k: accuracy for k in k_values}
         
     def calculate_distance_to_optimal(self, task_results: List[TaskResult]) -> float:
         """
