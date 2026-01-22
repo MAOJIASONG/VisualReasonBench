@@ -4,6 +4,7 @@ pyproject.toml
 src/phyvpuzzle/__init__.py
 src/phyvpuzzle/cli.py
 src/phyvpuzzle/runner.py
+src/phyvpuzzle/stacking_runner.py
 src/phyvpuzzle.egg-info/PKG-INFO
 src/phyvpuzzle.egg-info/SOURCES.txt
 src/phyvpuzzle.egg-info/dependency_links.txt
@@ -22,7 +23,9 @@ src/phyvpuzzle/core/registry.py
 src/phyvpuzzle/environment/__init__.py
 src/phyvpuzzle/environment/base_env.py
 src/phyvpuzzle/environment/domino_env.py
+src/phyvpuzzle/environment/luban_env.py
 src/phyvpuzzle/environment/puzzle_env.py
+src/phyvpuzzle/environment/stacking_game_env.py
 src/phyvpuzzle/evaluation/__init__.py
 src/phyvpuzzle/evaluation/evaluator.py
 src/phyvpuzzle/evaluation/judge.py
@@ -30,7 +33,9 @@ src/phyvpuzzle/evaluation/metrics.py
 src/phyvpuzzle/tasks/__init__.py
 src/phyvpuzzle/tasks/base_task.py
 src/phyvpuzzle/tasks/domino_dont_fall.py
+src/phyvpuzzle/tasks/luban_task.py
 src/phyvpuzzle/tasks/simple_stacking.py
+src/phyvpuzzle/tasks/stacking_game_task.py
 src/phyvpuzzle/tasks/three_by_three_stacking.py
 src/phyvpuzzle/utils/__init__.py
 src/phyvpuzzle/utils/constant.py

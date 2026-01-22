@@ -111,6 +111,113 @@ class JudgementConfig:
         if not isinstance(self.max_retries, int) or self.max_retries <= 0:
             raise ValueError("max_retries must be a positive integer")
 
+
+@dataclass
+class StepSelectionConfig:
+    """Configuration for Process Step Selection using Beam Search."""
+    
+    # Whether to enable step selection
+    enabled: bool = False
+    
+    # Selection method: "reward_model" or "pairwise_judge"
+    selection_method: str = "reward_model"
+    
+    # Number of candidate actions to generate per step (for each beam)
+    num_candidates: int = 5
+    
+    # Beam width: number of top actions to keep (parallel paths to maintain)
+    # - top_k = 1: Greedy search (single best path)
+    # - top_k > 1: Beam search (multiple parallel paths)
+    top_k: int = 1
+    
+    # Reward model configuration (used when selection_method="reward_model")
+    reward_model_type: str = "openai"  # "openai" or "transformers"
+    reward_model_name: str = "gpt-4o"
+    reward_model_mode: str = "generative"  # "generative" or "discriminative"
+    reward_api_key: Optional[str] = None
+    reward_base_url: Optional[str] = None
+    reward_temperature: float = 0.1
+    reward_max_tokens: int = 200
+    reward_device: str = "auto"
+    reward_torch_dtype: str = "auto"
+    
+    # Pairwise judge configuration (used when selection_method="pairwise_judge")  
+    pairwise_judge_type: str = "openai"  # "openai" or "transformers"
+    pairwise_judge_model: str = "gpt-4o"
+    pairwise_api_key: Optional[str] = None
+    pairwise_base_url: Optional[str] = None
+    pairwise_temperature: float = 0.1
+    pairwise_max_tokens: int = 100
+    pairwise_device: str = "auto"
+    pairwise_torch_dtype: str = "auto"
+    
+    # Sorting method for pairwise comparison: "bubble", "merge", or "full"
+    # "full" means comparing all pairs and computing total wins for global ranking
+    pairwise_sort_method: str = "merge"
+    
+    # Agent generation settings for multiple candidates
+    candidate_temperature: float = 1.0  # Higher temperature for diversity
+    
+    def __post_init__(self):
+        # Validate selection method
+        if self.selection_method not in ["reward_model", "pairwise_judge"]:
+            raise ValueError(f"selection_method must be 'reward_model' or 'pairwise_judge', got '{self.selection_method}'")
+        
+        # Validate reward model mode
+        if self.reward_model_mode not in ["generative", "discriminative"]:
+            raise ValueError(f"reward_model_mode must be 'generative' or 'discriminative', got '{self.reward_model_mode}'")
+        
+        # Validate numeric parameters
+        if not isinstance(self.num_candidates, int) or self.num_candidates < 1:
+            raise ValueError("num_candidates must be a positive integer")
+        if not isinstance(self.top_k, int) or self.top_k < 1:
+            raise ValueError("top_k must be a positive integer")
+        
+        # Validate top_k <= num_candidates
+        if self.top_k > self.num_candidates:
+            raise ValueError(
+                f"top_k ({self.top_k}) cannot be greater than num_candidates ({self.num_candidates}). "
+                f"top_k represents the beam width (number of parallel paths to maintain)."
+            )
+        
+        # Validate pairwise sort method
+        if self.pairwise_sort_method not in ["bubble", "merge", "full"]:
+            raise ValueError(f"pairwise_sort_method must be 'bubble', 'merge', or 'full', got '{self.pairwise_sort_method}'")
+        
+        # Performance warnings
+        if self.num_candidates > 10:
+            import warnings
+            warnings.warn(
+                f"num_candidates={self.num_candidates} is very large. "
+                f"This will result in many LLM calls per step."
+            )
+        
+        if self.top_k > 5:
+            import warnings
+            warnings.warn(
+                f"top_k={self.top_k} (beam width) is very large. "
+                f"This may result in exponential growth of computation."
+            )
+        
+        # Estimate and warn about computation cost
+        estimated_calls_per_step = self.num_candidates * self.top_k
+        if estimated_calls_per_step > 25:
+            import warnings
+            warnings.warn(
+                f"Estimated {estimated_calls_per_step} LLM calls per step "
+                f"(num_candidates × top_k). This may be very slow and expensive!"
+            )
+        
+        # Load API keys from environment if not provided
+        if self.reward_api_key is None:
+            self.reward_api_key = os.getenv("OPENAI_API_KEY")
+        if self.reward_base_url is None:
+            self.reward_base_url = os.getenv("OPENAI_BASE_URL", "https://api.openai.com/v1")
+        if self.pairwise_api_key is None:
+            self.pairwise_api_key = os.getenv("OPENAI_API_KEY")
+        if self.pairwise_base_url is None:
+            self.pairwise_base_url = os.getenv("OPENAI_BASE_URL", "https://api.openai.com/v1")
+
 @dataclass
 class EnvironmentConfig:
     """Configuration for physics environment."""
@@ -213,6 +320,7 @@ class Config:
     judgement: Optional[JudgementConfig] = None
     environment: EnvironmentConfig = field(default_factory=EnvironmentConfig)
     task: TaskConfig = field(default_factory=TaskConfig)
+    step_selection: Optional[StepSelectionConfig] = None
     
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> "Config":
@@ -232,12 +340,17 @@ class Config:
         env_data = data.get("environment", {})
         environment = EnvironmentConfig.from_dict(env_data)
         
+        # Parse step selection config if present
+        step_selection_data = data.get("step_selection", {})
+        step_selection = StepSelectionConfig(**step_selection_data) if step_selection_data else None
+        
         return cls(
             runner=runner,
             agent=agent,
             judgement=judgement,
             task=task,
             environment=environment,
+            step_selection=step_selection,
         )
     
     def to_dict(self) -> Dict[str, Any]:
@@ -258,6 +371,12 @@ class Config:
             "task": {
                 **{k: v for k, v in self.task.__dict__.items()}
             },
+        }
+        
+        # Add step selection config if present
+        if self.step_selection:
+            result["step_selection"] = {
+                **{k: v for k, v in self.step_selection.__dict__.items()}
         }
         
         return result

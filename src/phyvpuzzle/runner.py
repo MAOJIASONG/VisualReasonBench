@@ -8,8 +8,8 @@ environments, agents, tasks, and evaluation components.
 import json
 import os
 import time
-from typing import List, Optional, Dict, Tuple
-from phyvpuzzle.agents import VLMAgent
+from typing import List, Optional, Dict, Tuple, Callable
+from phyvpuzzle.agents import VLMAgent, ActionCandidate, StepSelectionManager, create_reward_agent, BaseRewardAgent
 from phyvpuzzle.core import Config, ENVIRONMENT_REGISTRY, TASK_REGISTRY, AGENT_REGISTRY
 from phyvpuzzle.core.base import Observation, State, TaskResult, Action, EvaluationResult
 from phyvpuzzle.environment import PhysicsEnvironment
@@ -38,6 +38,10 @@ class BenchmarkRunner:
         self.agent: Optional[VLMAgent] = None
         self.evaluator: Optional[BenchmarkEvaluator] = None
         
+        # Step selection components
+        self.reward_agent: Optional[BaseRewardAgent] = None
+        self.step_selection_manager: Optional[StepSelectionManager] = None
+        
         # Execution state
         # Each entry: {"response": str, "actions": List[Action], "observations": List[Observation]}
         self.interaction_history: List[Dict] = []
@@ -62,7 +66,30 @@ class BenchmarkRunner:
         # Create evaluator
         self.evaluator = self._create_evaluator()
         
+        # Setup step selection if enabled
+        self._setup_step_selection()
+        
         self.live_logger.log_info("Benchmark setup complete")
+    
+    def _setup_step_selection(self) -> None:
+        """Setup step selection components if enabled."""
+        if self.config.step_selection and self.config.step_selection.enabled:
+            mode = "greedy" if self.config.step_selection.top_k == 1 else f"beam search (width={self.config.step_selection.top_k})"
+            self.live_logger.log_info(
+                f"Initializing step selection: {mode}, "
+                f"method='{self.config.step_selection.selection_method}'"
+            )
+            
+            # Create reward agent for action scoring/comparison
+            self.reward_agent = create_reward_agent(self.config.step_selection)
+            
+            # Create step selection manager
+            self.step_selection_manager = StepSelectionManager(
+                self.config.step_selection,
+                self.reward_agent
+            )
+            
+            self.live_logger.log_info("Step selection components initialized")
 
     def _create_task(self) -> PhysicsTask:
         """Create task based on configuration."""
@@ -156,6 +183,22 @@ class BenchmarkRunner:
         max_steps = self.environment.config.max_steps
         StatusDisplay.print_section(f"Starting Interaction Loop (max {max_steps} steps)")
         
+        # Check if step selection is enabled
+        use_step_selection = (
+            self.config.step_selection and 
+            self.config.step_selection.enabled and 
+            self.step_selection_manager is not None
+        )
+        
+        if use_step_selection:
+            mode = "greedy" if self.config.step_selection.top_k == 1 else f"beam search (width={self.config.step_selection.top_k})"
+            self.live_logger.log_info(
+                f"Step selection enabled: {mode}, "
+                f"method={self.config.step_selection.selection_method}, "
+                f"num_candidates={self.config.step_selection.num_candidates}, "
+                f"beam_width(top_k)={self.config.step_selection.top_k}"
+            )
+        
         self.progress_display = ProgressDisplay(max_steps)
         
         for step in range(1, max_steps + 1):
@@ -165,9 +208,19 @@ class BenchmarkRunner:
             if self._is_token_limit_exceeded():
                 return self._handle_token_limit_exceeded(step)
             
-            # Build prompt and get agent response
+            # Build prompt
             prompt_history = self._build_prompt_history()
-            response, tool_calls = self._get_agent_response(step, prompt_history)
+            
+            # Get current image for beam search
+            current_image = observation.image if observation else None
+            
+            # Get agent response - use step selection if enabled
+            if use_step_selection and current_image is not None:
+                response, tool_calls = self._select_best_actions_with_step_selection(
+                    step, prompt_history, current_image
+                )
+            else:
+                response, tool_calls = self._get_agent_response(step, prompt_history)
             
             self.live_logger.log_info(f"Step {step}:")
             self.live_logger.log_info(f"Prompt history: \n{prompt_history}")
@@ -181,6 +234,12 @@ class BenchmarkRunner:
             # Execute tools or log response
             if tool_calls:
                 self._execute_tool_calls(step, tool_calls, response)
+                # Update observation from the last executed action
+                if self.interaction_history:
+                    last_step = self.interaction_history[-1]
+                    observations = last_step.get("observations", [])
+                    if observations:
+                        observation = observations[-1]
             else:
                 # Record text-only response in interaction history
                 self.interaction_history.append({
@@ -196,6 +255,13 @@ class BenchmarkRunner:
                 })
             
             self.live_logger.log_info(f"Step {step}, Token count: {self.agent.get_token_count()}")
+            
+            # Log step selection statistics if enabled
+            if use_step_selection:
+                best_path, best_score = self.step_selection_manager.get_best_path()
+                self.live_logger.log_info(
+                    f"Step selection: best path length={len(best_path)}, cumulative score={best_score:.3f}"
+                )
         
         # Finish progress display
         task_completed = step < max_steps
@@ -401,6 +467,147 @@ class BenchmarkRunner:
             self.live_logger.log_info("Agent provided text response only")
             
         return response, tool_calls
+    
+    def _generate_candidate_actions(self, step: int, prompt_history: str, num_candidates: int) -> List[ActionCandidate]:
+        """
+        Generate multiple candidate actions from the agent.
+        
+        Args:
+            step: Current step number
+            prompt_history: The prompt history string
+            num_candidates: Number of candidate actions to generate
+            
+        Returns:
+            List of ActionCandidate objects
+        """
+        candidates = []
+        
+        # Get recent observations
+        recent_obs = []
+        for step_data in self.interaction_history[-self.config.runner.history_length:]:
+            observations = step_data.get("observations", [])
+            recent_obs.extend(observations)
+        
+        # Store original temperature
+        original_temperature = self.agent.config.temperature
+        
+        # Use higher temperature for diversity if configured
+        if self.config.step_selection:
+            self.agent.config.temperature = self.config.step_selection.candidate_temperature
+        
+        self.live_logger.log_info(f"Generating {num_candidates} candidate actions...")
+        
+        for i in range(num_candidates):
+            try:
+                response, tool_calls = self.agent.process_observation(
+                    recent_obs, prompt_history, self.environment.get_tool_schemas()
+                )
+                
+                # Convert tool calls to ActionCandidate objects
+                for tool_call in tool_calls:
+                    try:
+                        tool_name = tool_call["function"]["name"]
+                        arguments = json.loads(tool_call["function"]["arguments"])
+                        
+                        # Skip finish action in candidates
+                        if tool_name == "finish":
+                            continue
+                        
+                        candidate = ActionCandidate(
+                            action_type=tool_name,
+                            parameters=arguments,
+                            response=response,
+                            tool_call=tool_call
+                        )
+                        candidates.append(candidate)
+                        
+                    except (KeyError, json.JSONDecodeError) as e:
+                        self.live_logger.log_warning(f"Failed to parse tool call: {e}")
+                        continue
+                        
+            except Exception as e:
+                self.live_logger.log_warning(f"Failed to generate candidate {i+1}: {e}")
+                continue
+        
+        # Restore original temperature
+        self.agent.config.temperature = original_temperature
+        
+        self.live_logger.log_info(f"Generated {len(candidates)} valid candidate actions")
+        return candidates
+    
+    def _select_best_actions_with_step_selection(
+        self,
+        step: int,
+        prompt_history: str,
+        current_image
+    ) -> Tuple[str, List[Dict]]:
+        """
+        Use step selection (greedy/beam search) to choose the best action(s).
+        
+        Args:
+            step: Current step number
+            prompt_history: The prompt history string
+            current_image: Current observation image
+            
+        Returns:
+            Tuple of (response, tool_calls) for the best action(s)
+        """
+        # Get task description and object mapping
+        task_description = self.task.get_user_prompt()
+        object_mapping = self.get_object_mapping()
+        
+        # Build interaction history string (simplified)
+        interaction_str = self._build_interaction_summary()
+        
+        # Initialize step selection manager if first step
+        if step == 1:
+            self.step_selection_manager.initialize()
+        
+        # Define candidate generator function
+        def generate_candidates() -> List[ActionCandidate]:
+            return self._generate_candidate_actions(
+                step, prompt_history, self.config.step_selection.num_candidates
+            )
+        
+        # Use step selection manager to expand and select
+        best_actions = self.step_selection_manager.expand_beams(
+            generate_candidates,
+            current_image,
+            task_description,
+            object_mapping,
+            interaction_str
+        )
+        
+        if not best_actions:
+            # Fallback to regular agent response if no candidates
+            self.live_logger.log_warning("No valid candidates from step selection, falling back to regular response")
+            return self._get_agent_response(step, prompt_history)
+        
+        # Convert best action to response and tool_calls format
+        best_action = best_actions[0]
+        
+        self.live_logger.log_info(
+            f"Step selection chose action: {best_action.action_type} "
+            f"(score: {best_action.score:.3f})"
+        )
+        
+        return best_action.response, [best_action.tool_call]
+    
+    def _build_interaction_summary(self) -> str:
+        """Build a summary string of the interaction history."""
+        summary_lines = []
+        for idx, step_data in enumerate(self.interaction_history):
+            if idx == 0:  # Skip initial reset
+                continue
+            
+            actions = step_data.get("actions", [])
+            for action in actions:
+                if hasattr(action, 'action_type'):
+                    summary_lines.append(f"Step {idx}: {action.action_type}({action.parameters})")
+                else:
+                    summary_lines.append(f"Step {idx}: {action.get('action_type', 'unknown')}")
+        
+        return "\n".join(summary_lines) if summary_lines else "No previous actions"
     
     def _should_finish_task(self, tool_calls: list) -> bool:
         """Check if agent wants to finish the task."""

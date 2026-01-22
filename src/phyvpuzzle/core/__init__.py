@@ -17,7 +17,7 @@ from phyvpuzzle.core.base import (
     BaseJudge,
 )
 
-from phyvpuzzle.core.config import Config, load_config, create_default_config, validate_config, EnvironmentConfig, TaskConfig, AgentConfig, JudgementConfig, CameraConfig
+from phyvpuzzle.core.config import Config, load_config, create_default_config, validate_config, EnvironmentConfig, TaskConfig, AgentConfig, JudgementConfig, CameraConfig, StepSelectionConfig
 
 from phyvpuzzle.core.registry import register_environment, register_environment_config, register_agent, register_task_config, register_task, ENVIRONMENT_REGISTRY, TASK_REGISTRY, AGENT_REGISTRY, TASK_CONFIG_REGISTRY
 
@@ -35,6 +35,7 @@ __all__ = [
     "TaskConfig",
     "AgentConfig",
     "JudgementConfig",
+    "StepSelectionConfig",
     "register_environment",
     "register_environment_config",
     "register_task_config",
