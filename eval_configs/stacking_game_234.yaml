@@ -1,5 +1,4 @@
-# Configuration for the Stacking Game Task
-# This example evaluates a small polycube packing puzzle.
+# Configuration for the Stacking Game Task (2x3x4)
 
 runner:
   experiment_name: stacking_game_exp1
@@ -33,10 +32,10 @@ environment:
   render_height: 512
   multi_view: true
   load_table: false
-  max_steps: 6
+  max_steps: 10
   puzzle_dir: "Stacking_scaling/puzzles_full_v9"
-  default_size: "2x2x2"
-  default_puzzle_id: "puzzle_001"
+  default_size: "2x3x4"
+  default_puzzle_id: "puzzle_003"
   randomize_on_reset: true
   init_spacing: 2
   init_seed: null
@@ -45,9 +44,9 @@ environment:
 task:
   type: "stacking_game"
   name: "stacking_game_exp1"
-  difficulty: easy
-  puzzle_size: "2x2x2"
-  puzzle_id: "puzzle_001"
+  difficulty: medium
+  puzzle_size: "2x3x4"
+  puzzle_id: "puzzle_003"
   ruled_evaluation: true
   allow_random_puzzle: false
   init_seed: null

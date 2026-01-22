@@ -59,3 +59,6 @@ if __name__ == "__main__":
 # python examples/stacking_game_test.py --config eval_configs/stacking_game_222.yaml --k 1 --workers 1
 
 # python examples/stacking_game_test.py --configs eval_configs/stacking_game_222.yaml eval_configs/stacking_game_223.yaml --runs-per-config 2 --workers 2
+
+# python examples/stacking_game_test.py --configs eval_configs/stacking_game_222.yaml eval_configs/stacking_game_223.yaml eval_configs/stacking_game_234.yaml eval_configs/stacking_game_244.yaml eval_configs/stacking_game_333.yaml eval_configs/stacking_game_334.yaml eval_configs/stacking_game_344.yaml eval_configs/stacking_game_444.yaml  --runs-per-config 1 --workers 8
+# python examples/stacking_game_test.py --configs eval_configs/stacking_game_222_seed.yaml eval_configs/stacking_game_223_seed.yaml eval_configs/stacking_game_234_seed.yaml eval_configs/stacking_game_244_seed.yaml eval_configs/stacking_game_333_seed.yaml eval_configs/stacking_game_334_seed.yaml eval_configs/stacking_game_344_seed.yaml eval_configs/stacking_game_444_seed.yaml  --runs-per-config 1 --workers 8
