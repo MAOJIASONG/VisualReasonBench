@@ -82,6 +82,22 @@ def _run_single_task(
     evaluated.metadata["config_path"] = config_path
     evaluated.metadata["env_id"] = env_id
     evaluated.metadata["level_index"] = level_index
+    
+    # Export results to Excel and detailed reports (same as run_benchmark)
+    # This ensures luban_task has the same logging capabilities as stacking_task
+    import os
+    runner.evaluator.export_results_to_excel(
+        evaluation,
+        os.path.join(runner.logger.run_dir, config.runner.results_excel_path),
+        config.agent.model_name
+    )
+    
+    runner.evaluator.export_detailed_report(
+        evaluation,
+        os.path.join(runner.logger.run_dir, "detailed_reports"),
+        config.agent.model_name
+    )
+    
     return evaluated
 
 
@@ -244,3 +260,5 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
+# python -m phyvpuzzle.luban_runner --config eval_configs/luban.yaml --levels 0 --runs-per-level 1
