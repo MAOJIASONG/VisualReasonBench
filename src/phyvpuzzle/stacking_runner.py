@@ -17,13 +17,54 @@ from phyvpuzzle.evaluation.metrics import MetricsCalculator
 from phyvpuzzle.runner import BenchmarkRunner
 
 LEVEL_SIZE_MAPPING = {
-    "0":"2x2x2",
-    "1":"2x3x4",
-    "2":"2x4x4",
-    "3":"3x3x3",
-    "4":"3x3x4",
-    "5":"3x4x4",
-    "6":"4x4x4",
+    "0": "2x2x2_puzzle_001",
+    "1": "2x3x4_puzzle_003",
+    "2": "2x3x4_puzzle_005",
+    "3": "2x3x4_puzzle_006",
+    "4": "2x3x4_puzzle_009",
+    "5": "2x4x4_puzzle_001",
+    "6": "2x4x4_puzzle_002",
+    "7": "2x4x4_puzzle_003",
+    "8": "2x4x4_puzzle_004",
+    "9": "2x4x4_puzzle_005",
+    "10": "2x4x4_puzzle_007",
+    "11": "2x4x4_puzzle_008",
+    "12": "2x4x4_puzzle_010",
+    "13": "3x3x3_puzzle_001",
+    "14": "3x3x3_puzzle_002",
+    "15": "3x3x3_puzzle_006",
+    "16": "3x3x3_puzzle_008",
+    "17": "3x3x3_puzzle_010",
+    "18": "3x3x4_puzzle_001",
+    "19": "3x3x4_puzzle_002",
+    "20": "3x3x4_puzzle_003",
+    "21": "3x3x4_puzzle_004",
+    "22": "3x3x4_puzzle_005",
+    "23": "3x3x4_puzzle_006",
+    "24": "3x3x4_puzzle_007",
+    "25": "3x3x4_puzzle_008",
+    "26": "3x3x4_puzzle_009",
+    "27": "3x3x4_puzzle_010",
+    "28": "3x4x4_puzzle_001",
+    "29": "3x4x4_puzzle_002",
+    "30": "3x4x4_puzzle_003",
+    "31": "3x4x4_puzzle_004",
+    "32": "3x4x4_puzzle_005",
+    "33": "3x4x4_puzzle_006",
+    "34": "3x4x4_puzzle_007",
+    "35": "3x4x4_puzzle_008",
+    "36": "3x4x4_puzzle_009",
+    "37": "3x4x4_puzzle_010",
+    "38": "4x4x4_puzzle_001",
+    "39": "4x4x4_puzzle_002",
+    "40": "4x4x4_puzzle_003",
+    "41": "4x4x4_puzzle_004",
+    "42": "4x4x4_puzzle_005",
+    "43": "4x4x4_puzzle_006",
+    "44": "4x4x4_puzzle_007",
+    "45": "4x4x4_puzzle_008",
+    "46": "4x4x4_puzzle_009",
+    "47": "4x4x4_puzzle_010",
 }
 
 @dataclass
@@ -59,6 +100,17 @@ def _clone_config_with_suffix(config_path: str, suffix: str):
     return config
 
 
+def _parse_level_mapping(level_index: int) -> tuple[str, str, str]:
+    level_key = str(level_index)
+    mapped = LEVEL_SIZE_MAPPING.get(level_key)
+    if not mapped:
+        raise ValueError(f"Unknown level index {level_index}. Known levels: {sorted(LEVEL_SIZE_MAPPING.keys())}")
+    size, puzzle_id = mapped.split("_", 1)
+    if not puzzle_id.startswith("puzzle_"):
+        puzzle_id = f"puzzle_{puzzle_id}"
+    return size, puzzle_id, mapped
+
+
 def _apply_seed_overrides(config, seed: Optional[int]) -> None:
     if seed is None:
         return
@@ -66,6 +118,26 @@ def _apply_seed_overrides(config, seed: Optional[int]) -> None:
         config.task.init_seed = seed
     if hasattr(config.environment, "init_seed"):
         config.environment.init_seed = seed
+
+
+def _apply_stacking_overrides(
+    config,
+    level_index: int,
+    env_id: int,
+    seed: Optional[int],
+) -> None:
+    if hasattr(config.environment, "env_id"):
+        config.environment.env_id = env_id
+    size, puzzle_id, _ = _parse_level_mapping(level_index)
+    if hasattr(config.task, "puzzle_size"):
+        config.task.puzzle_size = size
+    if hasattr(config.task, "puzzle_id"):
+        config.task.puzzle_id = puzzle_id
+    if hasattr(config.environment, "default_size"):
+        config.environment.default_size = size
+    if hasattr(config.environment, "default_puzzle_id"):
+        config.environment.default_puzzle_id = puzzle_id
+    _apply_seed_overrides(config, seed)
 
 
 def _run_single_task(
@@ -79,15 +151,16 @@ def _run_single_task(
 ) -> TaskResult:
     suffix = f"b{batch_id}_r{run_id},l{level_index}_e{env_id}_{int(time.time() * 1000)}"
     config = _clone_config_with_suffix(config_path, suffix)
-    _apply_seed_overrides(config, seed)
+    _apply_stacking_overrides(config, level_index=level_index, env_id=env_id, seed=seed)
 
     if level_log_dir:
-        level_base_name = f"level_{level_index}_{LEVEL_SIZE_MAPPING[str(level_index)]}"
+        _, _, level_name = _parse_level_mapping(level_index)
+        level_base_name = f"level_{level_index}_{level_name}"
         config.runner.experiment_name = f"{level_base_name}_run_{run_id}"
         config.runner.log_dir = level_log_dir
     else:
         pass
-    
+
     
     runner = BenchmarkRunner(config)
     runner.setup()
@@ -297,11 +370,11 @@ def run_parallel_levels(
     os.makedirs(base_log_dir, exist_ok=True)
     level_log_dirs: Dict[int, str] = {}
     for level_index in level_list:
-        level_size = LEVEL_SIZE_MAPPING[str(level_index)]
-        level_log_dir = os.path.join(base_log_dir, f"level_{level_index}_{level_size}")
+        _, _, level_name = _parse_level_mapping(level_index)
+        level_log_dir = os.path.join(base_log_dir, f"level_{level_index}_{level_name}")
         os.makedirs(level_log_dir, exist_ok=True)
         level_log_dirs[level_index] = level_log_dir
-        print("Created log directory for level", level_index, level_size, "at", level_log_dir)
+        print("Created log directory for level", level_index, level_name, "at", level_log_dir)
 
     all_results: List[TaskResult] = []
     futures = []
