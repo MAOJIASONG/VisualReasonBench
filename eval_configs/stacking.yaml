@@ -5,7 +5,7 @@ runner:
   experiment_name: stacking_game_exp1
   log_dir: "logs"
   results_excel_path: "experiment_results.xlsx"
-  history_length: 5
+  history_length: 3
 
 agent:
   type: "openai"
@@ -13,7 +13,7 @@ agent:
   # API key and base URL are loaded from environment variables (.env file or system export)
   api_key: null
   base_url: null
-  temperature: 0.1
+  temperature: 0.6
   max_content_size: 100000
   max_tokens: 2048
   timeout: 300.0
