@@ -33,8 +33,13 @@ class StackingGameTask(PhysicsTask):
         super().__init__(config)
 
     def _calculate_optimal_steps(self) -> int:
-        # Practical upper bound for small puzzles; used for metrics only.
-        return 24
+        import json
+        config_path = f"Stacking_scaling/puzzles_full_v9/{self.config.puzzle_size}/{self.config.puzzle_id}/{self.config.puzzle_id}_{self.config.puzzle_size}.json"
+        with open(config_path, "r") as f:
+            config = json.load(f)
+        piece_num = len(config.get("pieces", []))
+        return piece_num
+
 
     def configure_environment(self, environment) -> Observation:  # type: ignore[override]
         """Configure environment with the puzzle specified in the task config."""

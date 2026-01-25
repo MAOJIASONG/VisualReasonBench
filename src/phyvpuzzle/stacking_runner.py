@@ -4,9 +4,11 @@ from __future__ import annotations
 
 import argparse
 import os
+from queue import Queue
 import time
+import json
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 from typing import Any, Dict, Iterable, List, Optional
 
 from phyvpuzzle import load_config, validate_config
@@ -14,6 +16,15 @@ from phyvpuzzle.core.base import TaskResult
 from phyvpuzzle.evaluation.metrics import MetricsCalculator
 from phyvpuzzle.runner import BenchmarkRunner
 
+LEVEL_SIZE_MAPPING = {
+    "0":"2x2x2",
+    "1":"2x3x4",
+    "2":"2x4x4",
+    "3":"3x3x3",
+    "4":"3x3x4",
+    "5":"3x4x4",
+    "6":"4x4x4",
+}
 
 @dataclass
 class Pricing:
@@ -61,19 +72,43 @@ def _run_single_task(
     config_path: str,
     batch_id: int,
     run_id: int,
+    level_index: int,
+    env_id: int,
     seed: Optional[int] = None,
+    level_log_dir: Optional[str] = None,
 ) -> TaskResult:
-    suffix = f"b{batch_id}_r{run_id}_{int(time.time() * 1000)}"
+    suffix = f"b{batch_id}_r{run_id},l{level_index}_e{env_id}_{int(time.time() * 1000)}"
     config = _clone_config_with_suffix(config_path, suffix)
     _apply_seed_overrides(config, seed)
+
+    if level_log_dir:
+        level_base_name = f"level_{level_index}_{LEVEL_SIZE_MAPPING[str(level_index)]}"
+        config.runner.experiment_name = f"{level_base_name}_run_{run_id}"
+        config.runner.log_dir = level_log_dir
+    else:
+        pass
+    
+    
     runner = BenchmarkRunner(config)
     runner.setup()
     result = runner.run_single_task()
     evaluation = runner.evaluate([result])
     evaluated = evaluation.task_results[0]
-    evaluated.metadata["group_key"] = config.task.name
-    evaluated.metadata["difficulty"] = config.task.difficulty.value if config.task.difficulty else "unknown"
+    evaluated.metadata["group_key"] = f"level_{level_index}"
+    evaluated.metadata["level_index"] = level_index
+    evaluated.metadata["env_id"] = env_id
     evaluated.metadata["config_path"] = config_path
+    
+    runner.evaluator.export_results_to_excel(
+        evaluation,
+        os.path.join(runner.logger.run_dir, config.runner.results_excel_path),
+        config.agent.model_name
+    )
+    runner.evaluator.export_detailed_report(
+        evaluation,
+        os.path.join(runner.logger.run_dir, "detailed_reports"),
+        config.agent.model_name
+    )
     return evaluated
 
 
@@ -149,6 +184,13 @@ def _print_metrics(title: str, summary: MetricSummary) -> None:
     print(f"USD/Solved: {summary.usd_per_solved:.4f}")
     print("=" * 80)
 
+def _metrics_to_dict(summary: MetricSummary) -> Dict[str, Any]:
+    return asdict(summary)
+
+def _save_metrics_to_file(summary: MetricSummary, file_path: str) -> None:
+    os.makedirs(os.path.dirname(file_path) or ".", exist_ok=True)
+    with open(file_path, "w") as f:
+        json.dump(_metrics_to_dict(summary), f,indent=2,ensure_ascii=False)
 
 def run_parallel_kxk(
     config_path: str,
@@ -219,18 +261,160 @@ def run_parallel_difficulty_tasks(
 
     return all_results
 
+def _build_level_list(levels: Optional[List[int]], level_range: Optional[str], default_level: int) -> List[int]:
+    if levels:
+        return levels
+    if level_range:
+        start_str, end_str = level_range.split("-", 1)
+        start = int(start_str)
+        end = int(end_str)
+        if end < start:
+            raise ValueError("level-range must be in ascending order, e.g., 0-31")
+        return list(range(start, end + 1))
+    return [default_level]
+def run_parallel_levels(
+    config_path: str,
+    levels: Optional[List[int]],
+    level_range: Optional[str],
+    runs_per_level: int,
+    pricing: Pricing,
+    max_workers: Optional[int] = None,
+    seed_base: Optional[int] = None,
+) -> List[TaskResult]:
+
+    import os
+    from datetime import datetime
+
+    config = load_config(config_path)
+    level_list = _build_level_list(levels, level_range, getattr(config.task, "level_index", 0))
+    workers = min(max_workers or min(8, len(level_list) * runs_per_level), 8)
+    env_pool: Queue[int] = Queue()
+    for env_id in range(1, workers + 1):
+        env_pool.put(env_id)
+
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    base_log_dir = os.path.join(config.runner.log_dir, f"stacking_{timestamp}")
+    os.makedirs(base_log_dir, exist_ok=True)
+    level_log_dirs: Dict[int, str] = {}
+    for level_index in level_list:
+        level_size = LEVEL_SIZE_MAPPING[str(level_index)]
+        level_log_dir = os.path.join(base_log_dir, f"level_{level_index}_{level_size}")
+        os.makedirs(level_log_dir, exist_ok=True)
+        level_log_dirs[level_index] = level_log_dir
+        print("Created log directory for level", level_index, level_size, "at", level_log_dir)
+
+    all_results: List[TaskResult] = []
+    futures = []
+    print(f"\nStarting parallel runs for {len(level_list)} levels with up to {workers} workers...")
+
+    def _run_with_env(batch_id: int, run_id: int, level_index: int, seed: Optional[int]) -> TaskResult:
+        env_id = env_pool.get()
+        try:
+            level_log_dir = level_log_dirs.get(level_index)
+            return _run_single_task(
+                config_path=config_path,
+                batch_id=batch_id,
+                run_id=run_id,
+                level_index=level_index,
+                level_log_dir=level_log_dir,
+                env_id=env_id,
+                seed=seed,
+            )
+        finally:
+            env_pool.put(env_id)
+
+    with ThreadPoolExecutor(max_workers=workers) as executor:
+        batch_id = 1
+        for level_index in level_list:
+            for run_id in range(1, runs_per_level + 1):
+                seed = seed_base + (level_index * 1000 + run_id) if seed_base is not None else None
+                futures.append(
+                    executor.submit(_run_with_env, batch_id, run_id, level_index, seed)
+                )
+        for future in as_completed(futures):
+            all_results.append(future.result())
+
+    from phyvpuzzle.evaluation.metrics import MetricsCalculator
+    calculator = MetricsCalculator()
+
+    for level_index in level_list:
+        level_results = [r for r in all_results if r.metadata.get("level_index") == level_index]
+        if level_results:
+            level_log_dir = level_log_dirs[level_index]
+            level_summary = _calculate_metrics(level_results, pricing, k_values=[runs_per_level])
+           
+            # Save level-specific Excel report
+            from phyvpuzzle.evaluation.evaluator import BenchmarkEvaluator
+            evaluator = BenchmarkEvaluator(config.judgement)
+            evaluation_result = evaluator.evaluate_metrics(level_results)
+           
+            level_excel_path = os.path.join(level_log_dir, f"level_{level_index}_results.xlsx")
+            evaluator.export_results_to_excel(
+                evaluation_result,
+                level_excel_path,
+                config.agent.model_name
+            )
+           
+            level_report_dir = os.path.join(level_log_dir, "detailed_reports")
+            evaluator.export_detailed_report(
+                evaluation_result,
+                level_report_dir,
+                config.agent.model_name
+            )
+           
+            print(f"\n📊 Level {level_index} Summary:")
+            _print_metrics(f"Level {level_index} Metrics", level_summary)
+            level_metrics_path = os.path.join(level_log_dir, f"level_{level_index}_metrics.json")
+            _save_metrics_to_file(level_summary, level_metrics_path)
+
+
+    # Overall summary
+    summary = _calculate_metrics(all_results, pricing, k_values=[runs_per_level])
+    _print_metrics("Overall Metrics (Luban Levels)", summary)
+   
+    # Save overall summary Excel
+    from phyvpuzzle.evaluation.evaluator import BenchmarkEvaluator
+    evaluator = BenchmarkEvaluator(config.judgement)
+    overall_evaluation = evaluator.evaluate_metrics(all_results)
+    overall_excel_path = os.path.join(base_log_dir, "overall_results.xlsx")
+    evaluator.export_results_to_excel(
+        overall_evaluation,
+        overall_excel_path,
+        config.agent.model_name
+    )
+    overall_report_dir = os.path.join(base_log_dir, "detailed_reports")
+    evaluator.export_detailed_report(
+        overall_evaluation,
+        overall_report_dir,
+        config.agent.model_name
+    )
+    overall_metrics_path = os.path.join(base_log_dir, "overall_metrics.json")
+    _save_metrics_to_file(summary, overall_metrics_path)
+
+
+    print(f"\n📁 All logs saved to: {base_log_dir}")
+    print(f"   - Each level has its own directory: level_0/, level_1/, etc.")
+    print(f"   - Per-level metrics JSON: level_<N>/level_<N>_metrics.json")
+    print(f"   - Overall summary: {overall_excel_path}")
+    print(f"   - Overall metrics JSON: {overall_metrics_path}")
+   
+
+
+    return all_results
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Parallel runner for stacking_game tasks.")
     parser.add_argument("--config", help="Path to a single stacking_game YAML config.")
-    parser.add_argument(
-        "--configs",
-        nargs="+",
-        help="List of stacking_game YAML configs (different difficulties).",
-    )
-    parser.add_argument("--k", type=int, default=1, help="K for KxK parallel testing.")
+    # parser.add_argument(
+    #     "--configs",
+    #     nargs="+",
+    #     help="List of stacking_game YAML configs (different difficulties).",
+    # )
+    # parser.add_argument("--k", type=int, default=1, help="K for KxK parallel testing.")
+    parser.add_argument("--levels", nargs="+", type=int, help="Level indices to run (0-n).")
+    parser.add_argument("--level-range", help="Inclusive level range, e.g., 0-7.")
     parser.add_argument("--workers", type=int, default=None, help="Max parallel workers.")
-    parser.add_argument("--runs-per-config", type=int, default=1, help="Runs per config.")
+    parser.add_argument("--runs-per-level", type=int, default=1, help="Runs per config.")
     parser.add_argument("--price-in", type=float, default=0.1, help="USD per 1K input tokens.")
     parser.add_argument("--price-out", type=float, default=0.1, help="USD per 1K output tokens.")
     parser.add_argument("--seed-base", type=int, default=None, help="Base seed for deterministic runs.")
@@ -242,29 +426,40 @@ def main() -> int:
     args = parser.parse_args()
     pricing = Pricing(input_per_1k=args.price_in, output_per_1k=args.price_out)
 
-    if args.config:
-        run_parallel_kxk(
-            config_path=args.config,
-            k=max(1, args.k),
-            pricing=pricing,
-            max_workers=args.workers,
-            seed_base=args.seed_base,
-        )
-        return 0
+    # if args.config:
+    #     run_parallel_kxk(
+    #         config_path=args.config,
+    #         k=max(1, args.k),
+    #         pricing=pricing,
+    #         max_workers=args.workers,
+    #         seed_base=args.seed_base,
+    #     )
+    #     return 0
+    run_parallel_levels(
+        config_path=args.config,
+        levels=args.levels,
+        level_range=args.level_range,
+        runs_per_level=max(1, args.runs_per_level),
+        pricing=pricing,
+        max_workers=args.workers,
+        seed_base=args.seed_base,
+    )
 
-    if args.configs:
-        run_parallel_difficulty_tasks(
-            config_paths=args.configs,
-            pricing=pricing,
-            max_workers=args.workers,
-            runs_per_config=max(1, args.runs_per_config),
-            seed_base=args.seed_base,
-        )
-        return 0
+    # if args.configs:
+    #     run_parallel_difficulty_tasks(
+    #         config_paths=args.configs,
+    #         pricing=pricing,
+    #         max_workers=args.workers,
+    #         runs_per_config=max(1, args.runs_per_config),
+    #         seed_base=args.seed_base,
+    #     )
+    #     return 0
 
-    parser.print_help()
-    return 1
+    # parser.print_help()
+    return 0
 
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
+# python -m phyvpuzzle.stacking_runner --config eval_configs/stacking.yaml --levels 0 1 --runs-per-level 1 --workers 2

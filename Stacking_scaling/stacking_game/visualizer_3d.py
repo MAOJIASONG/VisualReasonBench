@@ -2,6 +2,7 @@
 3D可视化模块 - 使用matplotlib绘制3D视图
 """
 
+import math
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
@@ -169,28 +170,53 @@ def visualize_state_3d(state: GameState,
     A, B, C = state.spec.box
 
     if show_unplaced and state.unplaced:
-        # 创建两个子图:盒子 + 未放置的pieces
+        # 左侧单视角，右侧为未放置piece的网格小视角
         fig = plt.figure(figsize=figsize)
+        unplaced_ids = [pid for pid in sorted(state.unplaced) if pid in state.initial_placements]
+        n_unplaced = len(unplaced_ids)
+        right_cols = 2
+        right_rows = max(1, math.ceil(n_unplaced / right_cols))
 
-        # 主盒子视图
-        ax1 = fig.add_subplot(121, projection='3d')
-        _draw_box_view(ax1, state, title)
+        gs = fig.add_gridspec(
+            nrows=1,
+            ncols=2,
+            width_ratios=[1.6, 1.0],
+            wspace=0.18,  # 增加间距，自然分隔左右两部分
+        )
+        gs_right = gs[0, 1].subgridspec(right_rows, right_cols, wspace=0.05, hspace=0.2)
 
-        # 未放置pieces视图
-        ax2 = fig.add_subplot(122, projection='3d')
-        _draw_unplaced_pieces(ax2, state)
+        # 左侧：单一视角盒子视图
+        ax1 = fig.add_subplot(gs[0, 0], projection='3d')
+        _draw_box_view(ax1, state, title, elev=22, azim=45)
+
+        # 右侧：每个未放置piece独立小视角
+        if unplaced_ids:
+            for idx, pid in enumerate(unplaced_ids):
+                row = idx // right_cols
+                col = idx % right_cols
+                ax = fig.add_subplot(gs_right[row, col], projection='3d')
+                _draw_single_unplaced_piece(ax, state, pid)
+        else:
+            ax = fig.add_subplot(gs_right[0, 0], projection='3d')
+            ax.text(0.5, 0.5, 0.5, "No pieces", ha='center', va='center')
+            ax.set_axis_off()
+
+        # 右侧标题（移除突兀的分隔线，使用间距自然分隔）
+        fig.text(0.73, 0.96, "Unplaced Pieces", ha="center", va="center",
+                 fontsize=10, style='italic', alpha=0.6, color='gray')
 
     else:
         # 只显示盒子
         fig = plt.figure(figsize=(8, 8))
         ax = fig.add_subplot(111, projection='3d')
-        _draw_box_view(ax, state, title)
+        _draw_box_view(ax, state, title, elev=20, azim=45)
 
     plt.tight_layout()
     return fig
 
 
-def _draw_box_view(ax: Axes3D, state: GameState, title: str):
+def _draw_box_view(ax: Axes3D, state: GameState, title: str,
+                   elev: float = 20, azim: float = 45):
     """绘制盒子视图"""
     A, B, C = state.spec.box
 
@@ -204,15 +230,37 @@ def _draw_box_view(ax: Axes3D, state: GameState, title: str):
             draw_voxel(ax, cell, color, alpha=0.7)
 
     # 设置坐标轴
-    ax.set_xlabel('X')
-    ax.set_ylabel('Y')
-    ax.set_zlabel('Z')
-    ax.set_xlim([-0.5, A + 0.5])
-    ax.set_ylim([-0.5, B + 0.5])
-    ax.set_zlim([-0.5, C + 0.5])
+    ax.set_xlabel('X', labelpad=10)
+    ax.set_ylabel('Y', labelpad=10)
+    ax.set_zlabel('Z', labelpad=10)
+    ax.set_xlim([0, A])
+    ax.set_ylim([0, B])
+    ax.set_zlim([0, C])
+    
+    # 禁用网格线，避免在标签位置（0.5, 1.5）绘制虚线
+    ax.grid(False)
+    
+    # 设置刻度位置在单元格中心（0.5, 1.5, ...）用于标签显示
+    tick_pos_x = [i + 0.5 for i in range(A)]
+    tick_pos_y = [i + 0.5 for i in range(B)]
+    tick_pos_z = [i + 0.5 for i in range(C)]
+    ax.set_xticks(tick_pos_x)
+    ax.set_yticks(tick_pos_y)
+    ax.set_zticks(tick_pos_z)
+    ax.set_xticklabels([str(i) for i in range(A)])
+    ax.set_yticklabels([str(i) for i in range(B)])
+    ax.set_zticklabels([str(i) for i in range(C)])
+    # 隐藏刻度线本身，只显示标签
+    ax.tick_params(axis='x', which='both', length=0, pad=2)
+    ax.tick_params(axis='y', which='both', length=0, pad=2)
+    ax.tick_params(axis='z', which='both', length=0, pad=2)
+    try:
+        ax.set_box_aspect((A, B, C))
+    except Exception:
+        pass
 
     # 设置视角
-    ax.view_init(elev=20, azim=45)
+    ax.view_init(elev=elev, azim=azim)
 
     # 标题
     occupied = len(state.occupied)
@@ -260,8 +308,8 @@ def _draw_unplaced_pieces(ax: Axes3D, state: GameState):
 
     # 绘制地面网格（帮助理解pieces在地上）
     ground_z = 0.5  # 稍微低于z=1
-    ground_x = [min_x - 1, max_x + 1]
-    ground_y = [min_y - 1, max_y + 1]
+    ground_x = [max(0, min_x - 1), max_x + 1]
+    ground_y = [max(0, min_y - 1), max_y + 1]
 
     from matplotlib.patches import Rectangle
     import matplotlib.patches as mpatches
@@ -275,11 +323,68 @@ def _draw_unplaced_pieces(ax: Axes3D, state: GameState):
     ax.set_xlabel('X')
     ax.set_ylabel('Y')
     ax.set_zlabel('Z')
-    ax.set_xlim([min_x - 1, max_x + 1])
-    ax.set_ylim([min_y - 1, max_y + 1])
-    ax.set_zlim([0, max_z + 1])
+    x0 = max(0, min_x - 1)
+    y0 = max(0, min_y - 1)
+    z0 = 0
+    x1 = max_x + 1
+    y1 = max_y + 1
+    z1 = max_z + 1
+    ax.set_xlim([x0, x1])
+    ax.set_ylim([y0, y1])
+    ax.set_zlim([z0, z1])
+    ax.set_xticks(list(range(int(x0), int(x1) + 1)))
+    ax.set_yticks(list(range(int(y0), int(y1) + 1)))
+    ax.set_zticks(list(range(int(z0), int(z1) + 1)))
 
     ax.view_init(elev=20, azim=45)
+
+
+def _draw_single_unplaced_piece(ax: Axes3D, state: GameState, piece_id: str):
+    """绘制单个未放置piece的小视角（网格排布用）"""
+    placement = state.initial_placements.get(piece_id)
+    if not placement or not placement.world_cells:
+        ax.text(0.5, 0.5, 0.5, "No data", ha='center', va='center')
+        ax.set_axis_off()
+        return
+
+    color = get_piece_color(piece_id)
+    min_x = min(c.x for c in placement.world_cells)
+    max_x = max(c.x for c in placement.world_cells)
+    min_y = min(c.y for c in placement.world_cells)
+    max_y = max(c.y for c in placement.world_cells)
+    min_z = min(c.z for c in placement.world_cells)
+    max_z = max(c.z for c in placement.world_cells)
+
+    # 规范化到小视角坐标系，避免受全局摆放影响
+    normalized_cells = [
+        Vec3(c.x - min_x + 1, c.y - min_y + 1, c.z - min_z + 1)
+        for c in placement.world_cells
+    ]
+    for cell in normalized_cells:
+        draw_voxel(ax, cell, color, alpha=0.75)
+
+    size_x = max_x - min_x + 1
+    size_y = max_y - min_y + 1
+    size_z = max_z - min_z + 1
+    pad = 1
+    x0 = 0
+    y0 = 0
+    z0 = 0
+    x1 = size_x + pad
+    y1 = size_y + pad
+    z1 = size_z + pad
+    ax.set_xlim([x0, x1])
+    ax.set_ylim([y0, y1])
+    ax.set_zlim([z0, z1])
+
+    ax.set_title(f"Piece {piece_id}")
+    ax.view_init(elev=20, azim=45)
+    ax.set_xticks([])
+    ax.set_yticks([])
+    ax.set_zticks([])
+    ax.set_xlabel('')
+    ax.set_ylabel('')
+    ax.set_zlabel('')
 
 
 def visualize_piece_rotations(piece: PieceDef,
