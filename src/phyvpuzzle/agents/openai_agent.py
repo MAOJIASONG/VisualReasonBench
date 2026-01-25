@@ -3,6 +3,7 @@ OpenAI API-based agent implementation.
 """
 
 import json
+import re
 from typing import Any, Dict, List, Tuple, Optional
 from openai import OpenAI
 from tenacity import retry, stop_after_attempt, wait_exponential
@@ -109,6 +110,9 @@ class OpenAIAgent(VLMAgent):
                             "arguments": tool_call.function.arguments
                         }
                     })
+            else:
+                tool_calls = self.parse_tool_calls_from_text(content)
+                # if not tool_calls:
             
             return content, tool_calls
             
@@ -190,4 +194,25 @@ class OpenAIAgent(VLMAgent):
                     print(f"Error parsing JSON action: {e}")
                     continue
         
+        idx = 0
+        if not tool_calls:
+            pattern = "<action>(.*?)</action>"
+            # 会匹配多个，取最后一个
+            rematches = re.findall(pattern, text)[-1:]
+            for match in rematches:
+                try:
+                    tool_call = json.loads(match)
+                except:
+                    tool_call = {}
+                if "name" not in tool_call:
+                    continue
+                tool_calls.append({
+                        "id": f"re_match_{idx}",
+                        "type": "function",
+                        "function": {
+                            "name": tool_call.get("name"),
+                            "arguments": json.dumps(tool_call.get("parameters", {}))
+                        }
+                })
+                idx += 1
         return tool_calls
