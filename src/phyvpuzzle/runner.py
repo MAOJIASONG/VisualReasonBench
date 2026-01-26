@@ -240,6 +240,11 @@ class BenchmarkRunner:
                     observations = last_step.get("observations", [])
                     if observations:
                         observation = observations[-1]
+                        
+                        # Check if task is solved (for tasks that support this)
+                        if self._is_task_solved(observation):
+                            self.live_logger.log_info("Task solved! Ending task execution.")
+                            break
             else:
                 # Record text-only response in interaction history
                 self.interaction_history.append({
@@ -619,6 +624,22 @@ class BenchmarkRunner:
             self.live_logger.log_info("Agent called 'finish' tool. Task complete.")
             return True
             
+        return False
+    
+    def _is_task_solved(self, observation: Observation) -> bool:
+        """Check if task is solved based on observation state."""
+        if not observation or not observation.state:
+            return False
+        
+        metadata = observation.state.metadata or {}
+        is_solved = metadata.get("is_solved", False)
+        
+        # Handle both boolean and string representations
+        if isinstance(is_solved, bool):
+            return is_solved
+        elif isinstance(is_solved, str):
+            return is_solved.lower() in ("true", "1", "yes")
+        
         return False
     
     def _execute_tool_calls(self, step: int, tool_calls: list, response: str) -> None:

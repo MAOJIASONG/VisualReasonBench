@@ -3,9 +3,10 @@
 from __future__ import annotations
 
 import argparse
+import json
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from queue import Queue
 from typing import Dict, Iterable, List, Optional, Tuple
 
@@ -14,7 +15,82 @@ from phyvpuzzle.core.base import TaskResult
 from phyvpuzzle.evaluation.metrics import MetricsCalculator
 from phyvpuzzle.runner import BenchmarkRunner
 
-
+class LubanRunner(BenchmarkRunner):
+    def _build_prompt_history(self) -> str:
+        """Build prompt history from interaction history.
+        
+        Builds history in alternating format:
+        - Action 1
+        - Observation 1
+        - Action 2
+        - Observation 2
+        - ...
+        
+        Includes ALL steps in the interaction history (no truncation).
+        """
+        user_prompt = self.task.get_user_prompt()
+        
+        # Add object mapping information so the agent knows which object_id corresponds to which color/object
+        object_mapping = self.get_object_mapping()
+        
+        # Include ALL steps (skip only the initial reset step at idx 0)
+        prompt_history = ""
+        for idx, step_data in enumerate(self.interaction_history):
+            if idx == 0:  # Skip initial reset step
+                continue
+                
+            prompt_history += f"\n{'='*60}\nStep {idx}:\n"
+            
+            # Get actions and observations
+            actions = step_data.get("actions", [])
+            observations = step_data.get("observations", [])
+            # print("length of actions: ", len(actions))
+            # print("length of observations: ", len(observations))
+            
+            # If both are empty, show agent response (text-only response)
+            if not actions and not observations:
+                prompt_history += f"No actions and observations\n"
+                # response = step_data.get("response", "")
+                # if response:
+                #     prompt_history += f"\n[Agent Response]: {response}\n"
+            else:
+                # Pair actions with observations and display them alternately
+                max_count = max(len(actions), len(observations))
+                
+                for i in range(max_count):
+                    # Display action if available
+                    if i < len(actions):
+                        action = actions[i]
+                        # Handle both Action objects and dicts
+                        if hasattr(action, 'action_type'):
+                            action_type = action.action_type
+                            parameters = action.parameters
+                        else:
+                            action_type = action.get("action_type", "unknown")
+                            parameters = action.get("parameters", {})
+                        prompt_history += f"\n[Action {i+1}]: {action_type}({parameters})\n"
+                    
+                    # Display observation if available
+                    if i < len(observations):
+                        obs = observations[i]
+                        # Handle both Observation objects and dicts
+                        if hasattr(obs, 'description'):
+                            description = obs.description
+                        else:
+                            description = obs.get("description", "")
+                        if description:
+                            prompt_history += f"[Observation {i+1}]: {description}\n"
+        
+        # Include object mapping at the beginning so agent can reference it
+        full_prompt = f"{user_prompt}\n\n{object_mapping}\n"
+        
+        if prompt_history:
+            full_prompt += f"\nInteraction History:{prompt_history}\n"
+            
+        full_prompt += "\nNow, what's your next action?"
+        
+        return full_prompt
+     
 @dataclass
 class Pricing:
     """Token pricing in USD per 1K tokens."""
@@ -69,11 +145,39 @@ def _run_single_task(
     level_index: int,
     env_id: int,
     seed: Optional[int] = None,
+    level_log_dir: Optional[str] = None,
 ) -> TaskResult:
+    """
+    Run a single task for a specific level.
+    
+    Args:
+        config_path: Path to config file
+        batch_id: Batch ID
+        run_id: Run ID within the level
+        level_index: Level index
+        env_id: Environment ID
+        seed: Optional seed
+        level_log_dir: Optional base log directory for this level (for organizing logs by level)
+    
+    Returns:
+        TaskResult with evaluation
+    """
     suffix = f"b{batch_id}_r{run_id}_l{level_index}_e{env_id}_{int(time.time() * 1000)}"
     config = _clone_config_with_suffix(config_path, suffix)
     _apply_luban_overrides(config, level_index=level_index, env_id=env_id, seed=seed)
-    runner = BenchmarkRunner(config)
+    
+    # If level_log_dir is provided, organize logs by level
+    if level_log_dir:
+        # Create level-specific log directory structure
+        import os
+        level_base_name = f"level_{level_index}"
+        config.runner.log_dir = level_log_dir
+        config.runner.experiment_name = f"{level_base_name}_run_{run_id}"
+    else:
+        # Use default behavior (original experiment_name includes all info)
+        pass
+    
+    runner = LubanRunner(config)
     runner.setup()
     result = runner.run_single_task()
     evaluation = runner.evaluate([result])
@@ -146,6 +250,19 @@ def _calculate_metrics(
     )
 
 
+def _metrics_to_dict(summary: MetricSummary) -> dict:
+    """Convert MetricSummary to a JSON-serializable dict."""
+    return asdict(summary)
+
+
+def _save_metrics_to_file(summary: MetricSummary, path: str) -> None:
+    """Persist final metrics to a JSON file."""
+    import os
+    os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(_metrics_to_dict(summary), f, indent=2, ensure_ascii=False)
+
+
 def _print_metrics(title: str, summary: MetricSummary) -> None:
     print("\n" + "=" * 80)
     print(title)
@@ -188,6 +305,9 @@ def run_parallel_levels(
     max_workers: Optional[int] = None,
     seed_base: Optional[int] = None,
 ) -> List[TaskResult]:
+    import os
+    from datetime import datetime
+    
     config = load_config(config_path)
     level_list = _build_level_list(levels, level_range, getattr(config.task, "level_index", 0))
     workers = min(max_workers or min(8, len(level_list) * runs_per_level), 8)
@@ -195,13 +315,28 @@ def run_parallel_levels(
     for env_id in range(1, workers + 1):
         env_pool.put(env_id)
 
+    # Create a base log directory for this parallel run
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    base_log_dir = os.path.join(config.runner.log_dir, f"luban_parallel_{timestamp}")
+    os.makedirs(base_log_dir, exist_ok=True)
+    
+    # Create level-specific log directories
+    level_log_dirs: Dict[int, str] = {}
+    for level_index in level_list:
+        level_log_dir = os.path.join(base_log_dir, f"level_{level_index}")
+        os.makedirs(level_log_dir, exist_ok=True)
+        level_log_dirs[level_index] = level_log_dir
+        print(f"📁 Created log directory for level {level_index}: {level_log_dir}")
+
     all_results: List[TaskResult] = []
     futures = []
     print(f"\nStarting parallel runs for {len(level_list)} levels with up to {workers} workers...")
+    print(f"📁 Base log directory: {base_log_dir}")
 
     def _run_with_env(batch_id: int, run_id: int, level_index: int, seed: Optional[int]) -> TaskResult:
         env_id = env_pool.get()
         try:
+            level_log_dir = level_log_dirs.get(level_index)
             return _run_single_task(
                 config_path=config_path,
                 batch_id=batch_id,
@@ -209,6 +344,7 @@ def run_parallel_levels(
                 level_index=level_index,
                 env_id=env_id,
                 seed=seed,
+                level_log_dir=level_log_dir,
             )
         finally:
             env_pool.put(env_id)
@@ -224,8 +360,69 @@ def run_parallel_levels(
         for future in as_completed(futures):
             all_results.append(future.result())
 
+    # Aggregate results by level and save level-specific summaries
+    from phyvpuzzle.evaluation.metrics import MetricsCalculator
+    calculator = MetricsCalculator()
+    
+    for level_index in level_list:
+        level_results = [r for r in all_results if r.metadata.get("level_index") == level_index]
+        if level_results:
+            level_log_dir = level_log_dirs[level_index]
+            level_summary = _calculate_metrics(level_results, pricing, k_values=[runs_per_level])
+            
+            # Save level-specific Excel report
+            from phyvpuzzle.evaluation.evaluator import BenchmarkEvaluator
+            evaluator = BenchmarkEvaluator(config.judgement)
+            evaluation_result = evaluator.evaluate_metrics(level_results)
+            
+            level_excel_path = os.path.join(level_log_dir, f"level_{level_index}_results.xlsx")
+            evaluator.export_results_to_excel(
+                evaluation_result,
+                level_excel_path,
+                config.agent.model_name
+            )
+            
+            level_report_dir = os.path.join(level_log_dir, "detailed_reports")
+            evaluator.export_detailed_report(
+                evaluation_result,
+                level_report_dir,
+                config.agent.model_name
+            )
+            
+            print(f"\n📊 Level {level_index} Summary:")
+            _print_metrics(f"Level {level_index} Metrics", level_summary)
+            level_metrics_path = os.path.join(level_log_dir, f"level_{level_index}_metrics.json")
+            _save_metrics_to_file(level_summary, level_metrics_path)
+
+    # Overall summary
     summary = _calculate_metrics(all_results, pricing, k_values=[runs_per_level])
     _print_metrics("Overall Metrics (Luban Levels)", summary)
+    
+    # Save overall summary Excel
+    from phyvpuzzle.evaluation.evaluator import BenchmarkEvaluator
+    evaluator = BenchmarkEvaluator(config.judgement)
+    overall_evaluation = evaluator.evaluate_metrics(all_results)
+    overall_excel_path = os.path.join(base_log_dir, "overall_results.xlsx")
+    evaluator.export_results_to_excel(
+        overall_evaluation,
+        overall_excel_path,
+        config.agent.model_name
+    )
+    overall_report_dir = os.path.join(base_log_dir, "detailed_reports")
+    evaluator.export_detailed_report(
+        overall_evaluation,
+        overall_report_dir,
+        config.agent.model_name
+    )
+    overall_metrics_path = os.path.join(base_log_dir, "overall_metrics.json")
+    _save_metrics_to_file(summary, overall_metrics_path)
+
+    print(f"\n📁 All logs saved to: {base_log_dir}")
+    print(f"   - Each level has its own directory: level_0/, level_1/, etc.")
+    print(f"   - Per-level metrics JSON: level_<N>/level_<N>_metrics.json")
+    print(f"   - Overall summary: {overall_excel_path}")
+    print(f"   - Overall metrics JSON: {overall_metrics_path}")
+    
     return all_results
 
 
@@ -261,4 +458,5 @@ def main() -> int:
 if __name__ == "__main__":
     raise SystemExit(main())
 
-# python -m phyvpuzzle.luban_runner --config eval_configs/luban.yaml --levels 0 --runs-per-level 1
+# python -m phyvpuzzle.luban_runner --config eval_configs/luban.yaml --level-range 0-3 --runs-per-level 1 --price-in 0.0004 --price-out 0.001
+# python -m phyvpuzzle.luban_runner --config eval_configs/luban.yaml --levels 1 --runs-per-level 1 --price-in 0.0004 --price-out 0.001

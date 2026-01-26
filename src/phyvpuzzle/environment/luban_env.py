@@ -139,8 +139,7 @@ class LubanEnvironment(BaseEnvironment):
                 {
                     "piece_id": {"type": "integer", "description": "Target piece ID."},
                     "axis": {"type": "string", "enum": ["x", "y", "z"], "description": "Move axis."},
-                    "distance": {"type": "number", "description": "Move distance in logic units."},
-                    "is_exploratory": {"type": "boolean", "default": False, "description": "Move until blocked if true."},
+                    "distance": {"type": "number", "description": "Move distance in logic units."}
                 },
                 ["piece_id", "axis", "distance"],
             ),
@@ -186,7 +185,7 @@ class LubanEnvironment(BaseEnvironment):
         if self._check_server_available():
             self._server_ready = True
             return
-        self._start_unity_process()
+        # self._start_unity_process()
         self._wait_for_server()
         self._server_ready = True
 
@@ -276,10 +275,18 @@ class LubanEnvironment(BaseEnvironment):
         return objects
 
     def _get_current_state(self, metadata: Optional[Dict[str, Any]] = None) -> State:
+        # Calculate piece statistics
+        num_pieces = len(self.objects)
+        num_finished = sum(1 for obj in self.objects if obj.properties.get("is_finished", False))
+        num_blocked = num_pieces - num_finished  # Pieces still inside the lock
+        
         meta: Dict[str, Any] = {
             "puzzle_index": self._last_state_data.get("puzzle_index"),
             "step_count": self._last_state_data.get("step_count"),
             "is_solved": self._last_state_data.get("is_solved"),
+            "num_pieces": num_pieces,
+            "num_finished": num_finished,
+            "num_blocked": num_blocked,
         }
         if metadata:
             meta.update(metadata)
@@ -376,14 +383,14 @@ class LubanEnvironment(BaseEnvironment):
     def _tool_get_state(self) -> Dict[str, Any]:
         return self._send_command("get_state")
 
-    def _tool_move_piece(self, piece_id: int, axis: str, distance: float, is_exploratory: bool = False) -> Dict[str, Any]:
+    def _tool_move_piece(self, piece_id: int, axis: str, distance: float) -> Dict[str, Any]:
         return self._send_command(
             "move",
             {
                 "piece_id": int(piece_id),
                 "axis": axis,
                 "distance": float(distance),
-                "is_exploratory": bool(is_exploratory),
+                "is_exploratory": False,
             },
         )
 

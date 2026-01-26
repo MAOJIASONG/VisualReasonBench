@@ -40,6 +40,8 @@ class LubanDisassemblyTask(PhysicsTask):
         self.environment = environment
         observation = self.environment.reset()
         self._cache_initial_state(observation)
+        # Cache observation for _get_initial_instruction if called before environment is fully set up
+        self._cached_initial_obs = observation
         return observation
 
     def _configure_environment(self) -> None:
@@ -82,13 +84,78 @@ class LubanDisassemblyTask(PhysicsTask):
             return None
 
     def _get_initial_system_prompt(self) -> str:
-        return """You are a spatial reasoning expert solving a "Luban Lock".
-OBJECTS:
-- Pieces are mechanically interlocked and must be moved via tools.
+        # Get piece counts from environment state
+        num_pieces = 0
+        num_blocked = 0
+        
+        # Method 1: Try to get from state metadata (preferred - already calculated in _get_current_state)
+        if self.environment and hasattr(self.environment, 'current_state') and self.environment.current_state:
+            metadata = self.environment.current_state.metadata or {}
+            num_pieces = metadata.get("num_pieces", 0)
+            num_blocked = metadata.get("num_blocked", 0)
+        
+        # Method 2: Fallback - calculate from objects if metadata not available
+        if num_pieces == 0 and self.environment and hasattr(self.environment, 'objects') and self.environment.objects:
+            num_pieces = len(self.environment.objects)
+            num_finished = sum(
+                1 for obj in self.environment.objects 
+                if obj.properties.get("is_finished", False)
+            )
+            num_blocked = num_pieces - num_finished
+        
+        # Method 3: Last resort - use cached initial observation if available
+        # (This handles the case where _get_initial_instruction is called before environment is fully set up)
+        if num_pieces == 0 and hasattr(self, '_cached_initial_obs'):
+            obs = self._cached_initial_obs
+            if obs and hasattr(obs, 'state') and obs.state:
+                metadata = obs.state.metadata or {}
+                num_pieces = metadata.get("num_pieces", 0)
+                num_blocked = metadata.get("num_blocked", 0)
+                if num_pieces == 0 and obs.state.objects:
+                    num_pieces = len(obs.state.objects)
+                    num_finished = sum(
+                        1 for obj in obs.state.objects
+                        if obj.properties.get("is_finished", False)
+                    )
+                    num_blocked = num_pieces - num_finished
+        
+        system_prompt_template = """You are an expert mechanical puzzle solver for a “Luban Lock” (interlocking burr puzzle). Your job is to find the KEY piece (it is currently unblocked) and slide it completely out.
 
-GOAL:
-Identify the KEY piece (unblocked) and slide it out.
-"""
+CONTEXT
+- Total pieces: {NUM_PIECES}
+- Pieces still not removed: {NUM_BLOCKED} (these are still inside the lock; not necessarily “immovable”)
+- Pieces are mechanically interlocked; a piece can only translate (slide) along its allowed axis/rails.
+
+GOAL
+- Identify the KEY piece (must be unblocked in the current state) and extract it by sliding it out along the correct direction.
+- A piece is considered “unlocked/solved” if it is moved away from the center (its original position) by a distance greater than 200."""
+        return system_prompt_template.format(NUM_PIECES=num_pieces, NUM_BLOCKED=num_blocked)
 
     def _get_initial_instruction(self) -> str:
-        return "The puzzle is LOCKED. Find the key piece and slide it out along its free axis."
+        """
+        Get initial instruction with dynamic piece counts from environment state.
+        Retrieves NUM_PIECES and NUM_BLOCKED from the environment's state metadata
+        or calculates them from the objects list.
+        """
+        prompt = f"""
+You will receive shotscreens of the current state of the puzzle. The images are taken from 3 different viewpoints and the coordinates are given in each image.
+
+CRITICAL RULES (NO RANDOM TRIES)
+- Do NOT propose “try moving X in some direction” unless you can justify the direction from the images and the axis reference.
+- Every move must be a constrained translation along the piece’s allowed rail/axis. No rotation, no diagonal motion.
+- If the movement direction of a piece is blocked (you can directly see the piece is blocked in image), you should not propose to move in that direction.
+
+HOW TO REASON FROM IMAGES
+1) Align coordinate frames:
+   - Identify +X/-X, +Y/-Y, +Z/-Z directions using the axis markers shown in each screenshot.
+   - Cross-check between the 3 viewpoints to avoid sign confusion.
+
+2) Infer each piece’s allowed sliding axis:
+   - From grooves/rails and the piece geometry, decide whether the piece can only move along X, Y, or Z (and which sign is outward).
+   - If the axis is ambiguous from one view, resolve it using the other views. If still ambiguous, state what visual evidence is missing.
+
+3) Feasibility test BEFORE suggesting a move:
+   - A move is feasible only if there is visible clearance along that axis (no immediate collision).
+   - Prefer moves that increase “distance from the center” (moving outward), because the goal is extraction (>200 from original center).
+"""
+        return prompt
