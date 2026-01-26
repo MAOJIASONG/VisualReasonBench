@@ -3,6 +3,7 @@ README.md
 pyproject.toml
 src/phyvpuzzle/__init__.py
 src/phyvpuzzle/cli.py
+src/phyvpuzzle/luban_runner.py
 src/phyvpuzzle/runner.py
 src/phyvpuzzle/stacking_runner.py
 src/phyvpuzzle.egg-info/PKG-INFO
@@ -15,6 +16,7 @@ src/phyvpuzzle/agents/__init__.py
 src/phyvpuzzle/agents/base_agent.py
 src/phyvpuzzle/agents/human_agent.py
 src/phyvpuzzle/agents/openai_agent.py
+src/phyvpuzzle/agents/reward_agent.py
 src/phyvpuzzle/agents/transformers_agent.py
 src/phyvpuzzle/core/__init__.py
 src/phyvpuzzle/core/base.py

@@ -412,6 +412,11 @@ def generate_one_constrained_staged(a,b,c, *, max_pieces:int, max_piece_cells:in
     vol = a*b*c
     rng = random.Random(seed)
     stage_plan = [(4, tries//2), (3, tries - tries//2 if allow_min3 else 0)]
+    avg_sz = vol / max_pieces
+    if allow_min3 and avg_sz < 4.0:
+        # If average piece size is small, don't waste time enforcing min=4
+        stage_plan = [(3, tries)]
+
     for min_piece_cells, budget in stage_plan:
         if budget <= 0: continue
         min_needed = math.ceil(vol / max_piece_cells)
@@ -480,6 +485,7 @@ def _style_axis_as_cube(ax, a,b,c):
     for spine in ax.spines.values():
         spine.set_visible(False)
     ax.grid(False)
+    ax.view_init(elev=20, azim=45)
 
 def render_voxels_colored(a,b,c, placement_by_piece, title, save_path):
     filled = np.zeros((a,b,c), dtype=bool)
@@ -547,16 +553,16 @@ MIN_PIECE_FALLBACK = 3
 MAX_PIECE_CELLS = 5
 
 PER_SIZE_CFG = {
-    (2,2,2):  {"linear_count": 1, "nonlinear_count": 1, "difficulty_nodes": 0,   "max_pieces": 2},
-    (2,2,3):  {"linear_count":10, "nonlinear_count": 0, "difficulty_nodes": 60,  "max_pieces": 3},
-    (2,3,3):  {"linear_count":10, "nonlinear_count": 0, "difficulty_nodes": 90,  "max_pieces": 5},
-    (3,3,3):  {"linear_count":10, "nonlinear_count": 0, "difficulty_nodes": 140, "max_pieces": 6},
-    (2,2,4):  {"linear_count":10, "nonlinear_count": 0, "difficulty_nodes": 80,  "max_pieces": 4},
-    (2,3,4):  {"linear_count":10, "nonlinear_count": 0, "difficulty_nodes": 120, "max_pieces": 6},
-    (3,3,4):  {"linear_count":10, "nonlinear_count": 0, "difficulty_nodes": 160, "max_pieces": 8},
-    (2,4,4):  {"linear_count":10, "nonlinear_count": 0, "difficulty_nodes": 150, "max_pieces": 7},
-    (3,4,4):  {"linear_count":10, "nonlinear_count": 0, "difficulty_nodes": 200, "max_pieces":10},
-    (4,4,4):  {"linear_count":10, "nonlinear_count": 0, "difficulty_nodes": 260, "max_pieces":13},
+    #(2,2,2):  {"linear_count": 1, "nonlinear_count": 1, "difficulty_nodes": 0,   "max_pieces": 2},
+    (2,2,3):  {"linear_count":10, "nonlinear_count": 0, "difficulty_nodes": 10,  "max_pieces": 4},
+    (2,3,3):  {"linear_count":10, "nonlinear_count": 0, "difficulty_nodes": 20,  "max_pieces": 5},
+    # (3,3,3):  {"linear_count":10, "nonlinear_count": 0, "difficulty_nodes": 140, "max_pieces": 6},
+    # (2,2,4):  {"linear_count":10, "nonlinear_count": 0, "difficulty_nodes": 80,  "max_pieces": 4},
+    # (2,3,4):  {"linear_count":10, "nonlinear_count": 0, "difficulty_nodes": 120, "max_pieces": 6},
+    # (3,3,4):  {"linear_count":10, "nonlinear_count": 0, "difficulty_nodes": 160, "max_pieces": 8},
+    # (2,4,4):  {"linear_count":10, "nonlinear_count": 0, "difficulty_nodes": 150, "max_pieces": 7},
+    # (3,4,4):  {"linear_count":10, "nonlinear_count": 0, "difficulty_nodes": 200, "max_pieces":10},
+    # (4,4,4):  {"linear_count":10, "nonlinear_count": 0, "difficulty_nodes": 260, "max_pieces":13},
 }
 
 # ============== MP task ==============
@@ -655,7 +661,7 @@ def run_batch_mp(
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(description="Polycube puzzle batch generator (v8, Plan C: 2x2x2 also outputs non-linear)")
-    ap.add_argument("--out", type=str, default="./puzzles_full_9", help="Output root")
+    ap.add_argument("--out", type=str, default="./puzzles_full_10", help="Output root")
     ap.add_argument("--workers", type=int, default=max(1, cpu_count()//2), help="Processes")
     ap.add_argument("--seed", type=int, default=8001, help="Base seed")
     ap.add_argument("--tries", type=int, default=5000, help="Max tries per puzzle (shared by stages)")

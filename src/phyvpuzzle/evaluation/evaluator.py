@@ -189,12 +189,16 @@ class BenchmarkEvaluator(BaseEvaluator):
             report["task_breakdown"].append(task_data)
             
         # Save main report
+        # Ensure output directory exists (including subdirectories from model_name)
         report_path = os.path.join(output_dir, f"{model_name}_evaluation_report.json")
+        os.makedirs(os.path.dirname(report_path), exist_ok=True)
+        
         with open(report_path, 'w') as f:
             json.dump(report, f, indent=2, default=str)
             
         # Save trajectory details separately
         trajectories_path = os.path.join(output_dir, f"{model_name}_trajectories.json")
+        os.makedirs(os.path.dirname(trajectories_path), exist_ok=True)
         trajectories_data = {}
         
         for task_result in evaluation_result.task_results:

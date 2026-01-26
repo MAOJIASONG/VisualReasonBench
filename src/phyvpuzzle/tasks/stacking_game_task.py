@@ -34,7 +34,42 @@ class StackingGameTask(PhysicsTask):
 
     def _calculate_optimal_steps(self) -> int:
         import json
-        config_path = f"Stacking_scaling/puzzles_full_v9/{self.config.puzzle_size}/{self.config.puzzle_id}/{self.config.puzzle_id}_{self.config.puzzle_size}.json"
+        import os
+        
+        # Parse puzzle_id format: "puzzle_mid_001" -> difficulty="mid", number="001"
+        # or handle legacy format if puzzle_id doesn't start with "puzzle_"
+        puzzle_id = self.config.puzzle_id
+        if puzzle_id.startswith("puzzle_"):
+            puzzle_id = puzzle_id[7:]  # Remove "puzzle_" prefix
+        
+        # Split by underscore: "mid_001" -> ["mid", "001"]
+        parts = puzzle_id.split("_")
+        if len(parts) >= 2:
+            difficulty = parts[0]  # e.g., "easy", "mid", "hard"
+            number = parts[1]      # e.g., "001", "002"
+        else:
+            # Fallback: assume the entire puzzle_id is the number
+            difficulty = "easy"
+            number = puzzle_id
+        
+        # Build correct path: Stacking_scaling/puzzles_full_v9/{size}/{difficulty}/{number}/{size}_{difficulty}_{number}.json
+        size = self.config.puzzle_size
+        puzzle_dir = os.environ.get("PUZZLE_DIR", "Stacking_scaling/puzzles_full_v9")
+        config_path = os.path.join(
+            puzzle_dir,
+            size,
+            difficulty,
+            number,
+            f"{size}_{difficulty}_{number}.json"
+        )
+        
+        # Try to resolve path relative to project root if it doesn't exist
+        if not os.path.exists(config_path):
+            # Try from VisualReasonBench directory
+            alt_path = os.path.join("VisualReasonBench", config_path)
+            if os.path.exists(alt_path):
+                config_path = alt_path
+        
         with open(config_path, "r") as f:
             config = json.load(f)
         piece_num = len(config.get("pieces", []))
@@ -98,21 +133,24 @@ You are solving a 3D packing puzzle.
 
 1. **First, carefully read the list of available tools** (their names, required arguments, and what state they return).
 2. **Use the current image / board progress** as the ground-truth state of what is already placed and what remains.
-3. Work in a safe order: **inspect pieces → plan a feasible sequence → place pieces step-by-step**, verifying after each placement.
-4. If a placement fails (collision / invalid), **undo or adjust** and try a different orientation/order.
-5. Only call **`finish`** when the box is fully filled and valid.
+3. Think in 3D and plan explicitly: build a mental model of the box as **(x, y, z)** layers, check **cross-sections** layer-by-layer, and reason about **connectivity/voids** (avoid creating unreachable 1-cell cavities). Prefer a strategy like **anchor corners/edges → fill constrained regions → resolve remaining gaps**, and consider symmetry/rotations to match piece geometry.
+4. Work in a safe order: **inspect pieces → plan a feasible sequence → place pieces step-by-step**, verifying after each placement (collision-free, in-bounds, and consistent with your 3D plan).
+5. If a placement fails (collision / invalid) or you realize it blocks the remaining space, **backtrack**: use **`pickup`** to remove the previously placed piece (or the piece causing the conflict), then try a different orientation/order and re-place. Use `pickup` especially when a recent move seems to create trapped voids or misaligns with your layer-by-layer plan.
+6. Only call **`finish`** when the box is fully filled and valid.
 
 **Output format constraints:**
 
 * Do **not** output multiple actions.
-* Your response must end with **exactly one tool call** wrapped as:
+* You **MUST** end your response with **exactly one tool call** wrapped as:
 
   * `<action> XXX </action>`
 * `XXX` must be the **exact tool invocation content** (use the tool’s required schema/arguments).
+* **ALWAYS** call a tool to advance the game state. Do not just describe your plan without taking action.
 
-**Now do the next step:** based on the current image/board, start by inspecting the remaining pieces (or the most ambiguous piece) to plan the packing order.
+**Now do the next step.**
 
-<action>{{"tool":"inspect_pieces","puzzle_id":"puzzle_001"}}</action>        
+Example format for placing a piece (e.g., placing piece "3" at specific coordinates):
+<action>{{"tool":"place","piece_id":"3","cells":[[1,1,2],[2,1,2]]}}</action>        
         """
         # return (
         #     f"Pack every piece into the {cfg.puzzle_size} box for puzzle '{cfg.puzzle_id}'. "
