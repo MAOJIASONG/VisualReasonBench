@@ -289,7 +289,27 @@ def _print_metrics(title: str, summary: MetricSummary) -> None:
     print("=" * 80)
 
 def _metrics_to_dict(summary: MetricSummary) -> Dict[str, Any]:
-    return asdict(summary)
+    """Convert MetricSummary to a JSON-serializable dict.
+    
+    Replaces Infinity values with None (which becomes null in JSON).
+    """
+    import math
+    result = asdict(summary)
+    
+    # Recursively replace infinity values with None
+    def replace_inf(obj):
+        if isinstance(obj, float):
+            if math.isinf(obj):
+                return None
+            return obj
+        elif isinstance(obj, dict):
+            return {k: replace_inf(v) for k, v in obj.items()}
+        elif isinstance(obj, (list, tuple)):
+            return [replace_inf(item) for item in obj]
+        else:
+            return obj
+    
+    return replace_inf(result)
 
 def _save_metrics_to_file(summary: MetricSummary, file_path: str) -> None:
     os.makedirs(os.path.dirname(file_path) or ".", exist_ok=True)
