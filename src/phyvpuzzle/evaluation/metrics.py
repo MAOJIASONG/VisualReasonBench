@@ -167,17 +167,12 @@ class MetricsCalculator:
         """
         total_cost = 0.0
         for result in task_results:
-            tokens_in = result.metadata.get("tokens_in")
-            tokens_out = result.metadata.get("tokens_out")
-            total_tokens = result.metadata.get("total_tokens", 0)
-            if tokens_in is None and tokens_out is None:
-                tokens_in = total_tokens
-                tokens_out = 0
-            elif tokens_in is None:
-                tokens_in = max(0, total_tokens - int(tokens_out or 0))
-            elif tokens_out is None:
-                tokens_out = max(0, total_tokens - int(tokens_in or 0))
-            total_cost += (price_in * int(tokens_in or 0) + price_out * int(tokens_out or 0)) / 1000.0
+            # tokens_in = result.metadata.get("tokens_in")
+            # tokens_out = result.metadata.get("tokens_out")
+            # total_tokens = result.metadata.get("total_tokens", 0)
+            tokens_in = result.metadata.get("total_tokens_in", 0)
+            tokens_out = result.metadata.get("total_tokens_out", 0)
+            total_cost += (price_in * tokens_in + price_out * tokens_out) / 1000.0
         return total_cost
 
     def calculate_usd_per_solved(self, task_results: List[TaskResult], price_in: float = 0.0, price_out: float = 0.0) -> float:

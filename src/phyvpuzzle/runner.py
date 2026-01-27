@@ -789,6 +789,8 @@ class BenchmarkRunner:
                 "difficulty": self.config.task.difficulty.value,
                 "optimal_steps": self.task.optimal_steps,
                 "total_tokens": self.agent.get_token_count(),
+                "total_tokens_in": self.agent.get_total_tokens_in(),
+                "total_tokens_out": self.agent.get_total_tokens_out(),
                 "agent_model": self.config.agent.model_name,
             }
         )
@@ -830,6 +832,8 @@ class BenchmarkRunner:
             metadata={
                 "difficulty": self.config.task.difficulty.value,
                 "total_tokens": self.agent.get_token_count() if self.agent else 0,
+                "total_tokens_in": self.agent.get_total_tokens_in() if self.agent else 0,
+                "total_tokens_out": self.agent.get_total_tokens_out() if self.agent else 0,
                 "agent_model": self.config.agent.model_name if self.agent else "unknown",
             }
         )

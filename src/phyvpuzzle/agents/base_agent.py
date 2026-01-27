@@ -19,6 +19,8 @@ class VLMAgent(BaseAgent):
         super().__init__(config)
         self.system_prompt: str = None
         self.total_tokens: int = 0
+        self.total_tokens_in: int = 0
+        self.total_tokens_out: int = 0
 
     def set_system_prompt(self, system_prompt: str) -> None:
         """Set system prompt for this agent."""
@@ -30,9 +32,17 @@ class VLMAgent(BaseAgent):
 
         # Prepare messages
         messages = self._prepare_messages(history, prompt)
+
+        self.total_tokens_in += self._count_tokens_in_messages(messages)
         
         # Get response from model
         response, tool_calls = self._get_model_response(messages, tools)
+
+        self.total_tokens_out += self._count_tokens_in_messages([{
+            "role": "assistant",
+            "content": response,
+            "tool_calls": tool_calls
+        }])
 
         messages.append({
             "role": "assistant",
@@ -52,6 +62,14 @@ class VLMAgent(BaseAgent):
     def get_token_count(self) -> int:
         """Get total tokens used by this agent."""
         return self.total_tokens
+    
+    def get_total_tokens_in(self) -> int:
+        """Get total tokens used by this agent."""
+        return self.total_tokens_in
+    
+    def get_total_tokens_out(self) -> int:
+        """Get total tokens used by this agent."""
+        return self.total_tokens_out
     
     @abstractmethod
     def _prepare_messages(self, history: List[Observation], prompt: str) -> List[Dict[str, Any]]:

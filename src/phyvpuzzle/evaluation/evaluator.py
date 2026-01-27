@@ -116,6 +116,8 @@ class BenchmarkEvaluator(BaseEvaluator):
                 "Step Efficiency": step_efficiency,
                 "Execution Time (s)": task_result.execution_time,
                 "Token Usage": task_result.metadata.get("total_tokens", 0),
+                "Total Tokens In": task_result.metadata.get("total_tokens_in", 0),
+                "Total Tokens Out": task_result.metadata.get("total_tokens_out", 0),
                 "Eval Time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             }
             results_data.append(row_data)
@@ -189,6 +191,8 @@ class BenchmarkEvaluator(BaseEvaluator):
             report["task_breakdown"].append(task_data)
             
         # Save main report
+        if "/" in model_name:
+            model_name = model_name.split("/")[-1]
         # Ensure output directory exists (including subdirectories from model_name)
         report_path = os.path.join(output_dir, f"{model_name}_evaluation_report.json")
         os.makedirs(os.path.dirname(report_path), exist_ok=True)
