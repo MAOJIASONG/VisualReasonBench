@@ -240,11 +240,16 @@ class BenchmarkRunner:
                     observations = last_step.get("observations", [])
                     if observations:
                         observation = observations[-1]
+                
+                # Check if task is automatically completed based on environment state
+                if self._is_task_auto_completed(observation):
+                    self.live_logger.log_result("Task automatically completed! All objectives achieved.", success=True)
+                    break
                         
-                        # Check if task is solved (for tasks that support this)
-                        if self._is_task_solved(observation):
-                            self.live_logger.log_info("Task solved! Ending task execution.")
-                            break
+                # Check if task is solved (for tasks that support this)
+                if self._is_task_solved(observation):
+                    self.live_logger.log_info("Task solved! Ending task execution.")
+                    break
             else:
                 # Record text-only response in interaction history
                 self.interaction_history.append({
@@ -269,13 +274,24 @@ class BenchmarkRunner:
                 )
         
         # Finish progress display
+        # Check if task was completed (either by breaking early or by auto-completion)
         task_completed = step < max_steps
+        
+        # Additional check: verify if the last observation shows completion
+        if self.interaction_history:
+            last_step = self.interaction_history[-1]
+            observations = last_step.get("observations", [])
+            if observations:
+                last_obs = observations[-1]
+                if self._is_task_auto_completed(last_obs):
+                    task_completed = True
+        
         self.progress_display.finish(success=task_completed)
         
         if not task_completed:
             self.live_logger.log_info("Step limit reached")
         else:
-            self.live_logger.log_info("Task completed")
+            self.live_logger.log_info("Task completed successfully")
             
         return step
     
@@ -626,6 +642,22 @@ class BenchmarkRunner:
             
         return False
     
+    def _is_task_auto_completed(self, observation: Observation) -> bool:
+        """
+        Check if the task is automatically completed based on environment state.
+        
+        For stacking game: check if puzzle is complete (is_complete=True in metadata).
+        """
+        if not observation or not observation.state:
+            return False
+        
+        # Check metadata for completion status
+        metadata = observation.state.metadata
+        if metadata and metadata.get("is_complete", False):
+            return True
+            
+        return False
+    
     def _is_task_solved(self, observation: Observation) -> bool:
         """Check if task is solved based on observation state."""
         if not observation or not observation.state:
@@ -640,6 +672,22 @@ class BenchmarkRunner:
         elif isinstance(is_solved, str):
             return is_solved.lower() in ("true", "1", "yes")
         
+        return False
+    
+    def _is_task_auto_completed(self, observation: Observation) -> bool:
+        """
+        Check if the task is automatically completed based on environment state.
+        
+        For stacking game: check if puzzle is complete (is_complete=True in metadata).
+        """
+        if not observation or not observation.state:
+            return False
+        
+        # Check metadata for completion status
+        metadata = observation.state.metadata
+        if metadata and metadata.get("is_complete", False):
+            return True
+            
         return False
     
     def _execute_tool_calls(self, step: int, tool_calls: list, response: str) -> None:

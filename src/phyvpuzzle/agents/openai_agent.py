@@ -196,23 +196,66 @@ class OpenAIAgent(VLMAgent):
         
         idx = 0
         if not tool_calls:
-            pattern = "<action>(.*?)</action>"
-            # 会匹配多个，取最后一个
-            rematches = re.findall(pattern, text)[-1:]
-            for match in rematches:
+            # Pattern 3: <action>JSON</action>
+            # Use DOTALL to match across newlines
+            pattern = r"<action>(.*?)</action>"
+            rematches = re.findall(pattern, text, re.DOTALL)
+            
+            # Take the last match as it's likely the final decision
+            if rematches:
+                match = rematches[-1].strip()
+                
+                # Pre-processing to fix common JSON syntax errors from LLMs
+                # Replace Python None/True/False with JSON null/true/false
+                match_fixed = match.replace("None", "null").replace("True", "true").replace("False", "false")
+                
+                tool_data = {}
+                success = False
+                
+                # Attempt 1: Direct JSON parse
                 try:
-                    tool_call = json.loads(match)
-                except:
-                    tool_call = {}
-                if "name" not in tool_call:
-                    continue
-                tool_calls.append({
-                        "id": f"re_match_{idx}",
-                        "type": "function",
-                        "function": {
-                            "name": tool_call.get("name"),
-                            "arguments": json.dumps(tool_call.get("parameters", {}))
-                        }
-                })
-                idx += 1
+                    tool_data = json.loads(match_fixed)
+                    success = True
+                except json.JSONDecodeError:
+                    # Attempt 2: Try replacing single quotes with double quotes
+                    try:
+                        # Be careful not to replace apostrophes in text, but this is a heuristic
+                        fixed_quotes = match_fixed.replace("'", '"')
+                        tool_data = json.loads(fixed_quotes)
+                        success = True
+                    except json.JSONDecodeError:
+                        # Attempt 3: Try to parse if it looks like python dict string
+                        try:
+                            import ast
+                            # ast.literal_eval is safer than eval
+                            tool_data = ast.literal_eval(match)
+                            if isinstance(tool_data, dict):
+                                success = True
+                        except:
+                            print(f"Failed to parse action content: {match}")
+                            pass
+                
+                if success and isinstance(tool_data, dict):
+                    # Normalize fields
+                    # Check for tool name in various common fields
+                    tool_name = tool_data.get("name") or tool_data.get("tool") or tool_data.get("action") or tool_data.get("function")
+                    
+                    if tool_name:
+                        # Check for parameters
+                        parameters = tool_data.get("parameters") or tool_data.get("arguments") or tool_data.get("args") or tool_data.get("params")
+                        
+                        # If no explicit parameters dict, assume rest of keys are parameters
+                        if parameters is None:
+                            parameters = {k: v for k, v in tool_data.items() 
+                                        if k not in ["name", "tool", "action", "function", "id", "type"]}
+                        
+                        tool_calls.append({
+                            "id": f"re_match_{idx}",
+                            "type": "function",
+                            "function": {
+                                "name": tool_name,
+                                "arguments": json.dumps(parameters if parameters else {})
+                            }
+                        })
+                        idx += 1
         return tool_calls

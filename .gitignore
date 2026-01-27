@@ -195,3 +195,15 @@ cython_debug/
 debug_tests/
 logs/
 bullet3/
+Stacking_scaling/puzzles_full_10/2x3x3/_signatures/06e9d2314e5e94743dc5123a5759182b0ce27549.marker
+Stacking_scaling/puzzles_full_10/2x3x3/_signatures/09d6b4ceaeac5832c31b8924804801e45754ef84.marker
+Stacking_scaling/puzzles_full_10/2x3x3/_signatures/8249fa80d4b71d5660efd46895e5c362de865ffe.marker
+Stacking_scaling/puzzles_full_10/2x3x3/_signatures/a101d138dca3c605d74293094a11197de7f26b10.marker
+Stacking_scaling/puzzles_full_10/2x3x3/_signatures/b39a3c23a0da99371bf56c1b3028baa0d578c53b.marker
+Stacking_scaling/puzzles_full_10/2x3x3/_signatures/b60d654b72fd89d89230228ad6ba257632c90511.marker
+Stacking_scaling/puzzles_full_10/2x3x3/_signatures/bd5fa354726b176bd3e4c1d6fdb87f2c0c29e23a.marker
+Stacking_scaling/puzzles_full_10/2x3x3/_signatures/e9745972dd02427d17be8e8509c90e0e64611484.marker
+
+# Exclude JSON and PNG files
+*.json
+*.png

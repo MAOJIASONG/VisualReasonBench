@@ -197,7 +197,9 @@ class StackingGameEnvironment(BaseEnvironment):
             build_schema(
                 "place",
                 "Place a piece (CLI 'place <id>') using explicit cells. "
-                "Provide all occupied cells in 1-based coordinates; length must match the piece voxel count.",
+                "Provide all occupied cells in 1-based coordinates; length must match the piece voxel count. "
+                "Example: [[1, 1, 1], [1, 2, 1], [2, 1, 1], [2, 1, 2]] (verify these cells form the same shape as the chosen piece; "
+                "different valid cell layouts can represent rotations).",
                 {
                     "piece_id": {"type": "string", "description": "Piece identifier to place."},
                     "cells": {
@@ -215,7 +217,7 @@ class StackingGameEnvironment(BaseEnvironment):
             ),
             build_schema(
                 "pickup",
-                "Pick up a placed piece (CLI 'pickup <id>') so it can be repositioned.",
+                "Pick up a placed piece (CLI 'pickup <id>') so it can be repositioned. Use this to remove a previously placed block when it was placed incorrectly or needs adjusting.",
                 {"piece_id": {"type": "string", "description": "Piece identifier to remove."}},
                 ["piece_id"],
             ),

@@ -88,10 +88,10 @@ def create_cube_faces(vertices: np.ndarray) -> List[np.ndarray]:
 
 
 def draw_voxel(ax: Axes3D, pos: Vec3, color: str, alpha: float = 0.8,
-               edge_color: str = 'black', linewidth: float = 0.5):
+               edge_color: str = 'black', linewidth: float = 0.8):
     """
     绘制一个体素(单位立方体)
-
+    
     Args:
         ax: matplotlib 3D axes
         pos: 体素位置 (1-based)
@@ -154,7 +154,10 @@ def draw_box_frame(ax: Axes3D, box_size: Tuple[int, int, int],
 def visualize_state_3d(state: GameState,
                        title: str = "3D Polycube Puzzle",
                        show_unplaced: bool = True,
-                       figsize: Tuple[int, int] = (14, 8)) -> plt.Figure:
+                       figsize: Tuple[int, int] = (14, 8),
+                       keep_unplaced_initial_pose: bool = True,
+                       normalize_unplaced_view: bool = False,
+                       pad_unplaced_view: int = 1) -> plt.Figure:
     """
     可视化游戏状态(3D视图)
 
@@ -163,6 +166,9 @@ def visualize_state_3d(state: GameState,
         title: 图表标题
         show_unplaced: 是否显示未放置的piece
         figsize: 图表大小
+        keep_unplaced_initial_pose: 未放置piece保持加载时姿态与位置
+        normalize_unplaced_view: 右侧小视角是否归一化到局部坐标
+        pad_unplaced_view: 右侧小视角边界留白
 
     Returns:
         matplotlib Figure对象
@@ -170,12 +176,28 @@ def visualize_state_3d(state: GameState,
     A, B, C = state.spec.box
 
     if show_unplaced and state.unplaced:
-        # 左侧单视角，右侧为未放置piece的网格小视角
+        # 左侧单视角，右侧为piece的网格小视角
         fig = plt.figure(figsize=figsize)
-        unplaced_ids = [pid for pid in sorted(state.unplaced) if pid in state.initial_placements]
-        n_unplaced = len(unplaced_ids)
+        piece_ids = sorted(state.initial_placements.keys())
+        n_pieces = len(piece_ids)
         right_cols = 2
-        right_rows = max(1, math.ceil(n_unplaced / right_cols))
+        right_rows = max(1, math.ceil(n_pieces / right_cols))
+
+        # 计算所有piece的最大尺寸，用于统一缩放比例
+        max_span = 1.0
+        for pid in piece_ids:
+            placement = state.initial_placements.get(pid)
+            if placement and placement.world_cells:
+                min_x = min(c.x for c in placement.world_cells)
+                max_x = max(c.x for c in placement.world_cells)
+                min_y = min(c.y for c in placement.world_cells)
+                max_y = max(c.y for c in placement.world_cells)
+                min_z = min(c.z for c in placement.world_cells)
+                max_z = max(c.z for c in placement.world_cells)
+                max_span = max(max_span, max_x - min_x + 1, max_y - min_y + 1, max_z - min_z + 1)
+        
+        # 稍微增加一点视口余量
+        view_size = max_span + pad_unplaced_view * 2
 
         gs = fig.add_gridspec(
             nrows=1,
@@ -187,22 +209,32 @@ def visualize_state_3d(state: GameState,
 
         # 左侧：单一视角盒子视图
         ax1 = fig.add_subplot(gs[0, 0], projection='3d')
-        _draw_box_view(ax1, state, title, elev=22, azim=45)
+        _draw_box_view(ax1, state, title, elev=20, azim=45)
 
-        # 右侧：每个未放置piece独立小视角
-        if unplaced_ids:
-            for idx, pid in enumerate(unplaced_ids):
+        # 右侧：每个piece独立小视角（已放置的标记）
+        if piece_ids:
+            for idx, pid in enumerate(piece_ids):
                 row = idx // right_cols
                 col = idx % right_cols
                 ax = fig.add_subplot(gs_right[row, col], projection='3d')
-                _draw_single_unplaced_piece(ax, state, pid)
+                is_placed = pid not in state.unplaced
+                _draw_single_unplaced_piece(
+                    ax,
+                    state,
+                    pid,
+                    is_placed=is_placed,
+                    keep_initial_pose=keep_unplaced_initial_pose,
+                    normalize_view=normalize_unplaced_view,
+                    pad=pad_unplaced_view,
+                    unified_view_size=view_size
+                )
         else:
             ax = fig.add_subplot(gs_right[0, 0], projection='3d')
             ax.text(0.5, 0.5, 0.5, "No pieces", ha='center', va='center')
             ax.set_axis_off()
 
         # 右侧标题（移除突兀的分隔线，使用间距自然分隔）
-        fig.text(0.73, 0.96, "Unplaced Pieces", ha="center", va="center",
+        fig.text(0.73, 0.96, "Pieces", ha="center", va="center",
                  fontsize=10, style='italic', alpha=0.6, color='gray')
 
     else:
@@ -227,7 +259,7 @@ def _draw_box_view(ax: Axes3D, state: GameState, title: str,
     for piece_id, placed in state.placed.items():
         color = get_piece_color(piece_id)
         for cell in placed.world_cells:
-            draw_voxel(ax, cell, color, alpha=0.7)
+            draw_voxel(ax, cell, color, alpha=0.85, linewidth=0.8)
 
     # 设置坐标轴
     ax.set_xlabel('X', labelpad=10)
@@ -336,11 +368,21 @@ def _draw_unplaced_pieces(ax: Axes3D, state: GameState):
     ax.set_yticks(list(range(int(y0), int(y1) + 1)))
     ax.set_zticks(list(range(int(z0), int(z1) + 1)))
 
+    ax.set_box_aspect((x1 - x0, y1 - y0, z1 - z0))
     ax.view_init(elev=20, azim=45)
 
 
-def _draw_single_unplaced_piece(ax: Axes3D, state: GameState, piece_id: str):
-    """绘制单个未放置piece的小视角（网格排布用）"""
+def _draw_single_unplaced_piece(ax: Axes3D, state: GameState, piece_id: str,
+                                is_placed: bool = False,
+                                keep_initial_pose: bool = True,
+                                normalize_view: bool = False,
+                                pad: int = 1,
+                                unified_view_size: Optional[float] = None):
+    """绘制单个piece的小视角（网格排布用）"""
+    # keep_initial_pose: 保持初始加载姿态与位置
+    # normalize_view: 归一化到局部坐标（与初始位置无关）
+    # pad: 视角边界留白（单位为格）
+    # unified_view_size: 统一的视图尺寸（用于保持所有piece比例一致）
     placement = state.initial_placements.get(piece_id)
     if not placement or not placement.world_cells:
         ax.text(0.5, 0.5, 0.5, "No data", ha='center', va='center')
@@ -355,29 +397,73 @@ def _draw_single_unplaced_piece(ax: Axes3D, state: GameState, piece_id: str):
     min_z = min(c.z for c in placement.world_cells)
     max_z = max(c.z for c in placement.world_cells)
 
-    # 规范化到小视角坐标系，避免受全局摆放影响
-    normalized_cells = [
-        Vec3(c.x - min_x + 1, c.y - min_y + 1, c.z - min_z + 1)
-        for c in placement.world_cells
-    ]
-    for cell in normalized_cells:
-        draw_voxel(ax, cell, color, alpha=0.75)
+    if keep_initial_pose and not normalize_view:
+        # 保持与加载时一致的朝向与位置
+        draw_cells = placement.world_cells
+        
+        # 计算当前piece的中心
+        cx = (min_x + max_x) / 2
+        cy = (min_y + max_y) / 2
+        cz = (min_z + max_z) / 2
+        
+        if unified_view_size:
+            # 使用统一的视图尺寸，居中显示
+            d = unified_view_size / 2
+            x0, x1 = cx - d, cx + d
+            y0, y1 = cy - d, cy + d
+            z0, z1 = cz - d, cz + d
+        else:
+            x0 = min_x - pad
+            y0 = min_y - pad
+            z0 = min_z - pad
+            x1 = max_x + pad
+            y1 = max_y + pad
+            z1 = max_z + pad
+    else:
+        # 规范化到小视角坐标系，避免受全局摆放影响
+        draw_cells = [
+            Vec3(c.x - min_x + 1, c.y - min_y + 1, c.z - min_z + 1)
+            for c in placement.world_cells
+        ]
+        
+        if unified_view_size:
+            # 规范化模式下如果也要求统一比例（虽然这里通常不需要）
+            size_x = max_x - min_x + 1
+            size_y = max_y - min_y + 1
+            size_z = max_z - min_z + 1
+            cx, cy, cz = size_x/2 + 0.5, size_y/2 + 0.5, size_z/2 + 0.5
+            d = unified_view_size / 2
+            x0, x1 = cx - d, cx + d
+            y0, y1 = cy - d, cy + d
+            z0, z1 = cz - d, cz + d
+        else:
+            size_x = max_x - min_x + 1
+            size_y = max_y - min_y + 1
+            size_z = max_z - min_z + 1
+            x0 = 0
+            y0 = 0
+            z0 = 0
+            x1 = size_x + pad
+            y1 = size_y + pad
+            z1 = size_z + pad
 
-    size_x = max_x - min_x + 1
-    size_y = max_y - min_y + 1
-    size_z = max_z - min_z + 1
-    pad = 1
-    x0 = 0
-    y0 = 0
-    z0 = 0
-    x1 = size_x + pad
-    y1 = size_y + pad
-    z1 = size_z + pad
+    for cell in draw_cells:
+        draw_voxel(ax, cell, color, alpha=0.85, linewidth=0.8)
+
     ax.set_xlim([x0, x1])
     ax.set_ylim([y0, y1])
     ax.set_zlim([z0, z1])
+    
+    # 设置正确的空间比例，防止变形
+    ax.set_box_aspect((x1 - x0, y1 - y0, z1 - z0))
 
-    ax.set_title(f"Piece {piece_id}")
+    title = f"Piece {piece_id}"
+    if is_placed:
+        title = f"{title} (PLACED)"
+        # 标记已放置
+        ax.text2D(0.5, 0.5, "❌", transform=ax.transAxes,
+                  ha='center', va='center', fontsize=28, alpha=0.7)
+    ax.set_title(title)
     ax.view_init(elev=20, azim=45)
     ax.set_xticks([])
     ax.set_yticks([])
@@ -389,7 +475,8 @@ def _draw_single_unplaced_piece(ax: Axes3D, state: GameState, piece_id: str):
 
 def visualize_piece_rotations(piece: PieceDef,
                               num_rotations: int = 8,
-                              title: Optional[str] = None) -> plt.Figure:
+                              title: Optional[str] = None,
+                              rotate_piece: bool = False) -> plt.Figure:
     """
     可视化piece的多个旋转
 
@@ -397,6 +484,7 @@ def visualize_piece_rotations(piece: PieceDef,
         piece: piece定义
         num_rotations: 显示的旋转数量
         title: 图表标题
+        rotate_piece: 是否对物体进行旋转
 
     Returns:
         matplotlib Figure对象
@@ -418,13 +506,16 @@ def visualize_piece_rotations(piece: PieceDef,
         ax = fig.add_subplot(rows, cols, i + 1, projection='3d')
 
         # 应用旋转
-        rot_matrix = ROTATION_MATRICES[i]
-        rotated_voxels = []
+        if rotate_piece:
+            rot_matrix = ROTATION_MATRICES[i]
+            rotated_voxels = []
 
-        for v in piece.local_voxels:
-            vec = np.array([v.x, v.y, v.z])
-            rotated = rot_matrix @ vec
-            rotated_voxels.append(Vec3(int(rotated[0]), int(rotated[1]), int(rotated[2])))
+            for v in piece.local_voxels:
+                vec = np.array([v.x, v.y, v.z])
+                rotated = rot_matrix @ vec
+                rotated_voxels.append(Vec3(int(rotated[0]), int(rotated[1]), int(rotated[2])))
+        else:
+            rotated_voxels = list(piece.local_voxels)
 
         # 规范化到(1,1,1)起点
         min_x = min(v.x for v in rotated_voxels)
@@ -445,6 +536,9 @@ def visualize_piece_rotations(piece: PieceDef,
         ax.set_xlim([0, max_coord + 1])
         ax.set_ylim([0, max_coord + 1])
         ax.set_zlim([0, max_coord + 1])
+        # 强制为正方体比例，因为坐标轴范围一致
+        ax.set_box_aspect((1, 1, 1))
+        
         ax.set_title(f"Rotation {i}")
         ax.view_init(elev=20, azim=45)
 
@@ -550,7 +644,7 @@ if __name__ == "__main__":
 
     # 显示piece的旋转
     print("\nShowing piece rotations...")
-    fig2 = visualize_piece_rotations(piece1, num_rotations=8)
+    fig2 = visualize_piece_rotations(piece1, num_rotations=8, rotate_piece=False)
     show_visualization(fig2)
 
     print("Done!")
