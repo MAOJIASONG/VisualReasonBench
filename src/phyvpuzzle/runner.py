@@ -714,7 +714,13 @@ class BenchmarkRunner:
                            tool_call: dict, response: str) -> Tuple[Action, Observation]:
         """Execute a single tool call and return the action and observation."""
         tool_name = tool_call["function"]["name"]
-        arguments = json.loads(tool_call["function"]["arguments"])
+
+        # safe load json
+        arg_str = tool_call["function"]["arguments"]
+        if arg_str == '':
+            arguments = {}
+        else:
+            arguments = json.loads(arg_str)
         
         self.live_logger.log_action(f"Executing tool {tool_index}/{total_tools}: {tool_name}")
         
