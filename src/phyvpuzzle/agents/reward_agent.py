@@ -15,6 +15,8 @@ from abc import abstractmethod
 from PIL import Image
 from tenacity import retry, stop_after_attempt, wait_exponential
 
+from openai import OpenAI
+
 from phyvpuzzle.agents.base_agent import VLMAgent
 from phyvpuzzle.core.config import StepSelectionConfig, AgentConfig
 from phyvpuzzle.core.base import Observation
@@ -563,7 +565,6 @@ class OpenAIRewardAgent(BaseRewardAgent):
         super().__init__(config)
         
         # Initialize OpenAI client
-        from openai import OpenAI
         
         # Use reward model config for reward scoring
         self.reward_client = OpenAI(
@@ -604,14 +605,13 @@ class OpenAIRewardAgent(BaseRewardAgent):
                 ]
             }
         ]
-        
+
         response = self.reward_client.chat.completions.create(
             model=self.step_selection_config.reward_model_name,
             messages=messages,
             temperature=self.step_selection_config.reward_temperature,
             max_tokens=self.step_selection_config.reward_max_tokens,
         )
-        
         content = response.choices[0].message.content.strip()
         return self._parse_reward_score(content)
     
@@ -631,7 +631,7 @@ class OpenAIRewardAgent(BaseRewardAgent):
                 ]
             }
         ]
-        
+
         response = self.judge_client.chat.completions.create(
             model=self.step_selection_config.pairwise_judge_model,
             messages=messages,
@@ -654,6 +654,8 @@ class TransformersRewardAgent(BaseRewardAgent):
         self._reward_processor = None
         self._judge_model = None
         self._judge_processor = None
+
+        self.use_api = False
     
     def _create_agent_config(self, config: StepSelectionConfig) -> AgentConfig:
         """Create AgentConfig from StepSelectionConfig."""
@@ -670,6 +672,8 @@ class TransformersRewardAgent(BaseRewardAgent):
     
     def _load_reward_model(self) -> None:
         """Lazy load reward model."""
+        if self.use_api:
+            return
         if self._reward_model is None:
             import torch
             from transformers import AutoProcessor, AutoModelForImageTextToText
@@ -693,6 +697,8 @@ class TransformersRewardAgent(BaseRewardAgent):
     
     def _load_judge_model(self) -> None:
         """Lazy load judge model."""
+        if self.use_api:
+            return
         if self._judge_model is None:
             import torch
             from transformers import AutoProcessor, AutoModelForImageTextToText
@@ -713,9 +719,100 @@ class TransformersRewardAgent(BaseRewardAgent):
             
             if config.pairwise_device != "auto" and not hasattr(self._judge_model, 'hf_device_map'):
                 self._judge_model = self._judge_model.to(config.pairwise_device)
+    def _pil_to_data_url(self, image, fmt: str = "PNG") -> str:
+        import base64, io
+        buf = io.BytesIO()
+        image.save(buf, format=fmt)
+        b64 = base64.b64encode(buf.getvalue()).decode("utf-8")
+        return f"data:image/{fmt.lower()};base64,{b64}"
+
+    def _friendli_chat(self, messages, max_tokens: int, temperature: float, top_p: float = 0.95, timeout: int = 300) -> str:
+        import os, requests
+
+        token = os.environ.get("FRIENDLI_TOKEN")
+        if not token:
+            raise RuntimeError("FRIENDLI_TOKEN is not set in environment variables.")
+
+        url = "https://api.friendli.ai/dedicated/v1/chat/completions"
+
+        # 你在 Friendli Dedicated 上部署后的 model_id（强烈建议放 config）
+        model_id = getattr(self.step_selection_config, "friendli_model_id", None) or os.environ.get("FRIENDLI_MODEL_ID")
+        if not model_id:
+            raise RuntimeError("Friendli model_id not found. Set step_selection_config.friendli_model_id or env FRIENDLI_MODEL_ID.")
+
+        headers = {
+            "Authorization": f"Bearer {token}",
+            "Content-Type": "application/json",
+        }
+
+        payload = {
+            "model": model_id,
+            "messages": messages,
+            "max_tokens": max_tokens,
+            "temperature": temperature,
+            "top_p": top_p,
+        }
+
+        resp = requests.post(url, headers=headers, json=payload, timeout=timeout)
+        try:
+            resp.raise_for_status()
+        except Exception as e:
+            raise RuntimeError(f"Friendli API error: {e}, body={resp.text[:2000]}") from e
+
+        data = resp.json()
+        try:
+            return data["choices"][0]["message"]["content"].strip()
+        except Exception:
+            raise RuntimeError(f"Unexpected Friendli response format: {data}")
+
+
+    def _parse_plus_minus_from_text(self, text: str) -> str:
+        """
+        从模型输出里抽取 + 或 -。
+        优先匹配“独立 token”的 +/-；匹配不到再退化为找第一个出现的 +/-。
+        """
+        import re
+
+        t = (text or "").strip()
+
+        # 1) 独立 token：比如 "+" / "-" / " + " / "\n-\n"
+        m = re.search(r'(?<!\S)([+-])(?!\S)', t)
+        if m:
+            return m.group(1)
+
+        # 2) 退化：找第一个出现的 +/- 字符
+        m = re.search(r'[+-]', t)
+        if m:
+            return m.group(0)
+
+        raise ValueError(f"Cannot find '+' or '-' in model output: {text!r}")
     
     def _call_reward_model(self, prompt: str, image: Image.Image) -> float:
         """Call Transformers model for reward scoring."""
+        if self.use_api:
+            mode = self.step_selection_config.reward_model_mode
+            if mode == "discriminative":
+                # Friendli 走 image_url(data url) + text
+                data_url = self._pil_to_data_url(image, fmt="PNG")
+
+                messages = [
+                    {
+                        "role": "user",
+                        "content": [
+                            {"type": "image_url", "image_url": {"url": data_url}},
+                            {"type": "text", "text": prompt},
+                        ],
+                    }
+                ]
+
+                out_text = self._friendli_chat(
+                    messages=messages,
+                    max_tokens=self.step_selection_config.reward_max_tokens,          # discriminative 一般很短
+                    temperature=0.0,       # 稳定输出
+                )
+
+                sign = self._parse_plus_minus_from_text(out_text)
+                return 5.0 if sign == "+" else 1.0
         import torch
         import torch.nn.functional as F
         
