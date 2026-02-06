@@ -3,16 +3,16 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "phyvpuzzle"
+name = "chainbench"
 version = "0.1.0"
-description = "A physical visual benchmark for evaluating VLM's pure visual-based sequential reasoning abilities"
+description = "CHAIN: Causal Hierarchy of Actions and Interactions – an interactive 3D physics-driven benchmark for evaluating VLMs on structured action reasoning"
 readme = "README.md"
 requires-python = ">=3.10"
 license = {text = "MIT"}
 authors = [
     {name = "Maojia Song", email = "maojia_song@mymail.sutd.edu.sg"},
 ]
-keywords = ["vision", "reasoning", "benchmark", "VLM", "3D", "physics"]
+keywords = ["vision-language", "reasoning", "benchmark", "VLM", "3D", "physics", "causal", "CHAIN"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Science/Research",
@@ -66,7 +66,7 @@ training = [
 ]
 
 [project.scripts]
-phyvpuzzle = "phyvpuzzle.cli:main"
+chainbench = "chainbench.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

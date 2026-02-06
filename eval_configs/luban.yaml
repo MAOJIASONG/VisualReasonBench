@@ -42,7 +42,7 @@ judgement:
 
 environment:
   type: "luban"
-  urdf_local_path: "src/phyvpuzzle/environment/phobos_models"
+  urdf_local_path: "assets/pybullet/phobos_models"
   gui: false
   render_width: 512
   render_height: 512
@@ -56,6 +56,6 @@ task:
   type: "luban_disassembly"
   name: "luban_test"
   difficulty: "easy"
-  urdf_root: "src/phyvpuzzle/environment/phobos_models/luban-6-piece"
+  urdf_root: "assets/pybullet/phobos_models/luban-6-piece"
   target_displacement_threshold: 0.08
   ruled_evaluation: true

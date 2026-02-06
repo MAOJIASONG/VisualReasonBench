@@ -33,7 +33,7 @@ environment:
   multi_view: true
   load_table: false
   max_steps: 20
-  puzzle_dir: "Stacking_scaling/puzzles_full_v9"
+  puzzle_dir: "assets/stacking_game/puzzles_full_v9"
   default_size: "2x4x4"
   default_puzzle_id: "puzzle_001"
   randomize_on_reset: true

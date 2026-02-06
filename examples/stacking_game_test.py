@@ -5,7 +5,7 @@ from __future__ import annotations
 
 import argparse
 
-from phyvpuzzle import stacking_runner
+from chainbench import stacking_runner
 
 
 def build_parser() -> argparse.ArgumentParser:

@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
-"""A quick demonstration of the PhyVPuzzle system using the Luban Lock task."""
+"""A quick demonstration of the CHAIN benchmark using the Luban Lock task."""
 import sys
 import os
 from pathlib import Path
 
 # Import tasks to ensure registration
-import phyvpuzzle.tasks 
+import chainbench.tasks 
 
-from phyvpuzzle import load_config, BenchmarkRunner, validate_config
+from chainbench import load_config, BenchmarkRunner, validate_config
 
 # Try to load environment variables from a .env file (optional)
 try:

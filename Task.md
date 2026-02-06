@@ -1,2 +1,0 @@
-你现在讲要处理一个比较复杂的任务，首先你需要阅读代码，包括/home/yuhao/VisualReasonBench/README.md 和  /home/yuhao/VisualReasonBench/Stacking_scaling/README.md 和 /home/yuhao/VisualReasonBench/Stacking_scaling/stacking_game/README.md
-在你熟悉代码之后，你将要做的是，将stacking_game 作为一个环境添加到 VisualReasonBenc 这也是LLM 玩的一个环境game，包括环境倒入，tool 调用（和游戏的类似，给LLM的prompt）在完成code 之后（可以先不进行调试） 清晰的列出所有修改
