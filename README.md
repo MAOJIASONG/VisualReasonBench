@@ -17,6 +17,51 @@ Understanding physical structure is essential for real-world applications such a
 
 ---
 
+## Leaderboard
+
+### Diagnosing Frontier Models on CHAIN
+
+We use CHAIN's controlled interactive protocol to localize bottlenecks in perception, planning, and execution as physical constraints tighten.
+
+---
+
+#### Constraint Tightness (Difficulty Stratification)
+
+Accuracy (%) by difficulty tier. Stacking–Easy is largely solved, but performance collapses at Mid/Hard. Puzzle–Easy peaks at 10%, while Puzzle–Mid/Hard remain at 0%.
+
+| Model            | Puzzle Acc ↑ (Easy) | Puzzle Acc ↑ (Mid) | Puzzle Acc ↑ (Hard) | Stacking Acc ↑ (Easy) | Stacking Acc ↑ (Mid) | Stacking Acc ↑ (Hard) |
+|------------------|---------------------:|-------------------:|--------------------:|----------------------:|---------------------:|----------------------:|
+| GPT-5.2          | 10.0                 | 0.0                | 0.0                 | 100.0                 | 55.0                 | 6.3                   |
+| Gemini-3-Pro     | 10.0                 | 0.0                | 0.0                 | 90.0                  | 40.0                 | 6.3                   |
+| Claude-Sonnet-4.5| 10.0                 | 0.0                | 0.0                 | 100.0                 | 20.0                 | 0.0                   |
+
+---
+
+#### Intermediate Feedback (Interactive vs. One-shot)
+
+Multi-step interaction consistently outperforms one-shot solving. **Δ = Interactive − One-shot** on overall accuracy.
+
+| Model            | Interactive (%) ↑ (Puzzle) | Interactive (%) ↑ (Stack.) | Interactive (%) ↑ (All) | One-shot (%) ↑ (Puzzle) | One-shot (%) ↑ (Stack.) | One-shot (%) ↑ (All) | Δ |
+|------------------|----------------------------:|----------------------------:|-------------------------:|-------------------------:|--------------------------:|----------------------:|--:|
+| GPT-5.2          | 3.1                         | 31.2                        | 22.9                     | 0.0                      | 9.1                       | 7.1                   | -15.8 |
+| Claude-Sonnet-4.5| 3.1                         | 18.2                        | 13.8                     | 0.0                      | 10.3                      | 8.1                   | -5.7  |
+| Gemini-3-Pro     | 3.1                         | 26.0                        | 19.3                     | 0.0                      | 9.1                       | 7.1                   | -12.2 |
+
+---
+
+#### Selection Signal (Reward Models vs. Verification)
+
+Better selection helps, but gains saturate quickly. Reward-model reranking provides limited improvements relative to stronger verifier-style checks.
+
+| Strategy      | All (%) ↑ | Δ vs. Avg@4 |
+|---------------|----------:|------------:|
+| Avg@4         | 9.3       | —           |
+| Pass@1        | 9.4       | +0.1        |
+| Pass@2        | 11.2      | +1.9        |
+| Pass@4        | 11.2      | +1.9        |
+| VLM Judge     | 10.3      | +1.3        |
+| Reward Model  | 9.9       | +0.6        |
+
 ## Quick Start
 
 ### Prerequisites & Environment Variables
