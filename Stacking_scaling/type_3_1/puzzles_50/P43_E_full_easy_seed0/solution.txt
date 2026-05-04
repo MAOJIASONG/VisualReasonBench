@@ -1,0 +1,16 @@
+P43_E_full_easy
+grid: (5, 3, 3)
+fixed: [('D', (5, 2, 1)), ('G', (2, 2, 1)), ('P', (2, 1, 1))]
+inventory: { D:2 }
+push_budget: 1
+patches: [('D', [4, 2, 1]), ('D', [3, 2, 1])]
+pushes:  [([5, 2, 1], '-x')]
+origin:  [5, 2, 1] dir=-x
+skeleton_len: 4  fixed=3  patches=2
+
+plan:
+  01: ('place', <PieceType.DOMINO: 'D'>, (4, 2, 1))
+  02: ('place', <PieceType.DOMINO: 'D'>, (3, 2, 1))
+  03: ('submit_placement',)
+  04: ('push', (5, 2, 1), '-x')
+  05: ('submit',)

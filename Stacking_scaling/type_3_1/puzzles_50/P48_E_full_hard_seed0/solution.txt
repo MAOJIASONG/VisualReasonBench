@@ -1,0 +1,17 @@
+P48_E_full_hard
+grid: (6, 5, 5)
+fixed: [('D', (5, 2, 1)), ('G', (1, 2, 1)), ('P', (3, 3, 1)), ('P', (5, 1, 1)), ('P', (6, 2, 1))]
+inventory: { D:3 }
+push_budget: 1
+patches: [('D', [4, 2, 1]), ('D', [3, 2, 1]), ('D', [2, 2, 1])]
+pushes:  [([5, 2, 1], '-x')]
+origin:  [5, 2, 1] dir=-x
+skeleton_len: 5  fixed=5  patches=3
+
+plan:
+  01: ('place', <PieceType.DOMINO: 'D'>, (4, 2, 1))
+  02: ('place', <PieceType.DOMINO: 'D'>, (3, 2, 1))
+  03: ('place', <PieceType.DOMINO: 'D'>, (2, 2, 1))
+  04: ('submit_placement',)
+  05: ('push', (5, 2, 1), '-x')
+  06: ('submit',)

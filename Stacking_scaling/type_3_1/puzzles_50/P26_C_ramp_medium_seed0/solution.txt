@@ -1,0 +1,17 @@
+P26_C_ramp_medium
+grid: (5, 4, 4)
+fixed: [('D', (1, 1, 1)), ('G', (5, 1, 1)), ('P', (2, 2, 1))]
+inventory: { D:3 }
+push_budget: 1
+patches: [('D', [2, 1, 1]), ('D', [3, 1, 1]), ('D', [4, 1, 1])]
+pushes:  [([1, 1, 1], '+x')]
+origin:  [1, 1, 1] dir=+x
+skeleton_len: 5  fixed=3  patches=3
+
+plan:
+  01: ('place', <PieceType.DOMINO: 'D'>, (2, 1, 1))
+  02: ('place', <PieceType.DOMINO: 'D'>, (3, 1, 1))
+  03: ('place', <PieceType.DOMINO: 'D'>, (4, 1, 1))
+  04: ('submit_placement',)
+  05: ('push', (1, 1, 1), '+x')
+  06: ('submit',)
