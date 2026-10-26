@@ -116,18 +116,18 @@ type_3_1/
 
 | Element | Appearance |
 |---|---|
-| Domino `D` | slim ivory standing slab (0.45 × 0.45 × 2.0) with 4 black pip dots on the front face |
-| Splitter `T` | same body + **brass cross cap** on top (two short bars forming `+`) |
-| Goal `G` | **gold** slab + gold 4-point star emblem on top |
-| Protected `P` | red-lacquered slab + white warning-X on top; **bright red halo ring** on ground if toppled (the LOSE indicator) |
-| Ramp `R` | warm-tan triangular prism (wedge) with horizontal tread lines on the slope face |
-| Toppled D/G/P/T | lays flat in its `fall_dir`, length-2 cuboid, darker color |
-| Cascade trail | faint steel-blue line segments from push origin through each toppled piece (in fall order) |
-| Panels | STATUS (top-right: phase, push count, goals toppled, protected toppled, game state) + INVENTORY (mid-right) + legend (bottom-left) |
-| Canvas | 1400 × 1100, rectangular bbox, manual aspect ratio |
-| Cameras | `front` (1.15, -1.15, 0.80) + `back` (-1.15, 1.15, 0.80) via `render_state_pair` |
-
----
+| Domino `D` | slim ivory standing slab (0.46 × 0.46 × 2.0) with pips on all four faces |
+| Splitter `T` | ivory body + **brass cross cap** on top |
+| Goal `G` | **gold** slab + dark **5-point star** on top (distinct from the splitter's cross) |
+| Protected `P` | red-lacquered slab + white warning-X on top; **red halo ring** on the floor once toppled (the LOSE indicator) |
+| Ramp `R` | direction-free **three-step block** until the cascade uses it (game logic gives a ramp no direction); afterwards a wedge rising in the direction it was crossed |
+| Toppled D/T/G/P | lies flat **inside its own cell**, darker shade of its own colour, white arrow = fall direction (goal keeps its star) |
+| Cascade trail | steel-blue arrows along the true pulse edges (`from` → hit piece), so splitter branches show as branches |
+| Coordinates | `x=…` / `y=…` labels on the floor edges facing the camera, `z=…` on a vertical edge (shared `chain_viz`) |
+| Raised pieces | dashed drop line + floor footprint under every piece standing above z=1 |
+| Panels | STATUS (phase, pushes, goals / protected toppled, result) + INVENTORY + legend |
+| Canvas | 1400 × 1100 ×1.4, always frames the full grid |
+| Cameras | `front` + `back` via `render_state_pair` |
 
 ## Programmatic API
 
@@ -193,6 +193,22 @@ Hard guarantees:
 
 - **Replay always wins**: generator only returns levels where placing the
   canonical patches and applying the canonical pushes evaluates to WIN.
+- **Ramps get a step to land on**: the cascade leaves a ramp one level up,
+  so the generator adds a fixed 1-cell step block under the landing cell
+  when nothing supports it (and never carves those blocks into patches).
+  Before this, every ramp branch failed the support check and was rolled
+  back, so no generated level contained a ramp.
+- **Batch scripts enforce category mechanics**: `generate_50` /
+  `play_batch` only accept seeds whose level actually contains a ramp
+  (C_ramp) / splitter (D_split / E_full; E_full falls back to a ramp when
+  the grid is too narrow for a splitter) — see
+  `generator.level_has_features` — and never reuse a seed for the same
+  config (several tier slots share a config, which used to produce
+  identical puzzles).
+- **Known limitation**: a level never contains both a ramp and a
+  splitter.  Splitter branches are built with ramps disabled, and a
+  splitter reached through a ramp stands one level up with no support for
+  its side branches.
 - **Patches are load-bearing**: for every returned level, removing the
   patches and running the same push makes the cascade fail to reach all
   goals (or not reach any) — so patches genuinely matter.

@@ -12,6 +12,16 @@ from phyvpuzzle.tasks.base_task import PhysicsTask
 from phyvpuzzle.environment.puzzle_env import PuzzleEnvironment, p
 
 
+
+def _state_aabb(obj):
+    """AABB recorded in the observation state (the PyBullet client is already
+    disconnected when rule-based evaluation runs); queries PyBullet only for
+    states produced before that snapshot existed."""
+    aabb = obj.properties.get("aabb") if obj.properties else None
+    if aabb is not None:
+        return aabb
+    return p.getAABB(obj.object_id)
+
 @register_task_config("simple_stacking")
 @dataclass
 class SimpleStackingTaskConfig(TaskConfig):
@@ -222,8 +232,8 @@ class SimpleStackingTask(PhysicsTask):
                 continue
             
             # 检查 piece_2 是否在 container 内
-            container_aabb_min, container_aabb_max = p.getAABB(container.object_id)
-            piece_2_aabb_min, piece_2_aabb_max = p.getAABB(piece_2.object_id)
+            container_aabb_min, container_aabb_max = _state_aabb(container)
+            piece_2_aabb_min, piece_2_aabb_max = _state_aabb(piece_2)
             
             tolerance = 0.01
             piece_2_in_container = (
@@ -235,7 +245,7 @@ class SimpleStackingTask(PhysicsTask):
             )
             
             # 检查 piece_3 是否在 piece_2 上面
-            piece_3_aabb_min, piece_3_aabb_max = p.getAABB(piece_3.object_id)
+            piece_3_aabb_min, piece_3_aabb_max = _state_aabb(piece_3)
             piece_3_above_piece_2 = piece_3_aabb_min[2] > piece_2_aabb_max[2] - tolerance * 2
             
             # 检查 piece_3 是否也在 container 内

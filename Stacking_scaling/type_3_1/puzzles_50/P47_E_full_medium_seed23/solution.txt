@@ -1,0 +1,16 @@
+P47_E_full_medium
+grid: (5, 4, 4)
+fixed: [('D', (3, 1, 1)), ('T', (3, 3, 1)), ('G', (5, 3, 1)), ('G', (2, 3, 1)), ('P', (2, 4, 1)), ('P', (4, 2, 1))]
+inventory: { D:2 }
+push_budget: 1
+patches: [('D', [3, 2, 1]), ('D', [4, 3, 1])]
+pushes:  [([3, 1, 1], '+y')]
+origin:  [3, 1, 1] dir=+y
+skeleton_len: 6  fixed=6  patches=2
+
+plan:
+  01: ('place', <PieceType.DOMINO: 'D'>, (3, 2, 1))
+  02: ('place', <PieceType.DOMINO: 'D'>, (4, 3, 1))
+  03: ('submit_placement',)
+  04: ('push', (3, 1, 1), '+y')
+  05: ('submit',)

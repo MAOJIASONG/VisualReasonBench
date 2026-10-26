@@ -91,12 +91,13 @@ class OpenAIAgent(VLMAgent):
             message = response.choices[0].message
             if not message:
                 raise RuntimeError("Empty message in OpenAI API response")
+            # content is None on pure tool-call responses.
             if hasattr(message, "reasoning") and message.reasoning:
                 content = message.reasoning.strip()
                 if message.content:
                     content += "\n\n" + message.content.strip()
             else:
-                content = message.content.strip()
+                content = (message.content or "").strip()
             
             # Extract tool calls
             tool_calls = []
@@ -117,8 +118,12 @@ class OpenAIAgent(VLMAgent):
             return content, tool_calls
             
         except Exception as e:
+            # Re-raise so @retry can try again; after the last attempt the
+            # runner records the task as failed.  Returning "Error: ..." as a
+            # normal reply made retries dead code and counted outages as
+            # ordinary agent steps.
             print(f"Error calling OpenAI API: {e}")
-            return f"Error: {e}", []
+            raise
         
     def _image_to_data_url(self, image) -> str:
         """Convert PIL Image to data URL."""

@@ -1,0 +1,16 @@
+P37_D_split_medium
+grid: (5, 4, 4)
+fixed: [('D', (2, 3, 1)), ('T', (4, 3, 1)), ('G', (4, 4, 1)), ('G', (4, 1, 1)), ('P', (2, 2, 1))]
+inventory: { D:2 }
+push_budget: 1
+patches: [('D', [3, 3, 1]), ('D', [4, 2, 1])]
+pushes:  [([2, 3, 1], '+x')]
+origin:  [2, 3, 1] dir=+x
+skeleton_len: 6  fixed=5  patches=2
+
+plan:
+  01: ('place', <PieceType.DOMINO: 'D'>, (3, 3, 1))
+  02: ('place', <PieceType.DOMINO: 'D'>, (4, 2, 1))
+  03: ('submit_placement',)
+  04: ('push', (2, 3, 1), '+x')
+  05: ('submit',)

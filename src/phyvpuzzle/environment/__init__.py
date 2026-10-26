@@ -16,8 +16,6 @@ __all__ = [
     "PhysicsEnvironment",
     "DominoEnvironment", 
     "DominoConfig",
-    "LegoEnvironment",
-    "LegoConfig", 
     "PuzzleEnvironment",
     "PuzzleConfig",
     "StackingGameEnvironment",

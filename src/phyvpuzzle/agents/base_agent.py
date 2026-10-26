@@ -19,6 +19,7 @@ class VLMAgent(BaseAgent):
         super().__init__(config)
         self.system_prompt: str = None
         self.total_tokens: int = 0
+        self.last_context_tokens: int = 0
 
     def set_system_prompt(self, system_prompt: str) -> None:
         """Set system prompt for this agent."""
@@ -39,8 +40,10 @@ class VLMAgent(BaseAgent):
             "content": response,
             "tool_calls": tool_calls
         })
-        # Update token count
-        self.total_tokens += self._count_tokens_in_messages(messages)
+        # Update token counts: the size of this request's context (what a
+        # context-window limit applies to) and the running total (for cost).
+        self.last_context_tokens = self._count_tokens_in_messages(messages)
+        self.total_tokens += self.last_context_tokens
         
         return response, tool_calls
 
@@ -52,6 +55,10 @@ class VLMAgent(BaseAgent):
     def get_token_count(self) -> int:
         """Get total tokens used by this agent."""
         return self.total_tokens
+
+    def get_context_token_count(self) -> int:
+        """Tokens in the most recent request (prompt + reply)."""
+        return getattr(self, "last_context_tokens", 0)
     
     @abstractmethod
     def _prepare_messages(self, history: List[Observation], prompt: str) -> List[Dict[str, Any]]:

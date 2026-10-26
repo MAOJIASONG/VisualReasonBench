@@ -4,7 +4,7 @@ HuggingFace Transformers-based agent implementation for local model inference.
 
 import json
 import torch
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 from transformers import AutoProcessor, AutoModel
 from PIL import Image
 import base64
@@ -22,7 +22,12 @@ class TransformersAgent(VLMAgent):
         super().__init__(config)
         self.model = None
         self.processor = None
-        self.device = config.device
+        # "auto" picks CUDA when available (config.device defaults to "auto",
+        # which torch's .to() does not accept).
+        if config.device == "auto":
+            self.device = "cuda" if torch.cuda.is_available() else "cpu"
+        else:
+            self.device = config.device
 
         # Load model and tokenizer
         self._load_model_and_tokenizer()
@@ -36,12 +41,22 @@ class TransformersAgent(VLMAgent):
             if self.processor.tokenizer.pad_token is None:
                 self.processor.tokenizer.pad_token = self.processor.tokenizer.eos_token
 
-            self.model = AutoModel.from_pretrained(
-                self.config.model_name,
+            dtype = (self.config.torch_dtype if self.config.torch_dtype == "auto"
+                     else getattr(torch, self.config.torch_dtype))
+            load_kwargs = dict(
                 trust_remote_code=True,
                 device_map="auto" if self.device == "cuda" else None,
-                torch_dtype=getattr(torch, self.config.torch_dtype),
-            ).eval()
+                torch_dtype=dtype,
+            )
+            # Plain AutoModel usually has no generate(); prefer the
+            # image-text-to-text head and fall back for remote-code models.
+            try:
+                from transformers import AutoModelForImageTextToText
+                self.model = AutoModelForImageTextToText.from_pretrained(
+                    self.config.model_name, **load_kwargs).eval()
+            except (ImportError, ValueError):
+                self.model = AutoModel.from_pretrained(
+                    self.config.model_name, **load_kwargs).eval()
             print("Loaded as vision-capable model")
 
             # Move to device if not using device_map
@@ -84,7 +99,9 @@ class TransformersAgent(VLMAgent):
         
         return messages
     
-    def _get_model_response(self, messages: List[Dict[str, Any]]) -> Tuple[str, List[Dict[str, Any]]]:
+    def _get_model_response(self, messages: List[Dict[str, Any]],
+                            tools: Optional[List[Dict[str, Any]]] = None
+                            ) -> Tuple[str, List[Dict[str, Any]]]:
         """Get response from local Transformers model."""
         # Handle vision vs text-only models differently
         return self._get_vision_model_response(messages)
@@ -100,7 +117,9 @@ class TransformersAgent(VLMAgent):
             )
 
             inputs = self.processor(
-                images=[msg["image"] for msg in messages if msg["type"] == "image"],
+                images=[item["image"] for msg in messages
+                        if isinstance(msg.get("content"), list)
+                        for item in msg["content"] if item.get("type") == "image"] or None,
                 text=text, 
                 return_tensors="pt"
             ).to(self.device)

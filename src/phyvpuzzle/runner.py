@@ -74,7 +74,7 @@ class BenchmarkRunner:
     def _setup_step_selection(self) -> None:
         """Setup step selection components if enabled."""
         if self.config.step_selection and self.config.step_selection.enabled:
-            mode = "greedy" if self.config.step_selection.top_k == 1 else f"beam search (width={self.config.step_selection.top_k})"
+            mode = "greedy" if self.config.step_selection.top_k == 1 else f"best-of-N (recording top_{self.config.step_selection.top_k} alternatives)"
             self.live_logger.log_info(
                 f"Initializing step selection: {mode}, "
                 f"method='{self.config.step_selection.selection_method}'"
@@ -191,12 +191,12 @@ class BenchmarkRunner:
         )
         
         if use_step_selection:
-            mode = "greedy" if self.config.step_selection.top_k == 1 else f"beam search (width={self.config.step_selection.top_k})"
+            mode = "greedy" if self.config.step_selection.top_k == 1 else f"best-of-N (recording top_{self.config.step_selection.top_k} alternatives)"
             self.live_logger.log_info(
                 f"Step selection enabled: {mode}, "
                 f"method={self.config.step_selection.selection_method}, "
                 f"num_candidates={self.config.step_selection.num_candidates}, "
-                f"beam_width(top_k)={self.config.step_selection.top_k}"
+                f"top_k(alternatives)={self.config.step_selection.top_k}"
             )
         
         self.progress_display = ProgressDisplay(max_steps)
@@ -715,12 +715,16 @@ class BenchmarkRunner:
         })
     
     def _is_token_limit_exceeded(self) -> bool:
-        """Check if token count exceeds the configured limit."""
-        return self.agent.get_token_count() > self.config.agent.max_content_size
+        """Check if the last request's context exceeds the configured limit.
+
+        max_content_size is a per-request context limit; comparing it with
+        the cumulative total aborted multi-step runs after a few images.
+        """
+        return self.agent.get_context_token_count() > self.config.agent.max_content_size
     
     def _handle_token_limit_exceeded(self, step: int) -> int:
         """Handle case when token limit is exceeded."""
-        token_count = self.agent.get_token_count()
+        token_count = self.agent.get_context_token_count()
         max_tokens = self.config.agent.max_content_size
         
         self.live_logger.log_warning(f"Token count exceeded: {token_count}/{max_tokens}")
@@ -749,7 +753,8 @@ class BenchmarkRunner:
             trajectory=self.interaction_history,
             success=False,  # Success determined during evaluation
             metadata={
-                "difficulty": self.config.task.difficulty.value,
+                "difficulty": self._difficulty_name(),
+                "task_key": self._task_key(),
                 "optimal_steps": self.task.optimal_steps,
                 "total_tokens": self.agent.get_token_count(),
                 "agent_model": self.config.agent.model_name,
@@ -791,7 +796,8 @@ class BenchmarkRunner:
             success=False,
             error_message=str(error),
             metadata={
-                "difficulty": self.config.task.difficulty.value,
+                "difficulty": self._difficulty_name(),
+                "task_key": self._task_key(),
                 "total_tokens": self.agent.get_token_count() if self.agent else 0,
                 "agent_model": self.config.agent.model_name if self.agent else "unknown",
             }
@@ -846,6 +852,22 @@ class BenchmarkRunner:
             
         return results
         
+    def _task_key(self) -> str:
+        """Identifies the puzzle instance so repeated runs can be grouped
+        (pass@k).  Uses the puzzle selectors a task config may define."""
+        task = self.config.task
+        parts = [task.type, task.name, self._difficulty_name()]
+        for attr in ("puzzle_size", "puzzle_id", "init_seed"):
+            value = getattr(task, attr, None)
+            if value is not None:
+                parts.append(f"{attr}={value}")
+        return "|".join(str(p) for p in parts)
+
+    def _difficulty_name(self) -> str:
+        """Task difficulty for reports; it is optional in TaskConfig."""
+        difficulty = getattr(self.config.task, "difficulty", None)
+        return getattr(difficulty, "value", str(difficulty) if difficulty else "unspecified")
+
     def evaluate(self, task_results: List[TaskResult]) -> EvaluationResult:
         """
         Evaluate one or more task results using task-specific success criteria,
@@ -856,11 +878,12 @@ class BenchmarkRunner:
         self.live_logger.log_result("Success criteria defined")
 
         try:
-            evaluation_result = self.task.evaluate_tasks(self.evaluator, task_results)
+            return self.task.evaluate_tasks(self.evaluator, task_results)
         except Exception as e:
+            # Callers dereference the result straight away; returning None
+            # only turned this error into an unrelated AttributeError later.
             self.live_logger.log_warning(f"Evaluator failed during task evaluation: {e}")
-            evaluation_result = None
-        return evaluation_result
+            raise
         
     def run_benchmark(self, num_runs: int = 1) -> EvaluationResult:
         """Run complete benchmark with evaluation."""
@@ -871,7 +894,7 @@ class BenchmarkRunner:
             "Agent Model": self.config.agent.model_name,
             "Task Type": self.config.task.type,
             "Task Name": self.config.task.name,
-            "Difficulty": self.config.task.difficulty.value,
+            "Difficulty": self._difficulty_name(),
             "Number of Runs": num_runs
         }
         StatusDisplay.print_config(config_info, "Benchmark Configuration")
@@ -908,7 +931,7 @@ class BenchmarkRunner:
         # Basic information
         basic_info = {
             "Model": self.config.agent.model_name,
-            "Task": f"{self.config.task.name} ({self.config.task.difficulty.value})",
+            "Task": f"{self.config.task.name} ({self._difficulty_name()})",
             "Total Tasks": len(evaluation_result.task_results),
             "Successful": sum(1 for r in evaluation_result.task_results if r.success),
             "Accuracy": evaluation_result.accuracy

@@ -180,9 +180,6 @@ class EvaluationResult:
 class BaseEnvironment(ABC):
     """Base class for physics simulation environments."""
 
-     # registry for tool functions
-    tool_registry: dict[str, Callable] = {}
-    
     def __init__(self, config: EnvironmentConfig):
         self.config: EnvironmentConfig = config
 
@@ -193,11 +190,27 @@ class BaseEnvironment(ABC):
         Usage:
             @BaseEnvironment.register_tool("pick")
             def pick(self, ...): ...
+
+        The method is only tagged here; each environment class resolves its
+        own tools through its MRO (see available_tools).  A single global
+        registry let every environment dispatch every other environment's
+        tools (e.g. push_domino on a puzzle environment).
         """
         def deco(func):
-            cls.tool_registry[name] = cast(Callable, func)
+            func._tool_name = name
             return func
         return deco
+
+    @classmethod
+    def available_tools(cls) -> Dict[str, Callable]:
+        """Tools defined on this class and its bases (subclass wins)."""
+        tools: Dict[str, Callable] = {}
+        for klass in reversed(cls.__mro__):
+            for attr in vars(klass).values():
+                tool_name = getattr(attr, "_tool_name", None)
+                if tool_name:
+                    tools[tool_name] = cast(Callable, attr)
+        return tools
         
     @abstractmethod
     def reset(self) -> Observation:

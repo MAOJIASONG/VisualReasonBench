@@ -612,7 +612,16 @@ class OpenAIRewardAgent(BaseRewardAgent):
             max_tokens=self.step_selection_config.reward_max_tokens,
         )
         
-        content = response.choices[0].message.content.strip()
+        content = (response.choices[0].message.content or "").strip()
+        if self.step_selection_config.reward_model_mode == "discriminative":
+            # The discriminative prompt asks for a bare "+" / "-"; map it onto
+            # the same [1, 5] scale the Transformers path uses.  Parsing it as
+            # a 1-5 number always fell back to 3.0, so every candidate tied.
+            verdict = content.lstrip()[:1]
+            if verdict == "+":
+                return 5.0
+            if verdict == "-":
+                return 1.0
         return self._parse_reward_score(content)
     
     def _call_pairwise_judge(self, prompt: str, image: Image.Image) -> int:
@@ -862,24 +871,37 @@ def create_reward_agent(config: StepSelectionConfig) -> BaseRewardAgent:
 
 class StepSelectionManager:
     """
-    Manages step selection state using beam search.
-    
-    - top_k = 1: Greedy search (maintains single best path)
-    - top_k > 1: Beam search (maintains multiple parallel paths)
+    Step selection: score several candidate actions per step and execute
+    the best one.
+
+    The environments cannot be snapshotted / rolled back, so every candidate
+    is generated from (and executed in) the single real trajectory.  The old
+    "beam search" for top_k > 1 regenerated candidates once per beam from
+    that same state (identical prompts, N times the API calls) and could
+    execute an action from a beam whose earlier actions never ran.  Now
+    top_k only controls how many scored alternatives are recorded per step.
     """
-    
+
     def __init__(self, config: StepSelectionConfig, reward_agent: BaseRewardAgent):
         self.config = config
         self.reward_agent = reward_agent
-        
-        # Beam state: list of (path_history, cumulative_score) tuples
-        # Each path_history is a list of ActionCandidates
-        self.beams: List[Tuple[List[ActionCandidate], float]] = []
-        
+
+        # The executed path and its cumulative score.
+        self.executed_path: List[ActionCandidate] = []
+        self.executed_score: float = 0.0
+        # Per step: the top_k scored candidates (alternatives not executed).
+        self.alternatives: List[List[ActionCandidate]] = []
+        if config.top_k > 1:
+            print(f"Warning: step_selection.top_k={config.top_k} cannot branch "
+                  "(environments have no state rollback); executing the best "
+                  "candidate each step and recording the top_k alternatives.")
+
     def initialize(self) -> None:
-        """Initialize step selection with empty beam."""
-        self.beams = [([], 0.0)]
-    
+        """Reset to an empty executed path."""
+        self.executed_path = []
+        self.executed_score = 0.0
+        self.alternatives = []
+
     def expand_beams(
         self,
         candidate_generator_fn,  # Function that generates candidates
@@ -888,70 +910,31 @@ class StepSelectionManager:
         object_mapping: str,
         interaction_history: str
     ) -> List[ActionCandidate]:
-        """
-        Expand all beams with new candidate actions using beam search.
-        
-        Process:
-        1. For each current beam, generate num_candidates actions
-        2. Score all candidates using reward model or pairwise judge
-        3. Expand each beam with its top-scored actions
-        4. Keep top_k best beams globally (beam width)
-        5. Return the best action from the best beam
-        
-        Args:
-            candidate_generator_fn: Function that returns List[ActionCandidate]
-            current_image: Current observation
-            task_description: Task description
-            object_mapping: Object mapping info
-            interaction_history: Interaction history string
-            
-        Returns:
-            Best action to execute this step (from best beam)
-        """
-        all_expansions = []
-        
-        # Expand each current beam
-        for beam_idx, (path, cum_score) in enumerate(self.beams):
-            # Generate candidates for this beam
-            candidates = candidate_generator_fn()
-            
-            if not candidates:
-                continue
-            
-            # Score all candidates
-            scored = self.reward_agent.select_best_actions(
-                candidates,
-                current_image,
-                task_description,
-                object_mapping,
-                interaction_history
-            )
-            
-            # Create new beam entries for each scored candidate
-            # (not just top_k, we'll select globally later)
-            for candidate in scored:
-                new_path = path + [candidate]
-                new_score = cum_score + candidate.score
-                all_expansions.append((new_path, new_score, candidate))
-        
-        if not all_expansions:
+        """Generate candidates from the current (executed) state, score them,
+        and return the best one to execute."""
+        candidates = candidate_generator_fn()
+        if not candidates:
             return []
-        
-        # Sort all expansions by cumulative score (descending)
-        all_expansions.sort(key=lambda x: x[1], reverse=True)
-        
-        # Keep top_k beams (beam width)
-        self.beams = [(path, score) for path, score, _ in all_expansions[:self.config.top_k]]
-        
-        # Return the action from the best beam (to execute this step)
-        best_action = all_expansions[0][2]
-        return [best_action]
-    
+
+        scored = self.reward_agent.select_best_actions(
+            candidates,
+            current_image,
+            task_description,
+            object_mapping,
+            interaction_history
+        )
+        if not scored:
+            return []
+        ranked = sorted(scored, key=lambda c: c.score, reverse=True)
+        best = ranked[0]
+        self.alternatives.append(ranked[:max(1, self.config.top_k)])
+        self.executed_path.append(best)
+        self.executed_score += best.score
+        return [best]
+
     def get_best_path(self) -> Tuple[List[ActionCandidate], float]:
-        """Get the current best path and its score."""
-        if not self.beams:
-            return [], 0.0
-        return max(self.beams, key=lambda x: x[1])
+        """The executed path and its cumulative score."""
+        return list(self.executed_path), self.executed_score
 
 
 # Keep backward compatibility aliases

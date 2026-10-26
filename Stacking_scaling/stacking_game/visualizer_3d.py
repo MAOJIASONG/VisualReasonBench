@@ -13,20 +13,21 @@ from matplotlib.colors import to_rgba
 from game_core import Vec3, GameState, PieceDef
 
 
-# 预定义的颜色方案
+# 预定义的颜色方案 —— 高对比度、互相可区分（不含接近白色的颜色，
+# 否则在浅色背景上几乎看不见）
 PIECE_COLORS = [
-    '#FF6B6B',  # 红色
-    '#4ECDC4',  # 青色
-    '#45B7D1',  # 蓝色
-    '#96CEB4',  # 绿色
-    '#FFEAA7',  # 黄色
-    '#DFE6E9',  # 灰色
-    '#FD79A8',  # 粉色
-    '#A29BFE',  # 紫色
-    '#74B9FF',  # 浅蓝
-    '#55EFC4',  # 薄荷绿
-    '#FDCB6E',  # 橙色
-    '#E17055',  # 橙红
+    '#E6194B',  # 红
+    '#3CB44B',  # 绿
+    '#4363D8',  # 蓝
+    '#F58231',  # 橙
+    '#911EB4',  # 紫
+    '#42D4F4',  # 青
+    '#F032E6',  # 品红
+    '#9A6324',  # 棕
+    '#808000',  # 橄榄
+    '#469990',  # 蓝绿
+    '#FFE119',  # 黄
+    '#000075',  # 深蓝
 ]
 
 
@@ -180,7 +181,7 @@ def visualize_state_3d(state: GameState,
         fig = plt.figure(figsize=figsize)
         piece_ids = sorted(state.initial_placements.keys())
         n_pieces = len(piece_ids)
-        right_cols = 2
+        right_cols = 2 if n_pieces <= 6 else 3
         right_rows = max(1, math.ceil(n_pieces / right_cols))
 
         # 计算所有piece的最大尺寸，用于统一缩放比例
@@ -197,7 +198,7 @@ def visualize_state_3d(state: GameState,
                 max_span = max(max_span, max_x - min_x + 1, max_y - min_y + 1, max_z - min_z + 1)
         
         # 稍微增加一点视口余量
-        view_size = max_span + pad_unplaced_view * 2
+        view_size = max_span + pad_unplaced_view * 0.6
 
         gs = fig.add_gridspec(
             nrows=1,
@@ -226,7 +227,8 @@ def visualize_state_3d(state: GameState,
                     keep_initial_pose=keep_unplaced_initial_pose,
                     normalize_view=normalize_unplaced_view,
                     pad=pad_unplaced_view,
-                    unified_view_size=view_size
+                    unified_view_size=view_size,
+                    compact=right_cols > 2,
                 )
         else:
             ax = fig.add_subplot(gs_right[0, 0], projection='3d')
@@ -234,8 +236,8 @@ def visualize_state_3d(state: GameState,
             ax.set_axis_off()
 
         # 右侧标题（移除突兀的分隔线，使用间距自然分隔）
-        fig.text(0.73, 0.96, "Pieces", ha="center", va="center",
-                 fontsize=10, style='italic', alpha=0.6, color='gray')
+        fig.text(0.73, 0.97, "Pieces (initial pose)", ha="center",
+                 va="center", fontsize=11, color='#444444')
 
     else:
         # 只显示盒子
@@ -243,7 +245,7 @@ def visualize_state_3d(state: GameState,
         ax = fig.add_subplot(111, projection='3d')
         _draw_box_view(ax, state, title, elev=20, azim=45)
 
-    plt.tight_layout()
+    fig.subplots_adjust(left=0.02, right=0.98, bottom=0.03, top=0.93)
     return fig
 
 
@@ -261,31 +263,41 @@ def _draw_box_view(ax: Axes3D, state: GameState, title: str,
         for cell in placed.world_cells:
             draw_voxel(ax, cell, color, alpha=0.85, linewidth=0.8)
 
-    # 设置坐标轴
-    ax.set_xlabel('X', labelpad=10)
-    ax.set_ylabel('Y', labelpad=10)
-    ax.set_zlabel('Z', labelpad=10)
+    # 已放置piece的编号：标在该piece最高的、上方没有遮挡的体素上，便于
+    # pickup时引用。完全被盖住的piece不标（文字总是画在最上层，会误导）。
+    occupied = {(c.x, c.y, c.z) for p in state.placed.values()
+                for c in p.world_cells}
+    for piece_id, placed in state.placed.items():
+        exposed = [c for c in placed.world_cells
+                   if (c.x, c.y, c.z + 1) not in occupied]
+        if not exposed:
+            continue
+        top = max(exposed, key=lambda c: (c.z, c.x, -c.y))
+        ax.text(top.x - 0.5, top.y - 0.5, top.z + 0.15, str(piece_id),
+                ha='center', va='bottom', fontsize=10, fontweight='bold',
+                color='black', zorder=100,
+                bbox=dict(boxstyle='round,pad=0.15', fc='white',
+                          ec=get_piece_color(piece_id), lw=1.5, alpha=0.9))
+
+    # 坐标轴：刻度位于单元格中心，标签为 1-based，与 place 工具的坐标一致
+    ax.set_xlabel('x', labelpad=6, fontsize=11, fontweight='bold')
+    ax.set_ylabel('y', labelpad=6, fontsize=11, fontweight='bold')
+    ax.set_zlabel('z', labelpad=6, fontsize=11, fontweight='bold')
     ax.set_xlim([0, A])
     ax.set_ylim([0, B])
     ax.set_zlim([0, C])
-    
-    # 禁用网格线，避免在标签位置（0.5, 1.5）绘制虚线
     ax.grid(False)
-    
-    # 设置刻度位置在单元格中心（0.5, 1.5, ...）用于标签显示
-    tick_pos_x = [i + 0.5 for i in range(A)]
-    tick_pos_y = [i + 0.5 for i in range(B)]
-    tick_pos_z = [i + 0.5 for i in range(C)]
-    ax.set_xticks(tick_pos_x)
-    ax.set_yticks(tick_pos_y)
-    ax.set_zticks(tick_pos_z)
-    ax.set_xticklabels([str(i) for i in range(A)])
-    ax.set_yticklabels([str(i) for i in range(B)])
-    ax.set_zticklabels([str(i) for i in range(C)])
-    # 隐藏刻度线本身，只显示标签
-    ax.tick_params(axis='x', which='both', length=0, pad=2)
-    ax.tick_params(axis='y', which='both', length=0, pad=2)
-    ax.tick_params(axis='z', which='both', length=0, pad=2)
+    ax.set_xticks([i + 0.5 for i in range(A)])
+    ax.set_yticks([i + 0.5 for i in range(B)])
+    ax.set_zticks([i + 0.5 for i in range(C)])
+    ax.set_xticklabels([str(i + 1) for i in range(A)])
+    ax.set_yticklabels([str(i + 1) for i in range(B)])
+    ax.set_zticklabels([str(i + 1) for i in range(C)])
+    for axis in ('x', 'y', 'z'):
+        ax.tick_params(axis=axis, which='both', length=0, pad=1, labelsize=10)
+    for pane in (ax.xaxis.pane, ax.yaxis.pane, ax.zaxis.pane):
+        pane.set_facecolor((0.96, 0.96, 0.97, 1.0))
+        pane.set_edgecolor((0.8, 0.8, 0.82, 1.0))
     try:
         ax.set_box_aspect((A, B, C))
     except Exception:
@@ -377,7 +389,8 @@ def _draw_single_unplaced_piece(ax: Axes3D, state: GameState, piece_id: str,
                                 keep_initial_pose: bool = True,
                                 normalize_view: bool = False,
                                 pad: int = 1,
-                                unified_view_size: Optional[float] = None):
+                                unified_view_size: Optional[float] = None,
+                                compact: bool = False):
     """绘制单个piece的小视角（网格排布用）"""
     # keep_initial_pose: 保持初始加载姿态与位置
     # normalize_view: 归一化到局部坐标（与初始位置无关）
@@ -447,23 +460,30 @@ def _draw_single_unplaced_piece(ax: Axes3D, state: GameState, piece_id: str,
             y1 = size_y + pad
             z1 = size_z + pad
 
-    for cell in draw_cells:
-        draw_voxel(ax, cell, color, alpha=0.85, linewidth=0.8)
+    if is_placed:
+        # 已放置：淡化显示（原来用的 ❌ emoji 在默认字体里会渲染成方块）
+        for cell in draw_cells:
+            draw_voxel(ax, cell, color, alpha=0.18, edge_color='#999999',
+                       linewidth=0.5)
+    else:
+        for cell in draw_cells:
+            draw_voxel(ax, cell, color, alpha=0.9, linewidth=0.8)
 
     ax.set_xlim([x0, x1])
     ax.set_ylim([y0, y1])
     ax.set_zlim([z0, z1])
-    
+
     # 设置正确的空间比例，防止变形
     ax.set_box_aspect((x1 - x0, y1 - y0, z1 - z0))
 
-    title = f"Piece {piece_id}"
+    n_cells = len(placement.world_cells)
     if is_placed:
-        title = f"{title} (PLACED)"
-        # 标记已放置
-        ax.text2D(0.5, 0.5, "❌", transform=ax.transAxes,
-                  ha='center', va='center', fontsize=28, alpha=0.7)
-    ax.set_title(title)
+        ax.set_title(f"#{piece_id} placed", fontsize=9 if compact else 10,
+                     color='#888888')
+    else:
+        label = f"#{piece_id} ({n_cells})" if compact else f"#{piece_id}  ({n_cells} cells)"
+        ax.set_title(label, fontsize=9 if compact else 10,
+                     fontweight='bold', color=color)
     ax.view_init(elev=20, azim=45)
     ax.set_xticks([])
     ax.set_yticks([])
@@ -471,6 +491,9 @@ def _draw_single_unplaced_piece(ax: Axes3D, state: GameState, piece_id: str,
     ax.set_xlabel('')
     ax.set_ylabel('')
     ax.set_zlabel('')
+    for pane in (ax.xaxis.pane, ax.yaxis.pane, ax.zaxis.pane):
+        pane.set_facecolor((1, 1, 1, 0))
+        pane.set_edgecolor((0.85, 0.85, 0.85, 1.0))
 
 
 def visualize_piece_rotations(piece: PieceDef,

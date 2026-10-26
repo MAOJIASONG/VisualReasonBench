@@ -33,7 +33,7 @@ class DominoEnvironment(PhysicsEnvironment):
         
         return State(
             step=self.step_count,
-            objects=self.objects,
+            objects=self._snapshot_objects(),
             time_stamp=time.time(),
             metadata={
                 "total_dominoes": len(self.dominoes),
@@ -117,11 +117,15 @@ class DominoEnvironment(PhysicsEnvironment):
             
         force_vector = direction_np * force
         
-        # Apply force to the domino
+        # Apply the push near the top of the domino (at its centre of mass a
+        # one-step force mostly slides it instead of tipping it over).
+        pos, _ = p.getBasePositionAndOrientation(target_domino.object_id)
+        aabb_min, aabb_max = p.getAABB(target_domino.object_id)
+        contact = [pos[0], pos[1], aabb_min[2] + 0.8 * (aabb_max[2] - aabb_min[2])]
         p.applyExternalForce(
             target_domino.object_id, -1,
             force_vector.tolist(),
-            target_domino.position,
+            contact,
             p.WORLD_FRAME
         )
         

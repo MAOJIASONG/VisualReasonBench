@@ -219,3 +219,24 @@ Potential enhancements:
 **Created**: 2025-10-21
 **Version**: v9 (Plan C)
 **Author**: Based on polypuzzle_batch.py analysis
+
+
+---
+
+## CHAIN 3D tasks: shared rendering (`chain_viz.py`)
+
+`type_2_3` (PipeFit), `type_3` (FluidNet) and `type_3_1` (Domino) render
+through the helpers in `chain_viz.py`, so all three share:
+
+- the full-grid frame (no content-dependent cropping),
+- `x=… / y=… / z=…` cell labels on the edges facing each camera, matching
+  the 1-based cell coordinates the actions use,
+- dashed drop lines + floor footprints under raised objects,
+- the `front` / `back` cameras, panel styling and PNG export.
+
+Rendering needs `plotly<6` with `kaleido==0.2.1` (plotly 6+ requires
+kaleido>=1, which needs a separate Chrome install):
+
+```bash
+pip install "plotly<6" "kaleido==0.2.1"
+```

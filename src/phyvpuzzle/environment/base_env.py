@@ -5,6 +5,9 @@ This module provides the complete physics environment with PyBullet integration,
 serving as the base class for all specific puzzle environments.
 """
 
+import copy
+import sys
+import os
 from pathlib import Path
 import time
 import numpy as np
@@ -114,8 +117,13 @@ class PhysicsEnvironment(BaseEnvironment):
             height=self.config.render_height
         )
 
-        # Connect to PyBullet
-        if self.config.gui:
+        # Connect to PyBullet.  GUI mode needs a display; without one
+        # p.connect(p.GUI) blocks forever on Linux, so fall back to DIRECT.
+        use_gui = self.config.gui
+        if use_gui and sys.platform.startswith("linux") and not os.environ.get("DISPLAY"):
+            print("Warning: gui=true but no DISPLAY is set; using headless PyBullet (DIRECT).")
+            use_gui = False
+        if use_gui:
             self.client_id = p.connect(p.GUI)
         else:
             self.client_id = p.connect(p.DIRECT)
@@ -147,16 +155,20 @@ class PhysicsEnvironment(BaseEnvironment):
         p.setGravity(0, 0, self.config.gravity, physicsClientId=self.client_id)
         # 更细时间步与子步
         p.setTimeStep(self.config.time_step, physicsClientId=self.client_id)
+        # 同步设置固定步长与子步，以及迭代次数。num_sub_steps /
+        # num_solver_iterations are optional config fields; the old code read
+        # them unconditionally, so the AttributeError was swallowed and even
+        # fixedTimeStep was never applied.
+        engine_params = {"fixedTimeStep": self.config.time_step}
+        for attr, key in (("num_sub_steps", "numSubSteps"),
+                          ("num_solver_iterations", "numSolverIterations")):
+            value = getattr(self.config, attr, None)
+            if value is not None:
+                engine_params[key] = value
         try:
-            # 同步设置固定步长与子步，以及迭代次数
-            p.setPhysicsEngineParameter(
-                fixedTimeStep=self.config.time_step,
-                numSubSteps=self.config.num_sub_steps,
-                numSolverIterations=self.config.num_solver_iterations,
-                physicsClientId=self.client_id,
-            )
-        except Exception:
-            pass
+            p.setPhysicsEngineParameter(physicsClientId=self.client_id, **engine_params)
+        except Exception as exc:
+            print(f"Warning: setPhysicsEngineParameter{engine_params} failed: {exc}")
         p.setRealTimeSimulation(1 if self.config.real_time else 0, physicsClientId=self.client_id)
         
         # Add search paths using pybullet_data
@@ -272,7 +284,7 @@ class PhysicsEnvironment(BaseEnvironment):
         self.step_count += 1
         
         # Execute action
-        tool_result: Dict[str, Any] = self.execute_tool_call(action)
+        tool_result: Dict[str, Any] = self.execute_tool_call(action.action_type, action.parameters)
         settle_used = self._wait_until_stable()
         tool_result["settle_steps"] = settle_used
         
@@ -333,6 +345,16 @@ class PhysicsEnvironment(BaseEnvironment):
         max_iter = getattr(self.config, "overlap_max_iterations", 10)
         
         resolved_count = 0
+        static_ids = {self.plane_id, self.table_id}
+        for obj in self.objects:
+            if obj.properties.get("is_container"):
+                static_ids.add(obj.object_id)
+            else:
+                try:
+                    if p.getDynamicsInfo(obj.object_id, -1, physicsClientId=self.client_id)[0] == 0:
+                        static_ids.add(obj.object_id)
+                except Exception:
+                    pass
         for _ in range(max_iter):
             # 获取所有接触点
             contacts = p.getContactPoints(physicsClientId=self.client_id)
@@ -344,8 +366,9 @@ class PhysicsEnvironment(BaseEnvironment):
                 penetration_depth = contact[8]  # 负值表示穿透
                 contact_normal = contact[7]     # 从 B 指向 A 的法向
                 
-                # 跳过静态物体（地面、桌子）
-                if body_a in [self.plane_id, self.table_id] or body_b in [self.plane_id, self.table_id]:
+                # 跳过静态物体（地面、桌子、容器等质量为 0 的固定物体）；
+                # 否则容器会被 resetBasePositionAndOrientation 推走
+                if body_a in static_ids or body_b in static_ids:
                     continue
                 
                 # 仅处理穿透深度超过阈值的接触
@@ -393,10 +416,51 @@ class PhysicsEnvironment(BaseEnvironment):
         if multi_view is None:
             multi_view = self.config.multi_view
         
+        bounds = self._scene_bounds()
+        if bounds is not None:
+            self.multi_view_renderer.frame_to_bounds(*bounds)
+
+        labels = self._object_labels() if getattr(self.config, "render_object_labels", False) else None
         if multi_view:
-            return self.multi_view_renderer.render_multi_view()
+            return self.multi_view_renderer.render_multi_view(labels=labels)
         else:
-            return self.multi_view_renderer.render_single_view("perspective")
+            return self.multi_view_renderer.render_single_view("perspective", labels=labels)
+
+    def _object_labels(self):
+        """(top-centre point, "id", rgb) for every tracked object."""
+        labels = []
+        for obj in self.objects:
+            try:
+                lo, hi = p.getAABB(obj.object_id, physicsClientId=self.client_id)
+                rgba = p.getVisualShapeData(obj.object_id, physicsClientId=self.client_id)[0][7]
+            except Exception:
+                continue
+            top = [(lo[0] + hi[0]) / 2, (lo[1] + hi[1]) / 2, hi[2]]
+            color = tuple(int(255 * c) for c in rgba[:3])
+            labels.append((top, str(obj.object_id), color))
+        return labels
+
+    def _scene_bounds(self):
+        """AABB (min, max) over every body except the floor and table, or
+        None when there is nothing to frame."""
+        if not PYBULLET_AVAILABLE:
+            return None
+        skip = {self.plane_id, self.table_id}
+        lo, hi = None, None
+        try:
+            for i in range(p.getNumBodies(physicsClientId=self.client_id)):
+                body = p.getBodyUniqueId(i, physicsClientId=self.client_id)
+                if body in skip:
+                    continue
+                a, b = p.getAABB(body, physicsClientId=self.client_id)
+                lo = list(a) if lo is None else [min(u, v) for u, v in zip(lo, a)]
+                hi = list(b) if hi is None else [max(u, v) for u, v in zip(hi, b)]
+        except Exception:
+            return None
+        if lo is None:
+            return None
+        lo[2] = min(lo[2], 0.0)  # keep the ground contact in view
+        return lo, hi
 
     def get_tool_schemas(self) -> List[Dict[str, Any]]:
         """Get JSON schemas for tool functions."""
@@ -494,13 +558,16 @@ class PhysicsEnvironment(BaseEnvironment):
         
         # Freeze other objects if requested
         frozen_objects = []
+        original_mass: Dict[int, float] = {}
         if freeze_others:
             for obj in self.objects:
                 # Skip the object being moved and containers
                 if obj.object_id == object_id or obj.properties.get('is_container', False):
                     continue
                 
-                # Freeze the object completely
+                # Freeze the object completely (remember its real mass:
+                # URDF bodies have no 'mass' property to restore from)
+                original_mass[obj.object_id] = p.getDynamicsInfo(obj.object_id, -1)[0]
                 p.changeDynamics(
                     obj.object_id,
                     -1,
@@ -550,7 +617,7 @@ class PhysicsEnvironment(BaseEnvironment):
                 obj = self.get_object_by_id(frozen_id)
                 if obj:
                     # Restore to movable state with original mass and high damping
-                    mass = obj.properties.get('mass', 0.5)
+                    mass = original_mass.get(frozen_id, obj.properties.get('mass', 0.5))
                     p.changeDynamics(
                         frozen_id,
                         -1,
@@ -628,17 +695,16 @@ class PhysicsEnvironment(BaseEnvironment):
         """Finish tool implementation."""
         return {"status": "success", "message": "Finished the task"}
        
-    def execute_tool_call(self, action: Action) -> Dict[str, Any]:
-        """Execute a tool call from VLM."""
-        try:
-            tool_func = BaseEnvironment.tool_registry[action.action_type]
-        except Exception as e:
-            return {"status": "error", "message": f"Tool '{action.action_type}' not found: {str(e)}"}
+    def execute_tool_call(self, tool_name: str, arguments: Dict[str, Any]) -> Dict[str, Any]:
+        """Execute a tool call from VLM (same signature as BaseEnvironment)."""
+        tool_func = type(self).available_tools().get(tool_name)
+        if tool_func is None:
+            return {"status": "error", "message": f"Tool '{tool_name}' not found for {type(self).__name__}"}
 
         try:
-            return tool_func(self, **action.parameters)
+            return tool_func(self, **(arguments or {}))
         except Exception as e:
-            return {"status": "error", "message": f"Failed to execute tool '{action.action_type}': {str(e)}"}
+            return {"status": "error", "message": f"Failed to execute tool '{tool_name}': {str(e)}"}
     
     def close(self) -> None:
         """Clean up environment resources."""
@@ -831,13 +897,36 @@ class PhysicsEnvironment(BaseEnvironment):
         
         return object_id
 
+    def _snapshot_objects(self) -> List[ObjectInfo]:
+        """Refresh every object's pose from PyBullet and return copies.
+
+        ObjectInfo poses were otherwise only written by the move/rotate tools,
+        so states (and the rule-based evaluators reading them) kept reporting
+        the commanded pose instead of where physics actually left the body,
+        and every State shared the same mutable instances.
+        """
+        if PYBULLET_AVAILABLE:
+            for obj in self.objects:
+                try:
+                    pos, orn = p.getBasePositionAndOrientation(
+                        obj.object_id, physicsClientId=self.client_id)
+                except Exception:
+                    continue
+                obj.position = list(pos)
+                obj.orientation = list(orn)
+                # Rule-based evaluators run after the client disconnects, so
+                # they read the bounding box from the state, not PyBullet.
+                lo, hi = p.getAABB(obj.object_id, physicsClientId=self.client_id)
+                obj.properties["aabb"] = (list(lo), list(hi))
+        return copy.deepcopy(self.objects)
+
     @abstractmethod
     def _get_current_state(self, metadata: Optional[Dict[str, Any]] = None) -> State:
         """Get current state of the environment."""
         # 样板代码: 返回一个空的 State 对象，子类应实现具体逻辑
         return State(
             step=self.step_count,
-            objects=self.objects,
+            objects=self._snapshot_objects(),
             time_stamp=time.time(),
             metadata=metadata,
         )

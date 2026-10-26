@@ -11,6 +11,16 @@ from phyvpuzzle.tasks.base_task import PhysicsTask
 from phyvpuzzle.environment.puzzle_env import PuzzleEnvironment, p
 
 
+
+def _state_aabb(obj):
+    """AABB recorded in the observation state (the PyBullet client is already
+    disconnected when rule-based evaluation runs); queries PyBullet only for
+    states produced before that snapshot existed."""
+    aabb = obj.properties.get("aabb") if obj.properties else None
+    if aabb is not None:
+        return aabb
+    return p.getAABB(obj.object_id)
+
 @register_task_config("3x3_stacking")
 @dataclass
 class ThreeByThreeStackingTaskConfig(TaskConfig):
@@ -295,7 +305,7 @@ class ThreeByThreeStackingTask(PhysicsTask):
                 continue
             
             # Get container bounding box
-            container_aabb_min, container_aabb_max = p.getAABB(container.object_id)
+            container_aabb_min, container_aabb_max = _state_aabb(container)
             
             # Add tolerance for checking (5mm tolerance on each side)
             tolerance = 0.005
@@ -310,7 +320,7 @@ class ThreeByThreeStackingTask(PhysicsTask):
             all_pieces_inside = True
             
             for piece in puzzle_pieces:
-                piece_aabb_min, piece_aabb_max = p.getAABB(piece.object_id)
+                piece_aabb_min, piece_aabb_max = _state_aabb(piece)
                 
                 # Check if piece is completely inside container (with tolerance)
                 if not (piece_aabb_min[0] >= container_min[0] and piece_aabb_max[0] <= container_max[0] and
@@ -326,7 +336,7 @@ class ThreeByThreeStackingTask(PhysicsTask):
                 all_pieces_max = [float('-inf'), float('-inf'), float('-inf')]
                 
                 for piece in puzzle_pieces:
-                    piece_aabb_min, piece_aabb_max = p.getAABB(piece.object_id)
+                    piece_aabb_min, piece_aabb_max = _state_aabb(piece)
                     for i in range(3):
                         all_pieces_min[i] = min(all_pieces_min[i], piece_aabb_min[i])
                         all_pieces_max[i] = max(all_pieces_max[i], piece_aabb_max[i])

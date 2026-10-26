@@ -33,48 +33,23 @@ class StackingGameTask(PhysicsTask):
         super().__init__(config)
 
     def _calculate_optimal_steps(self) -> int:
+        """One placement per piece.  Read from the puzzle file when it can be
+        found here; configure_environment() sets the authoritative value
+        from the puzzle the environment actually loaded."""
         import json
         import os
-        
-        # Parse puzzle_id format: "puzzle_mid_001" -> difficulty="mid", number="001"
-        # or handle legacy format if puzzle_id doesn't start with "puzzle_"
-        puzzle_id = self.config.puzzle_id
-        if puzzle_id.startswith("puzzle_"):
-            puzzle_id = puzzle_id[7:]  # Remove "puzzle_" prefix
-        
-        # Split by underscore: "mid_001" -> ["mid", "001"]
-        parts = puzzle_id.split("_")
-        if len(parts) >= 2:
-            difficulty = parts[0]  # e.g., "easy", "mid", "hard"
-            number = parts[1]      # e.g., "001", "002"
-        else:
-            # Fallback: assume the entire puzzle_id is the number
-            difficulty = "easy"
-            number = puzzle_id
-        
-        # Build correct path: Stacking_scaling/puzzles_full_v9/{size}/{difficulty}/{number}/{size}_{difficulty}_{number}.json
-        size = self.config.puzzle_size
-        puzzle_dir = os.environ.get("PUZZLE_DIR", "Stacking_scaling/puzzles_full_v9")
-        config_path = os.path.join(
-            puzzle_dir,
-            size,
-            difficulty,
-            number,
-            f"{size}_{difficulty}_{number}.json"
-        )
-        
-        # Try to resolve path relative to project root if it doesn't exist
-        if not os.path.exists(config_path):
-            # Try from VisualReasonBench directory
-            alt_path = os.path.join("VisualReasonBench", config_path)
-            if os.path.exists(alt_path):
-                config_path = alt_path
-        
-        with open(config_path, "r") as f:
-            config = json.load(f)
-        piece_num = len(config.get("pieces", []))
-        return piece_num
 
+        from phyvpuzzle.environment.stacking_game_env import find_puzzle_file
+
+        puzzle_dir = os.environ.get("PUZZLE_DIR", "Stacking_scaling/puzzles_full_v9")
+        try:
+            path = find_puzzle_file(puzzle_dir, self.config.puzzle_size, self.config.puzzle_id)
+        except RuntimeError:
+            path = None
+        if path is None:
+            return 0
+        with open(path, "r") as f:
+            return len(json.load(f).get("pieces", []))
 
     def configure_environment(self, environment) -> Observation:  # type: ignore[override]
         """Configure environment with the puzzle specified in the task config."""
@@ -87,6 +62,8 @@ class StackingGameTask(PhysicsTask):
         if hasattr(environment, "_task_seed"):
             environment._task_seed = self.config.init_seed
         observation = environment.reset()
+        if getattr(environment, "game_state", None) is not None:
+            self.optimal_steps = len(environment.game_state.spec.pieces)
         return observation
 
     def _configure_environment(self) -> None:
@@ -123,11 +100,12 @@ class StackingGameTask(PhysicsTask):
     def _get_initial_instruction(self) -> str:
         """User-facing task instruction."""
         cfg = self.config
+        A, B, C = self.environment.game_state.spec.box
 
         instruction = f"""
 You are solving a 3D packing puzzle.
 
-**Goal:** Pack every piece into the **{cfg.puzzle_size}** box for puzzle **`{cfg.puzzle_id}`**. You must fill **all {len(self.environment.game_state.spec.box)} cells** with **no collisions** and **no out-of-bounds** placements.
+**Goal:** Pack every piece into the **{cfg.puzzle_size}** box for puzzle **`{cfg.puzzle_id}`**. You must fill **all {A * B * C} cells** with **no collisions** and **no out-of-bounds** placements.
 
 **Critical rules:**
 

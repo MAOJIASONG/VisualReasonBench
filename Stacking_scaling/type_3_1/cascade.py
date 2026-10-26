@@ -146,15 +146,19 @@ def simulate_push(state: GameState, origin_anchor: Vec3,
             continue
 
         # Dispatch by type
+        # Every hit event records `from` (the anchor the pulse left) so the
+        # renderer can draw the true propagation edges, including branches.
         pt = target.type
         if pt == PieceType.DOMINO or pt == PieceType.GOAL:
             topple(target, d)
             events.append({"kind": "topple", "anchor": target.pos,
+                            "from": from_anchor,
                             "type": pt.value, "dir": d, "z": z})
             queue.append((target.pos, d, z))
         elif pt == PieceType.PROTECTED:
             topple(target, d)
             events.append({"kind": "topple", "anchor": target.pos,
+                            "from": from_anchor,
                             "type": pt.value, "dir": d, "z": z,
                             "protected": True})
             game_over = True
@@ -162,6 +166,7 @@ def simulate_push(state: GameState, origin_anchor: Vec3,
         elif pt == PieceType.SPLITTER:
             topple(target, d)
             events.append({"kind": "topple", "anchor": target.pos,
+                            "from": from_anchor,
                             "type": pt.value, "dir": d, "z": z,
                             "split": True})
             for pd in perp_dirs(d):
@@ -170,6 +175,7 @@ def simulate_push(state: GameState, origin_anchor: Vec3,
             # Ramp activates; re-emerge at z+1
             topple(target, None)
             events.append({"kind": "ramp", "anchor": target.pos,
+                            "from": from_anchor,
                             "dir": d, "z_in": z, "z_out": z + 1})
             queue.append((target.pos, d, z + 1))
         else:

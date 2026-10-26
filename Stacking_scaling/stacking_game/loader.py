@@ -133,37 +133,34 @@ def load_puzzle_by_name(base_dir: str, size: str, puzzle_id: str) -> Optional[Le
     Returns:
         LevelSpec对象或None
     """
-    # 解析 puzzle_id: "puzzle_easy_001" -> difficulty="easy", number="001"
-    # 或者 "puzzle_001" -> 直接尝试作为完整名称
-    
-    # 移除 "puzzle_" 前缀（如果有）
-    if puzzle_id.startswith("puzzle_"):
-        puzzle_id = puzzle_id[7:]  # Remove "puzzle_" prefix
-    
-    # 尝试解析为 difficulty_number 格式
-    parts = puzzle_id.split("_")
-    if len(parts) >= 2:
-        difficulty = parts[0]  # e.g., "easy", "mid", "hard"
-        number = parts[1]      # e.g., "001", "002"
-        
-        # 构建新的路径格式: {size}/{difficulty}/{number}/{size}_{difficulty}_{number}.json
-        json_path = os.path.join(
-            base_dir,
-            size,
-            difficulty,
-            number,
-            f"{size}_{difficulty}_{number}.json"
-        )
-        
+    for json_path in _candidate_puzzle_paths(base_dir, size, puzzle_id):
         if os.path.exists(json_path):
             return load_puzzle_from_json(json_path)
-    
-    # 回退到旧格式（兼容性）
-    old_json_path = os.path.join(base_dir, size, puzzle_id, f"{puzzle_id}_{size}.json")
-    if os.path.exists(old_json_path):
-        return load_puzzle_from_json(old_json_path)
-    
     return None
+
+
+def _candidate_puzzle_paths(base_dir: str, size: str, puzzle_id: str) -> List[str]:
+    """All on-disk layouts a puzzle id may resolve to, most specific first.
+
+    - ``{size}/{difficulty}/{number}/{size}_{difficulty}_{number}.json``
+      for ids like ``puzzle_easy_001``
+    - ``{size}/puzzle_001/puzzle_001_{size}.json`` (puzzles_full_10 layout)
+    - ``{size}/001/001_{size}.json`` (prefix-less ids)
+
+    The second form used to be unreachable: the ``puzzle_`` prefix was
+    stripped before building the path, so ``puzzle_001`` never loaded and
+    callers silently got their fallback level.
+    """
+    bare = puzzle_id[len("puzzle_"):] if puzzle_id.startswith("puzzle_") else puzzle_id
+    paths: List[str] = []
+    parts = bare.split("_")
+    if len(parts) >= 2:
+        difficulty, number = parts[0], parts[1]
+        paths.append(os.path.join(base_dir, size, difficulty, number,
+                                  f"{size}_{difficulty}_{number}.json"))
+    for name in (f"puzzle_{bare}", bare):
+        paths.append(os.path.join(base_dir, size, name, f"{name}_{size}.json"))
+    return paths
 
 
 def create_game_state(level_spec: LevelSpec) -> GameState:

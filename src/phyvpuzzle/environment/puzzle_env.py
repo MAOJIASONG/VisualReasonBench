@@ -35,7 +35,7 @@ class PuzzleEnvironment(PhysicsEnvironment):
         
         return State(
             step=self.step_count,
-            objects=self.objects,
+            objects=self._snapshot_objects(),
             time_stamp=time.time(),
             metadata={
                 **(metadata or {}),

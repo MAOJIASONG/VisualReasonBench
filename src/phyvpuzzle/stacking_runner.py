@@ -153,12 +153,16 @@ def _apply_seed_overrides(config, seed: Optional[int]) -> None:
 
 def _apply_stacking_overrides(
     config,
-    level_index: int,
+    level_index: Optional[int],
     env_id: int,
     seed: Optional[int],
 ) -> None:
     if hasattr(config.environment, "env_id"):
         config.environment.env_id = env_id
+    if level_index is None:
+        # Per-config runs keep the puzzle the config itself names.
+        _apply_seed_overrides(config, seed)
+        return
     size, puzzle_id, _ = _parse_level_mapping(level_index)
     if hasattr(config.task, "puzzle_size"):
         config.task.puzzle_size = size
@@ -175,8 +179,8 @@ def _run_single_task(
     config_path: str,
     batch_id: int,
     run_id: int,
-    level_index: int,
-    env_id: int,
+    level_index: Optional[int] = None,
+    env_id: int = 0,
     seed: Optional[int] = None,
     level_log_dir: Optional[str] = None,
 ) -> TaskResult:
@@ -314,7 +318,7 @@ def run_parallel_kxk(
             for run_id in range(1, k + 1):
                 seed = seed_base + (batch_id * 1000 + run_id) if seed_base is not None else None
                 futures.append(
-                    executor.submit(_run_single_task, config_path, batch_id, run_id, seed)
+                    executor.submit(_run_single_task, config_path, batch_id, run_id, seed=seed)
                 )
             for future in as_completed(futures):
                 batch_results.append(future.result())
@@ -347,7 +351,7 @@ def run_parallel_difficulty_tasks(
             for run_id in range(1, runs_per_config + 1):
                 seed = seed_base + (config_index * 1000 + run_id) if seed_base is not None else None
                 futures.append(
-                    executor.submit(_run_single_task, config_path, 1, run_id, seed)
+                    executor.submit(_run_single_task, config_path, 1, run_id, seed=seed)
                 )
         for future in as_completed(futures):
             all_results.append(future.result())

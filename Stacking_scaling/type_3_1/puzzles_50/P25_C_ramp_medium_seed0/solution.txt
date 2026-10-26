@@ -1,17 +1,17 @@
 P25_C_ramp_medium
 grid: (6, 4, 4)
-fixed: [('D', (6, 3, 1)), ('G', (2, 3, 1)), ('P', (3, 2, 1))]
-inventory: { D:3 }
+fixed: [('D', (1, 2, 1)), ('R', (5, 2, 1)), ('G', (5, 2, 2)), ('P', (3, 1, 1))]
+inventory: { D:2, R:1 }
 push_budget: 1
-patches: [('D', [5, 3, 1]), ('D', [4, 3, 1]), ('D', [3, 3, 1])]
-pushes:  [([6, 3, 1], '-x')]
-origin:  [6, 3, 1] dir=-x
-skeleton_len: 5  fixed=3  patches=3
+patches: [('D', [2, 2, 1]), ('D', [3, 2, 1]), ('R', [4, 2, 1])]
+pushes:  [([1, 2, 1], '+x')]
+origin:  [1, 2, 1] dir=+x
+skeleton_len: 6  fixed=4  patches=3
 
 plan:
-  01: ('place', <PieceType.DOMINO: 'D'>, (5, 3, 1))
-  02: ('place', <PieceType.DOMINO: 'D'>, (4, 3, 1))
-  03: ('place', <PieceType.DOMINO: 'D'>, (3, 3, 1))
+  01: ('place', <PieceType.DOMINO: 'D'>, (2, 2, 1))
+  02: ('place', <PieceType.DOMINO: 'D'>, (3, 2, 1))
+  03: ('place', <PieceType.RAMP: 'R'>, (4, 2, 1))
   04: ('submit_placement',)
-  05: ('push', (6, 3, 1), '-x')
+  05: ('push', (1, 2, 1), '+x')
   06: ('submit',)

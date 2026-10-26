@@ -12,6 +12,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
+import logging
+
 from PIL import Image, ImageDraw
 
 from phyvpuzzle.core import (
@@ -21,6 +23,9 @@ from phyvpuzzle.core import (
     register_environment_config,
 )
 from phyvpuzzle.core.base import Action, Observation, ObjectInfo, State
+from phyvpuzzle.utils.multi_view_renderer import MultiViewRenderer
+
+logger = logging.getLogger(__name__)
 
 
 @register_environment_config("luban")
@@ -322,43 +327,72 @@ class LubanEnvironment(BaseEnvironment):
     def _blank_image(self) -> Image.Image:
         return Image.new("RGB", (self.config.render_width, self.config.render_height), color="black")
 
+    # Unity writes one screenshot per camera; these three give front, side
+    # and top-down coverage of the lock.
+    CAPTURE_VIEWS = (1, 3, 5)
+
     def _capture_and_compose(self) -> Image.Image:
-        """Capture Unity screenshots and compose viewpoints 1/3/5."""
+        """Capture Unity screenshots and tile viewpoints 1/3/5 side by side.
+
+        Missing or unreadable screenshots are logged (they used to become
+        silent black tiles) and drawn as a labelled placeholder.  Tiles are
+        scaled to a common height and labelled with a legible font.
+        """
         result = self._send_command("capture")
         if result.get("status") != "success":
+            logger.warning("Luban capture failed: %s", result.get("message"))
             return self._blank_image()
 
         data = result.get("data", {}) or {}
-        path_str = data.get("screenshot_path", "")
-        paths = [p for p in path_str.split("|") if p]
+        paths = [p for p in str(data.get("screenshot_path", "")).split("|") if p]
         if not paths:
+            logger.warning("Luban capture returned no screenshot paths")
             return self._blank_image()
 
-        target_indices = [1, 3, 5]
         tiles: List[Image.Image] = []
-        for idx in target_indices:
+        for idx in self.CAPTURE_VIEWS:
+            img = None
             if idx < len(paths) and os.path.exists(paths[idx]):
                 try:
-                    tiles.append(Image.open(paths[idx]).convert("RGB"))
-                    continue
-                except Exception:
-                    pass
-            tiles.append(self._blank_image())
+                    img = Image.open(paths[idx]).convert("RGB")
+                except Exception as exc:
+                    logger.warning("Unreadable Luban screenshot %s: %s", paths[idx], exc)
+            else:
+                logger.warning("Luban screenshot for view %d missing (%d paths returned)",
+                               idx, len(paths))
+            tiles.append(img)
 
-        widths = [img.width for img in tiles]
-        heights = [img.height for img in tiles]
-        total_width = sum(widths)
-        max_height = max(heights) if heights else self.config.render_height
-        canvas = Image.new("RGB", (total_width, max_height), color="black")
-
+        real = [t for t in tiles if t is not None]
+        size = ((real[0].width, max(t.height for t in real)) if real else
+                (self.config.render_width, self.config.render_height))
+        tiles = [t if t is not None else self._missing_tile(size) for t in tiles]
+        height = max(t.height for t in tiles)
+        tiles = [t if t.height == height else
+                 t.resize((max(1, round(t.width * height / t.height)), height))
+                 for t in tiles]
+        gap = 4
+        canvas = Image.new("RGB", (sum(t.width for t in tiles) + gap * (len(tiles) - 1), height),
+                           color=(60, 60, 60))
+        draw = ImageDraw.Draw(canvas)
+        font = MultiViewRenderer._label_font(max(14, height // 24))
         x_offset = 0
-        for view_idx, img in enumerate(tiles):
+        for view_idx, img in zip(self.CAPTURE_VIEWS, tiles):
             canvas.paste(img, (x_offset, 0))
-            draw = ImageDraw.Draw(canvas)
-            draw.text((x_offset + 8, 8), f"viewpoint {view_idx}", fill=(255, 255, 255))
-            x_offset += img.width
-
+            label = f"VIEW {view_idx}"
+            box = draw.textbbox((0, 0), label, font=font)
+            w, h = box[2] - box[0], box[3] - box[1]
+            draw.rectangle([x_offset + 6, 6, x_offset + 16 + w, 16 + h],
+                           fill=(30, 30, 30), outline="white")
+            draw.text((x_offset + 11 - box[0], 11 - box[1]), label, fill="white", font=font)
+            x_offset += img.width + gap
         return canvas
+
+    def _missing_tile(self, size) -> Image.Image:
+        tile = Image.new("RGB", size, color="black")
+        font = MultiViewRenderer._label_font(max(14, size[1] // 20))
+        ImageDraw.Draw(tile).text((12, size[1] // 2), "screenshot unavailable",
+                                  fill=(220, 80, 80), font=font)
+        return tile
 
     def _wait_until_stable(self) -> int:
         """Unity environment handles physics internally; no wait needed."""

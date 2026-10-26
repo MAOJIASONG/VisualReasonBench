@@ -22,14 +22,14 @@ from typing import Dict, List, Optional, Tuple
 
 if __package__ in (None, ""):
     sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    from type_3_1.generator import generate_level
+    from type_3_1.generator import generate_level, level_has_features
     from type_3_1.game_core import init_state
     from type_3_1.loader import save_level_to_json
     from type_3_1.mechanics import step_place, step_push, submit, submit_placement
     from type_3_1.solver import solve
     from type_3_1.visualizer_plotly import render_state_pair
 else:
-    from .generator import generate_level
+    from .generator import generate_level, level_has_features
     from .game_core import init_state
     from .loader import save_level_to_json
     from .mechanics import step_place, step_push, submit, submit_placement
@@ -99,11 +99,21 @@ def _make_plan() -> List[Tuple[str, str, str, dict]]:
     return plan
 
 
-def _find_seed(kwargs: dict, max_seed: int = 300) -> Optional[int]:
-    for s in range(max_seed):
-        r = generate_level(seed=s, max_attempts=60, **kwargs)
-        if r is not None:
-            return s
+def _find_seed(kwargs: dict, used: set, max_seed: int = 300
+               ) -> Optional[int]:
+    """First seed that generates a level with the category's features and
+    has not already been used for an identical config (several slots in a
+    tier share a config, which previously produced duplicate puzzles).
+    Strict feature matching first; relaxed only if no seed qualifies."""
+    key = repr(sorted(kwargs.items()))
+    for strict in (True, False):
+        for s in range(max_seed):
+            if (key, s) in used:
+                continue
+            r = generate_level(seed=s, max_attempts=60, **kwargs)
+            if r is not None and level_has_features(*r, strict=strict, **kwargs):
+                used.add((key, s))
+                return s
     return None
 
 
@@ -155,11 +165,12 @@ def main():
         print(f"  {c}: {n}")
 
     summary_rows: List[dict] = []
+    used_seeds: set = set()
     t_all = time.time()
     for i, (label, cat, diff, kwargs) in enumerate(plan, 1):
         t0 = time.time()
         print(f"\n=== [{i:2d}/{len(plan)}] {label}  cat={cat}  diff={diff}")
-        seed = _find_seed(kwargs)
+        seed = _find_seed(kwargs, used_seeds)
         if seed is None:
             print("  !! no seed found")
             summary_rows.append({"label": label, "cat": cat, "diff": diff,

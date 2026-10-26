@@ -8,6 +8,7 @@ This environment wraps the discrete polycube stacking game from
 from __future__ import annotations
 
 import io
+import logging
 import os
 import sys
 from dataclasses import dataclass
@@ -64,6 +65,28 @@ def _ensure_stacking_available() -> None:
         ) from STACKING_IMPORT_ERROR
 
 
+REPO_ROOT = Path(__file__).resolve().parents[3]
+
+
+def resolve_puzzle_dir(puzzle_dir: str) -> Path:
+    """Relative puzzle dirs are resolved against the repo root, not the CWD,
+    so configs work no matter where the runner is launched from."""
+    path = Path(puzzle_dir)
+    return path if path.is_absolute() else REPO_ROOT / path
+
+
+def find_puzzle_file(puzzle_dir: str, size: str, puzzle_id: str) -> Optional[Path]:
+    """Path of the JSON for (size, puzzle_id) under any supported layout."""
+    _ensure_stacking_available()
+    from loader import _candidate_puzzle_paths  # type: ignore
+
+    for candidate in _candidate_puzzle_paths(str(resolve_puzzle_dir(puzzle_dir)),
+                                             size, puzzle_id):
+        if os.path.exists(candidate):
+            return Path(candidate)
+    return None
+
+
 def _vec_center(cells: List[Vec3]) -> Tuple[float, float, float]:
     """Compute centroid of a voxel set (1-based coordinates)."""
     if not cells:
@@ -93,11 +116,13 @@ class StackingGameConfig(EnvironmentConfig):
     init_spacing: int = 2
     init_seed: Optional[int] = None
     render_unplaced: bool = True
+    # Use the built-in 2-piece demo when the requested puzzle is missing.
+    # Off by default: silently swapping the puzzle corrupts evaluations.
+    allow_fallback_level: bool = False
 
     def __post_init__(self) -> None:
         super().__post_init__()
-        if not Path(self.puzzle_dir).is_absolute():
-            self.puzzle_dir = str(Path(self.puzzle_dir).resolve())
+        self.puzzle_dir = str(resolve_puzzle_dir(self.puzzle_dir))
 
 
 @register_environment("stacking_game")
@@ -164,7 +189,9 @@ class StackingGameEnvironment(BaseEnvironment):
             img = Image.open(buf).convert("RGB")
             plt.close(fig)
             return img
-        except Exception as exc:  # pragma: no cover - visualization fallback
+        except Exception:  # pragma: no cover - visualization fallback
+            logging.getLogger(__name__).exception(
+                "stacking_game render failed; returning a red placeholder image")
             return Image.new(
                 "RGB",
                 (self.config.render_width, self.config.render_height),
@@ -254,6 +281,18 @@ class StackingGameEnvironment(BaseEnvironment):
         self._used_fallback = False
         spec = load_puzzle_by_name(self.config.puzzle_dir, self.current_size, self.current_puzzle_id)
         if not spec:
+            if not self.config.allow_fallback_level:
+                available = sorted(p.name for p in Path(self.config.puzzle_dir).iterdir()) \
+                    if Path(self.config.puzzle_dir).is_dir() else []
+                raise FileNotFoundError(
+                    f"Puzzle {self.current_size}/{self.current_puzzle_id} not found under "
+                    f"{self.config.puzzle_dir} (exists: {Path(self.config.puzzle_dir).is_dir()}, "
+                    f"sizes there: {available}). Fix environment.puzzle_dir or set "
+                    f"environment.allow_fallback_level: true to use the 2x2x2 demo level."
+                )
+            logging.getLogger(__name__).warning(
+                "Puzzle %s/%s not found under %s; using the built-in demo level.",
+                self.current_size, self.current_puzzle_id, self.config.puzzle_dir)
             spec = self._create_fallback_level()
             self._used_fallback = True
         self.game_state = create_game_state(spec)

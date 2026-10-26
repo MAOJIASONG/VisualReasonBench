@@ -6,6 +6,7 @@ environment variables, and provides typed configuration objects.
 """
 
 import os
+from enum import Enum
 import yaml
 from typing import Any, Dict, Optional, List, Tuple
 from dataclasses import dataclass, field
@@ -73,8 +74,9 @@ class AgentConfig:
         if self.base_url is None:
             self.base_url = os.getenv("OPENAI_BASE_URL", "https://api.openai.com/v1")
             
-        # Validate API key
-        if not self.api_key:
+        # Only API-backed agents/judges need credentials (human and local
+        # transformers models do not).
+        if self.type == "openai" and not self.api_key:
             raise ValueError("api_key must be a non-empty string")
         if not self.base_url:
             raise ValueError("base_url must be a non-empty string")
@@ -103,8 +105,9 @@ class JudgementConfig:
         if self.base_url is None:
             self.base_url = os.getenv("OPENAI_BASE_URL", "https://api.openai.com/v1")
             
-        # Validate API key
-        if not self.api_key:
+        # Only API-backed agents/judges need credentials (human and local
+        # transformers models do not).
+        if self.type == "openai" and not self.api_key:
             raise ValueError("api_key must be a non-empty string")
         if not self.base_url:
             raise ValueError("base_url must be a non-empty string")
@@ -223,7 +226,7 @@ class EnvironmentConfig:
     """Configuration for physics environment."""
     type: str
     gui: bool = False
-    urdf_local_path: str = str(Path(__file__).resolve().parent / "environment" / "phobos_models")
+    urdf_local_path: str = str(Path(__file__).resolve().parent.parent / "environment" / "phobos_models")
     table_position: Tuple[float, float, float] = (0, 0, 0.4)
     real_time: bool = False
     gravity: float = -9.81
@@ -231,6 +234,9 @@ class EnvironmentConfig:
     render_width: int = 512
     render_height: int = 512
     multi_view: bool = True
+    # Draw each object's id over it in the rendered views (ids are what the
+    # tools take as arguments).
+    render_object_labels: bool = True
     load_table: bool = False
     max_steps: int = 50
     max_settle_steps: int = 2000
@@ -254,7 +260,13 @@ class EnvironmentConfig:
         if not isinstance(self.urdf_local_path, str) or not self.urdf_local_path:
             raise ValueError("urdf_local_path must be a non-empty string")
         if not os.path.isabs(self.urdf_local_path):
-            self.urdf_local_path = os.path.abspath(self.urdf_local_path)
+            # Configs write repo-relative paths ("src/phyvpuzzle/..."); resolve
+            # them against the repo root unless they exist from the CWD, so
+            # runs started from another directory still find the models.
+            repo_root = Path(__file__).resolve().parents[3]
+            from_cwd = os.path.abspath(self.urdf_local_path)
+            from_repo = str(repo_root / self.urdf_local_path)
+            self.urdf_local_path = from_cwd if os.path.exists(from_cwd) or not os.path.exists(from_repo) else from_repo
         if not isinstance(self.table_position, (tuple, list)) or len(self.table_position) != 3:
             raise ValueError("table_position must be a tuple of 3 floats")
         if not isinstance(self.time_step, (float, int)) or self.time_step <= 0:
@@ -331,8 +343,8 @@ class Config:
         agent_data = data.get("agent", {})
         agent = AgentConfig(**agent_data)
         
-        judgement_data = data.get("judgement", {})
-        judgement = JudgementConfig(**judgement_data)
+        judgement_data = data.get("judgement")
+        judgement = JudgementConfig(**judgement_data) if judgement_data else None
 
         task_data = data.get("task", {})
         task = TaskConfig.from_dict(task_data)
@@ -354,32 +366,44 @@ class Config:
         )
     
     def to_dict(self) -> Dict[str, Any]:
-        """Convert Config to dictionary."""
+        """Convert Config to a plain dictionary that load_config can read back.
+
+        Credentials are dropped (they would otherwise be copied from the
+        environment into the YAML in plain text), enums become their values
+        and tuples become lists, so yaml.safe_load accepts the dump.
+        """
+        def section(obj) -> Dict[str, Any]:
+            out = {}
+            for k, v in obj.__dict__.items():
+                if k in ("api_key", "base_url", "reward_api_key",
+                         "reward_base_url", "pairwise_api_key",
+                         "pairwise_base_url"):
+                    continue
+                out[k] = _plain(v)
+            return out
+
         result = {
-            "runner": {
-                **{k: v for k, v in self.runner.__dict__.items()}
-            },
-            "agent": {
-                **{k: v for k, v in self.agent.__dict__.items()}
-            },
-            "judgement": {
-                **{k: v for k, v in self.judgement.__dict__.items()}
-            },
-            "environment": {
-                **{k: v for k, v in self.environment.__dict__.items()}
-            },
-            "task": {
-                **{k: v for k, v in self.task.__dict__.items()}
-            },
+            "runner": section(self.runner),
+            "agent": section(self.agent),
+            "environment": section(self.environment),
+            "task": section(self.task),
         }
-        
-        # Add step selection config if present
+        if self.judgement:
+            result["judgement"] = section(self.judgement)
         if self.step_selection:
-            result["step_selection"] = {
-                **{k: v for k, v in self.step_selection.__dict__.items()}
-        }
-        
+            result["step_selection"] = section(self.step_selection)
         return result
+
+
+def _plain(value: Any) -> Any:
+    """Enums -> values, tuples -> lists (recursively) for safe YAML."""
+    if isinstance(value, Enum):
+        return value.value
+    if isinstance(value, (list, tuple)):
+        return [_plain(v) for v in value]
+    if isinstance(value, dict):
+        return {k: _plain(v) for k, v in value.items()}
+    return value
 
 
 def load_config(config_path: str) -> Config:
@@ -432,12 +456,14 @@ def create_default_config(output_path: str = "config.yaml") -> Config:
             experiment_name="default_experiment"
         ),
         agent=AgentConfig(
+            type="openai",
             model_name="gpt-4o"
         ),
         judgement=JudgementConfig(
+            type="openai",
             model_name="gpt-4o"
         ),
-        environment=EnvironmentConfig(),
+        environment=EnvironmentConfig(type="domino"),
         task=TaskConfig(
             name="domino_simple",
             type="domino",

@@ -162,9 +162,14 @@ def run_command(args) -> int:
         runner.setup()
         logger.log_result("Runner initialized")
         
-        # Execute task
+        # Execute task, then apply the task's success criteria (success is
+        # only decided during evaluation, so skipping it always reported ✗).
         result = runner.run_single_task()
-        
+        try:
+            runner.evaluate([result])
+        except Exception as e:
+            logger.log_warning(f"Evaluation failed, success unknown: {e}")
+
         # Display and handle results
         return _handle_run_results(result, logger)
         
@@ -408,55 +413,6 @@ def evaluate_command(args) -> int:
         
         logger.log_info("Results evaluation completed successfully")
         return 0
-            
-        logger.log_info(f"Found {len(result_files)} result files")
-        
-        # Load and evaluate results
-        all_task_results = []
-        
-        for result_file in result_files:
-            try:
-                with open(result_file, 'r') as f:
-                    data = json.load(f)
-                    
-                # Extract task results (implementation would depend on file format)
-                # This is a simplified version
-                logger.log_result(f"Loaded results from: {result_file.name}")
-                
-            except Exception as e:
-                logger.log_warning(f"Error loading {result_file.name}: {e}")
-                continue
-                
-        # Calculate metrics
-        calculator = MetricsCalculator()
-        
-        if all_task_results:
-            evaluation_result = calculator.calculate_comprehensive_metrics(all_task_results)
-            
-            # Display results
-            results_data = {
-                "Accuracy": evaluation_result.accuracy,
-                "Total Tasks": len(evaluation_result.task_results),
-                "Successful Tasks": sum(1 for r in evaluation_result.task_results if r.success)
-            }
-            
-            if evaluation_result.pass_at_k:
-                for k, rate in evaluation_result.pass_at_k.items():
-                    results_data[f"Pass@{k}"] = rate
-            
-            StatusDisplay.print_results(results_data, "Evaluation Results")
-                    
-            # Save results if output specified
-            if args.output:
-                logger.log_action("Saving evaluation results")
-                evaluator = BenchmarkEvaluator({})
-                evaluator.export_results_to_excel(evaluation_result, args.output)
-                logger.log_result(f"Results saved to: {args.output}")
-        else:
-            logger.log_warning("No task results to evaluate")
-            
-        return 0
-        
     except Exception as e:
         logger.log_error(f"Failed to evaluate results: {e}")
         return 1

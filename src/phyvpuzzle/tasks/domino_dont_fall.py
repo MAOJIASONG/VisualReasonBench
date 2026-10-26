@@ -2,6 +2,7 @@
 Domino task implementation for falling domino puzzles.
 """
 
+import math
 import os
 from dataclasses import dataclass
 from typing import List, Set, Tuple
@@ -12,6 +13,15 @@ from phyvpuzzle.core.base import (Action, ObjectInfo, TaskDifficulty,
                                   TaskResult, Observation)
 from phyvpuzzle.environment.domino_env import DominoEnvironment, p
 from phyvpuzzle.tasks.base_task import PhysicsTask
+
+# One distinct colour per domino (in arrangement order) so the agent can tell
+# them apart in the rendered views.
+DOMINO_COLORS = [
+    [0.90, 0.10, 0.29, 1.0], [0.24, 0.71, 0.29, 1.0], [0.26, 0.39, 0.85, 1.0],
+    [0.96, 0.51, 0.19, 1.0], [0.57, 0.12, 0.71, 1.0], [0.26, 0.83, 0.96, 1.0],
+    [0.94, 0.20, 0.90, 1.0], [0.60, 0.39, 0.14, 1.0], [0.50, 0.50, 0.00, 1.0],
+    [0.27, 0.60, 0.56, 1.0],
+]
 
 
 @register_task_config("domino_dont_fall")
@@ -71,7 +81,11 @@ class DominoDontFallTask(PhysicsTask):
         # Load available domino URDF files
         available_dominoes = []
         if os.path.exists(domino_base_path):
-            for item in os.listdir(domino_base_path):
+            # Natural sort (Domino_2 before Domino_10) so the selected models
+            # are deterministic; os.listdir order is filesystem-dependent.
+            items = sorted(os.listdir(domino_base_path),
+                           key=lambda n: (len(n), n))
+            for item in items:
                 domino_dir = os.path.join(domino_base_path, item)
                 urdf_path = os.path.join(domino_dir, "urdf", f"{item}.urdf")
                 if os.path.isdir(domino_dir) and os.path.exists(urdf_path):
@@ -156,32 +170,84 @@ class DominoDontFallTask(PhysicsTask):
             ))
 
     def _arrange_dominoes(self) -> None:
-        """Arrange dominoes according to the specified pattern."""
-        positions = self._calculate_domino_positions()
-        
-        for i, obj in enumerate(self.environment.dominoes):
-            if i < len(positions):
-                pos, orient = positions[i]
+        """Arrange dominoes according to the specified pattern.
 
-                # Set domino position and orientation
-                p.resetBasePositionAndOrientation(obj.object_id, pos, orient)
-                p.resetBaseVelocity(obj.object_id, [0, 0, 0], [0, 0, 0])
-                
-                # Update object info
-                obj.position = pos
-                obj.orientation = orient
+        The Phobos-exported URDFs bake a per-model rotation into their
+        collision/visual frames (e.g. Domino_10 is yawed by -1.51 rad) and
+        are thin along their local y axis, while the patterns below assume a
+        domino that is thin along x (like the primitive fallback).  We undo
+        the baked rotation, align the thin axis with x, and stand every
+        domino on the ground using its real height; previously the slabs
+        ended up crossing each other.
+        """
+        positions = self._calculate_domino_positions()
+
+        for i, obj in enumerate(self.environment.dominoes):
+            if i >= len(positions):
+                break
+            pos, orient = positions[i]
+            dims, local_orn = self._domino_geometry(obj.object_id)
+            align = [0, 0, 0, 1]
+            if dims[1] < dims[0]:
+                align = p.getQuaternionFromEuler([0, 0, math.pi / 2])
+            _, inv_local = p.invertTransform([0, 0, 0], local_orn)
+            _, orn = p.multiplyTransforms([0, 0, 0], orient, [0, 0, 0], align)
+            _, orn = p.multiplyTransforms([0, 0, 0], orn, [0, 0, 0], inv_local)
+            pos = [pos[0], pos[1], self._ground_height() + dims[2] / 2 + 0.001]
+
+            p.resetBasePositionAndOrientation(obj.object_id, pos, orn)
+            p.resetBaseVelocity(obj.object_id, [0, 0, 0], [0, 0, 0])
+            p.changeVisualShape(obj.object_id, -1,
+                                rgbaColor=DOMINO_COLORS[i % len(DOMINO_COLORS)])
+            # add_object gives URDF bodies the heavy soft-collision damping
+            # meant to settle puzzle pieces; a domino chain needs to keep its
+            # momentum, so use the same light damping as the primitive path.
+            p.changeDynamics(obj.object_id, -1, linearDamping=0.04,
+                             angularDamping=0.04)
+            obj.position = list(pos)
+            obj.orientation = list(orn)
 
         # Wait for dominoes to settle
         for _ in range(5):
             p.stepSimulation()
-                
+
         print(f"Arranged {len(positions)} dominoes in {self.config.arrangement_pattern} pattern")
-        
+
+    def _ground_height(self) -> float:
+        """Top of the table when one is loaded, otherwise the floor (z=0)."""
+        if self.environment.config.load_table:
+            return self.environment.config.table_position[2] + 0.02
+        return 0.0
+
+    def _domino_geometry(self, body_id: int):
+        """(full box extents, local frame orientation) of a domino's collision
+        shape; falls back to the configured primitive size."""
+        try:
+            shape = p.getCollisionShapeData(body_id, -1)[0]
+            if shape[2] == p.GEOM_BOX:
+                return list(shape[3]), list(shape[6])
+        except Exception:
+            pass
+        return [0.02, 0.04, self.config.domino_height], [0, 0, 0, 1]
+
+    def _effective_spacing(self) -> float:
+        """domino_spacing clamped to 0.3-0.7x the real domino height.
+
+        Outside that band a chain cannot propagate: too close and the
+        dominoes jam leaning on each other (the URDF slabs are 0.5 m tall vs
+        the default 0.08 m spacing), too far and a falling domino never
+        reaches the next one.
+        """
+        heights = [self._domino_geometry(o.object_id)[0][2]
+                   for o in self.environment.dominoes]
+        height = max(heights) if heights else self.config.domino_height
+        return min(max(self.config.domino_spacing, 0.3 * height), 0.7 * height)
+
     def _calculate_domino_positions(self) -> List[Tuple[List[float], List[float]]]:
         """Calculate positions and orientations for dominoes based on arrangement pattern."""
         positions = []
-        spacing = self.config.domino_spacing
-        table_height = self.environment.config.table_position[2] + 0.02  # Slightly above table
+        spacing = self._effective_spacing()
+        table_height = self._ground_height()
         
         if self.config.arrangement_pattern == "line":
             # Simple line arrangement

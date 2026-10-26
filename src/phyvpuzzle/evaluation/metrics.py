@@ -61,8 +61,45 @@ class MetricsCalculator:
         if not task_results:
             return {k: 0.0 for k in k_values}
 
-        accuracy = self.calculate_accuracy(task_results)
-        return {k: accuracy for k in k_values}
+        # Group repeated runs of the same task and use the unbiased estimator
+        # pass@k = 1 - C(n-c, k) / C(n, k), averaged over tasks (Chen et al.,
+        # 2021).  Previously every k returned plain accuracy.  A task with
+        # fewer than k runs counts as solved if any of its runs succeeded.
+        groups: Dict[str, List[bool]] = defaultdict(list)
+        for result in task_results:
+            groups[self._task_key(result)].append(bool(result.success))
+
+        out: Dict[int, float] = {}
+        for k in k_values:
+            scores = []
+            for outcomes in groups.values():
+                n, c = len(outcomes), sum(outcomes)
+                if c == 0:
+                    scores.append(0.0)
+                elif n - c < k:
+                    scores.append(1.0)
+                else:
+                    scores.append(1.0 - float(np.prod(1.0 - k / np.arange(n - c + 1, n + 1))))
+            out[k] = float(np.mean(scores))
+        return out
+
+    @staticmethod
+    def _task_key(result: TaskResult) -> str:
+        """Identity of the underlying task, shared by repeated runs."""
+        meta = result.metadata or {}
+        return str(meta.get("task_key") or
+                   f"{result.task_type}:{meta.get('difficulty', '')}")
+
+    @staticmethod
+    def _is_reset_step(step) -> bool:
+        """The runner prepends a synthetic 'reset' entry to each trajectory."""
+        actions = step.get("actions", []) if isinstance(step, dict) else [step[0]]
+        if not actions:
+            return False
+        first = actions[0]
+        name = first.action_type if hasattr(first, "action_type") else (
+            first.get("action_type") if isinstance(first, dict) else None)
+        return name == "reset"
 
     def calculate_avg_at_k(self, task_results: List[TaskResult], k_values: List[int] = None) -> Dict[int, float]:
         """
@@ -81,8 +118,34 @@ class MetricsCalculator:
         if not task_results:
             return {k: 0.0 for k in k_values}
 
-        accuracy = self.calculate_accuracy(task_results)
-        return {k: accuracy for k in k_values}
+        # Group repeated runs of the same task and use the unbiased estimator
+        # pass@k = 1 - C(n-c, k) / C(n, k), averaged over tasks (Chen et al.,
+        # 2021).  Previously every k returned plain accuracy.  A task with
+        # fewer than k runs counts as solved if any of its runs succeeded.
+        groups: Dict[str, List[bool]] = defaultdict(list)
+        for result in task_results:
+            groups[self._task_key(result)].append(bool(result.success))
+
+        out: Dict[int, float] = {}
+        for k in k_values:
+            scores = []
+            for outcomes in groups.values():
+                n, c = len(outcomes), sum(outcomes)
+                if c == 0:
+                    scores.append(0.0)
+                elif n - c < k:
+                    scores.append(1.0)
+                else:
+                    scores.append(1.0 - float(np.prod(1.0 - k / np.arange(n - c + 1, n + 1))))
+            out[k] = float(np.mean(scores))
+        return out
+
+    @staticmethod
+    def _task_key(result: TaskResult) -> str:
+        """Identity of the underlying task, shared by repeated runs."""
+        meta = result.metadata or {}
+        return str(meta.get("task_key") or
+                   f"{result.task_type}:{meta.get('difficulty', '')}")
         
     def calculate_distance_to_optimal(self, task_results: List[TaskResult]) -> float:
         """
@@ -308,8 +371,10 @@ class MetricsCalculator:
         # Analyze first actions (support both old and new formats)
         first_actions = defaultdict(int)
         for result in task_results:
-            if result.trajectory:
-                first_step = result.trajectory[0]
+            steps = [st for st in result.trajectory
+                     if not self._is_reset_step(st)] if result.trajectory else []
+            if steps:
+                first_step = steps[0]
                 
                 if isinstance(first_step, dict):
                     # New format: {"response": str, "actions": List[Action], "observations": List[Observation]}
@@ -335,7 +400,8 @@ class MetricsCalculator:
         failure_points = defaultdict(int)
         
         for result in failed_results:
-            failure_step = len(result.trajectory)
+            failure_step = sum(1 for st in result.trajectory
+                               if not self._is_reset_step(st))
             failure_points[f"step_{failure_step}"] += 1
             
         if failed_results:

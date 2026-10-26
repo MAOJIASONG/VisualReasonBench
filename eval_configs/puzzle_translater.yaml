@@ -20,7 +20,7 @@ agent:
   type: "openai"
   model_name: "gpt-5-mini"
   # API密钥和基础URL从环境变量加载（.env文件或系统导出）
-  api_key: "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"
+  api_key: null  # read from OPENAI_API_KEY (.env or environment)
   base_url: "https://openrouter.ai/api/v1"
   temperature: 0.6
   max_tokens: 5000
@@ -30,7 +30,7 @@ agent:
 judgement:
   type: "openai"
   model_name: "gpt-4o-mini"
-  api_key: "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"
+  api_key: null  # read from OPENAI_API_KEY (.env or environment)
   base_url: "https://openrouter.ai/api/v1"
   temperature: 0.1
   max_tokens: 5000

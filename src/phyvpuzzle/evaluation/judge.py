@@ -33,7 +33,7 @@ class LLMJudge(BaseJudge):
                 self.tokenizer = tiktoken.get_encoding("o200k_base")
         elif config.type == "transformers":
             # For transformers, we expect a model and tokenizer to be provided in config
-            self.clinet = AutoModelForCausalLM.from_pretrained(config.model_name, torch_dtype="auto", device_map="auto")
+            self.client = AutoModelForCausalLM.from_pretrained(config.model_name, torch_dtype="auto", device_map="auto")
             self.tokenizer = AutoTokenizer.from_pretrained(config.model_name)
         else:
             raise ValueError(f"Unsupported judgement type: {config.type}")
@@ -135,10 +135,10 @@ Your response:"""
                 tokenize=False,
                 add_generation_prompt=True,
             )
-            model_inputs = self.tokenizer([text], return_tensors="pt").to(self.clinet.device)
-            generated_ids = self.clinet.generate(
+            model_inputs = self.tokenizer([text], return_tensors="pt").to(self.client.device)
+            generated_ids = self.client.generate(
                 **model_inputs,
-                max_length=self.max_tokens,
+                max_new_tokens=self.max_tokens,
                 temperature=self.temperature,
                 do_sample=True,
             )

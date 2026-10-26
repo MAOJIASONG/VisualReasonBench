@@ -39,13 +39,20 @@ class ExperimentLogger:
 
         # Handle image saving
         if "image" in log_entry and isinstance(log_entry["image"], Image.Image):
-            image_path = os.path.join(self.images_dir, f"step_{step}.png")
+            # Several tool calls can share a step number; never overwrite an
+            # earlier image of the same step.
+            image_name = f"step_{step}.png"
+            k = 1
+            while os.path.exists(os.path.join(self.images_dir, image_name)):
+                image_name = f"step_{step}_{k}.png"
+                k += 1
+            image_path = os.path.join(self.images_dir, image_name)
             log_entry["image"].save(image_path)
             log_entry["image_path"] = image_path
             del log_entry["image"]
-            
+
             if verbose:
-                print(f"  📷 Saved image: step_{step}.png")
+                print(f"  📷 Saved image: {image_name}")
         
         # Console output for different step types
         if verbose:
@@ -82,7 +89,8 @@ class ExperimentLogger:
         """Create a human-readable summary file."""
         total_steps = len([log for log in self.logs if log.get("step_type") in ["action", "response"]])
         actions_taken = len([log for log in self.logs if log.get("step_type") == "action"])
-        errors_occurred = len([log for log in self.logs if log.get("step_type") == "error"])
+        errors_occurred = len([log for log in self.logs
+                               if log.get("step_type") in ("error", "tool_error")])
         
         with open(summary_file, "w") as f:
             f.write(f"Experiment Summary: {self.experiment_name}\n")

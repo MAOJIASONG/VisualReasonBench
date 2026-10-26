@@ -13,7 +13,7 @@ import os
 import time
 from typing import Dict, List, Tuple
 
-from .generator import generate_level
+from .generator import generate_level, level_has_features
 from .game_core import init_state
 from .loader import save_level_to_json
 from .mechanics import step_place, step_push, submit, submit_placement
@@ -55,10 +55,11 @@ LEVELS: List[Tuple[str, Dict]] = [
 
 
 def _find_seed(kwargs: Dict, max_seed: int = 200) -> int:
-    for s in range(max_seed):
-        r = generate_level(seed=s, **kwargs)
-        if r is not None:
-            return s
+    for strict in (True, False):
+        for s in range(max_seed):
+            r = generate_level(seed=s, **kwargs)
+            if r is not None and level_has_features(*r, strict=strict, **kwargs):
+                return s
     return -1
 
 

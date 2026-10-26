@@ -2,6 +2,7 @@
 Base task implementation for PhyVPuzzle benchmarks.
 """
 
+import numpy as np
 from abc import abstractmethod
 from pathlib import Path
 from typing import Any, Dict, List, Tuple
