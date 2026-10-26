@@ -232,7 +232,13 @@ through the helpers in `chain_viz.py`, so all three share:
 - `x=… / y=… / z=…` cell labels on the edges facing each camera, matching
   the 1-based cell coordinates the actions use,
 - dashed drop lines + floor footprints under raised objects,
-- the `front` / `back` cameras, panel styling and PNG export.
+- the `front` / `back` cameras and a per-game theme (board colours,
+  background, accent),
+- the game-style frame from `chain_hud.py`: title bar with a
+  PLAYING / WIN / LOSE badge, STATUS card with progress bars, inventory
+  card, LEGEND card with a drawn icon for every piece type, and a rules
+  strip.  plotly renders only the 3D scene (transparent); PIL composes the
+  frame around it (1960 × 1540 px).
 
 Rendering needs `plotly<6` with `kaleido==0.2.1` (plotly 6+ requires
 kaleido>=1, which needs a separate Chrome install):

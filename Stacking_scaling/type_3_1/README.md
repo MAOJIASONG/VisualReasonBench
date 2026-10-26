@@ -125,8 +125,9 @@ type_3_1/
 | Cascade trail | steel-blue arrows along the true pulse edges (`from` → hit piece), so splitter branches show as branches |
 | Coordinates | `x=…` / `y=…` labels on the floor edges facing the camera, `z=…` on a vertical edge (shared `chain_viz`) |
 | Raised pieces | dashed drop line + floor footprint under every piece standing above z=1 |
-| Panels | STATUS (phase, pushes, goals / protected toppled, result) + INVENTORY + legend |
-| Canvas | 1400 × 1100 ×1.4, always frames the full grid |
+| Board | green-felt checkered board with a wooden rim (`chain_viz` theme `domino`) |
+| Frame | game-style frame from `chain_hud`: title bar with PLAYING / WIN / LOSE badge; STATUS card (phase, pushes, goals / protected toppled with progress bars), PATCH PIECES card (left / total), LEGEND card with a drawn icon per piece; one-line rules strip |
+| Canvas | 1960 × 1540 px, always frames the full grid |
 | Cameras | `front` + `back` via `render_state_pair` |
 
 ## Programmatic API

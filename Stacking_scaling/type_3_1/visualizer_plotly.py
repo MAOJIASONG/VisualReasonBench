@@ -30,6 +30,7 @@ import plotly.graph_objects as go
 _ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if _ROOT not in sys.path:
     sys.path.insert(0, _ROOT)
+import chain_hud as hud  # noqa: E402
 import chain_viz as cv  # noqa: E402
 
 from .game_core import (  # noqa: E402
@@ -327,8 +328,8 @@ def _scene_traces(state: GameState, view: str) -> List:
         else:
             _standing(mb, segs, p)
         raised.append(p.pos)
-    traces: List = cv.frame_traces(grid) + cv.coordinate_traces(grid, view)
-    traces += cv.drop_line_traces(raised)
+    traces: List = cv.scene_traces(grid, view, "domino")
+    traces += cv.drop_line_traces(raised, cv.drop_color("domino"))
     traces += mb.traces()
     for key, s in segs.items():
         color, _, width = key.partition("|")
@@ -338,50 +339,61 @@ def _scene_traces(state: GameState, view: str) -> List:
 
 
 # ---------------------------------------------------------------------------
-# Panels
+# HUD
 # ---------------------------------------------------------------------------
 
-def _inventory_html(state: GameState) -> str:
-    rem = state.remaining
-    start = state.spec.inventory
-    lines = ["<b>INVENTORY (patches)</b>"]
-    for pt, label, col in ((PieceType.DOMINO, "D domino", DOMINO_EDGE),
-                           (PieceType.RAMP, "R ramp", RAMP_EDGE)):
-        tot = start.get(pt, 0)
-        left = rem.get(pt, 0)
-        if tot == 0 and left == 0:
-            continue
-        lines.append(f"<span style='color:{col}'>■</span> <b>{label}</b>"
-                     f"   left {left}/{tot}")
-    if len(lines) == 1:
-        lines.append("<i>(no patches to place)</i>")
-    return "<br>".join(lines)
-
-
-def _status_html(state: GameState) -> Tuple[str, str]:
+def _hud(state: GameState, caption: str) -> "hud.Hud":
     anchors = state.anchors()
     goals = [p for p in anchors if p.type == PieceType.GOAL]
     prot = [p for p in anchors if p.type == PieceType.PROTECTED]
     term = state.terminal_code.value if state.terminal_code else None
-    color = cv.state_color(term)
-    return (f"<b>STATUS</b><br>"
-            f"phase: {state.phase.value}<br>"
-            f"pushes: {state.push_count} / {state.spec.push_budget}<br>"
-            f"goals toppled: {sum(p.toppled for p in goals)} / {len(goals)}<br>"
-            f"protected toppled: {sum(p.toppled for p in prot)} / {len(prot)}<br>"
-            f"<b>result: {term or '-'}</b>"), color
-
-
-def _legend_html() -> str:
-    return (
-        "<b>Domino Chain Reaction 3D</b><br>"
-        f"<span style='color:{DOMINO_EDGE}'>▮</span> D domino: falls straight on<br>"
-        f"<span style='color:{SPLITTER_CAP}'>✚</span> T splitter: sends 2 sideways pulses<br>"
-        f"<span style='color:{RAMP_EDGE}'>◢</span> R ramp: cascade continues one level up<br>"
-        f"<span style='color:{GOAL_EDGE}'>★</span> G gold goal: must be toppled<br>"
-        f"<span style='color:{PROT_BODY}'>✖</span> P red protected: must NOT be toppled<br>"
-        f"<span style='color:{CASCADE_LINE}'>➜</span> cascade path · flat piece = toppled (arrow = fall dir)<br>"
-        "<i>Phase 1: place inventory patches.  Phase 2: push one piece.</i>"
+    n_goal = sum(p.toppled for p in goals)
+    n_prot = sum(p.toppled for p in prot)
+    budget = max(1, state.spec.push_budget)
+    stats = [
+        hud.Stat(hud.icon_arrow("#8FB8FF"), "Phase", state.phase.value),
+        hud.Stat(hud.icon_slab(DOMINO_BODY, "pips"), "Pushes used",
+                 f"{state.push_count} / {state.spec.push_budget}",
+                 state.push_count / budget, "#8FB8FF"),
+        hud.Stat(hud.icon_slab(GOAL_BODY, "star", GOAL_STAR), "Goals toppled",
+                 f"{n_goal} / {len(goals)}",
+                 n_goal / max(1, len(goals)), "#F2C63A"),
+        hud.Stat(hud.icon_slab(PROT_BODY, "x"), "Protected toppled",
+                 f"{n_prot} / {len(prot)}",
+                 n_prot / max(1, len(prot)) if prot else 0.0,
+                 "#FF4D5E" if n_prot else "#2BD07A"),
+    ]
+    inventory = []
+    for pt, label, icon in ((PieceType.DOMINO, "Domino  D", hud.icon_slab(DOMINO_BODY, "pips")),
+                            (PieceType.RAMP, "Ramp  R", hud.icon_steps(RAMP_BODY))):
+        tot = state.spec.inventory.get(pt, 0)
+        if tot:
+            inventory.append(hud.Item(icon, label, state.remaining.get(pt, 0), tot))
+    legend = [
+        hud.LegendEntry(hud.icon_slab(DOMINO_BODY, "pips"), "D  Domino",
+                        "falls and knocks the next one"),
+        hud.LegendEntry(hud.icon_slab(SPLITTER_BODY, "cross", SPLITTER_CAP),
+                        "T  Splitter", "sends the wave both ways sideways"),
+        hud.LegendEntry(hud.icon_steps(RAMP_BODY), "R  Ramp",
+                        "wave continues one level up"),
+        hud.LegendEntry(hud.icon_slab(GOAL_BODY, "star", GOAL_STAR), "G  Gold goal",
+                        "topple every one to win"),
+        hud.LegendEntry(hud.icon_slab(PROT_BODY, "x"), "P  Protected",
+                        "toppling one loses the game"),
+        hud.LegendEntry(hud.icon_flat("#A39274"), "Toppled piece",
+                        "lies flat, arrow = fall direction"),
+        hud.LegendEntry(hud.icon_arrow(CASCADE_LINE), "Cascade path",
+                        "how the wave travelled"),
+    ]
+    return hud.Hud(
+        title="DOMINO CHAIN",
+        caption=caption,
+        result=cv.result_label(term),
+        stats=stats,
+        inventory=inventory,
+        inventory_title="PATCH PIECES",
+        legend=legend,
+        hint="Phase 1: place your patch pieces  •  Phase 2: push one domino and watch the chain",
     )
 
 
@@ -391,21 +403,11 @@ def _legend_html() -> str:
 
 def render_state(state: GameState, save_path: Optional[str],
                  title: Optional[str] = None,
-                 view: str = "front",
-                 width: int = 1400, height: int = 1100) -> go.Figure:
-    if title is None:
-        term = state.terminal_code.value if state.terminal_code else state.phase.value
-        title = f"Domino Chain 3D  |  {term}  |  view: {view}"
-    status, status_color = _status_html(state)
-    annotations = [
-        cv.panel(_legend_html(), 0.005, 0.005, "left", "bottom"),
-        cv.panel(status, 0.995, 0.995, "right", "top",
-                 border=status_color, color=status_color),
-        cv.panel(_inventory_html(state), 0.995, 0.80, "right", "top"),
-    ]
+                 view: str = "front") -> go.Figure:
+    caption = f"{title or state.phase.value}   ·   view: {view}"
     fig = go.Figure(data=_scene_traces(state, view))
-    return cv.finish_figure(fig, state.spec.grid_size, view, title,
-                            annotations, save_path, width, height)
+    return cv.render_game(fig, state.spec.grid_size, view, "domino",
+                          _hud(state, caption), save_path)
 
 
 def render_state_pair(state: GameState, save_dir: str, base_name: str,
