@@ -1,0 +1,19 @@
+P21_C_branch_easy
+grid: (5, 5, 4)
+entrances: [(4, 1, 1)]
+exits: [(1, 3, 2), (5, 2, 2)]
+obstacles: []
+inventory: {'L': 6, 'T': 1, 'I': 4}
+difficulty: {'n_solutions': 58, 'capped': False, 'min_pipes': 6, 'staircase_ok': False, 'n_portals': 3, 'plan_length': 10}
+
+plan (10 pieces):
+  01: L at (1, 2, 1) ends=+x,+z
+  02: T at (2, 2, 1) ends=+x,-x,+y
+  03: L at (2, 3, 1) ends=-y,+z
+  04: I at (3, 2, 1) ends=+x,-x
+  05: L at (4, 2, 1) ends=-x,-y
+  06: L at (1, 2, 2) ends=+x,-z
+  07: I at (2, 2, 2) ends=+x,-x
+  08: L at (2, 3, 2) ends=-x,-z
+  09: I at (3, 2, 2) ends=+x,-x
+  10: I at (4, 2, 2) ends=+x,-x

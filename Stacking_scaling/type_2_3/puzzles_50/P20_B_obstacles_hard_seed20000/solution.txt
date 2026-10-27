@@ -1,0 +1,17 @@
+P20_B_obstacles_hard
+grid: (6, 5, 4)
+entrances: [(1, 4, 1)]
+exits: [(6, 3, 3)]
+obstacles: [(5, 4, 3), (5, 2, 2), (2, 5, 1), (4, 4, 2)]
+inventory: {'S1': 1, 'L': 7, 'I': 1}
+difficulty: {'n_solutions': 2, 'capped': False, 'min_pipes': 7, 'staircase_ok': False, 'n_portals': 2, 'plan_length': 8}
+
+plan (8 pieces):
+  01: S1 at (5, 3, 1)
+  02: L at (2, 3, 1) ends=+x,+y
+  03: L at (2, 4, 1) ends=-x,-y
+  04: I at (3, 3, 1) ends=+x,-x
+  05: L at (4, 3, 1) ends=-x,+z
+  06: L at (4, 3, 2) ends=+x,-z
+  07: L at (5, 3, 2) ends=-x,+z
+  08: L at (5, 3, 3) ends=+x,-z

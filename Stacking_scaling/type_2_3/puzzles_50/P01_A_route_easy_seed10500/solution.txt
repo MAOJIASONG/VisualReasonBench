@@ -1,0 +1,14 @@
+P01_A_route_easy
+grid: (5, 4, 4)
+entrances: [(2, 1, 1)]
+exits: [(5, 3, 2)]
+obstacles: []
+inventory: {'L': 5, 'I': 1}
+difficulty: {'n_solutions': 2, 'capped': False, 'min_pipes': 5, 'staircase_ok': False, 'n_portals': 2, 'plan_length': 5}
+
+plan (5 pieces):
+  01: L at (2, 2, 1) ends=+x,-y
+  02: L at (3, 2, 1) ends=-x,+y
+  03: L at (3, 3, 1) ends=+x,-y
+  04: L at (4, 3, 1) ends=-x,+z
+  05: L at (4, 3, 2) ends=+x,-z

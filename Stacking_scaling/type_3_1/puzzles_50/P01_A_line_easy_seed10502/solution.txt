@@ -1,0 +1,7 @@
+P01_A_line_easy
+grid: (6, 5, 3)
+fixed: [('S', (1, 5, 1)), ('D', (2, 5, 1)), ('D', (4, 5, 1)), ('G', (5, 5, 1))]
+inventory: {'D': 1}
+patches: [('D', [3, 5, 1])]
+push:    START [1, 5, 1] dir=+x
+difficulty: {'n_solutions': 1, 'p_wavefill': 0.5, 'min_patches': 1, 'gaps': 1, 'decoy_gaps': 0, 'p_random': 0.0083, 'p_gapfill': 1.0}

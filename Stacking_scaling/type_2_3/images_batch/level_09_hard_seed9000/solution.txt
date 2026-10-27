@@ -1,0 +1,17 @@
+09_hard
+grid_size: (6, 5, 4)
+E: [(1, 3, 1)]
+X: [(4, 1, 2), (6, 4, 2)]
+obs: [(4, 3, 2), (5, 2, 1)]
+inventory: {'I': 2, 'L': 5, 'T': 1, 'S1': 1}
+meta: {'rules': 'v2', 'seed': 9000, 'attempt': 63, 'tier': 'hard', 'plan': [['I', [2, 3, 1], 0], ['I', [3, 3, 1], 0], ['L', [4, 2, 1], 8], ['T', [4, 3, 1], 3], ['L', [4, 4, 1], 1], ['L', [5, 4, 1], 6], ['L', [4, 2, 2], 11], ['L', [5, 4, 2], 5]], 'plan_length': 8, 'n_pipes': 8, 'n_supports': 0, 'difficulty': {'n_solutions': 3, 'capped': False, 'min_pipes': 8, 'staircase_ok': False, 'n_portals': 3, 'plan_length': 8}}
+
+plan (8 pieces):
+  step 1: I at (2, 3, 1)
+  step 2: I at (3, 3, 1)
+  step 3: L at (4, 2, 1)
+  step 4: T at (4, 3, 1)
+  step 5: L at (4, 4, 1)
+  step 6: L at (5, 4, 1)
+  step 7: L at (4, 2, 2)
+  step 8: L at (5, 4, 2)

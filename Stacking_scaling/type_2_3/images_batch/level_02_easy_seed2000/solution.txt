@@ -1,0 +1,16 @@
+02_easy
+grid_size: (5, 4, 4)
+E: [(3, 4, 1)]
+X: [(1, 2, 4)]
+obs: [(4, 3, 1)]
+inventory: {'S1': 1, 'L': 5, 'I': 2}
+meta: {'rules': 'v2', 'seed': 2000, 'attempt': 0, 'tier': 'easy', 'plan': [['S1', [2, 2, 1], 0], ['L', [2, 3, 1], 4], ['L', [3, 3, 1], 2], ['L', [2, 2, 2], 8], ['L', [2, 3, 2], 11], ['I', [2, 2, 3], 2], ['L', [2, 2, 4], 7]], 'plan_length': 7, 'n_pipes': 6, 'n_supports': 1, 'difficulty': {'n_solutions': 3, 'capped': False, 'min_pipes': 6, 'staircase_ok': True, 'n_portals': 2, 'plan_length': 7}}
+
+plan (7 pieces):
+  step 1: S1 at (2, 2, 1)
+  step 2: L at (2, 3, 1)
+  step 3: L at (3, 3, 1)
+  step 4: L at (2, 2, 2)
+  step 5: L at (2, 3, 2)
+  step 6: I at (2, 2, 3)
+  step 7: L at (2, 2, 4)

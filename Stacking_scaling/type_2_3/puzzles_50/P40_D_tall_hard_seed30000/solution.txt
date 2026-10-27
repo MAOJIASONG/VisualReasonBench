@@ -1,0 +1,18 @@
+P40_D_tall_hard
+grid: (5, 5, 5)
+entrances: [(2, 1, 1)]
+exits: [(5, 4, 3)]
+obstacles: [(3, 3, 3), (3, 2, 1), (3, 5, 2)]
+inventory: {'S1': 1, 'S2': 1, 'I': 2, 'L': 6}
+difficulty: {'n_solutions': 6, 'capped': False, 'min_pipes': 7, 'staircase_ok': False, 'n_portals': 2, 'plan_length': 9}
+
+plan (9 pieces):
+  01: S1 at (3, 4, 1)
+  02: S2 at (4, 4, 1)
+  03: I at (2, 2, 1) ends=+y,-y
+  04: L at (2, 3, 1) ends=+x,-y
+  05: L at (3, 3, 1) ends=-x,+z
+  06: L at (3, 3, 2) ends=+y,-z
+  07: L at (3, 4, 2) ends=-y,+z
+  08: L at (3, 4, 3) ends=+x,-z
+  09: I at (4, 4, 3) ends=+x,-x

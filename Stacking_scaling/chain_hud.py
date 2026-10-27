@@ -156,6 +156,9 @@ def icon_slab(color: str, mark: Optional[str] = None,
         elif mark == "cross":
             d.line([(cx - r * 1.5, top_y), (cx + r * 1.5, top_y)], fill=mc, width=4)
             d.line([(cx, top_y - r * 0.8), (cx, top_y + r * 0.8)], fill=mc, width=4)
+        elif mark == "dot":
+            d.ellipse([cx - r, top_y - r * 0.55, cx + r, top_y + r * 0.55],
+                      fill=mc)
         elif mark == "pips":
             for py in (0.35, 0.7):
                 for px in (-0.12, 0.12):

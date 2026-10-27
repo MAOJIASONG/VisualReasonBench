@@ -1,0 +1,7 @@
+P37_D_split_medium
+grid: (7, 6, 3)
+fixed: [('P', (1, 1, 1)), ('P', (1, 5, 1)), ('S', (3, 1, 1)), ('D', (3, 2, 1)), ('D', (3, 4, 1)), ('T', (3, 5, 1)), ('D', (4, 5, 1)), ('G', (7, 5, 1))]
+inventory: {'D': 3}
+patches: [('D', [3, 3, 1]), ('D', [5, 5, 1]), ('D', [6, 5, 1])]
+push:    START [3, 1, 1] dir=+y
+difficulty: {'n_solutions': 1, 'p_wavefill': 0.0833, 'min_patches': 3, 'gaps': 3, 'decoy_gaps': 2, 'p_random': 0.0, 'p_gapfill': 0.0}

@@ -1,0 +1,14 @@
+P33_D_tall_easy
+grid: (4, 4, 5)
+entrances: [(4, 3, 1)]
+exits: [(3, 1, 3)]
+obstacles: []
+inventory: {'S2': 1, 'L': 3, 'I': 2}
+difficulty: {'n_solutions': 2, 'capped': False, 'min_pipes': 4, 'staircase_ok': True, 'n_portals': 2, 'plan_length': 5}
+
+plan (5 pieces):
+  01: S2 at (3, 2, 1)
+  02: L at (3, 3, 1) ends=+x,+z
+  03: I at (3, 3, 2) ends=+z,-z
+  04: I at (3, 2, 3) ends=+y,-y
+  05: L at (3, 3, 3) ends=-y,-z

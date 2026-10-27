@@ -1,0 +1,20 @@
+P49_E_mixed_hard
+grid: (6, 5, 5)
+entrances: [(6, 2, 1)]
+exits: [(4, 1, 5), (1, 2, 3)]
+obstacles: [(5, 2, 5), (5, 2, 2), (3, 2, 4)]
+inventory: {'S1': 1, 'S2': 1, 'L': 4, 'I': 5, 'T': 1}
+difficulty: {'n_solutions': 4, 'capped': False, 'min_pipes': 9, 'staircase_ok': False, 'n_portals': 3, 'plan_length': 11}
+
+plan (11 pieces):
+  01: S1 at (3, 2, 1)
+  02: S2 at (2, 2, 1)
+  03: L at (4, 2, 1) ends=+x,+z
+  04: I at (5, 2, 1) ends=+x,-x
+  05: L at (3, 2, 2) ends=+x,+z
+  06: T at (4, 2, 2) ends=-x,+z,-z
+  07: I at (2, 2, 3) ends=+x,-x
+  08: L at (3, 2, 3) ends=-x,-z
+  09: I at (4, 2, 3) ends=+z,-z
+  10: I at (4, 2, 4) ends=+z,-z
+  11: L at (4, 2, 5) ends=-y,-z

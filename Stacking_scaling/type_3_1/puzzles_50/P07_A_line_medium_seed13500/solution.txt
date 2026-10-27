@@ -1,0 +1,7 @@
+P07_A_line_medium
+grid: (7, 5, 3)
+fixed: [('P', (1, 1, 1)), ('D', (1, 2, 1)), ('S', (1, 4, 1)), ('D', (3, 4, 1)), ('G', (5, 4, 1)), ('P', (7, 4, 1))]
+inventory: {'D': 2}
+patches: [('D', [2, 4, 1]), ('D', [4, 4, 1])]
+push:    START [1, 4, 1] dir=+x
+difficulty: {'n_solutions': 1, 'p_wavefill': 0.3333, 'min_patches': 2, 'gaps': 4, 'decoy_gaps': 2, 'p_random': 0.0033, 'p_gapfill': 0.0}

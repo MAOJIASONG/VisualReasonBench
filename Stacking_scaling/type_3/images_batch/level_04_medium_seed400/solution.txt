@@ -1,0 +1,12 @@
+04_medium
+grid_size: (5, 5, 4)
+sources:   [(4, 5, 1)]
+targets:   [(2, 2, 4), (5, 1, 2)]
+valves:    [(2, 5, 4), (4, 3, 2), (4, 5, 4), (5, 2, 1), (5, 4, 2)]
+protected: [(4, 2, 2), (5, 3, 4)]
+meta:      {'seed': 400, 'attempt': 7, 'generator': 'valve-tree-v3', 'tier': 'medium', 'network_cells': 22, 'min_valves_needed': 3, 'n_safe_subsets': 1, 'dangerous_valves': [[4, 3, 2], [4, 5, 4]], 'min_safe_example': [[2, 5, 4], [5, 2, 1], [5, 4, 2]], 'difficulty': {'n_valves': 5, 'min_plan': 3, 'n_min_sets': 1, 'n_win_sets': 1, 'prefilled': 0, 'traps': 2, 'nonlocal_traps': 1, 'p_random': 0.1, 'p_frontier': 0.1944, 'p_greedy': 0.5}}
+
+BFS plan (3 opens):
+  step 1: open (2, 5, 4)
+  step 2: open (5, 4, 2)
+  step 3: open (5, 2, 1)

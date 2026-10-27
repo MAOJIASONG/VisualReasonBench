@@ -1,0 +1,19 @@
+P22_C_branch_easy
+grid: (5, 5, 4)
+entrances: [(1, 2, 1)]
+exits: [(2, 5, 2), (4, 1, 2)]
+obstacles: []
+inventory: {'S1': 2, 'L': 6, 'I': 2, 'T': 1}
+difficulty: {'n_solutions': 40, 'capped': False, 'min_pipes': 7, 'staircase_ok': False, 'n_portals': 3, 'plan_length': 10}
+
+plan (10 pieces):
+  01: S1 at (2, 4, 1)
+  02: L at (2, 2, 1) ends=-x,+z
+  03: L at (2, 3, 1) ends=+x,+z
+  04: I at (3, 3, 1) ends=+x,-x
+  05: L at (4, 2, 1) ends=+y,+z
+  06: L at (4, 3, 1) ends=-x,-y
+  07: L at (2, 2, 2) ends=+y,-z
+  08: T at (2, 3, 2) ends=+y,-y,-z
+  09: I at (2, 4, 2) ends=+y,-y
+  10: L at (4, 2, 2) ends=-y,-z

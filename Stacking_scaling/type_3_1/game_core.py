@@ -1,26 +1,34 @@
 """
-Domino Chain Reaction 3D — Core data structures.
+Domino Chain Reaction 3D — Core data structures (rules v2).
 
-The puzzle has two phases:
+Two phases:
 
-  Phase PLACE: the player places K patch pieces from a bounded inventory
-    into a partial arrangement of pre-placed FIXED pieces (same physical
-    support rule as PipeFit: no thin air).  Free undo.
+  PLACE: put your K patch dominoes from the inventory into empty cells.
+    A domino stands on the ground (z=1) or on a grey STEP block.  Free undo.
 
-  Phase PUSH: the player selects up to K pushes.  Each push topples one
-    standing domino in a direction; cascade propagates through splitters
-    (T), ramps (R), goal (G), and protected (P) dominoes.
+  PUSH: push the green START domino in one of four directions.  It is the
+    only piece you may push, and you push it once.
+
+Cascade (v2, physical): a falling domino tips one cell forward and knocks
+over every standing piece whose body is in that next column at the faller's
+own height or one level higher (a domino is two cells tall).  So waves climb
+or descend one step automatically.  A STEP block stops the wave.
 
 Piece catalog:
-  D = 1x1x2 standing domino (basic)
-  T = 1x1x2 standing, splitter — cascade emits two orthogonal pulses on hit
-  R = 1x1x1 ramp — pulse re-emerges at z+1, same direction
-  G = 1x1x2 gold goal domino — toppling every G is the WIN condition
-  P = 1x1x2 red protected domino — toppling any P instantly LOSES
+  S = 1x1x2 green START domino (the only pushable piece)
+  D = 1x1x2 domino: falls forward, passes the wave on
+  T = 1x1x2 splitter: when hit, sends the wave out to BOTH sides
+      (left and right of the incoming direction), not straight on
+  G = 1x1x2 gold goal: topple every G to win
+  P = 1x1x2 red protected: toppling any P loses
+  B = 1x1x1 grey STEP block: holds a piece one level up; never falls
 
 Coordinate system: 1-indexed (x, y, z) with z pointing up.  A standing
-piece's pos is its base cell; it also occupies (x, y, z+1).  A ramp is
-a single cell.
+piece's pos is its base cell; it also occupies (x, y, z+1).
+
+Rules v1 (any standing piece could be pushed, a pulse only hit pieces
+whose base was at exactly its height, ramps lifted the pulse) allowed
+winning most levels by pushing the goal itself; see README.
 """
 
 from __future__ import annotations
@@ -80,16 +88,19 @@ def in_grid(pos: Vec3, grid_size: Vec3) -> bool:
 # ---------------------------------------------------------------------------
 
 class PieceType(Enum):
+    START = "S"        # 1x1x2 green starter -- the ONLY piece you may push
     DOMINO = "D"       # 1x1x2 basic standing
     SPLITTER = "T"     # 1x1x2 splitter (cross-cap)
-    RAMP = "R"         # 1x1x1 ramp (z transition)
     GOAL = "G"         # 1x1x2 gold — must be toppled
     PROTECTED = "P"    # 1x1x2 red — toppling it LOSES
+    BLOCK = "B"        # 1x1x1 inert step; raised pieces stand on it, the
+                       # wave stops at it and it never falls
+    RAMP = "R"         # legacy (rules v1 only); no longer generated
 
 
 def piece_is_standing(pt: PieceType) -> bool:
     """Standing pieces are tall (1x1x2) dominos."""
-    return pt in (PieceType.DOMINO, PieceType.SPLITTER,
+    return pt in (PieceType.START, PieceType.DOMINO, PieceType.SPLITTER,
                   PieceType.GOAL, PieceType.PROTECTED)
 
 
@@ -181,7 +192,8 @@ class ActionCode(Enum):
 
     # Push-phase
     NOT_STANDING = "NotStanding"
-    NOT_A_DOMINO = "NotADomino"         # tried to push a ramp
+    NOT_A_DOMINO = "NotADomino"         # tried to push something other than START
+    BAD_DIRECTION = "BadDirection"
     BUDGET_EXCEEDED = "BudgetExceeded"
 
     # Submit failures

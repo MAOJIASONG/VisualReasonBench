@@ -1,0 +1,20 @@
+P18_B_obstacles_hard
+grid: (6, 5, 4)
+entrances: [(6, 3, 1)]
+exits: [(1, 4, 3)]
+obstacles: [(3, 3, 2), (4, 3, 2), (5, 2, 2), (5, 2, 1)]
+inventory: {'S2': 4, 'L': 3, 'I': 5}
+difficulty: {'n_solutions': 6, 'capped': False, 'min_pipes': 7, 'staircase_ok': False, 'n_portals': 2, 'plan_length': 11}
+
+plan (11 pieces):
+  01: S2 at (3, 4, 1)
+  02: S2 at (5, 4, 1)
+  03: S2 at (2, 4, 1)
+  04: S2 at (4, 4, 1)
+  05: L at (5, 3, 1) ends=+x,+z
+  06: I at (5, 3, 2) ends=+z,-z
+  07: I at (2, 4, 3) ends=+x,-x
+  08: I at (3, 4, 3) ends=+x,-x
+  09: I at (4, 4, 3) ends=+x,-x
+  10: L at (5, 3, 3) ends=+y,-z
+  11: L at (5, 4, 3) ends=-x,-y

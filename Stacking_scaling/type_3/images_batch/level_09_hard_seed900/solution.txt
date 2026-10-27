@@ -1,0 +1,14 @@
+09_hard
+grid_size: (6, 5, 5)
+sources:   [(6, 3, 1)]
+targets:   [(3, 5, 4), (5, 5, 4)]
+valves:    [(1, 2, 1), (1, 3, 5), (1, 4, 2), (2, 3, 4), (3, 3, 1), (3, 5, 3), (5, 3, 1), (5, 3, 3)]
+protected: [(2, 4, 2), (5, 1, 4), (5, 4, 5)]
+meta:      {'seed': 900, 'attempt': 2, 'generator': 'valve-tree-v3', 'tier': 'hard', 'network_cells': 40, 'min_valves_needed': 5, 'n_safe_subsets': 1, 'dangerous_valves': [[1, 2, 1], [1, 3, 5], [1, 4, 2]], 'min_safe_example': [[2, 3, 4], [3, 3, 1], [3, 5, 3], [5, 3, 1], [5, 3, 3]], 'difficulty': {'n_valves': 8, 'min_plan': 5, 'n_min_sets': 1, 'n_win_sets': 1, 'prefilled': 0, 'traps': 3, 'nonlocal_traps': 2, 'p_random': 0.0179, 'p_frontier': 0.037, 'p_greedy': 0.1667}}
+
+BFS plan (5 opens):
+  step 1: open (5, 3, 1)
+  step 2: open (3, 3, 1)
+  step 3: open (2, 3, 4)
+  step 4: open (5, 3, 3)
+  step 5: open (3, 5, 3)

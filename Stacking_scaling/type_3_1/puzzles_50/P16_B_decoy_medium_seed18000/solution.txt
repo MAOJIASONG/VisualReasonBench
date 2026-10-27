@@ -1,0 +1,7 @@
+P16_B_decoy_medium
+grid: (7, 6, 3)
+fixed: [('G', (2, 4, 1)), ('P', (4, 1, 1)), ('D', (5, 4, 1)), ('D', (6, 4, 1)), ('P', (7, 1, 1)), ('D', (7, 2, 1)), ('S', (7, 4, 1)), ('P', (7, 6, 1))]
+inventory: {'D': 2}
+patches: [('D', [3, 4, 1]), ('D', [4, 4, 1])]
+push:    START [7, 4, 1] dir=-x
+difficulty: {'n_solutions': 1, 'p_wavefill': 0.3333, 'min_patches': 2, 'gaps': 2, 'decoy_gaps': 2, 'p_random': 0.0, 'p_gapfill': 0.0}

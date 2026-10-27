@@ -1,25 +1,18 @@
 """
-Domino Chain Reaction 3D — Placement + push mechanics.
+Domino Chain Reaction 3D — placement + push mechanics (rules v2).
 
 Phase PLACE:
-  step_place(state, piece_type, pos)        -> ActionResult
-  step_remove(state, pos)                   -> ActionResult
-  submit_placement(state)                   -> ActionResult  (transitions to PUSH)
-
+  step_place(state, PieceType.DOMINO, pos) -> ActionResult
+  step_remove(state, pos)                  -> ActionResult
+  submit_placement(state)                  -> ActionResult  (to PUSH; needs
+                                                             empty inventory)
 Phase PUSH:
-  step_push(state, anchor_pos, dir_name)    -> ActionResult  (runs cascade)
-  submit(state)                             -> ActionResult  (WIN / LOSE)
+  step_push(state, start_pos, dir_name)    -> ActionResult  (runs cascade;
+                                                             START only, once)
+  submit(state)                            -> ActionResult  (WIN / LOSE)
 
-Physical support rule at placement time (no building on thin air):
-  * RAMP at z=1:  OK.
-  * RAMP at z>1:  the cell directly below must be occupied by another
-                  piece (its top cell).
-  * Standing at z=1:  OK (base sits on ground).
-  * Standing at z>1:  the cell directly below its BASE must be the TOP
-                      cell of another piece (ramp top or standing piece's
-                      upper half).  I.e., piece at base-1 must extend up
-                      to base-1 (ramp) or cover base-1 via its upper cell
-                      (standing piece with anchor z-2 extending to z-1).
+Support rule: a domino stands on the ground (z=1) or directly on a grey
+STEP block.  Nothing stands on another domino.
 """
 
 from __future__ import annotations
@@ -34,8 +27,8 @@ from .game_core import (
 )
 
 
-# Only D and R are ever patch-able (placable/removable by the player).
-PATCHABLE_TYPES = (PieceType.DOMINO, PieceType.RAMP)
+# Patches are plain dominoes only.
+PATCHABLE_TYPES = (PieceType.DOMINO,)
 
 
 def _cell_free(state: GameState, cell: Vec3) -> ActionResult:
@@ -48,21 +41,12 @@ def _cell_free(state: GameState, cell: Vec3) -> ActionResult:
 
 def _has_physical_support(state: GameState, piece_type: PieceType,
                           pos: Vec3) -> bool:
-    """True iff the cell directly below this piece's base is ground or
-       the TOP cell of another already-placed piece."""
+    """True iff the piece stands on the ground or directly on a STEP."""
     x, y, z = pos
     if z == 1:
         return True
-    below = (x, y, z - 1)
-    if not in_grid(below, state.spec.grid_size):
-        return False
-    under = state.piece_at_cell(below)
-    if under is None:
-        return False
-    # `under` occupies `below`.  That cell must be `under`'s TOP cell,
-    # otherwise we'd be placing on the SIDE / base of a standing piece
-    # (not physically plausible).
-    return piece_top_cell(under.type, under.pos) == below
+    under = state.piece_at_cell((x, y, z - 1))
+    return under is not None and under.type == PieceType.BLOCK
 
 
 # ---------------------------------------------------------------------------
@@ -158,17 +142,18 @@ def step_push(state: GameState, anchor_pos: Vec3,
         return ActionResult(ActionCode.BUDGET_EXCEEDED,
                             f"budget {state.spec.push_budget} used up")
     if dir_name not in DIR_NAME_TO_VEC:
-        return ActionResult(ActionCode.INVALID_PIECE, f"bad dir {dir_name}")
+        return ActionResult(ActionCode.BAD_DIRECTION,
+                            f"bad direction {dir_name!r}; use +x, -x, +y or -y")
     piece = state.piece_at_cell(anchor_pos)
     if piece is None or piece.pos != anchor_pos:
         return ActionResult(ActionCode.NOT_STANDING,
                             f"no piece anchored @{anchor_pos}")
-    if piece_is_ramp(piece.type):
-        return ActionResult(ActionCode.NOT_A_DOMINO, "can't push a ramp")
-    if not piece_is_standing(piece.type) or piece.toppled:
-        return ActionResult(ActionCode.NOT_STANDING,
-                            f"{piece.type.value}@{piece.pos} not pushable")
-
+    if piece.type != PieceType.START:
+        return ActionResult(ActionCode.NOT_A_DOMINO,
+                            f"only the green START domino can be pushed "
+                            f"({piece.type.value}@{piece.pos} is not it)")
+    if piece.toppled:
+        return ActionResult(ActionCode.NOT_STANDING, "START already toppled")
     result = simulate_push(state, anchor_pos, dir_name)
     state.push_count += 1
     state.action_count += 1

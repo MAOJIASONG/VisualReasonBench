@@ -42,6 +42,8 @@ from .game_core import (  # noqa: E402
 # Palette
 # ---------------------------------------------------------------------------
 
+START_BODY     = "#36B865"    # green: the one piece you push
+BLOCK_BODY     = "#9AA1AB"    # grey stone step
 DOMINO_BODY    = "#F2E7D2"    # warm ivory
 DOMINO_EDGE    = "#3B3228"
 DOMINO_PIPS    = "#1C1611"
@@ -62,12 +64,14 @@ FALL_ARROW     = "#FFFFFF"
 
 # Toppled pieces keep their identity colour, just darker.
 TOPPLED_BODY: Dict[PieceType, str] = {
+    PieceType.START:     "#24804A",
     PieceType.DOMINO:    "#A39274",
     PieceType.SPLITTER:  "#9C8E68",
     PieceType.GOAL:      "#B8901C",
     PieceType.PROTECTED: "#7A1410",
 }
 STANDING_BODY: Dict[PieceType, str] = {
+    PieceType.START:     START_BODY,
     PieceType.DOMINO:    DOMINO_BODY,
     PieceType.SPLITTER:  SPLITTER_BODY,
     PieceType.GOAL:      GOAL_BODY,
@@ -202,6 +206,8 @@ def _standing(mb: MeshBuilder, segs: Dict[str, list], p: PlacedPiece) -> None:
                         (px, py, z0 + dz),
                         0.05 if along_x else 0.012,
                         0.012 if along_x else 0.05, 0.05))
+    elif p.type == PieceType.START:
+        mb.add("#FFFFFF", *_star(cx, cy, top + 0.012, 0.15, 0.15, n=12))
     elif p.type == PieceType.SPLITTER:
         mb.add(SPLITTER_CAP, *_box_c((cx, cy, top + 0.05), 0.66, 0.11, 0.1))
         mb.add(SPLITTER_CAP, *_box_c((cx, cy, top + 0.05), 0.11, 0.66, 0.1))
@@ -319,17 +325,18 @@ def _scene_traces(state: GameState, view: str) -> List:
     grid = state.spec.grid_size
     mb = MeshBuilder()
     segs: Dict[str, list] = {}
-    raised = []
     for p in state.anchors():
-        if p.type == PieceType.RAMP:
+        if p.type == PieceType.BLOCK:
+            lo = _cell_lo(p.pos)
+            mb.add(BLOCK_BODY, *_box(lo + 0.03, lo + np.array([0.97, 0.97, 1.0])))
+        elif p.type == PieceType.RAMP:          # legacy v1 levels
             _ramp(mb, segs, state, p)
         elif p.toppled:
             _toppled(mb, segs, p)
         else:
             _standing(mb, segs, p)
-        raised.append(p.pos)
+    # No floor drop lines: raised pieces stand on visible STEP blocks.
     traces: List = cv.scene_traces(grid, view, "domino")
-    traces += cv.drop_line_traces(raised, cv.drop_color("domino"))
     traces += mb.traces()
     for key, s in segs.items():
         color, _, width = key.partition("|")
@@ -349,12 +356,14 @@ def _hud(state: GameState, caption: str) -> "hud.Hud":
     term = state.terminal_code.value if state.terminal_code else None
     n_goal = sum(p.toppled for p in goals)
     n_prot = sum(p.toppled for p in prot)
-    budget = max(1, state.spec.push_budget)
+    total = sum(state.spec.inventory.values())
+    placed = total - sum(state.remaining.values())
     stats = [
-        hud.Stat(hud.icon_arrow("#8FB8FF"), "Phase", state.phase.value),
-        hud.Stat(hud.icon_slab(DOMINO_BODY, "pips"), "Pushes used",
-                 f"{state.push_count} / {state.spec.push_budget}",
-                 state.push_count / budget, "#8FB8FF"),
+        hud.Stat(hud.icon_arrow("#8FB8FF"), "Phase",
+                 {"PLACE": "1 \u00b7 place", "PUSH": "2 \u00b7 push",
+                  "DONE": "done"}.get(state.phase.value, state.phase.value)),
+        hud.Stat(hud.icon_slab(DOMINO_BODY, "pips"), "Patches placed",
+                 f"{placed} / {total}", placed / max(1, total), "#8FB8FF"),
         hud.Stat(hud.icon_slab(GOAL_BODY, "star", GOAL_STAR), "Goals toppled",
                  f"{n_goal} / {len(goals)}",
                  n_goal / max(1, len(goals)), "#F2C63A"),
@@ -364,26 +373,25 @@ def _hud(state: GameState, caption: str) -> "hud.Hud":
                  "#FF4D5E" if n_prot else "#2BD07A"),
     ]
     inventory = []
-    for pt, label, icon in ((PieceType.DOMINO, "Domino  D", hud.icon_slab(DOMINO_BODY, "pips")),
-                            (PieceType.RAMP, "Ramp  R", hud.icon_steps(RAMP_BODY))):
-        tot = state.spec.inventory.get(pt, 0)
-        if tot:
-            inventory.append(hud.Item(icon, label, state.remaining.get(pt, 0), tot))
+    tot = state.spec.inventory.get(PieceType.DOMINO, 0)
+    if tot:
+        inventory.append(hud.Item(hud.icon_slab(DOMINO_BODY, "pips"),
+                                  "Domino  D", state.remaining.get(PieceType.DOMINO, 0), tot))
     legend = [
+        hud.LegendEntry(hud.icon_slab(START_BODY, "dot"), "S  Start",
+                        "the only piece you push (pick a direction)"),
         hud.LegendEntry(hud.icon_slab(DOMINO_BODY, "pips"), "D  Domino",
-                        "falls and knocks the next one"),
+                        "falls forward, knocks the next piece"),
         hud.LegendEntry(hud.icon_slab(SPLITTER_BODY, "cross", SPLITTER_CAP),
-                        "T  Splitter", "sends the wave both ways sideways"),
-        hud.LegendEntry(hud.icon_steps(RAMP_BODY), "R  Ramp",
-                        "wave continues one level up"),
+                        "T  Splitter", "sends the wave out to both sides"),
         hud.LegendEntry(hud.icon_slab(GOAL_BODY, "star", GOAL_STAR), "G  Gold goal",
                         "topple every one to win"),
         hud.LegendEntry(hud.icon_slab(PROT_BODY, "x"), "P  Protected",
                         "toppling one loses the game"),
+        hud.LegendEntry(hud.icon_cube(BLOCK_BODY), "Step",
+                        "holds a piece 1 level up; reach is \u00b11 level"),
         hud.LegendEntry(hud.icon_flat("#A39274"), "Toppled piece",
                         "lies flat, arrow = fall direction"),
-        hud.LegendEntry(hud.icon_arrow(CASCADE_LINE), "Cascade path",
-                        "how the wave travelled"),
     ]
     return hud.Hud(
         title="DOMINO CHAIN",
@@ -391,9 +399,9 @@ def _hud(state: GameState, caption: str) -> "hud.Hud":
         result=cv.result_label(term),
         stats=stats,
         inventory=inventory,
-        inventory_title="PATCH PIECES",
+        inventory_title="PATCH DOMINOES",
         legend=legend,
-        hint="Phase 1: place your patch pieces  •  Phase 2: push one domino and watch the chain",
+        hint="1. Fill gaps with your patch dominoes   2. Push the green START once \u2014 topple every gold goal, no red one",
     )
 
 

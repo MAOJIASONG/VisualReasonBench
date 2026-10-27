@@ -1,0 +1,7 @@
+P26_C_steps_medium
+grid: (7, 5, 3)
+fixed: [('B', (3, 3, 1)), ('G', (3, 3, 2)), ('D', (6, 3, 1)), ('P', (7, 1, 1)), ('S', (7, 3, 1)), ('P', (7, 5, 1))]
+inventory: {'D': 2}
+patches: [('D', [4, 3, 1]), ('D', [5, 3, 1])]
+push:    START [7, 3, 1] dir=-x
+difficulty: {'n_solutions': 1, 'p_wavefill': 0.3333, 'min_patches': 2, 'gaps': 2, 'decoy_gaps': 2, 'p_random': 0.0, 'p_gapfill': 0.0}

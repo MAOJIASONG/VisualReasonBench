@@ -1,0 +1,18 @@
+P31_D_tall_easy
+grid: (4, 4, 5)
+entrances: [(4, 3, 1)]
+exits: [(1, 3, 4)]
+obstacles: []
+inventory: {'S1': 2, 'L': 7, 'I': 1}
+difficulty: {'n_solutions': 20, 'capped': False, 'min_pipes': 5, 'staircase_ok': False, 'n_portals': 2, 'plan_length': 9}
+
+plan (9 pieces):
+  01: S1 at (2, 2, 1)
+  02: S1 at (2, 3, 1)
+  03: L at (3, 3, 1) ends=+x,+z
+  04: L at (2, 2, 2) ends=+y,+z
+  05: L at (2, 3, 2) ends=+x,-y
+  06: L at (3, 3, 2) ends=-x,-z
+  07: L at (2, 2, 3) ends=+y,-z
+  08: L at (2, 3, 3) ends=-y,+z
+  09: L at (2, 3, 4) ends=-x,-z

@@ -1,0 +1,17 @@
+P06_A_route_medium
+grid: (5, 5, 4)
+entrances: [(1, 3, 1)]
+exits: [(3, 5, 3)]
+obstacles: [(3, 3, 1)]
+inventory: {'S2': 1, 'L': 6, 'I': 2}
+difficulty: {'n_solutions': 7, 'capped': False, 'min_pipes': 5, 'staircase_ok': False, 'n_portals': 2, 'plan_length': 8}
+
+plan (8 pieces):
+  01: S2 at (3, 4, 1)
+  02: L at (2, 3, 1) ends=-x,+y
+  03: L at (2, 4, 1) ends=-y,+z
+  04: I at (2, 4, 2) ends=+z,-z
+  05: I at (2, 4, 3) ends=+z,-z
+  06: L at (3, 4, 3) ends=+y,+z
+  07: L at (2, 4, 4) ends=+x,-z
+  08: L at (3, 4, 4) ends=-x,-z

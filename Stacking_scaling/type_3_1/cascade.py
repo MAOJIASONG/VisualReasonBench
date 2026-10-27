@@ -1,49 +1,38 @@
 """
-Domino Chain Reaction 3D — Pulse simulator.
+Domino Chain Reaction 3D — cascade simulator (rules v2, physical).
 
-A cascade is driven by pulses.  A pulse = (from_anchor, dir, z) where:
-  from_anchor = the anchor-cell we're "flying out of" after it toppled
-  dir         = horizontal direction ("+x"/"-x"/"+y"/"-y")
-  z           = z-level of the pulse (standing piece's BASE-z is what we
-                look up to decide whether the pulse hits it)
+A wave is (falling piece, direction).  The falling piece stands on base
+height z and is two cells tall, so when it tips over it sweeps the next
+column in its direction at heights z and z+1.  It knocks over every
+standing, not-yet-toppled piece whose body occupies one of those two cells.
+Consequences, all visible in the image:
 
-Cascade is deterministic: every piece topples at most once, and the
-set of toppled pieces is independent of pulse processing order.  We
-process pulses in FIFO for a stable fall_order that renderers can use
-to show the wave expanding outward.
+  * a domino can hit a piece standing one STEP higher (its upper half meets
+    the other's lower half), or one step lower (its lower half meets the
+    other's upper half), but not two steps away;
+  * a grey STEP block in the swept cells is solid: if nothing standing was
+    hit, the wave stops there;
+  * an empty column stops the wave (that is the gap a patch must fill).
 
-Rules:
+What a hit piece does:
+  D, S, G, P : falls in the same direction and passes the wave on.
+               (P falling loses the game; we still finish the cascade so
+               the renderer can show the damage.)
+  T          : falls, but sends the wave out to both sides (the two
+               directions perpendicular to the incoming one), not straight.
 
-  1. target_base = (from_anchor + dir_vec) at height z.
-  2. If target_base is out-of-bounds → pulse dies.
-  3. Look up the piece at target_base.  If no piece, or the piece is a
-     standing piece whose BASE is not at z, or the piece is already
-     toppled → pulse dies.  (A standing piece is "at z" iff its
-     anchor.z == z.  A ramp is "at z" iff ramp.z == z.)
-  4. Dispatch by piece type:
-
-     - DOMINO (D): topple, emit one pulse (target_base, dir, z).
-     - GOAL   (G): topple, emit one pulse (target_base, dir, z).
-     - PROTECTED (P): topple, raise game-over flag, emit one pulse
-       (target_base, dir, z) — we still propagate so the renderer shows
-       the full damage.
-     - SPLITTER (T): topple, emit two pulses, one per orthogonal dir.
-       Straight-through is NOT continued.  (dir_vec and -dir_vec both
-       disallowed; the two orthogonal directions get one pulse each.)
-     - RAMP (R): activate, emit one pulse (target_base, dir, z+1).
-
-  Exit condition: pulse queue empty.
+The cascade is deterministic; every piece topples at most once.
 """
 
 from __future__ import annotations
 
 from collections import deque
 from dataclasses import dataclass
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional
 
 from .game_core import (
     DIR_NAME_TO_VEC, GameState, PieceType, PlacedPiece, Vec3,
-    in_grid, perp_dirs,
+    in_grid, perp_dirs, piece_is_standing,
 )
 
 
@@ -54,140 +43,82 @@ class CascadeResult:
     game_over: bool                             # True iff any PROTECTED toppled
 
 
-def _find_target(state: GameState, from_pos: Vec3, dir_name: str,
-                 z: int) -> Optional[PlacedPiece]:
-    """
-    Return the piece whose BASE sits at (from_pos + dir_vec) with base-z == z.
-    None if OOB, empty, or the occupying piece's base is at a different z.
-    """
+def swept_cells(piece: PlacedPiece, dir_name: str) -> List[Vec3]:
+    """Cells of the next column that a piece falling in `dir_name` sweeps."""
     dx, dy, _ = DIR_NAME_TO_VEC[dir_name]
-    target_base = (from_pos[0] + dx, from_pos[1] + dy, z)
-    if not in_grid(target_base, state.spec.grid_size):
-        return None
-    piece = state.piece_at_cell(target_base)
-    if piece is None:
-        return None
-    # The pulse "hits" the piece only if the target_base IS the piece's
-    # anchor (base cell).  This prevents phantom hits on the upper half of
-    # a standing piece, or on a piece that stands at a higher base but
-    # extends down through this cell (impossible since bases are at z).
-    if piece.pos != target_base:
-        return None
-    return piece
+    x, y, z = piece.pos
+    return [(x + dx, y + dy, z + 1), (x + dx, y + dy, z)]
+
+
+def hits(state: GameState, piece: PlacedPiece, dir_name: str
+         ) -> List[PlacedPiece]:
+    """Standing, not-toppled pieces knocked by `piece` falling that way."""
+    out: List[PlacedPiece] = []
+    for c in swept_cells(piece, dir_name):
+        if not in_grid(c, state.spec.grid_size):
+            continue
+        p = state.piece_at_cell(c)
+        if p is None or p in out or p.toppled:
+            continue
+        if piece_is_standing(p.type):
+            out.append(p)
+    return out
 
 
 def simulate_push(state: GameState, origin_anchor: Vec3,
                   dir_name: str) -> CascadeResult:
-    """
-    Run a cascade from the initial push.  Mutates `state.pieces`: sets
-    `toppled`, `fall_dir`, `fall_order` on every hit piece.  Records the
-    cascade log into state.last_cascade and appends to all_cascades.
-    Returns a CascadeResult for inspection.
+    """Push the piece at `origin_anchor` and run the whole cascade.
 
-    Preconditions (validate in mechanics.step_push before calling):
-      - origin is a standing (D/T/G/P) piece, not toppled, and exists.
-      - dir_name in {+x,-x,+y,-y}.
+    Mutates `state.pieces` (toppled / fall_dir / fall_order) and appends the
+    event log to state.all_cascades.  mechanics.step_push validates that the
+    origin is the START domino.
     """
     origin = state.piece_at_cell(origin_anchor)
-    assert origin is not None, f"no piece at {origin_anchor}"
-    assert origin.type in (PieceType.DOMINO, PieceType.SPLITTER,
-                            PieceType.GOAL, PieceType.PROTECTED), \
-        f"can't push {origin.type}"
-    assert not origin.toppled, "origin already toppled"
+    assert origin is not None and piece_is_standing(origin.type)
+    assert not origin.toppled
 
     events: List[Dict] = []
     toppled_order: List[Vec3] = []
     game_over = False
-    fall_counter = 0
+    counter = 0
 
-    def topple(piece: PlacedPiece, fall_dir: Optional[str]) -> None:
-        nonlocal fall_counter
+    def topple(piece: PlacedPiece, fall_dir: str) -> None:
+        nonlocal counter, game_over
         piece.toppled = True
         piece.fall_dir = fall_dir
-        piece.fall_order = fall_counter
-        fall_counter += 1
+        piece.fall_order = counter
+        counter += 1
         toppled_order.append(piece.pos)
+        if piece.type == PieceType.PROTECTED:
+            game_over = True
 
-    # Topple the origin first (the push itself).  It falls in dir_name.
+    def outgoing(piece: PlacedPiece, d: str) -> List[str]:
+        return perp_dirs(d) if piece.type == PieceType.SPLITTER else [d]
+
     topple(origin, dir_name)
-    events.append({
-        "kind": "push",
-        "anchor": origin_anchor,
-        "type": origin.type.value,
-        "dir": dir_name,
-        "z": origin.pos[2],
-    })
-    if origin.type == PieceType.PROTECTED:
-        game_over = True
-
-    # Seed pulse queue with the origin's outgoing wave.
-    queue: deque = deque()
-    if origin.type == PieceType.SPLITTER:
-        for pd in perp_dirs(dir_name):
-            queue.append((origin.pos, pd, origin.pos[2]))
-    elif origin.type == PieceType.RAMP:
-        # Ramps can't be origins, but mirror the behavior anyway.
-        queue.append((origin.pos, dir_name, origin.pos[2] + 1))
-    else:
-        # D / G / P: one pulse in the push direction
-        queue.append((origin.pos, dir_name, origin.pos[2]))
+    events.append({"kind": "push", "anchor": origin.pos,
+                   "type": origin.type.value, "dir": dir_name,
+                   "z": origin.pos[2]})
+    queue: deque = deque((origin, d) for d in outgoing(origin, dir_name))
 
     while queue:
-        from_anchor, d, z = queue.popleft()
-        target = _find_target(state, from_anchor, d, z)
-        if target is None:
-            events.append({"kind": "pulse_die", "from": from_anchor,
-                            "dir": d, "z": z, "reason": "empty_or_oob"})
+        src, d = queue.popleft()
+        struck = hits(state, src, d)
+        if not struck:
+            events.append({"kind": "wave_stop", "from": src.pos, "dir": d})
             continue
-        if target.toppled:
-            events.append({"kind": "pulse_die", "from": from_anchor,
-                            "dir": d, "z": z, "reason": "already_toppled",
-                            "target": target.pos})
-            continue
+        for p in struck:
+            if p.toppled:
+                continue
+            topple(p, d)
+            events.append({"kind": "topple", "anchor": p.pos, "from": src.pos,
+                           "type": p.type.value, "dir": d, "z": p.pos[2],
+                           "protected": p.type == PieceType.PROTECTED,
+                           "split": p.type == PieceType.SPLITTER})
+            for nd in outgoing(p, d):
+                queue.append((p, nd))
 
-        # Dispatch by type
-        # Every hit event records `from` (the anchor the pulse left) so the
-        # renderer can draw the true propagation edges, including branches.
-        pt = target.type
-        if pt == PieceType.DOMINO or pt == PieceType.GOAL:
-            topple(target, d)
-            events.append({"kind": "topple", "anchor": target.pos,
-                            "from": from_anchor,
-                            "type": pt.value, "dir": d, "z": z})
-            queue.append((target.pos, d, z))
-        elif pt == PieceType.PROTECTED:
-            topple(target, d)
-            events.append({"kind": "topple", "anchor": target.pos,
-                            "from": from_anchor,
-                            "type": pt.value, "dir": d, "z": z,
-                            "protected": True})
-            game_over = True
-            queue.append((target.pos, d, z))
-        elif pt == PieceType.SPLITTER:
-            topple(target, d)
-            events.append({"kind": "topple", "anchor": target.pos,
-                            "from": from_anchor,
-                            "type": pt.value, "dir": d, "z": z,
-                            "split": True})
-            for pd in perp_dirs(d):
-                queue.append((target.pos, pd, z))
-        elif pt == PieceType.RAMP:
-            # Ramp activates; re-emerge at z+1
-            topple(target, None)
-            events.append({"kind": "ramp", "anchor": target.pos,
-                            "from": from_anchor,
-                            "dir": d, "z_in": z, "z_out": z + 1})
-            queue.append((target.pos, d, z + 1))
-        else:
-            events.append({"kind": "pulse_die", "from": from_anchor,
-                            "dir": d, "z": z,
-                            "reason": f"unknown_piece_{pt.value}"})
-
-    result = CascadeResult(
-        toppled=toppled_order,
-        events=events,
-        game_over=game_over,
-    )
     state.last_cascade = events
     state.all_cascades.append(events)
-    return result
+    return CascadeResult(toppled=toppled_order, events=events,
+                         game_over=game_over)

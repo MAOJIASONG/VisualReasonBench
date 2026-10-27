@@ -1,0 +1,18 @@
+P04_A_route_medium
+grid: (5, 5, 4)
+entrances: [(5, 3, 1)]
+exits: [(2, 1, 3)]
+obstacles: [(2, 3, 2)]
+inventory: {'S2': 1, 'L': 8, 'I': 1}
+difficulty: {'n_solutions': 18, 'capped': False, 'min_pipes': 6, 'staircase_ok': False, 'n_portals': 2, 'plan_length': 9}
+
+plan (9 pieces):
+  01: S2 at (2, 2, 1)
+  02: L at (3, 2, 1) ends=+x,+y
+  03: L at (3, 3, 1) ends=-y,+z
+  04: L at (4, 2, 1) ends=-x,+y
+  05: L at (4, 3, 1) ends=+x,-y
+  06: L at (3, 2, 2) ends=+y,+z
+  07: L at (3, 3, 2) ends=-y,-z
+  08: L at (2, 2, 3) ends=+x,-y
+  09: L at (3, 2, 3) ends=-x,-z

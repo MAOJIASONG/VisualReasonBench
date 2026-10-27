@@ -1,0 +1,7 @@
+P20_B_decoy_hard
+grid: (8, 7, 3)
+fixed: [('P', (1, 1, 1)), ('D', (2, 1, 1)), ('P', (2, 5, 1)), ('S', (4, 1, 1)), ('G', (4, 5, 1)), ('P', (4, 7, 1)), ('D', (6, 1, 1)), ('D', (7, 1, 1)), ('P', (8, 1, 1))]
+inventory: {'D': 3}
+patches: [('D', [4, 2, 1]), ('D', [4, 3, 1]), ('D', [4, 4, 1])]
+push:    START [4, 1, 1] dir=+y
+difficulty: {'n_solutions': 1, 'p_wavefill': 0.3333, 'min_patches': 3, 'gaps': 4, 'decoy_gaps': 4, 'p_random': 0.0, 'p_gapfill': 0.0}

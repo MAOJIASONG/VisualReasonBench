@@ -1,0 +1,7 @@
+P31_D_split_easy
+grid: (6, 6, 3)
+fixed: [('G', (2, 1, 1)), ('D', (3, 1, 1)), ('T', (4, 1, 1)), ('D', (4, 2, 1)), ('S', (4, 4, 1)), ('G', (6, 1, 1))]
+inventory: {'D': 2}
+patches: [('D', [4, 3, 1]), ('D', [5, 1, 1])]
+push:    START [4, 4, 1] dir=-y
+difficulty: {'n_solutions': 1, 'p_wavefill': 0.125, 'min_patches': 2, 'gaps': 2, 'decoy_gaps': 0, 'p_random': 0.0033, 'p_gapfill': 1.0}

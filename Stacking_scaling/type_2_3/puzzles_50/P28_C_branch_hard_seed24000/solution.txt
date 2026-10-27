@@ -1,0 +1,20 @@
+P28_C_branch_hard
+grid: (6, 5, 4)
+entrances: [(3, 1, 1)]
+exits: [(6, 2, 3), (5, 5, 4)]
+obstacles: [(4, 2, 2), (4, 1, 1)]
+inventory: {'S1': 2, 'L': 5, 'I': 4, 'T': 1}
+difficulty: {'n_solutions': 2, 'capped': False, 'min_pipes': 9, 'staircase_ok': False, 'n_portals': 3, 'plan_length': 11}
+
+plan (11 pieces):
+  01: S1 at (5, 4, 1)
+  02: S1 at (5, 3, 1)
+  03: L at (3, 2, 1) ends=+x,-y
+  04: I at (4, 2, 1) ends=+x,-x
+  05: L at (5, 2, 1) ends=-x,+z
+  06: T at (5, 2, 2) ends=+y,+z,-z
+  07: I at (5, 3, 2) ends=+y,-y
+  08: L at (5, 4, 2) ends=-y,+z
+  09: L at (5, 2, 3) ends=+x,-z
+  10: I at (5, 4, 3) ends=+z,-z
+  11: L at (5, 4, 4) ends=+y,-z

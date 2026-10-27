@@ -1,0 +1,19 @@
+P11_B_obstacles_easy
+grid: (5, 4, 4)
+entrances: [(4, 4, 1)]
+exits: [(1, 3, 4)]
+obstacles: [(3, 3, 2)]
+inventory: {'S1': 2, 'L': 8, 'I': 1}
+difficulty: {'n_solutions': 9, 'capped': False, 'min_pipes': 8, 'staircase_ok': False, 'n_portals': 2, 'plan_length': 10}
+
+plan (10 pieces):
+  01: S1 at (2, 3, 1)
+  02: S1 at (2, 4, 1)
+  03: L at (3, 3, 1) ends=+x,+y
+  04: L at (3, 4, 1) ends=-y,+z
+  05: L at (4, 3, 1) ends=-x,+y
+  06: L at (2, 3, 2) ends=+y,+z
+  07: L at (2, 4, 2) ends=+x,-y
+  08: L at (3, 4, 2) ends=-x,-z
+  09: I at (2, 3, 3) ends=+z,-z
+  10: L at (2, 3, 4) ends=-x,-z

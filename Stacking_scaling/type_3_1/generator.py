@@ -1,27 +1,23 @@
 """
-Domino Chain Reaction 3D — Level generator.
+Domino Chain Reaction 3D — level generator (rules v2).
 
-Algorithm (forward-build):
-  1. Pick a source cell (ground boundary, random).
-  2. Pick an initial direction (±x / ±y).
-  3. Walk the cascade by "steps":
-       - STRAIGHT step: place a DOMINO at the next cell, continue same dir.
-       - RAMP step: place a RAMP; next cell is at z+1 same (x,y).
-       - SPLIT step: place a SPLITTER at this cell; branch into 2 orthogonal
-                     sub-walks.  Each sub-walk must end at a GOAL.
-  4. End every branch at a GOAL (z constant, random length).
-  5. Add PROTECTED dominos on cells adjacent to the skeleton (making
-     wrong-direction pushes catastrophic).
-  6. Carve K patch cells out of the DOMINO / RAMP pieces; those become
-     inventory the player must re-place.  Patches are NOT in fixed_pieces.
-  7. Validate:
-       * With the canonical patches + canonical push sequence → WIN.
-       * Without the patches (leave holes) → push fails to topple all goals.
-  8. Return (spec, meta).
+Construction:
+  1. START (green) on the floor, facing a random direction.
+  2. Main chain: dominoes one cell apart, optionally stepping up or down one
+     level onto grey STEP blocks, ending at a gold GOAL -- or at a SPLITTER
+     whose two side branches end at goals (or one goal and a trap).
+  3. Decoy lines: an empty, supported gap followed by dominoes and a red
+     PROTECTED piece.  They are placed beside START (wrong push direction),
+     after the goal (the wave keeps travelling past a falling goal) and on
+     a splitter's second side.  Filling a decoy gap wastes a patch or loses.
+  4. K dominoes are carved out of the chain; the player gets exactly K.
+  5. The exact search (difficulty.solutions) must find exactly one winning
+     (placement, direction) and it must use all K patches; the level is
+     then assigned to a tier by measured difficulty (difficulty.TIERS).
 
-All steps must respect physical-support rules: every base cell must have
-ground or another piece's TOP directly below it.  We pre-check before
-committing each step.
+Every column holds at most one standing piece (plus STEP blocks under it),
+and a new column may only touch the column it continues from, so nothing
+hits anything by accident and the picture shows exactly what is connected.
 """
 
 from __future__ import annotations
@@ -29,487 +25,225 @@ from __future__ import annotations
 import random
 from typing import Dict, List, Optional, Set, Tuple
 
-from .cascade import simulate_push
-from .game_core import (
-    DIR_NAME_TO_VEC, GameState, LevelSpec, PieceType, Phase, PlacedPiece, Vec3,
-    in_grid, perp_dirs, piece_is_standing, piece_occupied_cells,
-)
-from .mechanics import (
-    step_place, submit_placement, step_push, submit,
-)
+from .difficulty import analyze, fits_tier, solutions
+from .game_core import DIR_NAME_TO_VEC, LevelSpec, PieceType, Vec3, perp_dirs
+
+DIRS = ["+x", "-x", "+y", "-y"]
+Col = Tuple[int, int]
 
 
-_DIRS = ["+x", "-x", "+y", "-y"]
+def _step(c: Col, d: str) -> Col:
+    v = DIR_NAME_TO_VEC[d]
+    return (c[0] + v[0], c[1] + v[1])
 
 
-def _top_cell_of_anchor(pt: PieceType, pos: Vec3) -> Vec3:
-    if piece_is_standing(pt):
-        return (pos[0], pos[1], pos[2] + 1)
-    return pos
+class _Board:
+    def __init__(self, grid: Vec3):
+        self.grid = grid
+        self.pieces: Dict[Vec3, PieceType] = {}     # anchor -> type
+        self.used: Set[Col] = set()                 # columns with anything
+        self.gaps: Set[Col] = set()                 # columns kept empty
 
+    def inside(self, c: Col, b: int) -> bool:
+        A, B, C = self.grid
+        return 1 <= c[0] <= A and 1 <= c[1] <= B and 1 <= b and b + 1 <= C
 
-def _occupied_after(cells_used: Set[Vec3], pt: PieceType, pos: Vec3) -> bool:
-    return any(c in cells_used for c in piece_occupied_cells(pt, pos))
+    def free(self, c: Col) -> bool:
+        return c not in self.used and c not in self.gaps
 
-
-class _BuildCtx:
-    """Mutable scratch state while building the skeleton."""
-    def __init__(self, grid_size: Vec3, rng: random.Random):
-        self.grid_size = grid_size
-        self.rng = rng
-        self.cells_used: Set[Vec3] = set()
-        self.tops: Set[Vec3] = set()              # top cells (can carry base)
-        self.pieces: List[Tuple[PieceType, Vec3]] = []   # in build order
-        self.anchors: Set[Vec3] = set()
-        # 1-cell blocks added only to hold up the piece after a ramp; they
-        # are never carved into patches (that would leave a fixed piece
-        # floating in the initial state).
-        self.pedestals: Set[Vec3] = set()
-
-    def snapshot(self):
-        return (set(self.cells_used), set(self.tops), list(self.pieces),
-                set(self.anchors), set(self.pedestals))
-
-    def restore(self, snap) -> None:
-        (self.cells_used, self.tops, self.pieces, self.anchors,
-         self.pedestals) = (set(snap[0]), set(snap[1]), list(snap[2]),
-                            set(snap[3]), set(snap[4]))
-
-    def can_place(self, pt: PieceType, pos: Vec3) -> bool:
-        """Check footprint is in-grid + free + has support."""
-        cells = piece_occupied_cells(pt, pos)
-        for c in cells:
-            if not in_grid(c, self.grid_size):
+    def clear(self, c: Col, allowed: Set[Col]) -> bool:
+        """No other occupied/gap column touches c (besides `allowed`)."""
+        for d in DIRS:
+            n = _step(c, d)
+            if n not in allowed and (n in self.used or n in self.gaps):
                 return False
-            if c in self.cells_used:
-                return False
-        # support
-        x, y, z = pos
-        if z == 1:
+        return True
+
+    def blocks(self, c: Col, b: int) -> None:
+        for z in range(1, b):
+            self.pieces[(c[0], c[1], z)] = PieceType.BLOCK
+
+    def put(self, pt: PieceType, c: Col, b: int) -> None:
+        self.blocks(c, b)
+        self.pieces[(c[0], c[1], b)] = pt
+        self.used.add(c)
+
+
+def _line(bd: _Board, c: Col, b: int, d: str, n: int, end: PieceType,
+          rng: random.Random, p_step: float) -> Optional[List[Tuple[Col, int]]]:
+    """Place n pieces continuing from (c, b) in direction d; the last is
+    `end`.  Heights change by at most one level per step."""
+    out = []
+    for i in range(n):
+        nc = _step(c, d)
+        nb = b
+        if rng.random() < p_step:
+            nb = max(1, b + rng.choice((-1, 1)))
+        if not bd.inside(nc, nb) or not bd.free(nc) or not bd.clear(nc, {c}):
+            return None
+        bd.put(end if i == n - 1 else PieceType.DOMINO, nc, nb)
+        out.append((nc, nb))
+        c, b = nc, nb
+    return out
+
+
+def _trap(bd: _Board, c: Col, b: int, d: str, rng: random.Random) -> bool:
+    """Gap (kept empty, on a step if needed) then 1-2 dominoes and a P."""
+    g = _step(c, d)
+    if not bd.inside(g, b) or not bd.free(g) or not bd.clear(g, {c}):
+        return False
+    bd.gaps.add(g)
+    snapshot = (dict(bd.pieces), set(bd.used))
+    # Longest trap that fits, down to "gap then the red piece".
+    for n in range(rng.randint(2, 3), 0, -1):
+        if _line(bd, g, b, d, n, PieceType.PROTECTED, rng, 0.0) is not None:
+            bd.blocks(g, b)              # the gap's step, if raised
             return True
-        below = (x, y, z - 1)
-        return below in self.tops
-
-    def place(self, pt: PieceType, pos: Vec3) -> None:
-        assert self.can_place(pt, pos), f"{pt}@{pos} can't be placed"
-        for c in piece_occupied_cells(pt, pos):
-            self.cells_used.add(c)
-        self.tops.add(_top_cell_of_anchor(pt, pos))
-        self.pieces.append((pt, pos))
-        self.anchors.add(pos)
+        bd.pieces, bd.used = dict(snapshot[0]), set(snapshot[1])
+    bd.gaps.discard(g)
+    return False
 
 
-def _next_base(pos: Vec3, dir_name: str, z_after: int) -> Vec3:
-    """The next base cell when a pulse leaves `pos` in `dir_name` at height z_after."""
-    dx, dy, _ = DIR_NAME_TO_VEC[dir_name]
-    return (pos[0] + dx, pos[1] + dy, z_after)
-
-
-def _walk_branch(ctx: _BuildCtx, start_pos: Vec3, dir_name: str,
-                 remaining_len: int, allow_ramp: bool, allow_split: bool,
-                 max_depth: int = 0, min_len: int = 1
-                 ) -> Optional[List[Tuple[PieceType, Vec3]]]:
-    """
-    Recursively build a branch that ends at a GOAL.  remaining_len is the
-    MAX number of further pieces we can add; min_len = remaining pieces
-    still required (so we don't stop too early).
-
-    Each call extends the branch by one piece at the NEXT base cell.
-    Returns the sequence of pieces added, or None if dead-ended.
-    """
-    if remaining_len <= 0:
-        return None
-
-    z = start_pos[2]
-    next_base = _next_base(start_pos, dir_name, z)
-
-    # Option to end branch here by placing a GOAL, if min_len satisfied
-    can_end = min_len <= 1 and ctx.can_place(PieceType.GOAL, next_base)
-
-    # Decide what to place at next_base
-    choices: List[str] = []
-    if remaining_len >= 2 and (min_len >= 2 or ctx.rng.random() < 0.70):
-        choices.append("D")
-    if allow_ramp and remaining_len >= 2 and ctx.rng.random() < 0.35:
-        choices.append("R")
-    if (allow_split and remaining_len >= 3 and max_depth == 0
-            and ctx.rng.random() < 0.40):
-        choices.append("T")
-    if can_end:
-        choices.append("G")
-    if not choices:
-        return None
-
-    ctx.rng.shuffle(choices)
-    for choice in choices:
-        snapshot = ctx.snapshot()
-
-        def _rollback():
-            ctx.restore(snapshot)
-
-        if choice == "G":
-            if ctx.can_place(PieceType.GOAL, next_base):
-                ctx.place(PieceType.GOAL, next_base)
-                return [(PieceType.GOAL, next_base)]
-
-        elif choice == "D":
-            if not ctx.can_place(PieceType.DOMINO, next_base):
-                continue
-            ctx.place(PieceType.DOMINO, next_base)
-            rest = _walk_branch(ctx, next_base, dir_name,
-                                 remaining_len - 1, allow_ramp, allow_split,
-                                 max_depth, max(0, min_len - 1))
-            if rest is not None:
-                return [(PieceType.DOMINO, next_base)] + rest
-            _rollback()
-
-        elif choice == "R":
-            if not ctx.can_place(PieceType.RAMP, next_base):
-                continue
-            ctx.place(PieceType.RAMP, next_base)
-            ramp_pos = next_base
-            z_out = ramp_pos[2] + 1
-            virt = (ramp_pos[0], ramp_pos[1], z_out)
-            # The cascade re-emerges at z+1, so the next piece stands one
-            # level up and needs something under it.  Without this step
-            # block every ramp branch failed the support check and was
-            # rolled back, i.e. ramps could never be generated.
-            landing = _next_base(virt, dir_name, z_out)
-            under = (landing[0], landing[1], ramp_pos[2])
-            if (in_grid(landing, ctx.grid_size)
-                    and under not in ctx.tops
-                    and ctx.can_place(PieceType.RAMP, under)):
-                ctx.place(PieceType.RAMP, under)
-                ctx.pedestals.add(under)
-            rest = _walk_branch(ctx, virt, dir_name,
-                                 remaining_len - 1,
-                                 allow_ramp=False,
-                                 allow_split=allow_split,
-                                 max_depth=max_depth,
-                                 min_len=max(0, min_len - 1))
-            if rest is not None:
-                return [(PieceType.RAMP, next_base)] + rest
-            _rollback()
-
-        elif choice == "T":
-            if not ctx.can_place(PieceType.SPLITTER, next_base):
-                continue
-            ctx.place(PieceType.SPLITTER, next_base)
-            perps = perp_dirs(dir_name)
-            sub_budget = max(2, (remaining_len - 1) // 2)
-            sub1 = _walk_branch(ctx, next_base, perps[0],
-                                 sub_budget, allow_ramp=False,
-                                 allow_split=False, max_depth=max_depth + 1,
-                                 min_len=1)
-            if sub1 is None:
-                _rollback()
-                continue
-            sub2 = _walk_branch(ctx, next_base, perps[1],
-                                 sub_budget, allow_ramp=False,
-                                 allow_split=False, max_depth=max_depth + 1,
-                                 min_len=1)
-            if sub2 is None:
-                _rollback()
-                continue
-            return [(PieceType.SPLITTER, next_base)] + sub1 + sub2
-
-    return None
-
-
-def _build_skeleton(grid_size: Vec3, rng: random.Random,
-                    target_len: int, allow_ramp: bool, allow_split: bool
-                    ) -> Optional[Tuple[List[Tuple[PieceType, Vec3]],
-                                         Vec3, str, Set[Vec3]]]:
-    """Build a cascade skeleton.
-
-    Returns (pieces_in_order, origin_anchor, origin_dir, pedestal_anchors)."""
-    A, B, C = grid_size
-    for _ in range(60):
-        ctx = _BuildCtx(grid_size, rng)
-        # Source = a z=1 cell with random starting dir that points inward
-        x = rng.randint(1, A)
-        y = rng.randint(1, B)
-        # Pick a direction that has room to walk.  We need enough cells
-        # PAST the origin to fit (target_len - 1) more pieces at minimum.
-        # Accept direction if there's at least floor(target_len/2) cells
-        # of clearance (min_len) — walker can splice in ramps to climb z.
-        min_needed = max(2, target_len // 2)
-        dir_candidates = list(_DIRS)
-        rng.shuffle(dir_candidates)
-        chosen: Optional[str] = None
-        for d in dir_candidates:
-            if d == "+x" and (A - x) >= min_needed: chosen = d; break
-            if d == "-x" and (x - 1) >= min_needed: chosen = d; break
-            if d == "+y" and (B - y) >= min_needed: chosen = d; break
-            if d == "-y" and (y - 1) >= min_needed: chosen = d; break
-        if chosen is None:
-            continue
-        origin_pos = (x, y, 1)
-        if not ctx.can_place(PieceType.DOMINO, origin_pos):
-            continue
-        ctx.place(PieceType.DOMINO, origin_pos)
-        branch = _walk_branch(ctx, origin_pos, chosen,
-                               remaining_len=target_len - 1,
-                               allow_ramp=allow_ramp,
-                               allow_split=allow_split,
-                               min_len=max(1, target_len // 2))
-        if branch is None:
-            continue
-        # Must contain at least one GOAL
-        if not any(p[0] == PieceType.GOAL for p in ctx.pieces):
-            continue
-        return (list(ctx.pieces), origin_pos, chosen, set(ctx.pedestals))
-    return None
-
-
-# ---------------------------------------------------------------------------
-# Protected placement + patch extraction
-# ---------------------------------------------------------------------------
-
-def _add_protected(pieces: List[Tuple[PieceType, Vec3]],
-                    grid_size: Vec3, rng: random.Random,
-                    n_protected: int) -> List[Tuple[PieceType, Vec3]]:
-    """
-    Add `n_protected` PROTECTED dominos at cells face-adjacent (in xy) to the
-    skeleton but NOT on the skeleton.  Need physical support & grid bounds.
-    Returns the updated pieces list.
-    """
-    used: Set[Vec3] = set()
-    for pt, pos in pieces:
-        for c in piece_occupied_cells(pt, pos):
-            used.add(c)
-    tops: Set[Vec3] = set()
-    for pt, pos in pieces:
-        tops.add(_top_cell_of_anchor(pt, pos))
-    tops.add((-1, -1, 0))  # sentinel (never matches)
-
-    # Candidates: cells adjacent to any skeleton base-cell (same z ±x/±y)
-    # Prefer cells near the END of the skeleton (harder to avoid).
-    candidates: List[Vec3] = []
-    for pt, pos in pieces:
-        if pt == PieceType.SPLITTER:
-            continue  # don't surround splitters (too easy to hit)
-        for d in _DIRS:
-            dx, dy, _ = DIR_NAME_TO_VEC[d]
-            nb = (pos[0] + dx, pos[1] + dy, pos[2])
-            if not in_grid(nb, grid_size):
-                continue
-            if nb in used:
-                continue
-            # Needs physical support
-            z = nb[2]
-            if z == 1:
-                ok = True
-            else:
-                ok = (nb[0], nb[1], nb[2] - 1) in tops
-            if not ok:
-                continue
-            # Check upper cell also free
-            upper = (nb[0], nb[1], nb[2] + 1)
-            if not in_grid(upper, grid_size) or upper in used:
-                continue
-            candidates.append(nb)
-
-    rng.shuffle(candidates)
-    placed: List[Vec3] = []
-    new_used = set(used)
-    new_tops = set(tops)
-    for c in candidates:
-        if len(placed) >= n_protected:
-            break
-        # Also keep protected dominos from clashing with each other
-        if c in new_used or (c[0], c[1], c[2] + 1) in new_used:
-            continue
-        placed.append(c)
-        pieces = pieces + [(PieceType.PROTECTED, c)]
-        new_used.add(c)
-        new_used.add((c[0], c[1], c[2] + 1))
-        new_tops.add((c[0], c[1], c[2] + 1))
-    return pieces
-
-
-def _extract_patches(pieces: List[Tuple[PieceType, Vec3]],
-                     rng: random.Random, n_patches: int,
-                     keep_fixed: Set[Vec3] = frozenset(),
-                     ) -> Tuple[List[Tuple[PieceType, Vec3]],
-                                List[Tuple[PieceType, Vec3]]]:
-    """
-    Split `pieces` into (fixed_pieces, patch_pieces).  Only DOMINO and RAMP
-    are patchable.  GOAL, SPLITTER, PROTECTED are always fixed.
-
-    To keep the patch meaningful, we avoid carving the ORIGIN piece
-    (first in the list) so the player can always find something to push.
-    Anchors in `keep_fixed` (support pedestals) are never carved.
-    """
-    # Candidate patch indices: D or R, not the first piece
-    candidates = [i for i, (pt, pos) in enumerate(pieces)
-                  if pt in (PieceType.DOMINO, PieceType.RAMP) and i > 0
-                  and pos not in keep_fixed]
-    rng.shuffle(candidates)
-    patch_indices = set(candidates[:n_patches])
-    fixed = [p for i, p in enumerate(pieces) if i not in patch_indices]
-    patches = [p for i, p in enumerate(pieces) if i in patch_indices]
-    return fixed, patches
-
-
-# ---------------------------------------------------------------------------
-# Main entry point
-# ---------------------------------------------------------------------------
-
-def _replay(spec: LevelSpec, patches: List[Tuple[PieceType, Vec3]],
-            pushes: List[Tuple[Vec3, str]]) -> str:
-    """Return the terminal ActionCode.value from replaying patches+pushes."""
-    from .game_core import init_state
-    st = init_state(spec)
-    for pt, pos in patches:
-        r = step_place(st, pt, pos)
-        if r.code.value != "OK":
-            return f"PLACE_FAIL:{r.code.value}:{pt.value}@{pos}"
-    r = submit_placement(st)
-    if r.code.value != "OK":
-        return f"SUBMIT_PLACE:{r.code.value}"
-    for pos, d in pushes:
-        r = step_push(st, pos, d)
-        if r.code.value != "OK":
-            return f"PUSH_FAIL:{r.code.value}"
-    r = submit(st)
-    return r.code.value
-
-
-def level_has_features(spec: LevelSpec, meta: dict,
-                       allow_ramp: bool = False, allow_split: bool = False,
-                       strict: bool = True, **_ignored) -> bool:
-    """True iff a generated level actually shows the mechanics it was
-    generated for: ramp-only configs need a ramp, split-only configs a
-    splitter.  When both are allowed, `strict` requires a splitter (the
-    generator never puts a ramp and a splitter in the same level: splitter
-    branches are built without ramps, and a splitter after a ramp has no
-    support for its side branches); `strict=False` accepts either.
-
-    `allow_*` only *permit* a mechanic, so batch scripts use this to skip
-    seeds whose level never ended up using it.
-    """
-    types = {pt for pt, _ in spec.fixed_pieces}
-    types |= {PieceType(t) for t, _ in meta.get("patch_pieces", [])}
-    has_r = PieceType.RAMP in types
-    has_t = PieceType.SPLITTER in types
-    if allow_ramp and allow_split:
-        return has_t if strict else (has_r or has_t)
-    if allow_ramp:
-        return has_r
-    if allow_split:
-        return has_t
-    return True
-
-
-def generate_level(grid_size: Vec3 = (5, 4, 4),
+def generate_level(grid_size: Vec3 = (6, 5, 3),
                    seed: int = 0,
-                   target_skeleton_len: int = 6,
                    n_patches: int = 2,
-                   n_protected: int = 1,
-                   allow_ramp: bool = True,
-                   allow_split: bool = False,
-                   max_attempts: int = 60
-                   ) -> Optional[Tuple[LevelSpec, dict]]:
-    """Generate one level.  Returns (spec, meta) or None."""
+                   main_len: Tuple[int, int] = (3, 5),
+                   use_height: bool = False,
+                   use_split: bool = False,
+                   two_goals: bool = False,
+                   n_decoys: int = 0,
+                   n_protected: int = 0,
+                   tier: Optional[str] = None,
+                   max_attempts: int = 300,
+                   **_legacy) -> Optional[Tuple[LevelSpec, dict]]:
+    """Generate one level; see the module docstring.  `n_protected` adds
+    plain P pieces away from every wave line (pure scenery)."""
     rng = random.Random(seed)
-
+    A, B, C = grid_size
+    p_step = 0.4 if use_height else 0.0
     for attempt in range(max_attempts):
-        built = _build_skeleton(grid_size, rng, target_skeleton_len,
-                                 allow_ramp, allow_split)
-        if built is None:
-            continue
-        skeleton, origin_pos, origin_dir, pedestals = built
+        bd = _Board(grid_size)
+        L = rng.randint(*main_len)
+        # START and a direction with room for the whole chain (a random
+        # pick ran into the board edge ~80% of the time).
+        room = []
+        for x in range(1, A + 1):
+            for y in range(1, B + 1):
+                for d in DIRS:
+                    v = DIR_NAME_TO_VEC[d]
+                    run = 0
+                    while (1 <= x + v[0] * (run + 1) <= A
+                           and 1 <= y + v[1] * (run + 1) <= B):
+                        run += 1
+                    if run >= L + (0 if use_split else 1):
+                        room.append(((x, y), d))
+        if not room:
+            return None
+        start, d0 = rng.choice(room)
+        bd.put(PieceType.START, start, 1)
+        chain: List[Tuple[Col, int]] = []
 
-        # Add protected dominos
-        pieces = _add_protected(skeleton, grid_size, rng, n_protected)
-
-        # Extract patches (only from D/R; skip origin)
-        fixed, patches = _extract_patches(pieces, rng, n_patches,
-                                          keep_fixed=pedestals)
-        if len(patches) < n_patches:
-            continue
-
-        # Ensure the origin is FIXED (we never carve origin; belt-and-braces)
-        if origin_pos not in [p[1] for p in fixed]:
-            continue
-
-        # Push budget: at least 1 (single origin).  For splitters we may
-        # want more, but single push suffices because the splitter itself
-        # fires orthogonal branches.  We keep budget = max(1, #goals / 2).
-        push_budget = 1
-
-        # Inventory from patches
-        inventory: Dict[PieceType, int] = {}
-        for pt, _ in patches:
-            inventory[pt] = inventory.get(pt, 0) + 1
-
-        spec = LevelSpec(
-            grid_size=grid_size,
-            fixed_pieces=fixed,
-            inventory=inventory,
-            push_budget=push_budget,
-            meta={},
-        )
-
-        canonical_pushes = [(origin_pos, origin_dir)]
-        # Validate: replay patches+pushes → WIN
-        verdict = _replay(spec, patches, canonical_pushes)
-        if verdict != "WIN":
-            continue
-
-        # Validate: WITHOUT patches (just submit_placement w/ missing pieces
-        # fails the inventory-not-empty check → can't even get to PUSH).
-        # Equivalent check: replay with [] patches but inventory={} forced
-        # AND the patches' cells left empty — cascade can't traverse gap.
-        # We simulate by creating a "no-patch" spec and checking cascade.
-        nopatch_spec = LevelSpec(
-            grid_size=grid_size,
-            fixed_pieces=fixed,
-            inventory={},
-            push_budget=push_budget,
-        )
-        verdict_nopatch = _replay(nopatch_spec, [], canonical_pushes)
-        if verdict_nopatch == "WIN":
-            # Patches aren't load-bearing — try again
-            continue
-
-        # Near-miss check: at least one alternative push direction either
-        # fails to topple all goals OR topples a P.  (We skip this check
-        # for level with 0 protected and target_skeleton_len small, since
-        # it's naturally trivially "correct-direction-only".)
-        if n_protected >= 1:
-            near_miss_found = False
-            for d in _DIRS:
-                if d == origin_dir:
-                    continue
-                alt = _replay(spec, patches, [(origin_pos, d)])
-                if alt != "WIN":
-                    near_miss_found = True
-                    break
-            if not near_miss_found:
+        if use_split:
+            main = _line(bd, start, 1, d0, L, PieceType.SPLITTER, rng, p_step)
+            if main is None:
                 continue
+            chain += main
+            tc, tb = main[-1]
+            sides = perp_dirs(d0)
+            rng.shuffle(sides)
+            a = _line(bd, tc, tb, sides[0], rng.randint(2, 4), PieceType.GOAL,
+                      rng, p_step)
+            if a is None:
+                continue
+            chain += a
+            ends, end_dirs = [a[-1]], [sides[0]]
+            if two_goals:
+                b2 = _line(bd, tc, tb, sides[1], rng.randint(2, 4),
+                           PieceType.GOAL, rng, p_step)
+                if b2 is None:
+                    continue
+                chain += b2
+                ends.append(b2[-1])
+                end_dirs.append(sides[1])
+            elif not _trap(bd, tc, tb, sides[1], rng):
+                continue
+        else:
+            main = _line(bd, start, 1, d0, L, PieceType.GOAL, rng, p_step)
+            if main is None:
+                continue
+            chain += main
+            ends, end_dirs = [main[-1]], [d0]
 
+        # Decoys: beside START first (the wrong push directions), then past
+        # a goal (the wave keeps going after the goal falls).
+        spots = [(start, 1, d) for d in DIRS if d != d0]
+        rng.shuffle(spots)
+        spots += [(c, b, d) for (c, b), d in zip(ends, end_dirs)]
+        placed = 0
+        for c, b, d in spots:
+            if placed >= n_decoys:
+                break
+            placed += _trap(bd, c, b, d, rng)
+        if placed < n_decoys:
+            continue
+
+        # Scenery P pieces away from every line.
+        for _ in range(n_protected):
+            for _try in range(20):
+                c = (rng.randint(1, A), rng.randint(1, B))
+                if bd.free(c) and bd.clear(c, set()):
+                    bd.put(PieceType.PROTECTED, c, 1)
+                    break
+
+        # Carve the patches out of the chain's plain dominoes.
+        carvable = [(c, b) for c, b in chain
+                    if bd.pieces[(c[0], c[1], b)] == PieceType.DOMINO]
+        if len(carvable) < n_patches:
+            continue
+        carved = rng.sample(carvable, n_patches)
+        patches = sorted((c[0], c[1], b) for c, b in carved)
+        fixed = [(pt, pos) for pos, pt in sorted(bd.pieces.items())
+                 if pos not in patches]
+
+        spec = LevelSpec(grid_size=grid_size, fixed_pieces=fixed,
+                         inventory={PieceType.DOMINO: n_patches},
+                         push_budget=1)
+        sols = solutions(spec, n_patches)
+        if sols != [(frozenset(patches), d0)]:
+            continue                       # not unique, or a patch is spare
+        spec.meta = {"solution_patches": [list(p) for p in patches]}
+        m = analyze(spec, n_patches, samples=600, seed=seed)
+        if tier is not None and not fits_tier(m, n_patches, tier):
+            continue
+
+        start_pos = (start[0], start[1], 1)
         meta = {
+            "rules": "v2",
             "seed": seed,
             "attempt": attempt,
-            "skeleton_len": len(skeleton),
-            "pieces_total": len(pieces),
+            "tier": tier,
+            "grid_size": list(grid_size),
+            "patch_count": n_patches,
             "fixed_count": len(fixed),
-            "patch_count": len(patches),
-            "n_protected": n_protected,
-            "allow_ramp": allow_ramp,
-            "allow_split": allow_split,
-            "origin": list(origin_pos),
-            "origin_dir": origin_dir,
-            "patch_pieces": [(pt.value, list(pos)) for pt, pos in patches],
-            "pushes": [(list(pos), d) for pos, d in canonical_pushes],
-            "push_budget": push_budget,
+            "use_height": use_height,
+            "use_split": use_split,
+            "n_decoys": n_decoys,
+            "origin": list(start_pos),
+            "origin_dir": d0,
+            "solution_patches": [list(p) for p in patches],
+            "patch_pieces": [("D", list(p)) for p in patches],
+            "pushes": [(list(start_pos), d0)],
+            "push_budget": 1,
+            "difficulty": m,
         }
         spec.meta = dict(meta)
         return spec, meta
-
     return None
+
+
+def level_has_features(spec: LevelSpec, meta: dict, **_kw) -> bool:
+    """Kept for old callers: v2 levels are built with their features."""
+    return True
 
 
 if __name__ == "__main__":
@@ -517,13 +251,9 @@ if __name__ == "__main__":
     seed = int(sys.argv[1]) if len(sys.argv) > 1 else 0
     r = generate_level(seed=seed)
     if r is None:
-        print("generation failed")
-        raise SystemExit(1)
+        raise SystemExit("generation failed")
     spec, meta = r
-    print("generated level:")
-    print(f"  grid:     {spec.grid_size}")
-    print(f"  fixed:    {len(spec.fixed_pieces)} pieces")
     for pt, pos in spec.fixed_pieces:
-        print(f"    {pt.value}@{pos}")
-    print(f"  patches:  {meta['patch_pieces']}")
-    print(f"  origin:   {meta['origin']} dir={meta['origin_dir']}")
+        print(f"  {pt.value}@{pos}")
+    print("solution:", meta["patch_pieces"], meta["pushes"])
+    print("difficulty:", meta["difficulty"])

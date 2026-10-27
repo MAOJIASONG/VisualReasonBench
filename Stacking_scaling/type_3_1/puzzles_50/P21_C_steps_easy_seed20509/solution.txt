@@ -1,0 +1,7 @@
+P21_C_steps_easy
+grid: (5, 5, 3)
+fixed: [('P', (2, 5, 1)), ('D', (3, 5, 1)), ('B', (5, 2, 1)), ('G', (5, 2, 2)), ('S', (5, 5, 1))]
+inventory: {'D': 2}
+patches: [('D', [5, 3, 1]), ('D', [5, 4, 1])]
+push:    START [5, 5, 1] dir=-y
+difficulty: {'n_solutions': 1, 'p_wavefill': 0.5, 'min_patches': 2, 'gaps': 1, 'decoy_gaps': 1, 'p_random': 0.0, 'p_gapfill': 0.0}

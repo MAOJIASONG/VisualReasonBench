@@ -1,0 +1,20 @@
+P46_E_mixed_medium
+grid: (5, 5, 5)
+entrances: [(1, 2, 1)]
+exits: [(3, 5, 2), (2, 1, 5)]
+obstacles: [(2, 3, 2), (2, 4, 2)]
+inventory: {'S1': 3, 'L': 4, 'T': 1, 'I': 4}
+difficulty: {'n_solutions': 5, 'capped': False, 'min_pipes': 8, 'staircase_ok': False, 'n_portals': 3, 'plan_length': 11}
+
+plan (11 pieces):
+  01: S1 at (3, 2, 1)
+  02: S1 at (3, 4, 1)
+  03: S1 at (3, 3, 1)
+  04: L at (2, 2, 1) ends=-x,+z
+  05: T at (2, 2, 2) ends=+x,+z,-z
+  06: L at (3, 2, 2) ends=-x,+y
+  07: I at (3, 3, 2) ends=+y,-y
+  08: I at (3, 4, 2) ends=+y,-y
+  09: I at (2, 2, 3) ends=+z,-z
+  10: I at (2, 2, 4) ends=+z,-z
+  11: L at (2, 2, 5) ends=-y,-z

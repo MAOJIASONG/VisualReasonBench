@@ -15,6 +15,7 @@ import time
 from typing import Tuple
 
 from .generator import generate_level
+from .levels import CATEGORY
 from .game_core import init_state
 from .loader import save_level_to_json
 from .mechanics import step_place, step_push, submit, submit_placement
@@ -24,10 +25,8 @@ from .visualizer_plotly import render_state_pair
 
 def play_seed(seed: int = 1, out_root: str = "type_3_1/images") -> None:
     print(f"[play] seed={seed}")
-    r = generate_level(seed=seed, grid_size=(5, 4, 4),
-                       target_skeleton_len=6,
-                       n_patches=2, n_protected=1,
-                       allow_ramp=True, allow_split=False)
+    r = generate_level(seed=seed, tier="medium",
+                       **CATEGORY["C_steps"]["medium"])
     if r is None:
         print("[play] generation failed")
         return

@@ -1,0 +1,19 @@
+P41_E_mixed_easy
+grid: (5, 5, 5)
+entrances: [(3, 5, 1)]
+exits: [(3, 1, 2), (5, 2, 4)]
+obstacles: [(3, 3, 2)]
+inventory: {'L': 5, 'T': 1, 'I': 5}
+difficulty: {'n_solutions': 9, 'capped': False, 'min_pipes': 8, 'staircase_ok': False, 'n_portals': 3, 'plan_length': 10}
+
+plan (10 pieces):
+  01: L at (3, 1, 1) ends=+x,+y
+  02: T at (3, 2, 1) ends=+y,-y,+z
+  03: I at (3, 3, 1) ends=+y,-y
+  04: I at (3, 4, 1) ends=+y,-y
+  05: L at (4, 1, 1) ends=-x,+y
+  06: L at (4, 2, 1) ends=-y,+z
+  07: L at (3, 2, 2) ends=-y,-z
+  08: I at (4, 2, 2) ends=+z,-z
+  09: I at (4, 2, 3) ends=+z,-z
+  10: L at (4, 2, 4) ends=+x,-z

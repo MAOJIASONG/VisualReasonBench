@@ -1,17 +1,15 @@
-# Domino Chain Reaction 3D — T3 × T2 Hybrid
+# Domino Chain Reaction 3D — T3 × T2 Hybrid (rules v2)
 
-A 3D causal-cascade puzzle.  You get a partial arrangement of fixed
-dominos (including one or more **gold goals** and a few **red protected
-pieces**) plus a small **inventory of patch dominos**.  You place the
-patches into legal cells, then **choose one piece to push** — the
-cascade propagates through the whole arrangement.  You **WIN** iff
-every goal is toppled and no protected domino gets touched.
+A 3D causal-cascade puzzle.  A partial domino chain stands on a board with
+a green **START** domino, gold **goals** and red **protected** pieces.  You
+get a few **patch dominoes**: put them into the right gaps, then push the
+START domino in one direction.  You **WIN** iff every goal falls and no red
+piece does.
 
 This is the **T3 × T2 Hybrid** task in the CHAIN benchmark — complementary
 to T1 Burr Puzzle, T2 Stacking, and T2×T3 PipeFit 3D.  Where PipeFit's
-T3 element is a *static* anchor graph evaluated at submit, Domino's T3
-element is a *dynamic* cascade that temporally unfolds from a single
-push action.
+T3 element is a *static* network checked at submit, Domino's T3 element is
+a *dynamic* cascade that unfolds from a single push.
 
 ---
 
@@ -39,52 +37,43 @@ python -m type_3_1.generator 7
 
 ## Rules in 60 seconds
 
-- Grid is `A × B × C` (z=1 is ground).
-- Special pieces (always FIXED, pre-placed):
-  - `G` (**gold goal**, 1×1×2) — must be toppled to WIN.
-  - `P` (**red protected**, 1×1×2) — toppling any LOSES instantly.
-  - `T` (**splitter**, 1×1×2, cross cap) — when toppled, cascade emits
-    two orthogonal pulses in the horizontal plane; does NOT continue
-    straight.
-- Patch pieces (the player places from inventory):
-  - `D` (**domino**, 1×1×2) — falls in the direction it was hit, cascade
-    continues in same direction.
-  - `R` (**ramp**, 1×1×1) — cascade re-emerges at `z + 1` along the same
-    horizontal direction.
-- **Phase 1 — PLACE**: `step_place(piece_type, pos)` / `step_remove(pos)`
-  / `submit_placement()`.  Free undo.  Physical-support rule enforced
-  (no building on thin air).  Submit requires the inventory to be empty.
-- **Phase 2 — PUSH**: `step_push(piece_anchor, direction)` / `submit()`.
-  Up to `push_budget` pushes.  Pushes are **irreversible**.
-- **Cascade**:
-  - A cascade is driven by pulses `(from_anchor, dir, z)`.
-  - Empty / OOB / already-toppled → pulse dies.
-  - `D` / `G` / `P`: topple; one forward pulse in the same direction at
-    the same z.  (P triggers GAME_OVER but we still run to completion
-    for rendering.)
-  - `T`: topple; **two** orthogonal pulses; straight-through dies.
-  - `R`: activate; one pulse at `z + 1` in the same direction.
-- **WIN** iff every G is toppled AND no P is toppled AND push count ≤
-  `push_budget`.
+- Grid `A × B × C` (z=1 is the floor).  Pieces (all fixed except patches):
+
+  | piece | look | behaviour |
+  |---|---|---|
+  | `S` START | green domino, white disc on top | the **only** piece you may push, once, in a direction you choose |
+  | `D` domino | ivory, pips | falls forward and knocks the next piece |
+  | `T` splitter | ivory + brass cross | when hit, sends the wave out to **both sides** (left and right of the incoming direction), not straight on |
+  | `G` goal | gold + star | topple every goal to win |
+  | `P` protected | red + white X | toppling one loses |
+  | step | grey block | holds a piece one level up; never falls; a wave that meets only a step stops |
+
+- **Hit rule (physical):** a falling domino tips one cell forward and
+  knocks over every standing piece whose body is in that column at its own
+  height or one level higher (dominoes are two cells tall).  So a wave can
+  climb or descend **one** step; two levels apart do not touch.
+- **Phase 1 — PLACE:** `step_place(state, D, pos)` / `step_remove`;
+  a patch stands on the floor or directly on a step.  Free undo.
+  `submit_placement` needs every patch placed.
+- **Phase 2 — PUSH:** `step_push(state, START_pos, dir)` runs the whole
+  cascade; `submit` scores it.
+
+Rules v1 (any standing piece pushable, pulses only hit pieces whose base
+was at exactly their height, ramps lifted the pulse) let 35/50 of the old
+puzzles be won by pushing the goal itself with the patches anywhere; see
+"Rules v2" in the iteration history below.
 
 ---
 
 ## What it tests
 
-- **T3 — Structural Propagation**: a single local push triggers a wave
-  that can touch pieces far from the source.  The player must
-  pre-simulate the cascade mentally to decide which direction to push.
-- **T2 — Spatial Commitment**: the patch pieces must be placed in the
-  correct cells.  A missing patch → cascade dies early and a goal stays
-  standing.  An extra patch in the wrong place → cascade may wander
-  into a protected domino.
-- **Splitter routing**: with a `T` on the skeleton, one push sends the
-  wave down two orthogonal branches simultaneously — the player must
-  verify both branches land on goals, not protected.
-- **z-transitions**: ramps lift the cascade one cell; a goal on a
-  different z is only reachable via a ramp.
-- **Near-miss hazards**: generator places protected dominos face-adjacent
-  to the skeleton so that a wrong-direction push catches one.
+- **T3 — Structural propagation:** predict where a single push travels,
+  through splitters (two branches at once) and up / down steps.
+- **T2 — Spatial commitment:** the patches are exactly as many as the real
+  gaps, but the board also shows **decoy gaps** (an empty, supported cell
+  between pieces that leads to a red piece).  Filling a decoy wastes a patch
+  or loses, so "fill every hole" fails from the medium tier on.
+- **Direction:** decoy lines beside START punish pushing the wrong way.
 
 ---
 
@@ -93,14 +82,15 @@ python -m type_3_1.generator 7
 ```
 type_3_1/
 ├── __init__.py
-├── game_core.py           # PieceType, LevelSpec, GameState, Phase, ActionCode
-├── cascade.py             # pulse simulator (splitter / ramp semantics)
+├── game_core.py           # PieceType (S/D/T/G/P/step), LevelSpec, GameState
+├── cascade.py             # v2 physical hit rule (±1 level), splitter
 ├── mechanics.py           # step_place / step_remove / step_push / submit
-├── generator.py           # forward skeleton builder + patch carving + validation
-├── solver.py              # replay validator (uses spec.meta)
+├── difficulty.py          # exhaustive solution search + baseline players
+├── generator.py           # chain + decoys + carved patches, tier by measurement
+├── levels.py              # category / tier configs, layout de-duplication
+├── solver.py              # replay of the stored solution
 ├── loader.py              # JSON save / load
-├── visualizer_plotly.py   # 3D renderer: ivory dominos, brass splitter, gold goal,
-│                          # red protected, tan ramp, cascade arrows, panels
+├── visualizer_plotly.py   # 3D scene (START, steps, toppled pieces, cascade)
 ├── play.py                # single-level demo (renders every step)
 ├── play_batch.py          # 10-level easy / medium / hard batch
 ├── generate_50.py         # 50-puzzle 5-category batch
@@ -116,19 +106,17 @@ type_3_1/
 
 | Element | Appearance |
 |---|---|
-| Domino `D` | slim ivory standing slab (0.46 × 0.46 × 2.0) with pips on all four faces |
-| Splitter `T` | ivory body + **brass cross cap** on top |
-| Goal `G` | **gold** slab + dark **5-point star** on top (distinct from the splitter's cross) |
-| Protected `P` | red-lacquered slab + white warning-X on top; **red halo ring** on the floor once toppled (the LOSE indicator) |
-| Ramp `R` | direction-free **three-step block** until the cascade uses it (game logic gives a ramp no direction); afterwards a wedge rising in the direction it was crossed |
-| Toppled D/T/G/P | lies flat **inside its own cell**, darker shade of its own colour, white arrow = fall direction (goal keeps its star) |
-| Cascade trail | steel-blue arrows along the true pulse edges (`from` → hit piece), so splitter branches show as branches |
-| Coordinates | `x=…` / `y=…` labels on the floor edges facing the camera, `z=…` on a vertical edge (shared `chain_viz`) |
-| Raised pieces | dashed drop line + floor footprint under every piece standing above z=1 |
-| Board | green-felt checkered board with a wooden rim (`chain_viz` theme `domino`) |
-| Frame | game-style frame from `chain_hud`: title bar with PLAYING / WIN / LOSE badge; STATUS card (phase, pushes, goals / protected toppled with progress bars), PATCH PIECES card (left / total), LEGEND card with a drawn icon per piece; one-line rules strip |
-| Canvas | 1960 × 1540 px, always frames the full grid |
-| Cameras | `front` + `back` via `render_state_pair` |
+| START `S` | green slab, white disc on top |
+| Domino `D` | ivory slab (0.46 × 0.46 × 2.0) with pips on all four faces |
+| Splitter `T` | ivory body + brass cross cap |
+| Goal `G` | gold slab + dark 5-point star |
+| Protected `P` | red slab + white X; red halo ring on the floor once toppled (LOSE) |
+| Step | grey block filling its cell; pieces stand on top |
+| Toppled piece | lies flat inside its own cell, darker shade, white arrow = fall direction |
+| Cascade trail | steel-blue arrows along the true wave edges, so branches show as branches |
+| Board / frame | green-felt board, `x=… / y=… / z=…` labels (`chain_viz`), game frame with STATUS / PATCH DOMINOES / LEGEND cards (`chain_hud`) |
+
+---
 
 ## Programmatic API
 
@@ -138,13 +126,10 @@ from type_3_1.solver import solve
 from type_3_1.game_core import init_state
 from type_3_1.mechanics import step_place, step_push, submit, submit_placement
 
-spec, meta = generate_level(
-    grid_size=(5, 4, 4),
-    target_skeleton_len=6,
-    n_patches=2, n_protected=1,
-    allow_ramp=True, allow_split=False,
-    seed=3,
-)
+from type_3_1.levels import CATEGORY
+
+spec, meta = generate_level(seed=3, tier="medium",
+                            **CATEGORY["C_steps"]["medium"])
 state = init_state(spec)
 plan = solve(spec)                              # uses spec.meta to replay
 for act in plan:
@@ -164,90 +149,72 @@ for act in plan:
 
 ## Generator knobs
 
-| Argument | Effect | Typical |
-|---|---|---|
-| `grid_size` | (A, B, C) board | `(5, 4, 4)` |
-| `target_skeleton_len` | how long the cascade chain should be (max) | 4–10 |
-| `n_patches` | how many inventory pieces the player must place | 1–4 |
-| `n_protected` | red-domino hazards near the skeleton | 0–3 |
-| `allow_ramp` | whether to insert z-transitions (R) | `True` / `False` |
-| `allow_split` | whether to insert splitters (T) | `True` / `False` |
-| `seed` | RNG seed | any int |
-| `max_attempts` | rejection-sampling budget | 60 default |
+`generator.generate_level(grid_size, seed, n_patches, main_len, use_height,
+use_split, two_goals, n_decoys, n_protected, tier)`:
 
-Per-level meta fields stored in `spec.meta`:
-
-| Field | Meaning |
+| knob | effect |
 |---|---|
-| `skeleton_len` | number of pieces on the cascade chain |
-| `pieces_total` | total pieces (skeleton + protected) |
-| `fixed_count` | pieces pre-placed at level init |
-| `patch_count` | pieces the player must add |
-| `n_protected` | number of P hazards |
-| `origin` | push-origin anchor (as list) |
-| `origin_dir` | push direction |
-| `patch_pieces` | `[(piece_type_str, [x,y,z]), …]` — canonical patch layout |
-| `pushes` | `[([x,y,z], dir_str), …]` — canonical push sequence |
-| `push_budget` | cap on pushes (≥ len(pushes)) |
+| `main_len` | length range of the chain from START |
+| `use_height` | chain may step up / down one level on grey steps |
+| `use_split` | chain ends in a splitter; one side to a goal, the other to a second goal (`two_goals`) or a decoy |
+| `n_decoys` | decoy lines (gap → dominoes → red) beside START / past a goal |
+| `n_patches` | dominoes carved out of the chain (= the inventory) |
+| `tier` | accept only levels whose **measured** difficulty is in that band |
 
-Hard guarantees:
+Hard guarantees (checked by exhaustive search, `difficulty.solutions`):
 
-- **Replay always wins**: generator only returns levels where placing the
-  canonical patches and applying the canonical pushes evaluates to WIN.
-- **Ramps get a step to land on**: the cascade leaves a ramp one level up,
-  so the generator adds a fixed 1-cell step block under the landing cell
-  when nothing supports it (and never carves those blocks into patches).
-  Before this, every ramp branch failed the support check and was rolled
-  back, so no generated level contained a ramp.
-- **Batch scripts enforce category mechanics**: `generate_50` /
-  `play_batch` only accept seeds whose level actually contains a ramp
-  (C_ramp) / splitter (D_split / E_full; E_full falls back to a ramp when
-  the grid is too narrow for a splitter) — see
-  `generator.level_has_features` — and never reuse a seed for the same
-  config (several tier slots share a config, which used to produce
-  identical puzzles).
-- **Known limitation**: a level never contains both a ramp and a
-  splitter.  Splitter branches are built with ramps disabled, and a
-  splitter reached through a ramp stands one level up with no support for
-  its side branches.
-- **Patches are load-bearing**: for every returned level, removing the
-  patches and running the same push makes the cascade fail to reach all
-  goals (or not reach any) — so patches genuinely matter.
-- **Near-miss exists (when `n_protected ≥ 1`)**: at least one of the
-  three alternative push directions leads to a non-WIN outcome, so
-  picking the correct direction is not trivial.
-- **Physically plausible**: every piece (fixed or patch) has ground or
-  the top of another piece directly below it at placement time.
+- exactly **one** winning (patch placement, push direction);
+- it uses **all** patches (every patch is load-bearing);
+- every column holds at most one standing piece, and a chain cell touches
+  only its neighbours in the chain, so nothing interacts by accident.
+
+Measured per level (`meta["difficulty"]`, `difficulty.py`): decoy gaps,
+win rate of random play, of "fill the holes nearest START" (gap-fill) and
+of "follow the wave and fill whichever hole it stops at" (wave-follow).
+
+| tier | patches | decoy gaps | gap-fill wins | wave-follow wins |
+|---|---|---|---|---|
+| easy | 1–2 | any | allowed | — |
+| medium | 2–3 | ≥ 1 | ≤ 50 % | ≤ 50 % |
+| hard | 3–4 | ≥ 2 | 0 % | ≤ 33 % |
 
 ---
 
 ## The 50-puzzle batch (`puzzles_50/`)
 
-`python -m type_3_1.generate_50` produces 50 puzzles in 5 categories:
+`python -m type_3_1.generate_50` (configs in `levels.py`):
 
-| category | pieces | obstacles | count |
-|---|---|---|---|
-| A_straight | D + G only | 0 P | 10 |
-| B_protect  | D + G + P | ≥ 1 P | 10 |
-| C_ramp     | D + R + G (+P) | maybe | 10 |
-| D_split    | D + T + G (+P) | maybe | 10 |
-| E_full     | D + R + T + G + P | 1–3 P | 10 |
+| category | what it adds |
+|---|---|
+| A_line | straight chain |
+| B_decoy | decoy lines around the chain |
+| C_steps | height changes on grey steps |
+| D_split | a splitter sends the wave both ways |
+| E_full | steps + splitter + decoys |
 
-Each category is split 3 easy + 4 medium + 3 hard.  Per puzzle we save:
-
-- `level.json` — full `LevelSpec` + `meta`
-- `solution.txt` — the solver's plan, step-by-step
-- `00_initial_front.png` — starting arrangement
-- `99_submit_front.png` — final (WIN) arrangement with cascade trail
-
-Top level:
-
-- `puzzles_50/SUMMARY.md` — markdown table of all 50 puzzles
-- `puzzles_50/index.json` — programmatic index
+Each category is 3 easy + 4 medium + 3 hard; layouts are de-duplicated up
+to rotation / reflection / translation and every slot scans its own seeds.
+Per puzzle: `level.json`, `solution.txt`, `00_initial_front.png`,
+`99_submit_front.png`; plus `SUMMARY.md` and `index.json` with the measured
+difficulty.  `level.json`'s meta and `solution.txt` contain the answer —
+keep them out of model inputs.
 
 ---
 
 ## Iteration history & lessons learned
+
+### Rules v2 — measured, then redesigned (2026-10)
+
+An exhaustive audit of the v1 puzzles (every placement × every push)
+found: 35/50 could be won with the patches *anywhere* by pushing the goal
+(or a splitter along its stem); in 40/50 the patch cells were exactly the
+straight gaps between pieces; protected pieces floated after a ramp under
+them became a patch; the "step" under a raised goal was a working ramp;
+and tiers only scaled the grid.  v2 fixes the rules rather than the
+numbers: one pushable START, a physical hit rule (±1 level), inert steps
+instead of ramps, decoy gaps, and acceptance by exhaustive search (unique
+solution, all patches load-bearing, measured tier).  The v1 notes below are
+kept for history.
 
 The build went through several rounds of adjustment.  Each lesson is
 written so the next CHAIN task can skip the mistake.
