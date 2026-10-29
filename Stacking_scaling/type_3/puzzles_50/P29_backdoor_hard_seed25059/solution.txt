@@ -1,0 +1,11 @@
+P29_backdoor_hard
+concept: backdoor  tier: hard
+insight: The route with the fewest valves also reaches a red cell through a loop; take the clean detour.
+grid: (5, 5, 5)
+pumps: [((4, 1, 1), 'blue')]
+tanks: [((5, 3, 3), 'blue'), ((5, 4, 1), 'blue')]
+valves: [(1, 2, 4), (2, 5, 4), (3, 3, 2), (3, 5, 2), (4, 1, 5), (5, 3, 5), (5, 5, 3), (5, 5, 5)]
+red cells: [(1, 4, 2), (2, 1, 1)]
+solution (open in this order): [(4, 1, 5), (5, 3, 5), (5, 5, 5), (5, 5, 3)]
+tempting mistake (the fewest-valve route: open (2, 5, 4) -> ProtectedBreach)
+difficulty: {'n_valves': 8, 'min_plan': 4, 'n_min_sets': 1, 'n_win_sets': 1, 'prefilled': 0, 'traps': 4, 'nonlocal_traps': 4, 'p_random': 0.0143, 'p_frontier': 0.0039, 'p_greedy': 0.0, 'p_lookahead': 1.0, 'shortest_ok': False, 'filler': 0, 'n_colors': 1, 'score': 9.0}

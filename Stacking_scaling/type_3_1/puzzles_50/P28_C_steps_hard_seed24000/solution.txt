@@ -1,7 +1,0 @@
-P28_C_steps_hard
-grid: (8, 6, 4)
-fixed: [('G', (3, 3, 1)), ('D', (7, 3, 1)), ('P', (8, 1, 1)), ('S', (8, 3, 1)), ('D', (8, 5, 1)), ('P', (8, 6, 1))]
-inventory: {'D': 3}
-patches: [('D', [4, 3, 1]), ('D', [5, 3, 1]), ('D', [6, 3, 1])]
-push:    START [8, 3, 1] dir=-x
-difficulty: {'n_solutions': 1, 'p_wavefill': 0.3333, 'min_patches': 3, 'gaps': 2, 'decoy_gaps': 2, 'p_random': 0.0, 'p_gapfill': 0.0}

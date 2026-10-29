@@ -10,8 +10,10 @@ Categories (10 each = 3 easy + 4 medium + 3 hard):
 
 Tiers are measured, not assumed (difficulty.TIERS): every level has exactly
 one winning (placement, direction), uses all its patches, and the medium /
-hard tiers defeat the "fill the obvious holes" shortcut.  Layouts are
-de-duplicated up to rotation, reflection and translation.
+hard tiers defeat the "fill the obvious holes" shortcut.  The tiers are one
+ladder for the whole game: easy 1-2 patches / medium 3 / hard 4, decoy holes
+<= 1 / 2 / >= 3, score <= 3.1 / 4-5.6 / >= 6.  Layouts are de-duplicated up
+to rotation, reflection and translation.
 
 Per puzzle we render (initial, submit) x front and save level.json +
 solution.txt.  level.json's meta and solution.txt contain the answer: keep
@@ -26,17 +28,19 @@ import sys
 import time
 from typing import Dict, List, Tuple
 
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from chain_search import pick_levels, tier_table  # noqa: E402
+
 if __package__ in (None, ""):
-    sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     from type_3_1.game_core import init_state
-    from type_3_1.levels import CATEGORY, find_level
+    from type_3_1.levels import CATEGORY, INSIGHT, layout_key, make_level
     from type_3_1.loader import save_level_to_json
     from type_3_1.mechanics import step_place, step_push, submit, submit_placement
     from type_3_1.solver import solve
     from type_3_1.visualizer_plotly import render_state_pair
 else:
     from .game_core import init_state
-    from .levels import CATEGORY, find_level
+    from .levels import CATEGORY, INSIGHT, layout_key, make_level
     from .loader import save_level_to_json
     from .mechanics import step_place, step_push, submit, submit_placement
     from .solver import solve
@@ -75,6 +79,7 @@ def _render_one(label: str, spec, meta, plan, out_dir: str) -> None:
                               views=("front",))
     with open(os.path.join(out_dir, "solution.txt"), "w") as f:
         f.write(f"{label}\n")
+        f.write(f"insight: {meta.get('insight', '')}\n")
         f.write(f"grid: {spec.grid_size}\n")
         f.write(f"fixed: {[(pt.value, pos) for pt, pos in spec.fixed_pieces]}\n")
         f.write(f"inventory: { {pt.value: n for pt, n in spec.inventory.items() if n} }\n")
@@ -95,18 +100,19 @@ def main():
 
     plan = _make_plan()
     rows: List[Dict] = []
-    seen: set = set()
     t_all = time.time()
-    for i, (label, cat, tier) in enumerate(plan, 1):
+    picks = pick_levels(plan, make_level, layout_key, n_seeds=400, need=6)
+    for i, ((label, cat, tier), found) in enumerate(zip(plan, picks), 1):
         kwargs = CATEGORY[cat][tier]
         print(f"=== [{i:2d}/{len(plan)}] {label}")
-        found = find_level(kwargs, tier, range(10000 + 500 * i, 10000 + 500 * i + 400), seen)
         if found is None:
             print("  !! no level found")
             rows.append({"label": label, "cat": cat, "diff": tier, "seed": None,
                          "grid": list(kwargs["grid_size"])})
             continue
         seed, spec, meta = found
+        meta["insight"] = INSIGHT[cat]
+        spec.meta = dict(meta)
         out_dir = os.path.join(out_root, f"{label}_seed{seed}")
         _render_one(label, spec, meta, solve(spec), out_dir)
         d = meta["difficulty"]
@@ -123,17 +129,22 @@ def main():
         "(3 easy + 4 medium + 3 hard each).  Every level has exactly one "
         "winning placement + push direction (exhaustive search).\n",
         "| # | label | grid | seed | fixed | patches | decoy gaps | P(random) "
-        "| P(gap-fill) | P(wave-follow) |",
-        "|---|---|---|---|---|---|---|---|---|---|",
+        "| P(gap-fill) | P(wave-follow) | score |",
+        "|---|---|---|---|---|---|---|---|---|---|---|",
     ]
     for i, r in enumerate(rows, 1):
         if r.get("seed") is None:
-            lines.append(f"| {i} | {r['label']} | {tuple(r['grid'])} | FAILED | | | | | | |")
+            lines.append(f"| {i} | {r['label']} | {tuple(r['grid'])} | FAILED | | | | | | | |")
             continue
         lines.append(
             f"| {i} | {r['label']} | {tuple(r['grid'])} | {r['seed']} | "
             f"{r['fixed_count']} | {r['patch_count']} | {r['decoy_gaps']} | "
-            f"{r['p_random']:.3f} | {r['p_gapfill']:.2f} | {r['p_wavefill']:.2f} |")
+            f"{r['p_random']:.3f} | {r['p_gapfill']:.2f} | {r['p_wavefill']:.2f} | {r['score']:.1f} |")
+    lines += ["", "score = (patches - 1) + 0.5 (decoy gaps + patches on a step) "
+              "+ log2 1/P(wave-follow).  Tiers are one ladder for the whole game "
+              "(difficulty.TIERS); ranges per tier:", ""]
+    lines += tier_table(rows, "diff", [("patch_count", "patches"), ("decoy_gaps", "decoy gaps"),
+                                       ("p_wavefill", "P(wave-follow)"), ("score", "score")])
     lines += ["", f"elapsed total: {time.time() - t_all:.1f}s"]
     with open(os.path.join(out_root, "SUMMARY.md"), "w") as f:
         f.write("\n".join(lines))

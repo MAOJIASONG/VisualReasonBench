@@ -7,16 +7,18 @@ import sys
 import time
 from typing import Dict, List, Optional, Tuple
 
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from chain_search import pick_levels, tier_table  # noqa: E402
+
 if __package__ in (None, ""):
-    sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    from type_2_3.levels import CATEGORY, find_level
+    from type_2_3.levels import CATEGORY, layout_key, make_level
     from type_2_3.solver import solve
     from type_2_3.game_core import init_state
     from type_2_3.mechanics import submit, step_place, step_remove
     from type_2_3.visualizer_plotly import render_state_pair
     from type_2_3.loader import save_level_to_json
 else:
-    from .levels import CATEGORY, find_level
+    from .levels import CATEGORY, layout_key, make_level
     from .solver import solve
     from .game_core import init_state
     from .mechanics import submit, step_place, step_remove
@@ -97,18 +99,18 @@ def main():
     os.makedirs(out_root, exist_ok=True)
 
     lines = ["# PipeFit 3D — 10-puzzle batch playthrough (rules v2)\n",
-             "| # | label | category | grid | seed | plan | pipes | supports | solutions | staircase wins | inventory |",
-             "|---|---|---|---|---|---|---|---|---|---|---|"]
+             "| # | label | category | grid | seed | plan | pipes | supports | solutions | staircase wins | score | inventory |",
+             "|---|---|---|---|---|---|---|---|---|---|---|---|"]
+    rows = []
 
     t0 = time.time()
-    seen: set = set()
-    for idx, (label, cat, tier) in enumerate(PUZZLES, 1):
+    picks = pick_levels(PUZZLES, make_level, layout_key, base=0, stride=1000, need=1)
+    for idx, ((label, cat, tier), found) in enumerate(zip(PUZZLES, picks), 1):
         params = CATEGORY[cat][tier]
         print(f"\n=== puzzle {idx:2d}: {label}  {cat} ===")
-        found = find_level(params, tier, range(1000 * idx, 1000 * idx + 300), seen)
         if found is None:
             print("  !! failed")
-            lines.append(f"| {idx} | {label} | {cat} | {params['grid_size']} | -- | FAILED | | | | | |")
+            lines.append(f"| {idx} | {label} | {cat} | {params['grid_size']} | -- | FAILED | | | | | | |")
             continue
         seed, spec, meta = found
         plan = solve(spec)
@@ -118,9 +120,11 @@ def main():
         inv = {pt.value: n for pt, n in spec.inventory.items() if n > 0}
         lines.append(f"| {idx} | {label} | {cat} | {params['grid_size']} | {seed} | {len(plan)} "
                      f"| {meta['n_pipes']} | {meta['n_supports']} | {d['n_solutions']} "
-                     f"| {d['staircase_ok']} | {inv} |")
+                     f"| {d['staircase_ok']} | {d['score']:.1f} | {inv} |")
+        rows.append({"tier": tier, "seed": seed, **d})
         print(f"  seed={seed}  plan={len(plan)}  {d} -> {out_dir}/")
 
+    lines += [""] + tier_table(rows, "tier", [("plan_length", "pieces"), ("score", "score")])
     lines.append(f"\nelapsed: {time.time() - t0:.1f}s")
     with open(os.path.join(out_root, "SUMMARY.md"), "w") as f:
         f.write("\n".join(lines))

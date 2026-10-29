@@ -17,17 +17,81 @@ Reported metrics:
   p_frontier        ... of "open a valve that touches fluid and is not next
                     to a red cell" (the obvious local rule)
   p_greedy          ... of "open the valve nearest to an empty target"
+  p_lookahead       ... of a player who simulates ONE valve ahead: opens a
+                    valve that does not lose right now and adds fluid.  It
+                    only fails on combination traps (two valves that are
+                    each safe but lose together, e.g. two pumps meeting)
+  shortest_ok       does "for each tank open the valves on its route with
+                    the fewest valves" win?  (False = the obvious route is
+                    a trap, e.g. a back door into a red cell)
+  filler            valves that are neither in the winning set nor fatal
+                    when added to it (dead weight; the generator wants 0)
 """
 
 from __future__ import annotations
 
+import math
+
 from functools import lru_cache
 from typing import Callable, Dict, List, Tuple
 
-from .game_core import CellType, GameState, LevelSpec, face_neighbors
-from .propagation import _compute_full_fluid
+from collections import deque
+
+from .game_core import ActionCode, CellType, GameState, LevelSpec, face_neighbors
+from .propagation import _compute_full_fluid, propagate_fluid
 
 Pos = Tuple[int, int, int]
+
+
+def outcome(spec: LevelSpec, opened) -> Tuple[bool, bool, Dict[Pos, str]]:
+    """(lose, win, fluid) once exactly `opened` valves are open.  Losing =
+    a red cell touched, a tank reached by the wrong colour, or two colours
+    meeting."""
+    st = GameState(spec=spec, opened_valves=set(opened))
+    lose = propagate_fluid(st).code != ActionCode.OK
+    fluid = _compute_full_fluid(st)
+    win = not lose and all(fluid.get(t) == spec.cells[t].color
+                           for t in spec.targets)
+    return lose, win, fluid
+
+
+def shortest_plan(spec: LevelSpec) -> List[Pos]:
+    """Valves on each tank's fewest-valve route from a same-colour pump
+    (0-1 BFS; ties broken by route length, then coordinates)."""
+    g = spec.grid_size
+    plan: List[Pos] = []
+    for t in spec.targets:
+        col = spec.cells[t].color
+        best: Dict[Pos, Tuple[int, int]] = {}
+        prev: Dict[Pos, Pos] = {}
+        dq = deque()
+        for s in spec.sources:
+            if spec.cells[s].color == col:
+                best[s] = (0, 0)
+                dq.append(s)
+        while dq:
+            c = dq.popleft()
+            cv_, cl = best[c]
+            for nb in sorted(face_neighbors(c, g)):
+                cell = spec.cells.get(nb)
+                if cell is None or cell.type == CellType.PROTECTED:
+                    continue
+                if cell.type in (CellType.SOURCE, CellType.TARGET) and cell.color != col:
+                    continue
+                w = 1 if cell.type == CellType.VALVE and nb not in plan else 0
+                cand = (cv_ + w, cl + 1)
+                if nb not in best or cand < best[nb]:
+                    best[nb] = cand
+                    prev[nb] = c
+                    (dq.appendleft if w == 0 else dq.append)(nb)
+        if t not in best:
+            continue
+        c = t
+        while c in prev:
+            if spec.cells[c].type == CellType.VALVE and c not in plan:
+                plan.append(c)
+            c = prev[c]
+    return plan
 
 
 def analyze(spec: LevelSpec) -> Dict:
@@ -38,12 +102,8 @@ def analyze(spec: LevelSpec) -> Dict:
     lose: Dict[int, bool] = {}
     win: Dict[int, bool] = {}
     for m in range(1 << n):
-        opened = {V[i] for i in range(n) if m >> i & 1}
-        f = _compute_full_fluid(GameState(spec=spec, opened_valves=opened))
-        fluid[m] = f
-        lose[m] = any(p in f for p in spec.protected)
-        win[m] = not lose[m] and all(f.get(t) == spec.cells[t].color
-                                     for t in spec.targets)
+        lose[m], win[m], fluid[m] = outcome(
+            spec, {V[i] for i in range(n) if m >> i & 1})
 
     win_sets = [m for m in range(1 << n) if win[m]]
     used = 0
@@ -93,9 +153,24 @@ def analyze(spec: LevelSpec) -> Dict:
         best = min(d.values())
         return [i for i in c if d[i] == best]
 
+    def lookahead(m: int) -> List[int]:
+        c = closed(m)
+        safe = [i for i in c if not lose[m | 1 << i]]
+        grow = [i for i in safe if len(fluid[m | 1 << i]) > len(fluid[m])]
+        return grow or safe or c
+
+    best = min((m for m in win_sets if bin(m).count("1") == min_plan),
+               default=None)
+    filler = 0
+    if best is not None:
+        filler = sum(1 for i in range(n) if not best >> i & 1
+                     and not lose[best | 1 << i])
+    sp = shortest_plan(spec)
+    sp_mask = sum(1 << V.index(v) for v in sp)
+
     prefilled = sum(1 for t in spec.targets
                     if fluid[0].get(t) == spec.cells[t].color)
-    return {
+    m = {
         "n_valves": n,
         "min_plan": min_plan,
         "n_min_sets": n_min_sets,
@@ -106,7 +181,22 @@ def analyze(spec: LevelSpec) -> Dict:
         "p_random": round(play(closed), 4),
         "p_frontier": round(play(frontier), 4),
         "p_greedy": round(play(greedy), 4),
+        "p_lookahead": round(play(lookahead), 4),
+        "shortest_ok": bool(win[sp_mask]),
+        "filler": filler,
+        "n_colors": len(spec.colors),
     }
+    m["score"] = score(m)
+    return m
+
+
+def score(m: Dict) -> float:
+    """Bits of insight a level asks for: log2 1/P(frontier) (how much blind
+    opening is punished) + 2 * log2 1/P(lookahead) (combination traps a
+    one-step simulator cannot see) + 1 if the fewest-valve route loses."""
+    bits = lambda p: math.log2(1 / max(p, 1 / 256))
+    return round(bits(m["p_frontier"]) + 2 * bits(m["p_lookahead"])
+                 + (0 if m["shortest_ok"] else 1), 2)
 
 
 # Tier = measured difficulty band (bands are disjoint).

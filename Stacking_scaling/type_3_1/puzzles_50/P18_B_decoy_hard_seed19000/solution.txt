@@ -1,7 +1,8 @@
 P18_B_decoy_hard
-grid: (8, 7, 3)
-fixed: [('P', (2, 1, 1)), ('D', (2, 2, 1)), ('S', (2, 4, 1)), ('D', (2, 6, 1)), ('P', (2, 7, 1)), ('G', (6, 4, 1)), ('P', (7, 1, 1)), ('P', (8, 4, 1))]
-inventory: {'D': 3}
-patches: [('D', [3, 4, 1]), ('D', [4, 4, 1]), ('D', [5, 4, 1])]
-push:    START [2, 4, 1] dir=+x
-difficulty: {'n_solutions': 1, 'p_wavefill': 0.25, 'min_patches': 3, 'gaps': 3, 'decoy_gaps': 3, 'p_random': 0.0, 'p_gapfill': 0.0}
+insight: Not every hole is yours: some lead to a red piece and must stay empty.
+grid: (9, 8, 3)
+fixed: [('P', (1, 6, 1)), ('G', (3, 6, 1)), ('D', (6, 6, 1)), ('P', (9, 2, 1)), ('D', (9, 3, 1)), ('D', (9, 4, 1)), ('S', (9, 6, 1)), ('P', (9, 8, 1))]
+inventory: {'D': 4}
+patches: [('D', [4, 6, 1]), ('D', [5, 6, 1]), ('D', [7, 6, 1]), ('D', [8, 6, 1])]
+push:    START [9, 6, 1] dir=-x
+difficulty: {'n_solutions': 1, 'p_wavefill': 0.3333, 'min_patches': 4, 'gaps': 3, 'decoy_gaps': 3, 'raised': 0, 'p_random': 0.0, 'p_gapfill': 0.0, 'score': 6.09}

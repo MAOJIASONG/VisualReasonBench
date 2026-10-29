@@ -1,17 +1,19 @@
 P35_D_tall_medium
+insight: A high exit: every raised pipe needs a support column under it.
 grid: (5, 4, 5)
-entrances: [(2, 1, 1)]
-exits: [(1, 2, 5)]
-obstacles: [(2, 1, 5), (2, 1, 3)]
-inventory: {'S2': 1, 'L': 7, 'I': 1}
-difficulty: {'n_solutions': 3, 'capped': False, 'min_pipes': 7, 'staircase_ok': False, 'n_portals': 2, 'plan_length': 8}
+entrances: [(1, 2, 1)]
+exits: [(4, 1, 4)]
+obstacles: [(3, 2, 2), (3, 1, 1)]
+inventory: {'S2': 1, 'I': 4, 'L': 5}
+difficulty: {'n_solutions': 8, 'capped': False, 'min_pipes': 6, 'staircase_ok': False, 'n_portals': 2, 'plan_length': 9, 'n_networks': 163, 'score': 6.6}
 
-plan (8 pieces):
-  01: S2 at (1, 2, 1)
-  02: L at (2, 2, 1) ends=-y,+z
-  03: I at (2, 2, 2) ends=+z,-z
-  04: L at (1, 2, 3) ends=+x,+z
-  05: L at (2, 2, 3) ends=-x,-z
-  06: L at (1, 2, 4) ends=+x,-z
-  07: L at (2, 2, 4) ends=-x,+z
-  08: L at (2, 2, 5) ends=-x,-z
+plan (9 pieces):
+  01: S2 at (5, 2, 1)
+  02: I at (2, 2, 1) ends=+x,-x
+  03: I at (3, 2, 1) ends=+x,-x
+  04: L at (4, 2, 1) ends=-x,+z
+  05: I at (4, 2, 2) ends=+z,-z
+  06: L at (4, 2, 3) ends=+x,-z
+  07: L at (5, 2, 3) ends=-x,+z
+  08: L at (4, 2, 4) ends=+x,-y
+  09: L at (5, 2, 4) ends=-x,-z

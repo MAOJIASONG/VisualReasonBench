@@ -1,7 +1,0 @@
-P40_D_split_hard
-grid: (8, 7, 3)
-fixed: [('P', (2, 1, 1)), ('S', (2, 3, 1)), ('D', (2, 5, 1)), ('P', (2, 6, 1)), ('G', (6, 1, 1)), ('D', (6, 2, 1)), ('T', (6, 3, 1)), ('D', (6, 5, 1)), ('D', (6, 6, 1)), ('P', (6, 7, 1))]
-inventory: {'D': 3}
-patches: [('D', [3, 3, 1]), ('D', [4, 3, 1]), ('D', [5, 3, 1])]
-push:    START [2, 3, 1] dir=+x
-difficulty: {'n_solutions': 1, 'p_wavefill': 0.25, 'min_patches': 3, 'gaps': 3, 'decoy_gaps': 3, 'p_random': 0.0, 'p_gapfill': 0.0}

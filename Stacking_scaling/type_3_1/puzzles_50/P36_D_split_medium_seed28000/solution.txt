@@ -1,7 +1,8 @@
 P36_D_split_medium
+insight: The splitter sends the wave out to both sides: plan both branches.
 grid: (7, 6, 3)
-fixed: [('G', (1, 2, 1)), ('T', (1, 4, 1)), ('P', (1, 6, 1)), ('D', (2, 4, 1)), ('P', (5, 1, 1)), ('D', (5, 2, 1)), ('S', (5, 4, 1))]
+fixed: [('P', (1, 5, 1)), ('D', (2, 5, 1)), ('S', (4, 1, 1)), ('D', (4, 3, 1)), ('T', (4, 5, 1)), ('D', (6, 1, 1)), ('G', (6, 5, 1)), ('P', (7, 1, 1))]
 inventory: {'D': 3}
-patches: [('D', [1, 3, 1]), ('D', [3, 4, 1]), ('D', [4, 4, 1])]
-push:    START [5, 4, 1] dir=-x
-difficulty: {'n_solutions': 1, 'p_wavefill': 0.125, 'min_patches': 3, 'gaps': 3, 'decoy_gaps': 2, 'p_random': 0.0, 'p_gapfill': 0.0}
+patches: [('D', [4, 2, 1]), ('D', [4, 4, 1]), ('D', [5, 5, 1])]
+push:    START [4, 1, 1] dir=+y
+difficulty: {'n_solutions': 1, 'p_wavefill': 0.1667, 'min_patches': 3, 'gaps': 5, 'decoy_gaps': 2, 'raised': 0, 'p_random': 0.0, 'p_gapfill': 0.0, 'score': 5.58}

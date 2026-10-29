@@ -1,0 +1,21 @@
+P26_C_branch_medium
+insight: Two exits: one network with a T junction feeding both.
+grid: (5, 5, 4)
+entrances: [(5, 3, 1)]
+exits: [(4, 5, 4), (1, 3, 3)]
+obstacles: [(4, 3, 4)]
+inventory: {'S2': 2, 'S1': 1, 'L': 5, 'I': 3, 'T': 1}
+difficulty: {'n_solutions': 10, 'capped': False, 'min_pipes': 8, 'staircase_ok': False, 'n_portals': 3, 'plan_length': 11, 'n_networks': 84, 'score': 5.82}
+
+plan (11 pieces):
+  01: S2 at (2, 3, 1)
+  02: S2 at (3, 3, 1)
+  03: S1 at (4, 3, 2)
+  04: L at (4, 3, 1) ends=+x,+y
+  05: L at (4, 4, 1) ends=-y,+z
+  06: I at (4, 4, 2) ends=+z,-z
+  07: I at (2, 3, 3) ends=+x,-x
+  08: I at (3, 3, 3) ends=+x,-x
+  09: L at (4, 3, 3) ends=-x,+y
+  10: T at (4, 4, 3) ends=-y,+z,-z
+  11: L at (4, 4, 4) ends=+y,-z

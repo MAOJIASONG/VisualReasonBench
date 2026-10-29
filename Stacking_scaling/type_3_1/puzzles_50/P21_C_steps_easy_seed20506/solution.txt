@@ -1,0 +1,8 @@
+P21_C_steps_easy
+insight: A piece on a step needs the step under it, and a falling piece only reaches one level up or down.
+grid: (5, 5, 3)
+fixed: [('B', (2, 5, 1)), ('G', (2, 5, 2)), ('B', (3, 5, 1)), ('D', (4, 5, 1)), ('S', (5, 5, 1))]
+inventory: {'D': 1}
+patches: [('D', [3, 5, 2])]
+push:    START [5, 5, 1] dir=-x
+difficulty: {'n_solutions': 1, 'p_wavefill': 0.5, 'min_patches': 1, 'gaps': 1, 'decoy_gaps': 0, 'raised': 1, 'p_random': 0.0133, 'p_gapfill': 1.0, 'score': 1.5}

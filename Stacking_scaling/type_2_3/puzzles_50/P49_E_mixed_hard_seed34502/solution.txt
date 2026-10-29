@@ -1,20 +1,30 @@
 P49_E_mixed_hard
+insight: Two exits, obstacles and supports together.
 grid: (6, 5, 5)
-entrances: [(6, 2, 1)]
-exits: [(4, 1, 5), (1, 2, 3)]
-obstacles: [(5, 2, 5), (5, 2, 2), (3, 2, 4)]
-inventory: {'S1': 1, 'S2': 1, 'L': 4, 'I': 5, 'T': 1}
-difficulty: {'n_solutions': 4, 'capped': False, 'min_pipes': 9, 'staircase_ok': False, 'n_portals': 3, 'plan_length': 11}
+entrances: [(4, 5, 1)]
+exits: [(4, 1, 4), (6, 4, 5)]
+obstacles: [(4, 3, 2), (5, 2, 1), (3, 2, 4)]
+inventory: {'S1': 2, 'S2': 4, 'L': 8, 'I': 6, 'T': 1}
+difficulty: {'n_solutions': 9, 'capped': False, 'min_pipes': 13, 'staircase_ok': False, 'n_portals': 3, 'plan_length': 20, 'n_networks': 12543, 'score': 15.44}
 
-plan (11 pieces):
+plan (20 pieces):
   01: S1 at (3, 2, 1)
-  02: S2 at (2, 2, 1)
-  03: L at (4, 2, 1) ends=+x,+z
-  04: I at (5, 2, 1) ends=+x,-x
-  05: L at (3, 2, 2) ends=+x,+z
-  06: T at (4, 2, 2) ends=-x,+z,-z
-  07: I at (2, 2, 3) ends=+x,-x
-  08: L at (3, 2, 3) ends=-x,-z
-  09: I at (4, 2, 3) ends=+z,-z
-  10: I at (4, 2, 4) ends=+z,-z
-  11: L at (4, 2, 5) ends=-y,-z
+  02: S2 at (3, 4, 1)
+  03: S2 at (3, 3, 1)
+  04: S1 at (4, 4, 2)
+  05: S2 at (5, 4, 1)
+  06: S2 at (5, 4, 3)
+  07: L at (4, 2, 1) ends=+y,+z
+  08: I at (4, 3, 1) ends=+y,-y
+  09: I at (4, 4, 1) ends=+y,-y
+  10: L at (3, 2, 2) ends=+x,+z
+  11: T at (4, 2, 2) ends=-x,+z,-z
+  12: L at (3, 2, 3) ends=+y,-z
+  13: I at (3, 3, 3) ends=+y,-y
+  14: L at (3, 4, 3) ends=+x,-y
+  15: I at (4, 2, 3) ends=+z,-z
+  16: L at (4, 4, 3) ends=-x,+z
+  17: L at (4, 2, 4) ends=-y,-z
+  18: I at (4, 4, 4) ends=+z,-z
+  19: L at (4, 4, 5) ends=+x,-z
+  20: I at (5, 4, 5) ends=+x,-x

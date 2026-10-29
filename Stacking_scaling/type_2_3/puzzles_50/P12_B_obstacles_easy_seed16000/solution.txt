@@ -1,14 +1,16 @@
 P12_B_obstacles_easy
+insight: The obvious step-and-climb route is blocked; find the detour your parts allow.
 grid: (5, 4, 4)
-entrances: [(4, 1, 1)]
-exits: [(4, 4, 2)]
-obstacles: [(4, 4, 1)]
-inventory: {'L': 5, 'I': 1}
-difficulty: {'n_solutions': 5, 'capped': False, 'min_pipes': 3, 'staircase_ok': True, 'n_portals': 2, 'plan_length': 5}
+entrances: [(1, 2, 1)]
+exits: [(2, 4, 3)]
+obstacles: [(3, 3, 1)]
+inventory: {'L': 5, 'I': 1, 'S1': 1}
+difficulty: {'n_solutions': 7, 'capped': False, 'min_pipes': 4, 'staircase_ok': True, 'n_portals': 2, 'plan_length': 6, 'n_networks': 32, 'score': 3.69}
 
-plan (5 pieces):
-  01: L at (3, 3, 1) ends=+x,+z
-  02: I at (4, 2, 1) ends=+y,-y
-  03: L at (4, 3, 1) ends=-x,-y
-  04: L at (3, 3, 2) ends=+x,-z
-  05: L at (4, 3, 2) ends=-x,+y
+plan (6 pieces):
+  01: L at (2, 2, 1) ends=-x,+y
+  02: L at (2, 3, 1) ends=-y,+z
+  03: L at (2, 2, 2) ends=+y,+z
+  04: L at (2, 3, 2) ends=-y,-z
+  05: L at (2, 2, 3) ends=+y,-z
+  06: I at (2, 3, 3) ends=+y,-y

@@ -1,0 +1,11 @@
+P45_mixed_medium
+concept: mixed  tier: medium
+insight: Two pumps and red cells: every route must avoid the red cells and the other colour.
+grid: (6, 5, 5)
+pumps: [((1, 2, 1), 'blue'), ((2, 5, 1), 'orange')]
+tanks: [((2, 4, 5), 'orange'), ((6, 2, 5), 'blue')]
+valves: [(1, 2, 3), (1, 2, 5), (1, 5, 3), (3, 5, 3), (4, 2, 2), (5, 5, 5)]
+red cells: [(4, 2, 4), (5, 5, 3)]
+solution (open in this order): [(1, 2, 3), (1, 2, 5), (1, 5, 3)]
+tempting mistake (one valve too many: open (4, 2, 2) -> ProtectedBreach)
+difficulty: {'n_valves': 6, 'min_plan': 3, 'n_min_sets': 1, 'n_win_sets': 1, 'prefilled': 0, 'traps': 3, 'nonlocal_traps': 3, 'p_random': 0.05, 'p_frontier': 0.0642, 'p_greedy': 0.0, 'p_lookahead': 0.5, 'shortest_ok': True, 'filler': 0, 'n_colors': 2, 'score': 5.96}

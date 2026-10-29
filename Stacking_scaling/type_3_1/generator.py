@@ -11,6 +11,8 @@ Construction:
      after the goal (the wave keeps travelling past a falling goal) and on
      a splitter's second side.  Filling a decoy gap wastes a patch or loses.
   4. K dominoes are carved out of the chain; the player gets exactly K.
+     With `min_raised`, that many must sit on a step (z >= 2), so the
+     height of a patch is part of the answer.
   5. The exact search (difficulty.solutions) must find exactly one winning
      (placement, direction) and it must use all K patches; the level is
      then assigned to a tier by measured difficulty (difficulty.TIERS).
@@ -113,7 +115,9 @@ def generate_level(grid_size: Vec3 = (6, 5, 3),
                    two_goals: bool = False,
                    n_decoys: int = 0,
                    n_protected: int = 0,
+                   min_raised: int = 0,
                    tier: Optional[str] = None,
+                   score_band: Optional[Tuple[float, float]] = None,
                    max_attempts: int = 300,
                    **_legacy) -> Optional[Tuple[LevelSpec, dict]]:
     """Generate one level; see the module docstring.  `n_protected` adds
@@ -202,6 +206,8 @@ def generate_level(grid_size: Vec3 = (6, 5, 3),
             continue
         carved = rng.sample(carvable, n_patches)
         patches = sorted((c[0], c[1], b) for c, b in carved)
+        if sum(1 for p in patches if p[2] >= 2) < min_raised:
+            continue                       # steps must matter: a patch on a step
         fixed = [(pt, pos) for pos, pt in sorted(bd.pieces.items())
                  if pos not in patches]
 
@@ -213,7 +219,7 @@ def generate_level(grid_size: Vec3 = (6, 5, 3),
             continue                       # not unique, or a patch is spare
         spec.meta = {"solution_patches": [list(p) for p in patches]}
         m = analyze(spec, n_patches, samples=600, seed=seed)
-        if tier is not None and not fits_tier(m, n_patches, tier):
+        if tier is not None and not fits_tier(m, n_patches, tier, score_band):
             continue
 
         start_pos = (start[0], start[1], 1)

@@ -4,7 +4,7 @@ E: [(2, 4, 1)]
 X: [(4, 1, 2)]
 obs: []
 inventory: {'L': 5, 'I': 1}
-meta: {'rules': 'v2', 'seed': 1000, 'attempt': 0, 'tier': 'easy', 'plan': [['L', [2, 3, 1], 0], ['L', [3, 2, 1], 0], ['L', [3, 3, 1], 3], ['L', [4, 2, 1], 6], ['L', [4, 2, 2], 11]], 'plan_length': 5, 'n_pipes': 5, 'n_supports': 0, 'difficulty': {'n_solutions': 2, 'capped': False, 'min_pipes': 5, 'staircase_ok': False, 'n_portals': 2, 'plan_length': 5}}
+meta: {'rules': 'v2', 'seed': 1000, 'attempt': 0, 'tier': 'easy', 'plan': [['L', [2, 3, 1], 0], ['L', [3, 2, 1], 0], ['L', [3, 3, 1], 3], ['L', [4, 2, 1], 6], ['L', [4, 2, 2], 11]], 'plan_length': 5, 'n_pipes': 5, 'n_supports': 0, 'difficulty': {'n_solutions': 2, 'capped': False, 'min_pipes': 5, 'staircase_ok': False, 'n_portals': 2, 'plan_length': 5, 'n_networks': 12, 'score': 3.83}}
 
 plan (5 pieces):
   step 1: L at (2, 3, 1)

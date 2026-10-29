@@ -1,7 +1,0 @@
-P22_C_steps_easy
-grid: (5, 5, 3)
-fixed: [('B', (2, 5, 1)), ('G', (2, 5, 2)), ('P', (5, 1, 1)), ('D', (5, 2, 1)), ('D', (5, 3, 1)), ('S', (5, 5, 1))]
-inventory: {'D': 2}
-patches: [('D', [3, 5, 1]), ('D', [4, 5, 1])]
-push:    START [5, 5, 1] dir=-x
-difficulty: {'n_solutions': 1, 'p_wavefill': 0.5, 'min_patches': 2, 'gaps': 1, 'decoy_gaps': 1, 'p_random': 0.0017, 'p_gapfill': 0.0}

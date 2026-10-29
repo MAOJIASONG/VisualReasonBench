@@ -1,7 +1,8 @@
 P43_E_full_easy
+insight: Holes, decoys, steps and a splitter together: follow the wave all the way.
 grid: (6, 6, 3)
-fixed: [('P', (1, 4, 1)), ('S', (3, 4, 1)), ('P', (5, 1, 1)), ('D', (5, 2, 1)), ('T', (5, 4, 1)), ('B', (5, 5, 1)), ('B', (5, 6, 1)), ('G', (5, 6, 2))]
-inventory: {'D': 2}
-patches: [('D', [4, 4, 1]), ('D', [5, 5, 2])]
-push:    START [3, 4, 1] dir=+x
-difficulty: {'n_solutions': 1, 'p_wavefill': 0.125, 'min_patches': 2, 'gaps': 4, 'decoy_gaps': 2, 'p_random': 0.0, 'p_gapfill': 0.0}
+fixed: [('B', (2, 1, 1)), ('G', (2, 1, 2)), ('B', (3, 1, 1)), ('D', (3, 1, 2)), ('B', (4, 1, 1)), ('T', (4, 1, 2)), ('B', (4, 2, 1)), ('D', (4, 2, 2)), ('B', (4, 3, 1)), ('B', (4, 4, 1)), ('D', (4, 4, 2)), ('S', (4, 5, 1)), ('B', (5, 1, 1)), ('B', (6, 1, 1)), ('P', (6, 1, 2))]
+inventory: {'D': 1}
+patches: [('D', [4, 3, 2])]
+push:    START [4, 5, 1] dir=-y
+difficulty: {'n_solutions': 1, 'p_wavefill': 0.25, 'min_patches': 1, 'gaps': 2, 'decoy_gaps': 1, 'raised': 1, 'p_random': 0.0083, 'p_gapfill': 1.0, 'score': 3.0}

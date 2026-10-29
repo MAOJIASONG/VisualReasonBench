@@ -58,8 +58,12 @@ def _classify_subset(spec: LevelSpec, opened: FrozenSet[Valve]) -> Tuple[bool, b
                             single-color generator output it cannot trigger.)
     all_targets_filled := every TARGET holds its matching-color fluid.
     """
+    from .propagation import propagate_fluid
     state = _state_for_subset(spec, opened)
     fluid = state.fluid_cells
+    # Any violation (breach, wrong colour, two colours meeting)?
+    if propagate_fluid(state).code != ActionCode.OK:
+        return False, False
     # Protected breach?
     for p in spec.protected:
         if p in fluid:

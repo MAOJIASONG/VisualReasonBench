@@ -1,0 +1,10 @@
+P13_series_easy
+concept: series  tier: easy
+insight: The tank sits behind a row of valves: open the whole row, but none of the side spurs.
+grid: (4, 4, 4)
+pumps: [((2, 2, 1), 'blue')]
+tanks: [((4, 4, 3), 'blue')]
+valves: [(2, 4, 2), (2, 4, 4), (3, 1, 4)]
+red cells: [(4, 1, 2)]
+solution (open in this order): [(2, 4, 2), (2, 4, 4)]
+difficulty: {'n_valves': 3, 'min_plan': 2, 'n_min_sets': 1, 'n_win_sets': 1, 'prefilled': 0, 'traps': 1, 'nonlocal_traps': 1, 'p_random': 0.3333, 'p_frontier': 1.0, 'p_greedy': 1.0, 'p_lookahead': 1.0, 'shortest_ok': True, 'filler': 0, 'n_colors': 1, 'score': 0.0}

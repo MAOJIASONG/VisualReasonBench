@@ -1,18 +1,17 @@
 P23_C_branch_easy
+insight: Two exits: one network with a T junction feeding both.
 grid: (5, 5, 4)
 entrances: [(3, 5, 1)]
-exits: [(5, 4, 4), (4, 1, 2)]
+exits: [(5, 4, 3), (1, 4, 2)]
 obstacles: []
-inventory: {'S1': 2, 'L': 3, 'I': 4, 'T': 1}
-difficulty: {'n_solutions': 1, 'capped': False, 'min_pipes': 7, 'staircase_ok': False, 'n_portals': 3, 'plan_length': 9}
+inventory: {'S1': 1, 'L': 4, 'I': 2, 'T': 1}
+difficulty: {'n_solutions': 4, 'capped': False, 'min_pipes': 6, 'staircase_ok': False, 'n_portals': 3, 'plan_length': 7, 'n_networks': 18, 'score': 3.92}
 
-plan (9 pieces):
-  01: S1 at (4, 3, 1)
-  02: S1 at (4, 2, 1)
-  03: L at (3, 4, 1) ends=+x,+y
-  04: L at (4, 4, 1) ends=-x,+z
-  05: I at (4, 2, 2) ends=+y,-y
-  06: I at (4, 3, 2) ends=+y,-y
-  07: T at (4, 4, 2) ends=-y,+z,-z
-  08: I at (4, 4, 3) ends=+z,-z
-  09: L at (4, 4, 4) ends=+x,-z
+plan (7 pieces):
+  01: S1 at (2, 4, 1)
+  02: L at (3, 4, 1) ends=+x,+y
+  03: L at (4, 4, 1) ends=-x,+z
+  04: I at (2, 4, 2) ends=+x,-x
+  05: I at (3, 4, 2) ends=+x,-x
+  06: T at (4, 4, 2) ends=-x,+z,-z
+  07: L at (4, 4, 3) ends=+x,-z

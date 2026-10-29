@@ -1,14 +1,22 @@
 P14_B_obstacles_medium
+insight: The obvious step-and-climb route is blocked; find the detour your parts allow.
 grid: (5, 5, 4)
-entrances: [(3, 1, 1)]
-exits: [(5, 3, 3)]
-obstacles: [(4, 2, 2), (4, 4, 1), (3, 3, 1)]
-inventory: {'L': 4, 'I': 2}
-difficulty: {'n_solutions': 1, 'capped': False, 'min_pipes': 5, 'staircase_ok': False, 'n_portals': 2, 'plan_length': 5}
+entrances: [(5, 4, 1)]
+exits: [(1, 2, 2)]
+obstacles: [(3, 4, 1), (4, 3, 2), (4, 1, 2)]
+inventory: {'S1': 5, 'L': 5, 'I': 3}
+difficulty: {'n_solutions': 18, 'capped': False, 'min_pipes': 6, 'staircase_ok': False, 'n_portals': 2, 'plan_length': 12, 'n_networks': 142, 'score': 5.98}
 
-plan (5 pieces):
-  01: L at (3, 2, 1) ends=+x,-y
-  02: L at (4, 2, 1) ends=-x,+y
-  03: L at (4, 3, 1) ends=-y,+z
-  04: I at (4, 3, 2) ends=+z,-z
-  05: L at (4, 3, 3) ends=+x,-z
+plan (12 pieces):
+  01: S1 at (5, 2, 1)
+  02: S1 at (2, 2, 1)
+  03: S1 at (3, 2, 1)
+  04: S1 at (4, 2, 1)
+  05: L at (4, 3, 1) ends=+x,+y
+  06: L at (4, 4, 1) ends=+x,-y
+  07: L at (5, 3, 1) ends=-x,+z
+  08: I at (2, 2, 2) ends=+x,-x
+  09: I at (3, 2, 2) ends=+x,-x
+  10: I at (4, 2, 2) ends=+x,-x
+  11: L at (5, 2, 2) ends=-x,+y
+  12: L at (5, 3, 2) ends=-y,-z

@@ -1,0 +1,8 @@
+P17_B_decoy_medium
+insight: Not every hole is yours: some lead to a red piece and must stay empty.
+grid: (7, 6, 3)
+fixed: [('P', (1, 6, 1)), ('D', (2, 6, 1)), ('G', (4, 2, 1)), ('S', (4, 6, 1)), ('D', (6, 6, 1)), ('P', (7, 6, 1))]
+inventory: {'D': 3}
+patches: [('D', [4, 3, 1]), ('D', [4, 4, 1]), ('D', [4, 5, 1])]
+push:    START [4, 6, 1] dir=-y
+difficulty: {'n_solutions': 1, 'p_wavefill': 0.3333, 'min_patches': 3, 'gaps': 2, 'decoy_gaps': 2, 'raised': 0, 'p_random': 0.0, 'p_gapfill': 0.0, 'score': 4.59}

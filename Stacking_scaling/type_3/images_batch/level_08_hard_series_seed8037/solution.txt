@@ -1,0 +1,14 @@
+08_hard series
+insight: The tank sits behind a row of valves: open the whole row, but none of the side spurs.
+grid_size: (5, 5, 5)
+sources:   [(5, 3, 1)]
+targets:   [(2, 2, 1)]
+valves:    [(1, 5, 1), (1, 5, 4), (3, 2, 3), (3, 4, 4), (3, 5, 2), (5, 3, 5), (5, 4, 3)]
+protected: [(2, 2, 5), (5, 1, 5), (5, 5, 1)]
+meta:      {'generator': 'concepts-v1', 'concept': 'series', 'tier': 'hard', 'insight': 'The tank sits behind a row of valves: open the whole row, but none of the side spurs.', 'seed': 8037, 'attempt': 267, 'difficulty': {'n_valves': 7, 'min_plan': 4, 'n_min_sets': 1, 'n_win_sets': 1, 'prefilled': 0, 'traps': 3, 'nonlocal_traps': 3, 'p_random': 0.0286, 'p_frontier': 0.0039, 'p_greedy': 0.0, 'p_lookahead': 1.0, 'shortest_ok': True, 'filler': 0, 'n_colors': 1, 'score': 8.0}}
+
+BFS plan (4 opens):
+  step 1: open (5, 4, 3)
+  step 2: open (3, 4, 4)
+  step 3: open (1, 5, 4)
+  step 4: open (1, 5, 1)

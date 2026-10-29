@@ -1,0 +1,19 @@
+05_medium
+grid_size: (5, 5, 4)
+E: [(1, 3, 1)]
+X: [(5, 2, 3)]
+obs: [(3, 3, 2), (3, 1, 1), (4, 3, 1)]
+inventory: {'S1': 1, 'S2': 1, 'L': 4, 'I': 5}
+meta: {'rules': 'v2', 'seed': 5003, 'attempt': 68, 'tier': 'medium', 'plan': [['S1', [3, 2, 2], 0], ['S2', [4, 2, 1], 0], ['L', [2, 2, 1], 4], ['I', [2, 3, 1], 0], ['L', [3, 2, 1], 2], ['L', [3, 3, 1], 3], ['I', [2, 2, 2], 2], ['L', [2, 2, 3], 5], ['I', [3, 2, 3], 0], ['I', [4, 2, 3], 0]], 'plan_length': 10, 'n_pipes': 8, 'n_supports': 2, 'difficulty': {'n_solutions': 5, 'capped': False, 'min_pipes': 6, 'staircase_ok': False, 'n_portals': 2, 'plan_length': 10, 'n_networks': 224, 'score': 7.99}}
+
+plan (10 pieces):
+  step 1: S1 at (3, 2, 2)
+  step 2: S2 at (4, 2, 1)
+  step 3: L at (2, 2, 1)
+  step 4: I at (2, 3, 1)
+  step 5: L at (3, 2, 1)
+  step 6: L at (3, 3, 1)
+  step 7: I at (2, 2, 2)
+  step 8: L at (2, 2, 3)
+  step 9: I at (3, 2, 3)
+  step 10: I at (4, 2, 3)

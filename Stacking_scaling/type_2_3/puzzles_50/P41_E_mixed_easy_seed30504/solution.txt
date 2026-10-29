@@ -1,0 +1,17 @@
+P41_E_mixed_easy
+insight: Two exits, obstacles and supports together.
+grid: (5, 5, 4)
+entrances: [(1, 4, 1)]
+exits: [(5, 4, 2), (3, 5, 2)]
+obstacles: [(4, 3, 1)]
+inventory: {'I': 3, 'L': 4, 'T': 1}
+difficulty: {'n_solutions': 6, 'capped': False, 'min_pipes': 5, 'staircase_ok': False, 'n_portals': 3, 'plan_length': 7, 'n_networks': 40, 'score': 4.49}
+
+plan (7 pieces):
+  01: I at (2, 4, 1) ends=+x,-x
+  02: L at (3, 3, 1) ends=+y,+z
+  03: T at (3, 4, 1) ends=+x,-x,-y
+  04: L at (4, 4, 1) ends=-x,+z
+  05: L at (3, 3, 2) ends=+y,-z
+  06: I at (3, 4, 2) ends=+y,-y
+  07: L at (4, 4, 2) ends=+x,-z

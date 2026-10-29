@@ -1,0 +1,11 @@
+P21_backdoor_easy
+concept: backdoor  tier: easy
+insight: The route with the fewest valves also reaches a red cell through a loop; take the clean detour.
+grid: (4, 4, 4)
+pumps: [((3, 1, 1), 'blue')]
+tanks: [((1, 2, 2), 'blue')]
+valves: [(1, 2, 4), (1, 4, 3), (3, 3, 1), (4, 2, 4)]
+red cells: [(3, 4, 4)]
+solution (open in this order): [(1, 2, 4), (1, 4, 3)]
+tempting mistake (the fewest-valve route: open (4, 2, 4) -> ProtectedBreach)
+difficulty: {'n_valves': 4, 'min_plan': 2, 'n_min_sets': 1, 'n_win_sets': 1, 'prefilled': 0, 'traps': 2, 'nonlocal_traps': 2, 'p_random': 0.1667, 'p_frontier': 0.25, 'p_greedy': 1.0, 'p_lookahead': 1.0, 'shortest_ok': False, 'filler': 0, 'n_colors': 1, 'score': 3.0}

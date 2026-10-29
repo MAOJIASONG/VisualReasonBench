@@ -1,0 +1,22 @@
+P38_D_tall_hard
+insight: A high exit: every raised pipe needs a support column under it.
+grid: (5, 5, 5)
+entrances: [(3, 5, 1)]
+exits: [(5, 2, 5)]
+obstacles: [(3, 3, 1), (4, 3, 4), (5, 3, 1)]
+inventory: {'S1': 1, 'S2': 1, 'L': 10, 'I': 1}
+difficulty: {'n_solutions': 4, 'capped': False, 'min_pipes': 8, 'staircase_ok': False, 'n_portals': 2, 'plan_length': 12, 'n_networks': 1358, 'score': 11.41}
+
+plan (12 pieces):
+  01: S1 at (4, 2, 1)
+  02: S2 at (3, 2, 1)
+  03: L at (3, 4, 1) ends=+x,+y
+  04: L at (4, 3, 1) ends=+y,+z
+  05: L at (4, 4, 1) ends=-x,-y
+  06: L at (4, 2, 2) ends=+y,+z
+  07: L at (4, 3, 2) ends=-y,-z
+  08: L at (3, 2, 3) ends=+x,+z
+  09: L at (4, 2, 3) ends=-x,-z
+  10: L at (3, 2, 4) ends=+x,-z
+  11: L at (4, 2, 4) ends=-x,+z
+  12: L at (4, 2, 5) ends=+x,-z

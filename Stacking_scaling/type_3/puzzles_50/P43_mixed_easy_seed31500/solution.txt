@@ -1,0 +1,11 @@
+P43_mixed_easy
+concept: mixed  tier: easy
+insight: Two pumps and red cells: every route must avoid the red cells and the other colour.
+grid: (5, 5, 5)
+pumps: [((1, 2, 1), 'orange'), ((4, 4, 1), 'blue')]
+tanks: [((3, 1, 2), 'orange'), ((3, 1, 5), 'orange')]
+valves: [(1, 1, 5), (1, 2, 3), (3, 5, 5), (5, 2, 3)]
+red cells: [(1, 5, 2)]
+solution (open in this order): [(1, 2, 3), (1, 1, 5)]
+tempting mistake (one valve too many: open (5, 2, 3) -> WrongColorTarget)
+difficulty: {'n_valves': 4, 'min_plan': 2, 'n_min_sets': 1, 'n_win_sets': 1, 'prefilled': 0, 'traps': 2, 'nonlocal_traps': 2, 'p_random': 0.1667, 'p_frontier': 0.1667, 'p_greedy': 0.3333, 'p_lookahead': 1.0, 'shortest_ok': True, 'filler': 0, 'n_colors': 2, 'score': 2.58}

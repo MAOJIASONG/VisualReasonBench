@@ -1,0 +1,11 @@
+P33_two_pumps_easy
+concept: two_pumps  tier: easy
+insight: Each tank needs its own colour and the colours must never meet: a valve that is safe alone can lose once the other colour arrives.
+grid: (5, 5, 4)
+pumps: [((2, 5, 1), 'orange'), ((4, 3, 1), 'blue')]
+tanks: [((2, 1, 4), 'orange'), ((4, 5, 4), 'orange')]
+valves: [(2, 3, 2), (2, 3, 4), (2, 5, 4)]
+red cells: []
+solution (open in this order): [(2, 3, 4), (2, 5, 4)]
+tempting mistake (one valve too many: open (2, 3, 2) -> ColorContamination)
+difficulty: {'n_valves': 3, 'min_plan': 2, 'n_min_sets': 1, 'n_win_sets': 1, 'prefilled': 0, 'traps': 1, 'nonlocal_traps': 1, 'p_random': 0.3333, 'p_frontier': 0.3333, 'p_greedy': 1.0, 'p_lookahead': 1.0, 'shortest_ok': True, 'filler': 0, 'n_colors': 2, 'score': 1.59}

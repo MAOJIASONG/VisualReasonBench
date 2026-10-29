@@ -1,17 +1,20 @@
 P06_A_route_medium
+insight: Count the parts: the bin holds exactly one route's worth of corners and straights (plus one spare).
 grid: (5, 5, 4)
-entrances: [(1, 3, 1)]
+entrances: [(3, 1, 1)]
 exits: [(3, 5, 3)]
 obstacles: [(3, 3, 1)]
-inventory: {'S2': 1, 'L': 6, 'I': 2}
-difficulty: {'n_solutions': 7, 'capped': False, 'min_pipes': 5, 'staircase_ok': False, 'n_portals': 2, 'plan_length': 8}
+inventory: {'S1': 1, 'S2': 2, 'L': 7, 'I': 1}
+difficulty: {'n_solutions': 8, 'capped': False, 'min_pipes': 7, 'staircase_ok': False, 'n_portals': 2, 'plan_length': 10, 'n_networks': 87, 'score': 5.94}
 
-plan (8 pieces):
-  01: S2 at (3, 4, 1)
-  02: L at (2, 3, 1) ends=-x,+y
-  03: L at (2, 4, 1) ends=-y,+z
-  04: I at (2, 4, 2) ends=+z,-z
-  05: I at (2, 4, 3) ends=+z,-z
-  06: L at (3, 4, 3) ends=+y,+z
-  07: L at (2, 4, 4) ends=+x,-z
-  08: L at (3, 4, 4) ends=-x,-z
+plan (10 pieces):
+  01: S1 at (4, 3, 1)
+  02: S2 at (3, 4, 1)
+  03: S2 at (4, 4, 1)
+  04: L at (3, 2, 1) ends=+x,-y
+  05: L at (4, 2, 1) ends=-x,+z
+  06: L at (4, 2, 2) ends=+y,-z
+  07: L at (4, 3, 2) ends=-y,+z
+  08: L at (3, 4, 3) ends=+x,+y
+  09: L at (4, 3, 3) ends=+y,-z
+  10: L at (4, 4, 3) ends=-x,-y

@@ -11,10 +11,13 @@ PipeFit 3D — level generator (rules v2).
      supported pipe); missing columns are filled bottom-up and packed into
      S2 / S1 pieces.
   4. Obstacles go on the staircase shortcut (so it fails) or, failing that,
-     next to the route.
+     next to the route.  Each one must matter: removing it has to add a
+     solution or revive the staircase (difficulty.idle_obstacles).
   5. Inventory = exactly the pieces of that network, plus `spare` extras.
   6. The exhaustive search (difficulty.solutions) must find the network,
-     and the measured difficulty must match the requested tier.
+     the measured difficulty must match the requested tier: piece count
+     and difficulty.score inside the tier's ranges (difficulty.TIERS;
+     `plan_range` / `score_band` override them).
 """
 
 from __future__ import annotations
@@ -23,7 +26,8 @@ import random
 from typing import Dict, List, Optional, Set, Tuple
 
 from .difficulty import (
-    Board, analyze, fits, fits_tier, network_dirs, plan_of, staircase,
+    TIERS, Board, analyze, fits, fits_tier, idle_obstacles, n_networks,
+    network_dirs, plan_of, score, staircase,
 )
 from .game_core import DIRS, LevelSpec, PieceType, Vec3, portal_inward
 
@@ -70,9 +74,14 @@ def generate_level(grid_size: Vec3 = (5, 4, 4),
                    extra_len: Tuple[int, int] = (1, 4),
                    spare: int = 1,
                    min_supports: int = 0,
+                   plan_range: Optional[Tuple[int, int]] = None,
                    tier: Optional[str] = None,
+                   score_band: Optional[Tuple[float, float]] = None,
                    max_attempts: int = 300,
                    **_legacy) -> Optional[Tuple[LevelSpec, dict]]:
+    if tier is not None:
+        plan_range = plan_range or TIERS[tier]["plan"]
+        score_band = score_band or TIERS[tier]["score"]
     rng = random.Random(seed)
     A, B, C = grid_size
     walls = [("x", 1), ("x", A), ("y", 1), ("y", B)]
@@ -135,6 +144,8 @@ def generate_level(grid_size: Vec3 = (5, 4, 4),
         plan = plan_of(bd, sol)
         if sum(len(c) for c in sol["cols"]) < min_supports:
             continue                       # category wants real support work
+        if plan_range is not None and not plan_range[0] <= len(plan) <= plan_range[1]:
+            continue                       # tier size ladder
         inv: Dict[PieceType, int] = {}
         for p in plan:
             inv[p.type] = inv.get(p.type, 0) + 1
@@ -151,6 +162,12 @@ def generate_level(grid_size: Vec3 = (5, 4, 4),
             continue
         if tier is not None and not fits_tier(m, tier):
             continue
+        m["n_networks"] = n_networks(spec)
+        m["score"] = score(m)
+        if score_band is not None and not score_band[0] <= m["score"] <= score_band[1]:
+            continue
+        if obstacles and idle_obstacles(spec, m):
+            continue                       # every obstacle must change something
         meta = {
             "rules": "v2",
             "seed": seed,

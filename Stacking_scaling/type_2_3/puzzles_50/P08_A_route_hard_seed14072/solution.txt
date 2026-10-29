@@ -1,0 +1,22 @@
+P08_A_route_hard
+insight: Count the parts: the bin holds exactly one route's worth of corners and straights (plus one spare).
+grid: (6, 6, 4)
+entrances: [(2, 6, 1)]
+exits: [(3, 1, 3)]
+obstacles: [(2, 4, 2), (4, 4, 2)]
+inventory: {'S1': 1, 'S2': 2, 'L': 10}
+difficulty: {'n_solutions': 8, 'capped': False, 'min_pipes': 9, 'staircase_ok': False, 'n_portals': 2, 'plan_length': 12, 'n_networks': 737, 'score': 9.53}
+
+plan (12 pieces):
+  01: S1 at (3, 4, 1)
+  02: S2 at (3, 2, 1)
+  03: S2 at (3, 3, 1)
+  04: L at (2, 5, 1) ends=+x,+y
+  05: L at (3, 5, 1) ends=-x,+z
+  06: L at (3, 4, 2) ends=+y,+z
+  07: L at (3, 5, 2) ends=-y,-z
+  08: L at (3, 2, 3) ends=-y,+z
+  09: L at (3, 3, 3) ends=+y,+z
+  10: L at (3, 4, 3) ends=-y,-z
+  11: L at (3, 2, 4) ends=+y,-z
+  12: L at (3, 3, 4) ends=-y,-z

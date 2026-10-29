@@ -1,5 +1,5 @@
 """
-FluidNet 3D - Batch playthrough: 10 puzzles spanning easy → hard.
+FluidNet 3D - Batch playthrough: 10 concept puzzles spanning easy → hard.
 
 For each puzzle:
   1. Generate the level with given parameters and seed.
@@ -26,19 +26,21 @@ from __future__ import annotations
 import os
 import sys
 import time
-from typing import List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple
+
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from chain_search import pick_levels, tier_table  # noqa: E402
 
 if __package__ in (None, ""):
-    sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     from type_3.game_core import ActionCode
-    from type_3.generator import generate_level
+    from type_3.concepts import generate
     from type_3.loader import create_game_state, save_level_to_json
     from type_3.propagation import step_open_valve
     from type_3.solver import order_by_flow, solve
     from type_3.visualizer_plotly import render_state_pair
 else:
     from .game_core import ActionCode
-    from .generator import generate_level
+    from .concepts import generate
     from .loader import create_game_state, save_level_to_json
     from .propagation import step_open_valve
     from .solver import order_by_flow, solve
@@ -51,37 +53,24 @@ else:
 # We try seeds in order until one yields a valid level meeting the criteria.
 # ---------------------------------------------------------------------------
 
-PUZZLES: List[Tuple[str, dict, List[int]]] = [
-    # Tiers are measured (difficulty.TIERS): plan length, non-local traps,
-    # and how often the obvious local rules still win.  Each slot starts its
-    # seed search at a different offset so no two slots share a level.
-    ("01_easy",   dict(grid_size=(4, 4, 4), n_targets=1, n_valves=3, n_protected=1, tier="easy"),   list(range(100, 400))),
-    ("02_easy",   dict(grid_size=(4, 4, 4), n_targets=1, n_valves=3, n_protected=2, tier="easy"),   list(range(200, 500))),
-    ("03_easy",   dict(grid_size=(5, 5, 4), n_targets=2, n_valves=3, n_protected=1, tier="easy"),   list(range(300, 600))),
-
-    ("04_medium", dict(grid_size=(5, 5, 4), n_targets=2, n_valves=5, n_protected=2, tier="medium"), list(range(400, 800))),
-    ("05_medium", dict(grid_size=(5, 5, 5), n_targets=2, n_valves=5, n_protected=2, tier="medium"), list(range(500, 900))),
-    ("06_medium", dict(grid_size=(5, 5, 5), n_targets=2, n_valves=6, n_protected=2, tier="medium"), list(range(600, 1000))),
-    ("07_medium", dict(grid_size=(5, 5, 5), n_targets=2, n_valves=6, n_protected=3, tier="medium"), list(range(700, 1100))),
-
-    ("08_hard",   dict(grid_size=(5, 5, 5), n_targets=2, n_valves=7, n_protected=3, tier="hard"),   list(range(800, 1300))),
-    ("09_hard",   dict(grid_size=(6, 5, 5), n_targets=2, n_valves=8, n_protected=3, tier="hard"),   list(range(900, 1400))),
-    ("10_hard",   dict(grid_size=(6, 6, 5), n_targets=3, n_valves=8, n_protected=3, tier="hard"),   list(range(1000, 1500))),
+PUZZLES: List[Tuple[str, str, str]] = [
+    # (label, concept, tier) -- one idea per level, see concepts.py.  Each
+    # slot searches its own seed range so no two slots share a level.
+    ("01_easy",   "trace",     "easy"),
+    ("02_easy",   "series",    "easy"),
+    ("03_easy",   "two_pumps", "easy"),
+    ("04_medium", "trace",     "medium"),
+    ("05_medium", "backdoor",  "medium"),
+    ("06_medium", "two_pumps", "medium"),
+    ("07_medium", "mixed",     "medium"),
+    ("08_hard",   "series",    "hard"),
+    ("09_hard",   "backdoor",  "hard"),
+    ("10_hard",   "mixed",     "hard"),
 ]
 
 
-def _find_level(label: str, params: dict, seeds: List[int]):
-    """First seed whose level falls in the requested measured tier."""
-    for s in seeds:
-        r = generate_level(seed=s, max_attempts=100, **params)
-        if r is None:
-            continue
-        spec, meta = r
-        plan = solve(spec)
-        if plan is None:
-            continue
-        return s, spec, meta, order_by_flow(spec, plan)
-    return None
+def _make(slot: Tuple[str, str, str], seed: int):
+    return generate(slot[1], slot[2], seed, max_attempts=300)
 
 
 def _breaching_counterfactual(spec, plan):
@@ -100,7 +89,9 @@ def _breaching_counterfactual(spec, plan):
                     break
             if not ok or dv in st.opened_valves:
                 continue
-            if step_open_valve(st, dv).code == ActionCode.PROTECTED_BREACH:
+            if step_open_valve(st, dv).code in (ActionCode.PROTECTED_BREACH,
+                                                ActionCode.WRONG_COLOR_TARGET,
+                                                ActionCode.COLOR_CONTAMINATION):
                 return k, dv
     return None
 
@@ -142,6 +133,7 @@ def _render_episode(label: str, spec, meta, plan: List[Tuple[int,int,int]],
     # Plain-text solution log
     with open(os.path.join(out_dir, "solution.txt"), "w") as f:
         f.write(f"{label}\n")
+        f.write(f"insight: {meta.get('insight', '')}\n")
         f.write(f"grid_size: {spec.grid_size}\n")
         f.write(f"sources:   {spec.sources}\n")
         f.write(f"targets:   {spec.targets}\n")
@@ -169,37 +161,40 @@ def main():
                 os.remove(full)
     os.makedirs(out_root, exist_ok=True)
 
-    summary_lines = ["# FluidNet 3D — 10-puzzle batch playthrough\n"]
-    summary_lines.append("| # | label | grid | T | V | P | seed | plan_len | traps | non-local | P(random) | P(frontier) | P(greedy) |")
+    summary_lines = ["# FluidNet 3D — 10-puzzle batch playthrough (concepts)\n"]
+    summary_lines.append("| # | label | concept | grid | seed | valves | plan | traps | P(random) | P(frontier) | P(lookahead) | shortest route wins | score |")
     summary_lines.append("|---|---|---|---|---|---|---|---|---|---|---|---|---|")
+    rows: List[Dict] = []
 
     t0 = time.time()
-    for idx, (label, params, seeds) in enumerate(PUZZLES, 1):
-        print(f"\n=== puzzle {idx:2d}: {label}  params={params} ===")
-        found = _find_level(label, params, seeds)
+    from type_3.generate_50 import layout_key
+    picks = pick_levels(PUZZLES, _make, layout_key, base=0, stride=1000, n_seeds=600, need=1)
+    for idx, ((label, concept, tier), found) in enumerate(zip(PUZZLES, picks), 1):
+        print(f"\n=== puzzle {idx:2d}: {label}  {concept}/{tier} ===")
+        if found is not None:
+            seed, spec, meta = found
+            found = (seed, spec, meta, order_by_flow(spec, solve(spec)))
         if found is None:
-            print("  !! no seed produced a valid level for this tier")
-            summary_lines.append(f"| {idx} | {label} | {params['grid_size']} "
-                                 f"| {params['n_targets']} | {params['n_valves']} "
-                                 f"| {params['n_protected']} | -- | FAILED | | | | | |")
+            print("  !! no seed produced a valid level")
+            summary_lines.append(f"| {idx} | {label} | {concept} | | FAILED | | | | | | | | |")
             continue
         seed, spec, meta, plan = found
         print(f"  seed={seed}  plan={plan}")
-        out_dir = os.path.join(out_root, f"level_{label}_seed{seed}")
-        _render_episode(label, spec, meta, plan, out_dir)
+        out_dir = os.path.join(out_root, f"level_{label}_{concept}_seed{seed}")
+        _render_episode(f"{label} {concept}", spec, meta, plan, out_dir)
         d = meta["difficulty"]
         summary_lines.append(
-            f"| {idx} | {label} | {params['grid_size']} | {params['n_targets']} "
-            f"| {d['n_valves']} | {params['n_protected']} | {seed} "
-            f"| {len(plan)} | {d['traps']} | {d['nonlocal_traps']} "
-            f"| {d['p_random']:.2f} | {d['p_frontier']:.2f} | {d['p_greedy']:.2f} |"
-        )
+            f"| {idx} | {label} | {concept} | {spec.grid_size} | {seed} | {d['n_valves']} "
+            f"| {len(plan)} | {d['traps']} | {d['p_random']:.2f} | {d['p_frontier']:.2f} "
+            f"| {d['p_lookahead']:.2f} | {'yes' if d['shortest_ok'] else 'no'} | {d['score']:.1f} |")
+        rows.append({"tier": tier, "seed": seed, **d})
         print(f"  rendered to {out_dir}/")
 
     summary_lines.append(
-        "\nP(random / frontier / greedy) = exact win probability of a player who "
-        "opens random valves / opens a valve touching fluid that is not next to "
-        "a red cell / opens the valve nearest an empty tank (difficulty.py).")
+        "\nP(random / frontier / lookahead) = exact win probability of a player who "
+        "opens random valves / opens a wet valve not next to a red cell / "
+        "simulates one valve ahead (difficulty.py).\n")
+    summary_lines += tier_table(rows, "tier", [("n_valves", "valves"), ("score", "score")])
     summary_lines.append(f"\nelapsed: {time.time() - t0:.1f}s")
     with open(os.path.join(out_root, "SUMMARY.md"), "w") as f:
         f.write("\n".join(summary_lines))

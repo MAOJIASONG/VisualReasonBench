@@ -22,11 +22,20 @@ Metrics:
   p_wavefill      win rate of following the wave and filling whichever
                   hole it stops at (solves straight chains; fails when a
                   splitter or decoy forces a real choice)
+  raised          solution patches standing on a step (z >= 2)
+  score           (patches - 1) + 0.5 * (decoy_gaps + raised)
+                  + log2(1 / p_wavefill)
+
+Tiers (TIERS) are one ladder for the whole game, not per category:
+  easy 1-2 patches, <= 1 decoy hole, score <= 3.1
+  medium 3 patches, 2 decoy holes,   score 4-5.6
+  hard 4 patches,   >= 3 decoy holes, score >= 6
 """
 
 from __future__ import annotations
 
 import itertools
+import math
 import random
 from typing import Dict, FrozenSet, List, Optional, Set, Tuple
 
@@ -193,15 +202,27 @@ def analyze(spec: LevelSpec, k: int, samples: int = 1500,
             ok += _wins(spec, fill, d)
 
     p_wave = wave_follow(spec, k)
-    return {
+    m = {
         "n_solutions": len(sols),
         "p_wavefill": round(p_wave, 4),
         "min_patches": min((len(s) for s, _ in sols), default=None),
         "gaps": len(g),
         "decoy_gaps": len(decoys),
+        "raised": sum(1 for c in canon if c[2] >= 2),
         "p_random": round(wins / samples, 4),
         "p_gapfill": round(ok / max(1, trials), 4),
     }
+    m["score"] = score(m, k)
+    return m
+
+
+def score(m: Dict, k: int) -> float:
+    """One number for "how much has to be worked out": every patch past the
+    first, half a point per hole that must stay empty and per patch on a
+    step, plus the bits of choice a wave-follower faces (log2 1/p_wavefill,
+    capped at 6)."""
+    bits = math.log2(1 / max(m["p_wavefill"], 1 / 64))
+    return round((k - 1) + 0.5 * m["decoy_gaps"] + 0.5 * m.get("raised", 0) + bits, 2)
 
 
 def wave_follow(spec: LevelSpec, k: int) -> float:
@@ -235,21 +256,29 @@ def wave_follow(spec: LevelSpec, k: int) -> float:
     return sum(p(frozenset(), d) for d in dirs) / max(1, len(dirs))
 
 
+# One ladder for the whole game: every easy level is below every medium level
+# on pieces to place, holes that must stay empty and score, and every medium
+# below every hard (score bands leave a gap).
 TIERS: Dict[str, Dict] = {
-    "easy":   dict(patches=(1, 2), decoy_gaps=0, max_gapfill=1.0),
-    "medium": dict(patches=(2, 3), decoy_gaps=1, max_gapfill=0.5,
+    "easy":   dict(patches=(1, 2), decoy_gaps=(0, 1), score=(0, 3.1), max_gapfill=1.0),
+    "medium": dict(patches=(3, 3), decoy_gaps=(2, 2), score=(4, 5.6), max_gapfill=0.5,
                    max_wavefill=0.5),
-    "hard":   dict(patches=(3, 4), decoy_gaps=2, max_gapfill=0.0,
+    "hard":   dict(patches=(4, 4), decoy_gaps=(3, 9), score=(6, 99), max_gapfill=0.0,
                    max_wavefill=0.34),
 }
 
 
-def fits_tier(m: Dict, k: int, tier: str) -> bool:
+def fits_tier(m: Dict, k: int, tier: str,
+              score_band: Optional[Tuple[float, float]] = None) -> bool:
+    """`score_band` overrides the tier's own score band."""
     t = TIERS[tier]
     lo, hi = t["patches"]
+    band = score_band or t["score"]
+    if not band[0] <= m["score"] <= band[1]:
+        return False
     return (lo <= k <= hi
             and m["n_solutions"] == 1
             and m["min_patches"] == k
-            and m["decoy_gaps"] >= t["decoy_gaps"]
+            and t["decoy_gaps"][0] <= m["decoy_gaps"] <= t["decoy_gaps"][1]
             and m["p_gapfill"] <= t["max_gapfill"]
             and m["p_wavefill"] <= t.get("max_wavefill", 1.0))

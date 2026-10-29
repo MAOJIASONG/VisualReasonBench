@@ -1,0 +1,19 @@
+P17_B_obstacles_medium
+insight: The obvious step-and-climb route is blocked; find the detour your parts allow.
+grid: (5, 5, 4)
+entrances: [(4, 1, 1)]
+exits: [(2, 5, 3)]
+obstacles: [(3, 2, 2), (3, 3, 1), (1, 4, 2)]
+inventory: {'L': 6, 'I': 3, 'S1': 1}
+difficulty: {'n_solutions': 16, 'capped': False, 'min_pipes': 7, 'staircase_ok': False, 'n_portals': 2, 'plan_length': 9, 'n_networks': 696, 'score': 7.69}
+
+plan (9 pieces):
+  01: L at (2, 1, 1) ends=+x,+y
+  02: I at (2, 2, 1) ends=+y,-y
+  03: I at (2, 3, 1) ends=+y,-y
+  04: L at (2, 4, 1) ends=-y,+z
+  05: L at (3, 1, 1) ends=-x,+y
+  06: L at (3, 2, 1) ends=+x,-y
+  07: L at (4, 2, 1) ends=-x,-y
+  08: I at (2, 4, 2) ends=+z,-z
+  09: L at (2, 4, 3) ends=+y,-z

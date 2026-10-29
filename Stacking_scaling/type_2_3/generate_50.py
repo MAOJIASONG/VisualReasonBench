@@ -9,7 +9,9 @@ Categories (10 each = 3 easy + 4 medium + 3 hard):
   E_mixed      two exits, tall box, obstacles
 
 Tiers are measured by exhaustive search (difficulty.TIERS): number of
-solutions, minimum pipes, and whether the staircase shortcut works.  Every
+solutions, minimum pipes, whether the staircase shortcut works, and one
+ladder for the whole game: pieces <= 8 / 9-12 / >= 10 and score <= 4.5 /
+5.5-8.5 / >= 9.5 for easy / medium / hard.  Every
 slot scans its own seed range and layouts are de-duplicated; the output
 folder is wiped first so no stale puzzles remain.
 
@@ -25,17 +27,19 @@ import sys
 import time
 from typing import Dict, List, Tuple
 
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from chain_search import pick_levels, tier_table  # noqa: E402
+
 if __package__ in (None, ""):
-    sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     from type_2_3.game_core import init_state
-    from type_2_3.levels import CATEGORY, find_level
+    from type_2_3.levels import CATEGORY, INSIGHT, layout_key, make_level
     from type_2_3.loader import save_level_to_json
     from type_2_3.mechanics import ends_of, step_place, submit
     from type_2_3.solver import solve
     from type_2_3.visualizer_plotly import render_state_pair
 else:
     from .game_core import init_state
-    from .levels import CATEGORY, find_level
+    from .levels import CATEGORY, INSIGHT, layout_key, make_level
     from .loader import save_level_to_json
     from .mechanics import ends_of, step_place, submit
     from .solver import solve
@@ -67,6 +71,7 @@ def _render_minimal(label: str, spec, meta, plan, out_dir: str) -> None:
                       title=f"{label}  submit -> {res.code.value}")
     with open(os.path.join(out_dir, "solution.txt"), "w") as f:
         f.write(f"{label}\n")
+        f.write(f"insight: {meta.get('insight', '')}\n")
         f.write(f"grid: {spec.grid_size}\n")
         f.write(f"entrances: {spec.entrances}\nexits: {spec.exits}\n")
         f.write(f"obstacles: {spec.obstacles}\n")
@@ -90,18 +95,20 @@ def main():
             os.rmdir(full)
 
     rows: List[Dict] = []
-    seen: set = set()
     t_all = time.time()
-    for i, (label, cat, tier) in enumerate(_make_plan(), 1):
+    plan50 = _make_plan()
+    picks = pick_levels(plan50, make_level, layout_key, need=2)
+    for i, ((label, cat, tier), found) in enumerate(zip(plan50, picks), 1):
         params = CATEGORY[cat][tier]
         print(f"=== [{i:2d}/50] {label}")
-        found = find_level(params, tier, range(10000 + 500 * i, 10000 + 500 * i + 300), seen)
         if found is None:
             print("  !! no level found")
             rows.append({"label": label, "cat": cat, "diff": tier, "seed": None,
                          "grid": list(params["grid_size"])})
             continue
         seed, spec, meta = found
+        meta["insight"] = INSIGHT[cat]
+        spec.meta = dict(meta)
         plan = solve(spec)
         out_dir = os.path.join(out_root, f"{label}_seed{seed}")
         _render_minimal(label, spec, meta, plan, out_dir)
@@ -115,15 +122,20 @@ def main():
 
     lines = ["# PipeFit 3D — 50 puzzles (rules v2)\n",
              "| # | label | grid | seed | plan | pipes | supports | solutions "
-             "| staircase wins | inventory |",
-             "|---|---|---|---|---|---|---|---|---|---|"]
+             "| networks | staircase wins | score | inventory |",
+             "|---|---|---|---|---|---|---|---|---|---|---|---|"]
     for i, r in enumerate(rows, 1):
         if r.get("seed") is None:
-            lines.append(f"| {i} | {r['label']} | {tuple(r['grid'])} | FAILED | | | | | | |")
+            lines.append(f"| {i} | {r['label']} | {tuple(r['grid'])} | FAILED | | | | | | | | |")
             continue
         lines.append(f"| {i} | {r['label']} | {tuple(r['grid'])} | {r['seed']} | "
                      f"{r['plan_length']} | {r['pipes']} | {r['supports']} | "
-                     f"{r['n_solutions']} | {r['staircase_ok']} | {r['inventory']} |")
+                     f"{r['n_solutions']} | {r['n_networks']} | {r['staircase_ok']} | "
+                     f"{r['score']:.1f} | {r['inventory']} |")
+    lines += ["", "score = log2(networks / solutions) + plan / 4.  Tiers are one ladder "
+              "for the whole game (difficulty.TIERS); ranges per tier:", ""]
+    lines += tier_table(rows, "diff", [("plan_length", "pieces"), ("n_solutions", "solutions"),
+                                       ("n_networks", "networks"), ("score", "score")])
     lines += ["", f"elapsed total: {time.time() - t_all:.1f}s"]
     with open(os.path.join(out_root, "SUMMARY.md"), "w") as f:
         f.write("\n".join(lines))

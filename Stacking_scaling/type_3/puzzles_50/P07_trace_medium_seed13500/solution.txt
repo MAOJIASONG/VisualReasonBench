@@ -1,0 +1,11 @@
+P07_trace_medium
+concept: trace  tier: medium
+insight: Trace each pipe to its end: a valve far from any red cell can still feed one.
+grid: (5, 5, 4)
+pumps: [((1, 3, 1), 'blue')]
+tanks: [((3, 4, 1), 'blue'), ((5, 5, 1), 'blue')]
+valves: [(1, 2, 4), (2, 1, 1), (4, 1, 3), (5, 1, 1), (5, 3, 1)]
+red cells: [(1, 4, 4), (4, 3, 3)]
+solution (open in this order): [(2, 1, 1), (5, 1, 1), (5, 3, 1)]
+tempting mistake (one valve too many: open (1, 2, 4) -> ProtectedBreach)
+difficulty: {'n_valves': 5, 'min_plan': 3, 'n_min_sets': 1, 'n_win_sets': 1, 'prefilled': 0, 'traps': 2, 'nonlocal_traps': 2, 'p_random': 0.1, 'p_frontier': 0.0556, 'p_greedy': 1.0, 'p_lookahead': 1.0, 'shortest_ok': True, 'filler': 0, 'n_colors': 1, 'score': 4.17}

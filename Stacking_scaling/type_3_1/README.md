@@ -150,7 +150,7 @@ for act in plan:
 ## Generator knobs
 
 `generator.generate_level(grid_size, seed, n_patches, main_len, use_height,
-use_split, two_goals, n_decoys, n_protected, tier)`:
+use_split, two_goals, n_decoys, n_protected, min_raised, tier, score_band)`:
 
 | knob | effect |
 |---|---|
@@ -159,7 +159,10 @@ use_split, two_goals, n_decoys, n_protected, tier)`:
 | `use_split` | chain ends in a splitter; one side to a goal, the other to a second goal (`two_goals`) or a decoy |
 | `n_decoys` | decoy lines (gap → dominoes → red) beside START / past a goal |
 | `n_patches` | dominoes carved out of the chain (= the inventory) |
+| `min_raised` | at least this many patches stand on a step (z ≥ 2), so a patch's height is part of the answer (C_steps, E_full use 1) |
+| `n_protected` | loose red pieces off every line — pure scenery, no category uses it |
 | `tier` | accept only levels whose **measured** difficulty is in that band |
+| `score_band` | override the tier's score band (default: `difficulty.TIERS`) |
 
 Hard guarantees (checked by exhaustive search, `difficulty.solutions`):
 
@@ -172,11 +175,29 @@ Measured per level (`meta["difficulty"]`, `difficulty.py`): decoy gaps,
 win rate of random play, of "fill the holes nearest START" (gap-fill) and
 of "follow the wave and fill whichever hole it stops at" (wave-follow).
 
-| tier | patches | decoy gaps | gap-fill wins | wave-follow wins |
-|---|---|---|---|---|
-| easy | 1–2 | any | allowed | — |
-| medium | 2–3 | ≥ 1 | ≤ 50 % | ≤ 50 % |
-| hard | 3–4 | ≥ 2 | 0 % | ≤ 33 % |
+Every level also gets one number, `difficulty.score`:
+
+    score = (patches - 1) + 0.5 * (decoy gaps + patches on a step) + log2 1/P(wave-follow)
+
+The tiers (`difficulty.TIERS`) are **one ladder for the whole game**, not per
+category: every easy level is below every medium level on patches, decoy
+holes and score, and every medium below every hard.  The score bands leave a
+gap, so no two tiers touch.
+
+| tier | patches | decoy gaps | score | gap-fill wins | wave-follow wins |
+|---|---|---|---|---|---|
+| easy | 1–2 | 0–1 | ≤ 3.1 | allowed | — |
+| medium | 3 | 2 | 4 – 5.6 | ≤ 50 % | ≤ 50 % |
+| hard | 4 | ≥ 3 | ≥ 6 | 0 % | ≤ 33 % |
+
+The configs in `levels.CATEGORY` were tuned on a 1500-level sample so every
+(category, tier) pair can reach its rung: e.g. E_full easy is a single patch
+on a step behind a splitter, and A_line / B_decoy hard need 4 patches and 3
+decoys (the generator places at most 3 decoy lines, which is why the hard
+floor is 6: 3 + 1.5 + log2 3).  `score_band=` on `generate_level` overrides
+the tier's band for experiments.
+
+`generate_50` / `play_batch` search seeds in parallel (`../chain_search.py`).
 
 ---
 
@@ -188,9 +209,12 @@ of "follow the wave and fill whichever hole it stops at" (wave-follow).
 |---|---|
 | A_line | straight chain |
 | B_decoy | decoy lines around the chain |
-| C_steps | height changes on grey steps |
+| C_steps | height changes on grey steps; at least one patch stands on a step |
 | D_split | a splitter sends the wave both ways |
-| E_full | steps + splitter + decoys |
+| E_full | steps + splitter + decoys; at least one patch on a step |
+
+Every level stores the category's insight (`levels.INSIGHT`) in its meta
+and `solution.txt` — the one thing the player has to notice.
 
 Each category is 3 easy + 4 medium + 3 hard; layouts are de-duplicated up
 to rotation / reflection / translation and every slot scans its own seeds.
@@ -215,6 +239,12 @@ numbers: one pushable START, a physical hit rule (±1 level), inert steps
 instead of ramps, decoy gaps, and acceptance by exhaustive search (unique
 solution, all patches load-bearing, measured tier).  The v1 notes below are
 kept for history.
+
+A second audit (rules v2) found that the `C_steps` category often did not
+need its steps: one hard level had no step at all, and many put every patch
+on the floor; `B_decoy` medium / hard also scattered red pieces that no
+wave could reach.  Fix: `min_raised` (a patch must stand on a step) and no
+scenery pieces — every piece on the board now matters.
 
 The build went through several rounds of adjustment.  Each lesson is
 written so the next CHAIN task can skip the mistake.

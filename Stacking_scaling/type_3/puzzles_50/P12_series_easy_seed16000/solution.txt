@@ -1,0 +1,11 @@
+P12_series_easy
+concept: series  tier: easy
+insight: The tank sits behind a row of valves: open the whole row, but none of the side spurs.
+grid: (4, 4, 4)
+pumps: [((1, 3, 1), 'blue')]
+tanks: [((2, 1, 4), 'blue')]
+valves: [(3, 1, 1), (4, 1, 4), (4, 3, 1)]
+red cells: [(1, 1, 2)]
+solution (open in this order): [(4, 3, 1), (4, 1, 4)]
+tempting mistake (one valve too many: open (3, 1, 1) -> ProtectedBreach)
+difficulty: {'n_valves': 3, 'min_plan': 2, 'n_min_sets': 1, 'n_win_sets': 1, 'prefilled': 0, 'traps': 1, 'nonlocal_traps': 1, 'p_random': 0.3333, 'p_frontier': 0.5, 'p_greedy': 0.0, 'p_lookahead': 1.0, 'shortest_ok': True, 'filler': 0, 'n_colors': 1, 'score': 1.0}

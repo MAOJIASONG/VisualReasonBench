@@ -10,10 +10,14 @@ post-push + submit frames (front only, to save time; ~6 images per level).
 from __future__ import annotations
 
 import os
+import sys
 import time
 from typing import Dict, List, Tuple
 
-from .levels import CATEGORY, find_level
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from chain_search import pick_levels, tier_table  # noqa: E402
+
+from .levels import CATEGORY, layout_key, make_level
 from .game_core import init_state
 from .loader import save_level_to_json
 from .mechanics import step_place, step_push, submit, submit_placement
@@ -72,13 +76,12 @@ def main():
                 os.remove(os.path.join(full, f))
             os.rmdir(full)
     summary: List[Dict] = []
-    seen: set = set()
     t0 = time.time()
-
-    for i, (label, cat, tier) in enumerate(LEVELS, 1):
+    picks = pick_levels(LEVELS, make_level, layout_key, base=0, stride=1000,
+                        n_seeds=400, need=1)
+    for i, ((label, cat, tier), found) in enumerate(zip(LEVELS, picks), 1):
         kwargs = CATEGORY[cat][tier]
         print(f"[{i:2d}/{len(LEVELS)}] {label}  {cat}/{tier}")
-        found = find_level(kwargs, tier, range(1000 * i, 1000 * i + 400), seen)
         if found is None:
             print("  !! no level found")
             summary.append({"label": label, "seed": None, "grid": kwargs["grid_size"]})
@@ -95,24 +98,26 @@ def main():
     lines = [
         "# Domino Chain Reaction 3D — 10-level batch (rules v2)\n",
         "| # | label | category | tier | seed | grid | fixed | patches | decoy gaps "
-        "| solutions | P(random) | P(gap-fill) | P(wave-follow) |",
-        "|---|---|---|---|---|---|---|---|---|---|---|---|---|",
+        "| solutions | P(random) | P(gap-fill) | P(wave-follow) | score |",
+        "|---|---|---|---|---|---|---|---|---|---|---|---|---|---|",
     ]
     for i, r in enumerate(summary, 1):
         if r.get("seed") is None:
-            lines.append(f"| {i} | {r['label']} | | | — | {r['grid']} | | | | | | | |")
+            lines.append(f"| {i} | {r['label']} | | | — | {r['grid']} | | | | | | | | |")
             continue
         lines.append(
             f"| {i} | {r['label']} | {r['cat']} | {r['tier']} | {r['seed']} | "
             f"{tuple(r['grid'])} | {r['fixed']} | {r['patches']} | {r['decoy_gaps']} "
             f"| {r['n_solutions']} | {r['p_random']:.3f} | {r['p_gapfill']:.2f} "
-            f"| {r['p_wavefill']:.2f} |")
+            f"| {r['p_wavefill']:.2f} | {r['score']:.1f} |")
     lines += ["",
               "P(random) = random legal placement + random push direction; "
               "P(gap-fill) = fill the holes nearest START and push at its "
               "neighbour; P(wave-follow) = follow the wave, filling whichever "
-              "hole it stops at (see difficulty.py).",
-              "", f"elapsed: {time.time() - t0:.1f}s"]
+              "hole it stops at (see difficulty.py).", ""]
+    lines += tier_table(summary, "tier", [("patches", "patches"), ("decoy_gaps", "decoy gaps"),
+                                          ("score", "score")])
+    lines += ["", f"elapsed: {time.time() - t0:.1f}s"]
     with open(os.path.join(out_root, "SUMMARY.md"), "w") as f:
         f.write("\n".join(lines))
     print(f"\n[play_batch] done in {time.time() - t0:.1f}s -> {out_root}")

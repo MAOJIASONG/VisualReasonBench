@@ -1,7 +1,8 @@
 P12_B_decoy_easy
+insight: Not every hole is yours: some lead to a red piece and must stay empty.
 grid: (5, 5, 3)
 fixed: [('P', (1, 1, 1)), ('S', (1, 3, 1)), ('G', (4, 3, 1))]
 inventory: {'D': 2}
 patches: [('D', [2, 3, 1]), ('D', [3, 3, 1])]
 push:    START [1, 3, 1] dir=+x
-difficulty: {'n_solutions': 1, 'p_wavefill': 0.3333, 'min_patches': 2, 'gaps': 1, 'decoy_gaps': 1, 'p_random': 0.0017, 'p_gapfill': 0.0}
+difficulty: {'n_solutions': 1, 'p_wavefill': 0.3333, 'min_patches': 2, 'gaps': 1, 'decoy_gaps': 1, 'raised': 0, 'p_random': 0.0017, 'p_gapfill': 0.0, 'score': 3.09}

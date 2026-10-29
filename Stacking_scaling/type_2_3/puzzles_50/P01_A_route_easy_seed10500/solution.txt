@@ -1,14 +1,16 @@
 P01_A_route_easy
+insight: Count the parts: the bin holds exactly one route's worth of corners and straights (plus one spare).
 grid: (5, 4, 4)
-entrances: [(2, 1, 1)]
+entrances: [(1, 2, 1)]
 exits: [(5, 3, 2)]
 obstacles: []
-inventory: {'L': 5, 'I': 1}
-difficulty: {'n_solutions': 2, 'capped': False, 'min_pipes': 5, 'staircase_ok': False, 'n_portals': 2, 'plan_length': 5}
+inventory: {'S1': 1, 'L': 5, 'I': 1}
+difficulty: {'n_solutions': 3, 'capped': False, 'min_pipes': 5, 'staircase_ok': False, 'n_portals': 2, 'plan_length': 6, 'n_networks': 12, 'score': 3.5}
 
-plan (5 pieces):
-  01: L at (2, 2, 1) ends=+x,-y
-  02: L at (3, 2, 1) ends=-x,+y
-  03: L at (3, 3, 1) ends=+x,-y
-  04: L at (4, 3, 1) ends=-x,+z
-  05: L at (4, 3, 2) ends=+x,-z
+plan (6 pieces):
+  01: S1 at (4, 3, 1)
+  02: L at (2, 2, 1) ends=-x,+y
+  03: L at (2, 3, 1) ends=+x,-y
+  04: L at (3, 3, 1) ends=-x,+z
+  05: L at (3, 3, 2) ends=+x,-z
+  06: I at (4, 3, 2) ends=+x,-x

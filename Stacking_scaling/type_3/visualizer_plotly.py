@@ -42,6 +42,27 @@ import chain_viz as cv  # noqa: E402
 from .game_core import CellType, GameState, face_neighbors  # noqa: E402
 
 
+def _clash_marker(state: GameState) -> List[go.Scatter3d]:
+    """Red box + cross where two colours met (or the wrong colour reached a
+    tank): a colour loss otherwise shows no visible culprit."""
+    from .game_core import ActionCode
+    if state.terminal_code not in (ActionCode.COLOR_CONTAMINATION,
+                                   ActionCode.WRONG_COLOR_TARGET):
+        return []
+    if state.violation_cell is None:
+        return []
+    c = _cell_center(state.violation_cell)
+    h = 0.42
+    corners = [c + np.array([sx, sy, sz]) for sz in (-h, h)
+               for sx, sy in ((-h, -h), (h, -h), (h, h), (-h, h))]
+    edges = [(i, (i + 1) % 4) for i in range(4)]
+    edges += [(4 + i, 4 + (i + 1) % 4) for i in range(4)]
+    edges += [(i, i + 4) for i in range(4)]
+    segs = [(corners[a], corners[b]) for a, b in edges]
+    segs += [(corners[4], corners[6]), (corners[5], corners[7])]
+    return [_line_trace(segs, "#FF1744", 8, "colour-clash")]
+
+
 # ---------------------------------------------------------------------------
 # Palette
 # ---------------------------------------------------------------------------
@@ -591,8 +612,12 @@ def _hud(state: GameState, caption: str) -> "hud.Hud":
                    if state.fluid_cells.get(t) == spec.cells[t].color)
     n_open = len(state.opened_valves)
     n_breach = sum(1 for p in spec.protected if p in state.fluid_cells)
+    from .game_core import ActionCode
+    clash = state.terminal_code in (ActionCode.COLOR_CONTAMINATION,
+                                    ActionCode.WRONG_COLOR_TARGET)
     term = state.terminal_code.value if state.terminal_code else None
     fluid = COLOR_FLUID["blue"]
+    two = len(spec.colors) > 1
     stats = [
         hud.Stat(hud.icon_target(fluid), "Targets filled",
                  f"{n_filled} / {len(spec.targets)}",
@@ -603,13 +628,24 @@ def _hud(state: GameState, caption: str) -> "hud.Hud":
         hud.Stat(hud.icon_block_x(PROTECTED_FACE), "Protected breached",
                  str(n_breach), None, "#FF4D5E" if n_breach else "#2BD07A"),
     ]
+    if len(spec.colors) > 1:
+        stats.append(hud.Stat(hud.icon_sphere(COLOR_FLUID["orange"]),
+                              "Colours mixed", "yes" if clash else "no", None,
+                              "#FF4D5E" if clash else "#2BD07A"))
     legend = [
         hud.LegendEntry(hud.icon_sphere(fluid), "Source",
                         "start of the flow (pump on a ring)"),
+    ]
+    if two:
+        legend.append(hud.LegendEntry(hud.icon_sphere(COLOR_FLUID["orange"]),
+                                      "Second pump",
+                                      "its colour must never meet the other"))
+    legend += [
         hud.LegendEntry(hud.icon_target(fluid), "Target tank",
-                        "fill every tank to win"),
+                        "needs the colour of its frame" if two
+                        else "fill every tank to win"),
         hud.LegendEntry(hud.icon_pipe("bar", PIPE_BODY, None), "Pipe",
-                        "always open; blue = carrying fluid"),
+                        "always open; coloured = carrying fluid"),
         hud.LegendEntry(hud.icon_valve(VALVE_BODY), "Valve (closed)",
                         "amber with a hand-wheel: blocks flow"),
         hud.LegendEntry(hud.icon_valve(open_=True), "Valve (opened)",
@@ -623,7 +659,9 @@ def _hud(state: GameState, caption: str) -> "hud.Hud":
         result=cv.result_label(term),
         stats=stats,
         legend=legend,
-        hint="Each turn open one valve  \u2022  fluid floods everything connected  \u2022  fill all tanks, spare the red cells",
+        hint=("Open one valve per turn  \u2022  each tank wants its frame's colour  \u2022  colours never meet  \u2022  spare the red cells"
+              if two else
+              "Each turn open one valve  \u2022  fluid floods everything connected  \u2022  fill all tanks, spare the red cells"),
     )
 
 
@@ -657,6 +695,7 @@ def render_state(state: GameState,
     traces.extend(target_mesh); traces.extend(target_lines)
 
     traces.extend(_build_sources(state))
+    traces.extend(_clash_marker(state))
 
     if show_labels:
         traces.extend(_build_labels(state, view))

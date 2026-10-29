@@ -17,10 +17,16 @@ Metrics:
   min_pipes     fewest pipe pieces any solution needs
   staircase_ok  the obvious "step toward the exit, then up, repeat" route
                 (with supports under every pipe) solves the level
+  n_networks    pipe networks of valid piece shapes within the pipe budget,
+                ignoring piece types and supports (n_networks())
+  score         log2(n_networks / n_solutions) + plan_length / 4; tiers
+                (TIERS) are one ladder for the whole game: pieces <= 8 / 9-12 /
+                >= 10 and score <= 4.5 / 5.5-8.5 / >= 9.5
 """
 
 from __future__ import annotations
 
+import math
 from typing import Dict, Iterator, List, Optional, Set, Tuple
 
 from .game_core import (
@@ -210,14 +216,25 @@ def solutions(spec: LevelSpec, cap: int = CAP) -> List[Dict]:
     if len(portals) != 3:
         return out
     a, b, c = portals
+    tc = bd.inner(c)
     for r in routes(bd, bd.inner(a), bd.inner(b), budget - 1):
         on = set(r)
+        # The route's own I / L pieces (the junction cell becomes the T):
+        # a branch only adds pieces, so a route over the inventory is dead.
+        kinds = [piece_of(ds)[0] for ds in
+                 (lambda nd: [nd[x] for x in r])(network_dirs(bd, [(a, r, b)]))]
+        n_i = kinds.count(PieceType.PIPE_I)
+        n_l = kinds.count(PieceType.PIPE_L)
+        rest = budget - len(r)
         for i, j in enumerate(r):
+            if (n_i - (kinds[i] == PieceType.PIPE_I) > inv.get(PieceType.PIPE_I, 0)
+                    or n_l - (kinds[i] == PieceType.PIPE_L) > inv.get(PieceType.PIPE_L, 0)):
+                continue
             for d in range(6):
                 start = _nb(j, d)
-                if start in on or not bd.free(start):
+                if start in on or not bd.free(start) or 1 + _man(start, tc) > rest:
                     continue
-                for br in routes(bd, start, bd.inner(c), budget - len(r), avoid=on):
+                for br in routes(bd, start, tc, rest, avoid=on):
                     dirs = network_dirs(bd, [(a, r, b), (None, [j] + br, c)])
                     f = fits(bd, dirs)
                     if f:
@@ -225,6 +242,39 @@ def solutions(spec: LevelSpec, cap: int = CAP) -> List[Dict]:
                         if len(out) >= cap:
                             return out
     return out
+
+
+def n_networks(spec: LevelSpec, cap: int = 20000) -> int:
+    """Pipe networks with a valid piece in every cell that use at most the
+    inventory's number of pipes, ignoring piece types and supports: the
+    space a player picks from.  solutions() is the subset that also fits
+    the exact inventory and its supports."""
+    bd = Board(spec)
+    inv = spec.inventory
+    budget = sum(inv.get(pt, 0) for pt in (PieceType.PIPE_I, PieceType.PIPE_L, PieceType.PIPE_T))
+    portals = bd.portals
+    n = 0
+    shaped = lambda dirs: all(piece_of(ds) for ds in dirs.values())
+    if len(portals) == 2:
+        a, b = portals
+        for r in routes(bd, bd.inner(a), bd.inner(b), budget, cap=cap):
+            n += shaped(network_dirs(bd, [(a, r, b)]))
+        return n
+    a, b, c = portals
+    tc = bd.inner(c)
+    for r in routes(bd, bd.inner(a), bd.inner(b), budget - 1, cap=cap):
+        on = set(r)
+        rest = budget - len(r)
+        for j in r:
+            for d in range(6):
+                start = _nb(j, d)
+                if start in on or not bd.free(start) or 1 + _man(start, tc) > rest:
+                    continue
+                for br in routes(bd, start, tc, rest, avoid=on):
+                    n += shaped(network_dirs(bd, [(a, r, b), (None, [j] + br, c)]))
+                    if n >= cap:
+                        return n
+    return n
 
 
 def staircase(bd: Board, s: Vec3, t: Vec3) -> Optional[List[Vec3]]:
@@ -274,11 +324,41 @@ def analyze(spec: LevelSpec) -> Dict:
     }
 
 
+def idle_obstacles(spec: LevelSpec, m: Dict) -> int:
+    """Obstacles whose removal changes nothing (same solution count, same
+    staircase verdict): pure decoration, which the generator rejects."""
+    import dataclasses
+    idle = 0
+    for o in spec.obstacles:
+        rest = [c for c in spec.obstacles if c != o]
+        s2 = dataclasses.replace(spec, obstacles=rest,
+                                 obstacle_shapes=[[c] for c in rest])
+        m2 = analyze(s2)
+        if (m2["n_solutions"] == m["n_solutions"]
+                and m2["staircase_ok"] == m["staircase_ok"]):
+            idle += 1
+    return idle
+
+
+# One ladder for the whole game, not per category: every easy level places
+# fewer pieces and scores lower than every medium / hard level, and score
+# bands leave a gap so every medium scores below every hard.
 TIERS: Dict[str, Dict] = {
-    "easy":   dict(max_solutions=CAP, staircase=True, min_pipes=3, max_plan=10),
-    "medium": dict(max_solutions=20, staircase=False, min_pipes=5, max_plan=14),
-    "hard":   dict(max_solutions=6, staircase=False, min_pipes=7, max_plan=18),
+    "easy":   dict(max_solutions=CAP, staircase=True, min_pipes=3, plan=(3, 8),
+                   score=(0, 4.5)),
+    "medium": dict(max_solutions=20, staircase=False, min_pipes=5, plan=(9, 12),
+                   score=(5.5, 8.5)),
+    "hard":   dict(max_solutions=12, staircase=False, min_pipes=7, plan=(10, 20),
+                   score=(9.5, 99)),
 }
+
+
+def score(m: Dict) -> float:
+    """How hard picking the network is: log2(networks / solutions), the bits
+    the inventory and supports take away from "any route that looks right",
+    plus a quarter point per piece to place."""
+    return round(math.log2(max(m["n_networks"], 1) / max(m["n_solutions"], 1))
+                 + 0.25 * m.get("plan_length", 0), 2)
 
 
 def fits_tier(m: Dict, tier: str) -> bool:
@@ -287,4 +367,4 @@ def fits_tier(m: Dict, tier: str) -> bool:
             and m["n_solutions"] <= t["max_solutions"]
             and (m["min_pipes"] or 0) >= t["min_pipes"]
             and (t["staircase"] or not m["staircase_ok"])
-            and m.get("plan_length", 0) <= t["max_plan"])
+            and t["plan"][0] <= m.get("plan_length", 0) <= t["plan"][1])

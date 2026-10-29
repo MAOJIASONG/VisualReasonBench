@@ -1,7 +1,8 @@
 P33_D_split_easy
+insight: The splitter sends the wave out to both sides: plan both branches.
 grid: (6, 6, 3)
 fixed: [('S', (2, 4, 1)), ('G', (4, 1, 1)), ('D', (4, 3, 1)), ('T', (4, 4, 1)), ('D', (4, 5, 1)), ('G', (4, 6, 1))]
 inventory: {'D': 2}
 patches: [('D', [3, 4, 1]), ('D', [4, 2, 1])]
 push:    START [2, 4, 1] dir=+x
-difficulty: {'n_solutions': 1, 'p_wavefill': 0.25, 'min_patches': 2, 'gaps': 2, 'decoy_gaps': 0, 'p_random': 0.0017, 'p_gapfill': 1.0}
+difficulty: {'n_solutions': 1, 'p_wavefill': 0.25, 'min_patches': 2, 'gaps': 2, 'decoy_gaps': 0, 'raised': 0, 'p_random': 0.0017, 'p_gapfill': 1.0, 'score': 3.0}

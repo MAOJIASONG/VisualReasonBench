@@ -147,19 +147,50 @@ step_place(init_state(spec), PieceType.PIPE_L, (3, 2, 2), ends=("+x", "+z"))
 ## Generator knobs
 
 `generator.generate_level(grid_size, seed, n_exits, n_obstacles, extra_len,
-spare, tier)` builds a biased random-walk route (plus a branch to a second
-exit), fills the support columns it needs, puts obstacles on the staircase
-shortcut, and sets the inventory to exactly those pieces plus `spare`.
+spare, min_supports, plan_range, tier, score_band)` builds a biased random-walk route (plus a
+branch to a second exit), fills the support columns it needs, puts
+obstacles on the staircase shortcut, and sets the inventory to exactly
+those pieces plus `spare`.  Every obstacle must matter: removing any one of
+them has to add a solution or revive the staircase
+(`difficulty.idle_obstacles`), otherwise the level is rejected.
 
 `difficulty.solutions` enumerates **every** network that fits the
 inventory (routes for two portals; route + T-junction branch for three).
-Tiers (`difficulty.TIERS`, configs in `levels.py`):
+Hard rules per tier (`difficulty.TIERS`, configs in `levels.py`):
 
-| tier | solutions | min pipes | staircase shortcut | pieces to place |
-|---|---|---|---|---|
-| easy | ≥ 1 | ≥ 3 | may work | ≤ 10 |
-| medium | ≤ 20 | ≥ 5 | fails | ≤ 14 |
-| hard | ≤ 6 | ≥ 7 | fails | ≤ 18 |
+| tier | solutions | min pipes | staircase shortcut |
+|---|---|---|---|
+| easy | ≥ 1 | ≥ 3 | may work |
+| medium | ≤ 20 | ≥ 5 | fails |
+| hard | ≤ 12 | ≥ 7 | fails |
+
+Solution count alone says little, since a big open box has many routes
+*and* many solutions.  What matters is how much the inventory narrows the
+choice, so every level also gets `difficulty.score`:
+
+    score = log2(n_networks / n_solutions) + pieces_to_place / 4
+
+where `n_networks` counts pipe networks of valid piece shapes within the
+pipe budget (ignoring piece types and supports), i.e. everything that
+"looks like a route".
+
+The tiers are **one ladder for the whole game**, not per category: every
+easy level places fewer pieces and scores lower than every medium / hard
+level, and the score bands leave a gap so every medium level scores below
+every hard one:
+
+| tier | pieces to place | score |
+|---|---|---|
+| easy | 3 – 8 | ≤ 4.5 |
+| medium | 9 – 12 | 5.5 – 8.5 |
+| hard | ≥ 10 | ≥ 9.5 |
+
+(`plan_range=` / `score_band=` on `generate_level` override them.)  The
+configs were tuned on a ~1500-level sample.  The single-route categories
+(A_route, B_obstacles) reach hard only in a 6×6 box with long detours.
+
+The hard tier is rare (a few % of seeds), so `generate_50` / `play_batch`
+search seeds in parallel (`../chain_search.py`).
 
 ---
 
@@ -167,8 +198,9 @@ Tiers (`difficulty.TIERS`, configs in `levels.py`):
 
 `python -m type_2_3.generate_50`: categories A_route, B_obstacles,
 C_branch (two exits), D_tall (high exits), E_mixed — 3 easy + 4 medium +
-3 hard each, distinct seed ranges, de-duplicated layouts, output folder
-wiped first.  `SUMMARY.md` / `index.json` list the measured difficulty.
+3 hard each, distinct seed ranges, layouts de-duplicated up to rotation /
+reflection, output folder wiped first.  Each level stores its category's
+insight (`levels.INSIGHT`) in the meta and `solution.txt`.  `SUMMARY.md` / `index.json` list the measured difficulty.
 `level.json`'s meta (`plan`) and `solution.txt` contain the answer — keep
 them out of model inputs.
 
@@ -188,6 +220,14 @@ that did not match the code.  v2: one leak-free network joining every
 portal, a plain "rest on something solid" support rule, pipes named by
 their open ends, a single final submit, varied routes with obstacles on
 the staircase, exact inventories, and tiers from an exhaustive search.
+
+A second audit of the v2 set found 7 of 20 obstacle levels whose
+obstacles changed nothing (removing them left the solution count and the
+staircase verdict unchanged), easy levels larger than hard ones (up to 28
+pieces), and a de-duplication that only caught exact copies, not mirrored
+or rotated ones.  Fix: every
+obstacle must matter, a piece range per tier, and symmetric
+de-duplication.
 The v1 rounds below are kept for history.
 
 The current build is the result of five rounds of user feedback.  Each

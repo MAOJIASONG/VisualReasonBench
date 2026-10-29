@@ -1,0 +1,12 @@
+03_easy two_pumps
+insight: Each tank needs its own colour and the colours must never meet: a valve that is safe alone can lose once the other colour arrives.
+grid_size: (5, 5, 4)
+sources:   [(1, 2, 1), (4, 5, 1)]
+targets:   [(5, 1, 4), (5, 3, 1)]
+valves:    [(3, 3, 4), (4, 5, 4), (5, 3, 3)]
+protected: []
+meta:      {'generator': 'concepts-v1', 'concept': 'two_pumps', 'tier': 'easy', 'insight': 'Each tank needs its own colour and the colours must never meet: a valve that is safe alone can lose once the other colour arrives.', 'seed': 3000, 'attempt': 10, 'difficulty': {'n_valves': 3, 'min_plan': 2, 'n_min_sets': 1, 'n_win_sets': 1, 'prefilled': 0, 'traps': 1, 'nonlocal_traps': 1, 'p_random': 0.3333, 'p_frontier': 0.3333, 'p_greedy': 0.0, 'p_lookahead': 1.0, 'shortest_ok': True, 'filler': 0, 'n_colors': 2, 'score': 1.59}}
+
+BFS plan (2 opens):
+  step 1: open (4, 5, 4)
+  step 2: open (5, 3, 3)

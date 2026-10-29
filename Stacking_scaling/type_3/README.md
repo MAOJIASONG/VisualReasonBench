@@ -21,9 +21,13 @@ python -m type_3.game_cli --seed 5 --size 5 5 5 --targets 2 --valves 6 --protect
 # 2) Auto-play one level with the BFS solver, render every step
 python -m type_3.play --seed 70
 
-# 3) Generate 10 puzzles spanning easy → hard, render solver steps for each
+# 3) Generate 10 concept puzzles spanning easy → hard, render solver steps for each
 python -m type_3.play_batch
 #    -> output in type_3/images_batch/  (with SUMMARY.md)
+
+# 3b) The 50-puzzle set: 5 concepts x (3 easy + 4 medium + 3 hard)
+python -m type_3.generate_50
+#    -> output in type_3/puzzles_50/  (SUMMARY.md, index.json)
 
 # 4) Visual style bakeoff (5 rendering styles for the same state)
 python -m type_3.render_variants
@@ -46,10 +50,13 @@ fluidnet> quit
 ## The rules in 60 seconds
 
 - The board is an `A × B × C` grid of cells: **empty / pipe / source /
-  target / valve / protected**.  The pipe network is a tree drawn as tubes:
-  two cells are connected exactly when a tube joins them.
+  target / valve / protected**.  The pipe network is drawn as tubes: two
+  cells are connected exactly when a tube joins them (it may contain loops).
 - The **source** (big sphere on a pump) floods everything connected to it.
-- **Target** tanks (glass boxes) must all fill.
+  Some levels have **two pumps** (blue and orange).
+- **Target** tanks (glass boxes) must all fill, each with the colour of its
+  frame.  Two colours meeting anywhere, or a tank reached by the wrong
+  colour, loses.
 - **Protected** cells (red, white X) are fed by a short stub; if fluid
   reaches the cell next to one, you lose.
 - **Valves** (amber, hand-wheel) start closed.  Each turn you open one;
@@ -64,10 +71,22 @@ fluidnet> quit
 ## What the game tests
 
 **Structural-propagation reasoning** — the T3 axis of the CHAIN benchmark.
-The action (open one valve) is local; its effect is the whole subtree
-behind that valve.  Traps are placed **far from** the red cell they feed, so
-"avoid valves next to red, follow the fluid front" stops working from the
-medium tier on: you must trace each branch to its end before opening it.
+The action (open one valve) is local; its effect is everything newly
+connected behind that valve.  Each level is built around one concept
+(`concepts.py`):
+
+| concept | what the player has to see |
+|---|---|
+| `trace` | a valve far from any red cell can still feed one: trace each pipe to its end |
+| `series` | the tank sits behind a row of valves: open the whole row, none of the side spurs |
+| `backdoor` | the route with the fewest valves also reaches a red cell through a loop: take the clean detour |
+| `two_pumps` | each tank wants its own colour and the colours must never meet: a valve that is safe alone can lose once the other colour arrives |
+| `mixed` | two pumps plus red cells: both kinds of trap at once |
+
+Design rule for every level: **each valve is a real decision** — it is in
+the unique minimal winning set, or adding it to that set loses.  There are
+no filler valves.  Pumps, tanks, valves and red cells keep at least one
+empty cell between each other (also diagonally) so none hides another.
 
 ---
 
@@ -168,6 +187,45 @@ easy / medium / hard, and up to 40 % of its levels started with a tank
 already full (the folded snake touched itself); V3 measures about
 64 / 15 / 3 % with no pre-filled tanks.
 
+V3 levels are trees with one pump, and two stronger baselines win all of
+them: `p_lookahead` (simulate one valve ahead, open one that adds fluid and
+does not lose) and `shortest_ok` (open each tank's fewest-valve route).
+The concept generator (`concepts.py`, used by `play_batch` and
+`generate_50`) adds loops and a second pump so that, per concept:
+
+| metric | meaning | concept that defeats it |
+|---|---|---|
+| `p_lookahead` | win rate of a one-valve-ahead simulator | `two_pumps`, `mixed` (combination traps) |
+| `shortest_ok` | does the fewest-valve route per tank win? | `backdoor` |
+| `filler` | valves neither needed nor fatal | all concepts require 0 |
+
+Per-concept tier rules are in `concepts.CONCEPTS` (plan length, non-local
+traps, frontier / greedy / lookahead ceilings, shortest route must fail).
+
+On top of those, every level gets one number, `difficulty.score`:
+
+    score = log2 1/p_frontier + 2 * log2 1/p_lookahead + (1 if the shortest route loses)
+
+The tiers are **one ladder for the whole game** (`concepts.TIER_SCORE` plus
+the `valves` ranges), not per concept: every easy level has fewer valves and
+a lower score than every medium level, and every medium than every hard.
+The score bands leave a gap, so no two tiers touch:
+
+| tier | valves | score |
+|---|---|---|
+| easy | 2–4 | ≤ 3 |
+| medium | 5–6 | 4 – 6 |
+| hard | 7–8 | ≥ 7 |
+
+The concept configs were tuned on a 2100-level sample so every (concept,
+tier) pair reaches its rung.  backdoor hard is the rarest (~1 % of seeds),
+so `generate_50` searches 600 seeds per slot.  A `score_band` entry in a
+concept's params overrides the tier band for experiments.
+
+`generate_50` and `play_batch` search seeds in parallel
+(`../chain_search.py`); the picks equal a sequential search over the same
+seeds.
+
 ---
 
 ## Visual encoding (V2 plotly renderer)
@@ -267,6 +325,7 @@ can skip the same mistakes.
 | 9 | "Pipes too short, two pipe colors confuse, planes empty" | Replace tree-growth with **DFS snake-path backbone**, **unify pipe color**, **rectangular bbox** with normalised aspect ratio |
 | 10 | Density too high after the snake-path change | Cap backbone length at ~27 % of grid volume |
 | 11 | Measured audit: up to 40 % of levels started with a tank full (the folded snake touched itself), the "open a wet valve not next to red" rule won 86–98 %, half of all losses were an invisible "deadlock" | **V3 valve tree** (no-touch growth, tips = tanks / red cells, far-away traps), tiers from exact measurement, no hidden deadlock loss, prominent source, stub into red cells, breaching counterfactual |
+| 12 | Measured audit: every V3 level is won by "simulate one valve ahead" and by "open the fewest-valve route" (trees only test path tracing) | **Concept generator**: loops (`backdoor`), two pumps (`two_pumps`, `mixed`), no filler valves, spacing between big pieces, 50-puzzle set `puzzles_50/` |
 
 ## Recurring user concerns (the "what they actually care about" list)
 

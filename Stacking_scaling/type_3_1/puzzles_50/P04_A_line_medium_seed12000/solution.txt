@@ -1,7 +1,8 @@
 P04_A_line_medium
-grid: (7, 5, 3)
-fixed: [('P', (1, 5, 1)), ('G', (3, 5, 1)), ('D', (6, 5, 1)), ('P', (7, 1, 1)), ('D', (7, 2, 1)), ('D', (7, 3, 1)), ('S', (7, 5, 1))]
-inventory: {'D': 2}
-patches: [('D', [4, 5, 1]), ('D', [5, 5, 1])]
-push:    START [7, 5, 1] dir=-x
-difficulty: {'n_solutions': 1, 'p_wavefill': 0.5, 'min_patches': 2, 'gaps': 2, 'decoy_gaps': 2, 'p_random': 0.0, 'p_gapfill': 0.0}
+insight: Find the holes in the line and fill each one; push START toward the goal.
+grid: (8, 5, 3)
+fixed: [('P', (2, 1, 1)), ('S', (2, 3, 1)), ('P', (2, 5, 1)), ('D', (3, 3, 1)), ('G', (7, 3, 1))]
+inventory: {'D': 3}
+patches: [('D', [4, 3, 1]), ('D', [5, 3, 1]), ('D', [6, 3, 1])]
+push:    START [2, 3, 1] dir=+x
+difficulty: {'n_solutions': 1, 'p_wavefill': 0.25, 'min_patches': 3, 'gaps': 2, 'decoy_gaps': 2, 'raised': 0, 'p_random': 0.0, 'p_gapfill': 0.0, 'score': 5.0}

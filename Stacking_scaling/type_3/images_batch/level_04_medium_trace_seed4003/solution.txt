@@ -1,0 +1,13 @@
+04_medium trace
+insight: Trace each pipe to its end: a valve far from any red cell can still feed one.
+grid_size: (5, 5, 4)
+sources:   [(2, 1, 1)]
+targets:   [(1, 3, 2), (2, 5, 1)]
+valves:    [(1, 5, 4), (2, 1, 4), (3, 3, 4), (4, 1, 4), (5, 1, 1)]
+protected: [(3, 3, 1), (3, 5, 4)]
+meta:      {'generator': 'concepts-v1', 'concept': 'trace', 'tier': 'medium', 'insight': 'Trace each pipe to its end: a valve far from any red cell can still feed one.', 'seed': 4003, 'attempt': 215, 'difficulty': {'n_valves': 5, 'min_plan': 3, 'n_min_sets': 1, 'n_win_sets': 1, 'prefilled': 0, 'traps': 2, 'nonlocal_traps': 2, 'p_random': 0.1, 'p_frontier': 0.0556, 'p_greedy': 0.0, 'p_lookahead': 1.0, 'shortest_ok': True, 'filler': 0, 'n_colors': 1, 'score': 4.17}}
+
+BFS plan (3 opens):
+  step 1: open (4, 1, 4)
+  step 2: open (2, 1, 4)
+  step 3: open (1, 5, 4)
