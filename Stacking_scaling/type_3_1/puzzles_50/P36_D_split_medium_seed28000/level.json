@@ -1,0 +1,165 @@
+{
+  "grid_size": [
+    7,
+    6,
+    3
+  ],
+  "fixed_pieces": [
+    [
+      "P",
+      [
+        1,
+        5,
+        1
+      ]
+    ],
+    [
+      "D",
+      [
+        2,
+        5,
+        1
+      ]
+    ],
+    [
+      "S",
+      [
+        4,
+        1,
+        1
+      ]
+    ],
+    [
+      "D",
+      [
+        4,
+        3,
+        1
+      ]
+    ],
+    [
+      "T",
+      [
+        4,
+        5,
+        1
+      ]
+    ],
+    [
+      "D",
+      [
+        6,
+        1,
+        1
+      ]
+    ],
+    [
+      "G",
+      [
+        6,
+        5,
+        1
+      ]
+    ],
+    [
+      "P",
+      [
+        7,
+        1,
+        1
+      ]
+    ]
+  ],
+  "inventory": {
+    "D": 3
+  },
+  "push_budget": 1,
+  "meta": {
+    "rules": "v2",
+    "seed": 28000,
+    "attempt": 8,
+    "tier": "medium",
+    "grid_size": [
+      7,
+      6,
+      3
+    ],
+    "patch_count": 3,
+    "fixed_count": 8,
+    "use_height": false,
+    "use_split": true,
+    "n_decoys": 1,
+    "origin": [
+      4,
+      1,
+      1
+    ],
+    "origin_dir": "+y",
+    "solution_patches": [
+      [
+        4,
+        2,
+        1
+      ],
+      [
+        4,
+        4,
+        1
+      ],
+      [
+        5,
+        5,
+        1
+      ]
+    ],
+    "patch_pieces": [
+      [
+        "D",
+        [
+          4,
+          2,
+          1
+        ]
+      ],
+      [
+        "D",
+        [
+          4,
+          4,
+          1
+        ]
+      ],
+      [
+        "D",
+        [
+          5,
+          5,
+          1
+        ]
+      ]
+    ],
+    "pushes": [
+      [
+        [
+          4,
+          1,
+          1
+        ],
+        "+y"
+      ]
+    ],
+    "push_budget": 1,
+    "difficulty": {
+      "n_solutions": 1,
+      "p_wavefill": 0.1667,
+      "min_patches": 3,
+      "gaps": 5,
+      "decoy_gaps": 2,
+      "raised": 0,
+      "p_random": 0.0,
+      "p_gapfill": 0.0,
+      "score": 5.58
+    },
+    "insight": "The splitter sends the wave out to both sides: plan both branches."
+  }
+}

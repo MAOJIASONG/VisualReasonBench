@@ -1,0 +1,173 @@
+{
+  "grid_size": [
+    7,
+    5,
+    3
+  ],
+  "fixed_pieces": [
+    [
+      "B",
+      [
+        1,
+        4,
+        1
+      ]
+    ],
+    [
+      "P",
+      [
+        1,
+        4,
+        2
+      ]
+    ],
+    [
+      "B",
+      [
+        2,
+        4,
+        1
+      ]
+    ],
+    [
+      "B",
+      [
+        3,
+        4,
+        1
+      ]
+    ],
+    [
+      "G",
+      [
+        3,
+        4,
+        2
+      ]
+    ],
+    [
+      "B",
+      [
+        4,
+        4,
+        1
+      ]
+    ],
+    [
+      "P",
+      [
+        7,
+        1,
+        1
+      ]
+    ],
+    [
+      "D",
+      [
+        7,
+        2,
+        1
+      ]
+    ],
+    [
+      "S",
+      [
+        7,
+        4,
+        1
+      ]
+    ]
+  ],
+  "inventory": {
+    "D": 3
+  },
+  "push_budget": 1,
+  "meta": {
+    "rules": "v2",
+    "seed": 23023,
+    "attempt": 0,
+    "tier": "medium",
+    "grid_size": [
+      7,
+      5,
+      3
+    ],
+    "patch_count": 3,
+    "fixed_count": 9,
+    "use_height": true,
+    "use_split": false,
+    "n_decoys": 2,
+    "origin": [
+      7,
+      4,
+      1
+    ],
+    "origin_dir": "-x",
+    "solution_patches": [
+      [
+        4,
+        4,
+        2
+      ],
+      [
+        5,
+        4,
+        1
+      ],
+      [
+        6,
+        4,
+        1
+      ]
+    ],
+    "patch_pieces": [
+      [
+        "D",
+        [
+          4,
+          4,
+          2
+        ]
+      ],
+      [
+        "D",
+        [
+          5,
+          4,
+          1
+        ]
+      ],
+      [
+        "D",
+        [
+          6,
+          4,
+          1
+        ]
+      ]
+    ],
+    "pushes": [
+      [
+        [
+          7,
+          4,
+          1
+        ],
+        "-x"
+      ]
+    ],
+    "push_budget": 1,
+    "difficulty": {
+      "n_solutions": 1,
+      "p_wavefill": 0.3333,
+      "min_patches": 3,
+      "gaps": 2,
+      "decoy_gaps": 2,
+      "raised": 1,
+      "p_random": 0.0,
+      "p_gapfill": 0.0,
+      "score": 5.09
+    },
+    "insight": "A piece on a step needs the step under it, and a falling piece only reaches one level up or down."
+  }
+}

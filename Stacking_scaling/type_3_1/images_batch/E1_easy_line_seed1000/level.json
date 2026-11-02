@@ -1,0 +1,106 @@
+{
+  "grid_size": [
+    6,
+    5,
+    3
+  ],
+  "fixed_pieces": [
+    [
+      "S",
+      [
+        1,
+        2,
+        1
+      ]
+    ],
+    [
+      "D",
+      [
+        3,
+        2,
+        1
+      ]
+    ],
+    [
+      "D",
+      [
+        4,
+        2,
+        1
+      ]
+    ],
+    [
+      "G",
+      [
+        5,
+        2,
+        1
+      ]
+    ]
+  ],
+  "inventory": {
+    "D": 1
+  },
+  "push_budget": 1,
+  "meta": {
+    "rules": "v2",
+    "seed": 1000,
+    "attempt": 0,
+    "tier": "easy",
+    "grid_size": [
+      6,
+      5,
+      3
+    ],
+    "patch_count": 1,
+    "fixed_count": 4,
+    "use_height": false,
+    "use_split": false,
+    "n_decoys": 0,
+    "origin": [
+      1,
+      2,
+      1
+    ],
+    "origin_dir": "+x",
+    "solution_patches": [
+      [
+        2,
+        2,
+        1
+      ]
+    ],
+    "patch_pieces": [
+      [
+        "D",
+        [
+          2,
+          2,
+          1
+        ]
+      ]
+    ],
+    "pushes": [
+      [
+        [
+          1,
+          2,
+          1
+        ],
+        "+x"
+      ]
+    ],
+    "push_budget": 1,
+    "difficulty": {
+      "n_solutions": 1,
+      "p_wavefill": 0.3333,
+      "min_patches": 1,
+      "gaps": 1,
+      "decoy_gaps": 0,
+      "raised": 0,
+      "p_random": 0.0067,
+      "p_gapfill": 1.0,
+      "score": 1.59
+    }
+  }
+}

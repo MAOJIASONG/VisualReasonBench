@@ -1,0 +1,184 @@
+{
+  "grid_size": [
+    5,
+    4,
+    5
+  ],
+  "entrances": [
+    [
+      5,
+      3,
+      1
+    ]
+  ],
+  "exits": [
+    [
+      2,
+      4,
+      4
+    ]
+  ],
+  "obstacles": [
+    [
+      3,
+      3,
+      1
+    ],
+    [
+      4,
+      2,
+      3
+    ]
+  ],
+  "obstacle_shapes": [
+    [
+      [
+        3,
+        3,
+        1
+      ]
+    ],
+    [
+      [
+        4,
+        2,
+        3
+      ]
+    ]
+  ],
+  "inventory": {
+    "S2": 4,
+    "L": 7,
+    "I": 2
+  },
+  "meta": {
+    "rules": "v2",
+    "seed": 28002,
+    "attempt": 4,
+    "tier": "medium",
+    "plan": [
+      [
+        "S2",
+        [
+          3,
+          4,
+          1
+        ],
+        0
+      ],
+      [
+        "S2",
+        [
+          2,
+          3,
+          1
+        ],
+        0
+      ],
+      [
+        "S2",
+        [
+          2,
+          4,
+          1
+        ],
+        0
+      ],
+      [
+        "S2",
+        [
+          4,
+          4,
+          1
+        ],
+        0
+      ],
+      [
+        "L",
+        [
+          4,
+          3,
+          1
+        ],
+        4
+      ],
+      [
+        "I",
+        [
+          4,
+          3,
+          2
+        ],
+        2
+      ],
+      [
+        "L",
+        [
+          2,
+          3,
+          3
+        ],
+        8
+      ],
+      [
+        "L",
+        [
+          2,
+          4,
+          3
+        ],
+        1
+      ],
+      [
+        "I",
+        [
+          3,
+          4,
+          3
+        ],
+        0
+      ],
+      [
+        "L",
+        [
+          4,
+          3,
+          3
+        ],
+        9
+      ],
+      [
+        "L",
+        [
+          4,
+          4,
+          3
+        ],
+        3
+      ],
+      [
+        "L",
+        [
+          2,
+          3,
+          4
+        ],
+        9
+      ]
+    ],
+    "plan_length": 12,
+    "n_pipes": 8,
+    "n_supports": 4,
+    "difficulty": {
+      "n_solutions": 6,
+      "capped": false,
+      "min_pipes": 8,
+      "staircase_ok": false,
+      "n_portals": 2,
+      "plan_length": 12,
+      "n_networks": 170,
+      "score": 7.82
+    },
+    "insight": "A high exit: every raised pipe needs a support column under it."
+  }
+}

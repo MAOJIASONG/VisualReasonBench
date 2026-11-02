@@ -1,0 +1,165 @@
+{
+  "grid_size": [
+    7,
+    6,
+    3
+  ],
+  "fixed_pieces": [
+    [
+      "S",
+      [
+        3,
+        4,
+        1
+      ]
+    ],
+    [
+      "P",
+      [
+        3,
+        6,
+        1
+      ]
+    ],
+    [
+      "B",
+      [
+        5,
+        4,
+        1
+      ]
+    ],
+    [
+      "P",
+      [
+        7,
+        1,
+        1
+      ]
+    ],
+    [
+      "D",
+      [
+        7,
+        2,
+        1
+      ]
+    ],
+    [
+      "T",
+      [
+        7,
+        4,
+        1
+      ]
+    ],
+    [
+      "D",
+      [
+        7,
+        5,
+        1
+      ]
+    ],
+    [
+      "G",
+      [
+        7,
+        6,
+        1
+      ]
+    ]
+  ],
+  "inventory": {
+    "D": 3
+  },
+  "push_budget": 1,
+  "meta": {
+    "rules": "v2",
+    "seed": 33002,
+    "attempt": 175,
+    "tier": "medium",
+    "grid_size": [
+      7,
+      6,
+      3
+    ],
+    "patch_count": 3,
+    "fixed_count": 8,
+    "use_height": true,
+    "use_split": true,
+    "n_decoys": 1,
+    "origin": [
+      3,
+      4,
+      1
+    ],
+    "origin_dir": "+x",
+    "solution_patches": [
+      [
+        4,
+        4,
+        1
+      ],
+      [
+        5,
+        4,
+        2
+      ],
+      [
+        6,
+        4,
+        1
+      ]
+    ],
+    "patch_pieces": [
+      [
+        "D",
+        [
+          4,
+          4,
+          1
+        ]
+      ],
+      [
+        "D",
+        [
+          5,
+          4,
+          2
+        ]
+      ],
+      [
+        "D",
+        [
+          6,
+          4,
+          1
+        ]
+      ]
+    ],
+    "pushes": [
+      [
+        [
+          3,
+          4,
+          1
+        ],
+        "+x"
+      ]
+    ],
+    "push_budget": 1,
+    "difficulty": {
+      "n_solutions": 1,
+      "p_wavefill": 0.25,
+      "min_patches": 3,
+      "gaps": 2,
+      "decoy_gaps": 2,
+      "raised": 1,
+      "p_random": 0.0,
+      "p_gapfill": 0.0,
+      "score": 5.5
+    },
+    "insight": "Holes, decoys, steps and a splitter together: follow the wave all the way."
+  }
+}

@@ -1,0 +1,139 @@
+{
+  "grid_size": [
+    6,
+    6,
+    3
+  ],
+  "fixed_pieces": [
+    [
+      "S",
+      [
+        1,
+        4,
+        1
+      ]
+    ],
+    [
+      "D",
+      [
+        2,
+        4,
+        1
+      ]
+    ],
+    [
+      "B",
+      [
+        3,
+        4,
+        1
+      ]
+    ],
+    [
+      "D",
+      [
+        4,
+        4,
+        1
+      ]
+    ],
+    [
+      "G",
+      [
+        5,
+        2,
+        1
+      ]
+    ],
+    [
+      "D",
+      [
+        5,
+        3,
+        1
+      ]
+    ],
+    [
+      "T",
+      [
+        5,
+        4,
+        1
+      ]
+    ],
+    [
+      "P",
+      [
+        5,
+        6,
+        1
+      ]
+    ]
+  ],
+  "inventory": {
+    "D": 1
+  },
+  "push_budget": 1,
+  "meta": {
+    "rules": "v2",
+    "seed": 30500,
+    "attempt": 54,
+    "tier": "easy",
+    "grid_size": [
+      6,
+      6,
+      3
+    ],
+    "patch_count": 1,
+    "fixed_count": 8,
+    "use_height": true,
+    "use_split": true,
+    "n_decoys": 0,
+    "origin": [
+      1,
+      4,
+      1
+    ],
+    "origin_dir": "+x",
+    "solution_patches": [
+      [
+        3,
+        4,
+        2
+      ]
+    ],
+    "patch_pieces": [
+      [
+        "D",
+        [
+          3,
+          4,
+          2
+        ]
+      ]
+    ],
+    "pushes": [
+      [
+        [
+          1,
+          4,
+          1
+        ],
+        "+x"
+      ]
+    ],
+    "push_budget": 1,
+    "difficulty": {
+      "n_solutions": 1,
+      "p_wavefill": 0.3333,
+      "min_patches": 1,
+      "gaps": 2,
+      "decoy_gaps": 1,
+      "raised": 1,
+      "p_random": 0.0067,
+      "p_gapfill": 1.0,
+      "score": 2.59
+    },
+    "insight": "Holes, decoys, steps and a splitter together: follow the wave all the way."
+  }
+}

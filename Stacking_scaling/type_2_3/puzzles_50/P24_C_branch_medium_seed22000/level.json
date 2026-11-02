@@ -1,0 +1,168 @@
+{
+  "grid_size": [
+    5,
+    5,
+    4
+  ],
+  "entrances": [
+    [
+      4,
+      5,
+      1
+    ]
+  ],
+  "exits": [
+    [
+      1,
+      4,
+      2
+    ],
+    [
+      5,
+      2,
+      3
+    ]
+  ],
+  "obstacles": [
+    [
+      3,
+      4,
+      2
+    ]
+  ],
+  "obstacle_shapes": [
+    [
+      [
+        3,
+        4,
+        2
+      ]
+    ]
+  ],
+  "inventory": {
+    "S1": 3,
+    "L": 8,
+    "T": 1
+  },
+  "meta": {
+    "rules": "v2",
+    "seed": 22000,
+    "attempt": 60,
+    "tier": "medium",
+    "plan": [
+      [
+        "S1",
+        [
+          3,
+          2,
+          1
+        ],
+        0
+      ],
+      [
+        "S1",
+        [
+          4,
+          2,
+          1
+        ],
+        0
+      ],
+      [
+        "L",
+        [
+          2,
+          4,
+          1
+        ],
+        4
+      ],
+      [
+        "L",
+        [
+          3,
+          3,
+          1
+        ],
+        8
+      ],
+      [
+        "T",
+        [
+          3,
+          4,
+          1
+        ],
+        1
+      ],
+      [
+        "L",
+        [
+          4,
+          4,
+          1
+        ],
+        2
+      ],
+      [
+        "L",
+        [
+          2,
+          4,
+          2
+        ],
+        7
+      ],
+      [
+        "L",
+        [
+          3,
+          2,
+          2
+        ],
+        0
+      ],
+      [
+        "L",
+        [
+          3,
+          3,
+          2
+        ],
+        11
+      ],
+      [
+        "L",
+        [
+          4,
+          2,
+          2
+        ],
+        6
+      ],
+      [
+        "L",
+        [
+          4,
+          2,
+          3
+        ],
+        5
+      ]
+    ],
+    "plan_length": 11,
+    "n_pipes": 9,
+    "n_supports": 2,
+    "difficulty": {
+      "n_solutions": 4,
+      "capped": false,
+      "min_pipes": 9,
+      "staircase_ok": false,
+      "n_portals": 3,
+      "plan_length": 11,
+      "n_networks": 62,
+      "score": 6.7
+    },
+    "insight": "Two exits: one network with a T junction feeding both."
+  }
+}

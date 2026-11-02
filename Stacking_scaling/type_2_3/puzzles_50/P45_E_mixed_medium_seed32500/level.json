@@ -1,0 +1,172 @@
+{
+  "grid_size": [
+    5,
+    5,
+    5
+  ],
+  "entrances": [
+    [
+      5,
+      2,
+      1
+    ]
+  ],
+  "exits": [
+    [
+      3,
+      5,
+      2
+    ],
+    [
+      4,
+      1,
+      2
+    ]
+  ],
+  "obstacles": [
+    [
+      4,
+      3,
+      2
+    ],
+    [
+      2,
+      2,
+      1
+    ]
+  ],
+  "obstacle_shapes": [
+    [
+      [
+        4,
+        3,
+        2
+      ]
+    ],
+    [
+      [
+        2,
+        2,
+        1
+      ]
+    ]
+  ],
+  "inventory": {
+    "S1": 2,
+    "L": 4,
+    "I": 4,
+    "T": 1
+  },
+  "meta": {
+    "rules": "v2",
+    "seed": 32500,
+    "attempt": 10,
+    "tier": "medium",
+    "plan": [
+      [
+        "S1",
+        [
+          3,
+          4,
+          1
+        ],
+        0
+      ],
+      [
+        "S1",
+        [
+          3,
+          3,
+          1
+        ],
+        0
+      ],
+      [
+        "L",
+        [
+          3,
+          2,
+          1
+        ],
+        4
+      ],
+      [
+        "I",
+        [
+          4,
+          2,
+          1
+        ],
+        0
+      ],
+      [
+        "T",
+        [
+          3,
+          2,
+          2
+        ],
+        10
+      ],
+      [
+        "I",
+        [
+          3,
+          3,
+          2
+        ],
+        1
+      ],
+      [
+        "I",
+        [
+          3,
+          4,
+          2
+        ],
+        1
+      ],
+      [
+        "L",
+        [
+          4,
+          2,
+          2
+        ],
+        10
+      ],
+      [
+        "L",
+        [
+          3,
+          2,
+          3
+        ],
+        5
+      ],
+      [
+        "L",
+        [
+          4,
+          2,
+          3
+        ],
+        7
+      ]
+    ],
+    "plan_length": 10,
+    "n_pipes": 8,
+    "n_supports": 2,
+    "difficulty": {
+      "n_solutions": 8,
+      "capped": false,
+      "min_pipes": 6,
+      "staircase_ok": false,
+      "n_portals": 3,
+      "plan_length": 10,
+      "n_networks": 71,
+      "score": 5.65
+    },
+    "insight": "Two exits, obstacles and supports together."
+  }
+}

@@ -1,0 +1,198 @@
+{
+  "grid_size": [
+    5,
+    5,
+    4
+  ],
+  "cells": [
+    {
+      "pos": [
+        2,
+        1,
+        1
+      ],
+      "type": "source",
+      "color": "blue"
+    },
+    {
+      "pos": [
+        3,
+        1,
+        1
+      ],
+      "type": "pipe"
+    },
+    {
+      "pos": [
+        4,
+        1,
+        1
+      ],
+      "type": "pipe"
+    },
+    {
+      "pos": [
+        5,
+        1,
+        1
+      ],
+      "type": "valve"
+    },
+    {
+      "pos": [
+        1,
+        4,
+        1
+      ],
+      "type": "source",
+      "color": "orange"
+    },
+    {
+      "pos": [
+        1,
+        5,
+        1
+      ],
+      "type": "pipe"
+    },
+    {
+      "pos": [
+        1,
+        5,
+        2
+      ],
+      "type": "pipe"
+    },
+    {
+      "pos": [
+        5,
+        2,
+        1
+      ],
+      "type": "pipe"
+    },
+    {
+      "pos": [
+        5,
+        3,
+        1
+      ],
+      "type": "target",
+      "color": "blue"
+    },
+    {
+      "pos": [
+        5,
+        2,
+        2
+      ],
+      "type": "pipe"
+    },
+    {
+      "pos": [
+        5,
+        2,
+        3
+      ],
+      "type": "pipe"
+    },
+    {
+      "pos": [
+        5,
+        2,
+        4
+      ],
+      "type": "valve"
+    },
+    {
+      "pos": [
+        5,
+        3,
+        4
+      ],
+      "type": "pipe"
+    },
+    {
+      "pos": [
+        5,
+        4,
+        4
+      ],
+      "type": "target",
+      "color": "blue"
+    },
+    {
+      "pos": [
+        4,
+        2,
+        2
+      ],
+      "type": "pipe"
+    },
+    {
+      "pos": [
+        3,
+        2,
+        2
+      ],
+      "type": "pipe"
+    },
+    {
+      "pos": [
+        3,
+        3,
+        2
+      ],
+      "type": "pipe"
+    },
+    {
+      "pos": [
+        2,
+        5,
+        2
+      ],
+      "type": "pipe"
+    },
+    {
+      "pos": [
+        3,
+        5,
+        2
+      ],
+      "type": "pipe"
+    },
+    {
+      "pos": [
+        3,
+        4,
+        2
+      ],
+      "type": "valve"
+    }
+  ],
+  "meta": {
+    "generator": "concepts-v1",
+    "concept": "two_pumps",
+    "tier": "easy",
+    "insight": "Each tank needs its own colour and the colours must never meet: a valve that is safe alone can lose once the other colour arrives.",
+    "seed": 26000,
+    "attempt": 17,
+    "difficulty": {
+      "n_valves": 3,
+      "min_plan": 2,
+      "n_min_sets": 1,
+      "n_win_sets": 1,
+      "prefilled": 0,
+      "traps": 1,
+      "nonlocal_traps": 1,
+      "p_random": 0.3333,
+      "p_frontier": 0.25,
+      "p_greedy": 1.0,
+      "p_lookahead": 1.0,
+      "shortest_ok": true,
+      "filler": 0,
+      "n_colors": 2,
+      "score": 2.0
+    }
+  }
+}

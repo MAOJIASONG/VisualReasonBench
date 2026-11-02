@@ -1,0 +1,104 @@
+{
+  "grid_size": [
+    4,
+    4,
+    5
+  ],
+  "entrances": [
+    [
+      1,
+      3,
+      1
+    ]
+  ],
+  "exits": [
+    [
+      4,
+      3,
+      4
+    ]
+  ],
+  "obstacles": [],
+  "obstacle_shapes": [],
+  "inventory": {
+    "S1": 2,
+    "L": 4,
+    "I": 1
+  },
+  "meta": {
+    "rules": "v2",
+    "seed": 25500,
+    "attempt": 2,
+    "tier": "easy",
+    "plan": [
+      [
+        "S1",
+        [
+          3,
+          3,
+          1
+        ],
+        0
+      ],
+      [
+        "L",
+        [
+          2,
+          3,
+          1
+        ],
+        6
+      ],
+      [
+        "L",
+        [
+          2,
+          3,
+          2
+        ],
+        5
+      ],
+      [
+        "L",
+        [
+          3,
+          3,
+          2
+        ],
+        6
+      ],
+      [
+        "I",
+        [
+          3,
+          3,
+          3
+        ],
+        2
+      ],
+      [
+        "L",
+        [
+          3,
+          3,
+          4
+        ],
+        5
+      ]
+    ],
+    "plan_length": 6,
+    "n_pipes": 5,
+    "n_supports": 1,
+    "difficulty": {
+      "n_solutions": 2,
+      "capped": false,
+      "min_pipes": 5,
+      "staircase_ok": false,
+      "n_portals": 2,
+      "plan_length": 6,
+      "n_networks": 4,
+      "score": 2.5
+    },
+    "insight": "A high exit: every raised pipe needs a support column under it."
+  }
+}

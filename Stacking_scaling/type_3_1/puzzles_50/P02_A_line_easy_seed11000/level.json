@@ -1,0 +1,99 @@
+{
+  "grid_size": [
+    6,
+    5,
+    3
+  ],
+  "fixed_pieces": [
+    [
+      "G",
+      [
+        5,
+        2,
+        1
+      ]
+    ],
+    [
+      "D",
+      [
+        5,
+        3,
+        1
+      ]
+    ],
+    [
+      "S",
+      [
+        5,
+        5,
+        1
+      ]
+    ]
+  ],
+  "inventory": {
+    "D": 1
+  },
+  "push_budget": 1,
+  "meta": {
+    "rules": "v2",
+    "seed": 11000,
+    "attempt": 0,
+    "tier": "easy",
+    "grid_size": [
+      6,
+      5,
+      3
+    ],
+    "patch_count": 1,
+    "fixed_count": 3,
+    "use_height": false,
+    "use_split": false,
+    "n_decoys": 0,
+    "origin": [
+      5,
+      5,
+      1
+    ],
+    "origin_dir": "-y",
+    "solution_patches": [
+      [
+        5,
+        4,
+        1
+      ]
+    ],
+    "patch_pieces": [
+      [
+        "D",
+        [
+          5,
+          4,
+          1
+        ]
+      ]
+    ],
+    "pushes": [
+      [
+        [
+          5,
+          5,
+          1
+        ],
+        "-y"
+      ]
+    ],
+    "push_budget": 1,
+    "difficulty": {
+      "n_solutions": 1,
+      "p_wavefill": 0.3333,
+      "min_patches": 1,
+      "gaps": 1,
+      "decoy_gaps": 0,
+      "raised": 0,
+      "p_random": 0.0133,
+      "p_gapfill": 1.0,
+      "score": 1.59
+    },
+    "insight": "Find the holes in the line and fill each one; push START toward the goal."
+  }
+}

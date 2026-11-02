@@ -1,0 +1,157 @@
+{
+  "grid_size": [
+    7,
+    6,
+    3
+  ],
+  "fixed_pieces": [
+    [
+      "P",
+      [
+        1,
+        1,
+        1
+      ]
+    ],
+    [
+      "S",
+      [
+        1,
+        3,
+        1
+      ]
+    ],
+    [
+      "G",
+      [
+        5,
+        1,
+        1
+      ]
+    ],
+    [
+      "D",
+      [
+        5,
+        2,
+        1
+      ]
+    ],
+    [
+      "T",
+      [
+        5,
+        3,
+        1
+      ]
+    ],
+    [
+      "D",
+      [
+        5,
+        5,
+        1
+      ]
+    ],
+    [
+      "P",
+      [
+        5,
+        6,
+        1
+      ]
+    ]
+  ],
+  "inventory": {
+    "D": 3
+  },
+  "push_budget": 1,
+  "meta": {
+    "rules": "v2",
+    "seed": 28500,
+    "attempt": 9,
+    "tier": "medium",
+    "grid_size": [
+      7,
+      6,
+      3
+    ],
+    "patch_count": 3,
+    "fixed_count": 7,
+    "use_height": false,
+    "use_split": true,
+    "n_decoys": 1,
+    "origin": [
+      1,
+      3,
+      1
+    ],
+    "origin_dir": "+x",
+    "solution_patches": [
+      [
+        2,
+        3,
+        1
+      ],
+      [
+        3,
+        3,
+        1
+      ],
+      [
+        4,
+        3,
+        1
+      ]
+    ],
+    "patch_pieces": [
+      [
+        "D",
+        [
+          2,
+          3,
+          1
+        ]
+      ],
+      [
+        "D",
+        [
+          3,
+          3,
+          1
+        ]
+      ],
+      [
+        "D",
+        [
+          4,
+          3,
+          1
+        ]
+      ]
+    ],
+    "pushes": [
+      [
+        [
+          1,
+          3,
+          1
+        ],
+        "+x"
+      ]
+    ],
+    "push_budget": 1,
+    "difficulty": {
+      "n_solutions": 1,
+      "p_wavefill": 0.3333,
+      "min_patches": 3,
+      "gaps": 2,
+      "decoy_gaps": 2,
+      "raised": 0,
+      "p_random": 0.0,
+      "p_gapfill": 0.0,
+      "score": 4.59
+    },
+    "insight": "The splitter sends the wave out to both sides: plan both branches."
+  }
+}

@@ -1,0 +1,128 @@
+{
+  "grid_size": [
+    6,
+    6,
+    3
+  ],
+  "fixed_pieces": [
+    [
+      "G",
+      [
+        2,
+        2,
+        1
+      ]
+    ],
+    [
+      "T",
+      [
+        4,
+        2,
+        1
+      ]
+    ],
+    [
+      "S",
+      [
+        4,
+        4,
+        1
+      ]
+    ],
+    [
+      "D",
+      [
+        5,
+        2,
+        1
+      ]
+    ],
+    [
+      "G",
+      [
+        6,
+        2,
+        1
+      ]
+    ]
+  ],
+  "inventory": {
+    "D": 2
+  },
+  "push_budget": 1,
+  "meta": {
+    "rules": "v2",
+    "seed": 25500,
+    "attempt": 16,
+    "tier": "easy",
+    "grid_size": [
+      6,
+      6,
+      3
+    ],
+    "patch_count": 2,
+    "fixed_count": 5,
+    "use_height": false,
+    "use_split": true,
+    "n_decoys": 0,
+    "origin": [
+      4,
+      4,
+      1
+    ],
+    "origin_dir": "-y",
+    "solution_patches": [
+      [
+        3,
+        2,
+        1
+      ],
+      [
+        4,
+        3,
+        1
+      ]
+    ],
+    "patch_pieces": [
+      [
+        "D",
+        [
+          3,
+          2,
+          1
+        ]
+      ],
+      [
+        "D",
+        [
+          4,
+          3,
+          1
+        ]
+      ]
+    ],
+    "pushes": [
+      [
+        [
+          4,
+          4,
+          1
+        ],
+        "-y"
+      ]
+    ],
+    "push_budget": 1,
+    "difficulty": {
+      "n_solutions": 1,
+      "p_wavefill": 0.25,
+      "min_patches": 2,
+      "gaps": 2,
+      "decoy_gaps": 0,
+      "raised": 0,
+      "p_random": 0.0,
+      "p_gapfill": 1.0,
+      "score": 3.0
+    },
+    "insight": "The splitter sends the wave out to both sides: plan both branches."
+  }
+}

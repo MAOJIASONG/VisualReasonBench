@@ -1,0 +1,1379 @@
+[
+  {
+    "label": "P01_A_route_easy",
+    "cat": "A_route",
+    "diff": "easy",
+    "seed": 10500,
+    "grid": [
+      5,
+      4,
+      4
+    ],
+    "plan_length": 6,
+    "pipes": 5,
+    "supports": 1,
+    "inventory": {
+      "S1": 1,
+      "L": 5,
+      "I": 1
+    },
+    "out_dir": "P01_A_route_easy_seed10500",
+    "n_solutions": 3,
+    "capped": false,
+    "min_pipes": 5,
+    "staircase_ok": false,
+    "n_portals": 2,
+    "n_networks": 12,
+    "score": 3.5
+  },
+  {
+    "label": "P02_A_route_easy",
+    "cat": "A_route",
+    "diff": "easy",
+    "seed": 11000,
+    "grid": [
+      5,
+      4,
+      4
+    ],
+    "plan_length": 5,
+    "pipes": 5,
+    "supports": 0,
+    "inventory": {
+      "L": 2,
+      "I": 4
+    },
+    "out_dir": "P02_A_route_easy_seed11000",
+    "n_solutions": 1,
+    "capped": false,
+    "min_pipes": 5,
+    "staircase_ok": false,
+    "n_portals": 2,
+    "n_networks": 6,
+    "score": 3.83
+  },
+  {
+    "label": "P03_A_route_easy",
+    "cat": "A_route",
+    "diff": "easy",
+    "seed": 11500,
+    "grid": [
+      5,
+      4,
+      4
+    ],
+    "plan_length": 6,
+    "pipes": 5,
+    "supports": 1,
+    "inventory": {
+      "S1": 1,
+      "L": 5,
+      "I": 1
+    },
+    "out_dir": "P03_A_route_easy_seed11500",
+    "n_solutions": 4,
+    "capped": false,
+    "min_pipes": 5,
+    "staircase_ok": false,
+    "n_portals": 2,
+    "n_networks": 12,
+    "score": 3.08
+  },
+  {
+    "label": "P04_A_route_medium",
+    "cat": "A_route",
+    "diff": "medium",
+    "seed": 12000,
+    "grid": [
+      5,
+      5,
+      4
+    ],
+    "plan_length": 11,
+    "pipes": 8,
+    "supports": 3,
+    "inventory": {
+      "S2": 2,
+      "S1": 2,
+      "L": 4,
+      "I": 4
+    },
+    "out_dir": "P04_A_route_medium_seed12000",
+    "n_solutions": 19,
+    "capped": false,
+    "min_pipes": 6,
+    "staircase_ok": false,
+    "n_portals": 2,
+    "n_networks": 286,
+    "score": 6.66
+  },
+  {
+    "label": "P05_A_route_medium",
+    "cat": "A_route",
+    "diff": "medium",
+    "seed": 12501,
+    "grid": [
+      5,
+      5,
+      4
+    ],
+    "plan_length": 9,
+    "pipes": 8,
+    "supports": 1,
+    "inventory": {
+      "S2": 1,
+      "L": 6,
+      "I": 3
+    },
+    "out_dir": "P05_A_route_medium_seed12501",
+    "n_solutions": 12,
+    "capped": false,
+    "min_pipes": 6,
+    "staircase_ok": false,
+    "n_portals": 2,
+    "n_networks": 175,
+    "score": 6.12
+  },
+  {
+    "label": "P06_A_route_medium",
+    "cat": "A_route",
+    "diff": "medium",
+    "seed": 13000,
+    "grid": [
+      5,
+      5,
+      4
+    ],
+    "plan_length": 10,
+    "pipes": 7,
+    "supports": 3,
+    "inventory": {
+      "S1": 1,
+      "S2": 2,
+      "L": 7,
+      "I": 1
+    },
+    "out_dir": "P06_A_route_medium_seed13000",
+    "n_solutions": 8,
+    "capped": false,
+    "min_pipes": 7,
+    "staircase_ok": false,
+    "n_portals": 2,
+    "n_networks": 87,
+    "score": 5.94
+  },
+  {
+    "label": "P07_A_route_medium",
+    "cat": "A_route",
+    "diff": "medium",
+    "seed": 13500,
+    "grid": [
+      5,
+      5,
+      4
+    ],
+    "plan_length": 9,
+    "pipes": 8,
+    "supports": 1,
+    "inventory": {
+      "S2": 1,
+      "L": 7,
+      "I": 2
+    },
+    "out_dir": "P07_A_route_medium_seed13500",
+    "n_solutions": 16,
+    "capped": false,
+    "min_pipes": 6,
+    "staircase_ok": false,
+    "n_portals": 2,
+    "n_networks": 249,
+    "score": 6.21
+  },
+  {
+    "label": "P08_A_route_hard",
+    "cat": "A_route",
+    "diff": "hard",
+    "seed": 14072,
+    "grid": [
+      6,
+      6,
+      4
+    ],
+    "plan_length": 12,
+    "pipes": 9,
+    "supports": 3,
+    "inventory": {
+      "S1": 1,
+      "S2": 2,
+      "L": 10
+    },
+    "out_dir": "P08_A_route_hard_seed14072",
+    "n_solutions": 8,
+    "capped": false,
+    "min_pipes": 9,
+    "staircase_ok": false,
+    "n_portals": 2,
+    "n_networks": 737,
+    "score": 9.53
+  },
+  {
+    "label": "P09_A_route_hard",
+    "cat": "A_route",
+    "diff": "hard",
+    "seed": 14525,
+    "grid": [
+      6,
+      6,
+      4
+    ],
+    "plan_length": 11,
+    "pipes": 10,
+    "supports": 1,
+    "inventory": {
+      "S1": 1,
+      "L": 11
+    },
+    "out_dir": "P09_A_route_hard_seed14525",
+    "n_solutions": 12,
+    "capped": false,
+    "min_pipes": 8,
+    "staircase_ok": false,
+    "n_portals": 2,
+    "n_networks": 2804,
+    "score": 10.62
+  },
+  {
+    "label": "P10_A_route_hard",
+    "cat": "A_route",
+    "diff": "hard",
+    "seed": 15014,
+    "grid": [
+      6,
+      6,
+      4
+    ],
+    "plan_length": 14,
+    "pipes": 10,
+    "supports": 4,
+    "inventory": {
+      "S2": 2,
+      "S1": 3,
+      "L": 5,
+      "I": 5
+    },
+    "out_dir": "P10_A_route_hard_seed15014",
+    "n_solutions": 7,
+    "capped": false,
+    "min_pipes": 10,
+    "staircase_ok": false,
+    "n_portals": 2,
+    "n_networks": 1080,
+    "score": 10.77
+  },
+  {
+    "label": "P11_B_obstacles_easy",
+    "cat": "B_obstacles",
+    "diff": "easy",
+    "seed": 15500,
+    "grid": [
+      5,
+      4,
+      4
+    ],
+    "plan_length": 6,
+    "pipes": 6,
+    "supports": 0,
+    "inventory": {
+      "L": 4,
+      "I": 2,
+      "S1": 1
+    },
+    "out_dir": "P11_B_obstacles_easy_seed15500",
+    "n_solutions": 7,
+    "capped": false,
+    "min_pipes": 4,
+    "staircase_ok": false,
+    "n_portals": 2,
+    "n_networks": 26,
+    "score": 3.39
+  },
+  {
+    "label": "P12_B_obstacles_easy",
+    "cat": "B_obstacles",
+    "diff": "easy",
+    "seed": 16000,
+    "grid": [
+      5,
+      4,
+      4
+    ],
+    "plan_length": 6,
+    "pipes": 6,
+    "supports": 0,
+    "inventory": {
+      "L": 5,
+      "I": 1,
+      "S1": 1
+    },
+    "out_dir": "P12_B_obstacles_easy_seed16000",
+    "n_solutions": 7,
+    "capped": false,
+    "min_pipes": 4,
+    "staircase_ok": true,
+    "n_portals": 2,
+    "n_networks": 32,
+    "score": 3.69
+  },
+  {
+    "label": "P13_B_obstacles_easy",
+    "cat": "B_obstacles",
+    "diff": "easy",
+    "seed": 16500,
+    "grid": [
+      5,
+      4,
+      4
+    ],
+    "plan_length": 6,
+    "pipes": 6,
+    "supports": 0,
+    "inventory": {
+      "L": 6,
+      "I": 1
+    },
+    "out_dir": "P13_B_obstacles_easy_seed16500",
+    "n_solutions": 6,
+    "capped": false,
+    "min_pipes": 4,
+    "staircase_ok": false,
+    "n_portals": 2,
+    "n_networks": 17,
+    "score": 3.0
+  },
+  {
+    "label": "P14_B_obstacles_medium",
+    "cat": "B_obstacles",
+    "diff": "medium",
+    "seed": 17000,
+    "grid": [
+      5,
+      5,
+      4
+    ],
+    "plan_length": 12,
+    "pipes": 8,
+    "supports": 4,
+    "inventory": {
+      "S1": 5,
+      "L": 5,
+      "I": 3
+    },
+    "out_dir": "P14_B_obstacles_medium_seed17000",
+    "n_solutions": 18,
+    "capped": false,
+    "min_pipes": 6,
+    "staircase_ok": false,
+    "n_portals": 2,
+    "n_networks": 142,
+    "score": 5.98
+  },
+  {
+    "label": "P15_B_obstacles_medium",
+    "cat": "B_obstacles",
+    "diff": "medium",
+    "seed": 17500,
+    "grid": [
+      5,
+      5,
+      4
+    ],
+    "plan_length": 10,
+    "pipes": 9,
+    "supports": 1,
+    "inventory": {
+      "S1": 1,
+      "L": 9,
+      "I": 1
+    },
+    "out_dir": "P15_B_obstacles_medium_seed17500",
+    "n_solutions": 14,
+    "capped": false,
+    "min_pipes": 7,
+    "staircase_ok": false,
+    "n_portals": 2,
+    "n_networks": 763,
+    "score": 8.27
+  },
+  {
+    "label": "P16_B_obstacles_medium",
+    "cat": "B_obstacles",
+    "diff": "medium",
+    "seed": 18001,
+    "grid": [
+      5,
+      5,
+      4
+    ],
+    "plan_length": 11,
+    "pipes": 8,
+    "supports": 3,
+    "inventory": {
+      "S1": 4,
+      "L": 6,
+      "I": 2
+    },
+    "out_dir": "P16_B_obstacles_medium_seed18001",
+    "n_solutions": 18,
+    "capped": false,
+    "min_pipes": 6,
+    "staircase_ok": false,
+    "n_portals": 2,
+    "n_networks": 129,
+    "score": 5.59
+  },
+  {
+    "label": "P17_B_obstacles_medium",
+    "cat": "B_obstacles",
+    "diff": "medium",
+    "seed": 18501,
+    "grid": [
+      5,
+      5,
+      4
+    ],
+    "plan_length": 9,
+    "pipes": 9,
+    "supports": 0,
+    "inventory": {
+      "L": 6,
+      "I": 3,
+      "S1": 1
+    },
+    "out_dir": "P17_B_obstacles_medium_seed18501",
+    "n_solutions": 16,
+    "capped": false,
+    "min_pipes": 7,
+    "staircase_ok": false,
+    "n_portals": 2,
+    "n_networks": 696,
+    "score": 7.69
+  },
+  {
+    "label": "P18_B_obstacles_hard",
+    "cat": "B_obstacles",
+    "diff": "hard",
+    "seed": 19013,
+    "grid": [
+      6,
+      6,
+      4
+    ],
+    "plan_length": 11,
+    "pipes": 10,
+    "supports": 1,
+    "inventory": {
+      "S1": 1,
+      "L": 10,
+      "I": 1
+    },
+    "out_dir": "P18_B_obstacles_hard_seed19013",
+    "n_solutions": 10,
+    "capped": false,
+    "min_pipes": 10,
+    "staircase_ok": false,
+    "n_portals": 2,
+    "n_networks": 1682,
+    "score": 10.14
+  },
+  {
+    "label": "P19_B_obstacles_hard",
+    "cat": "B_obstacles",
+    "diff": "hard",
+    "seed": 19532,
+    "grid": [
+      6,
+      6,
+      4
+    ],
+    "plan_length": 12,
+    "pipes": 11,
+    "supports": 1,
+    "inventory": {
+      "S2": 1,
+      "L": 11,
+      "S1": 1
+    },
+    "out_dir": "P19_B_obstacles_hard_seed19532",
+    "n_solutions": 10,
+    "capped": false,
+    "min_pipes": 11,
+    "staircase_ok": false,
+    "n_portals": 2,
+    "n_networks": 6261,
+    "score": 12.29
+  },
+  {
+    "label": "P20_B_obstacles_hard",
+    "cat": "B_obstacles",
+    "diff": "hard",
+    "seed": 20020,
+    "grid": [
+      6,
+      6,
+      4
+    ],
+    "plan_length": 13,
+    "pipes": 10,
+    "supports": 3,
+    "inventory": {
+      "S1": 2,
+      "S2": 1,
+      "L": 10,
+      "I": 1
+    },
+    "out_dir": "P20_B_obstacles_hard_seed20020",
+    "n_solutions": 3,
+    "capped": false,
+    "min_pipes": 10,
+    "staircase_ok": false,
+    "n_portals": 2,
+    "n_networks": 2269,
+    "score": 12.81
+  },
+  {
+    "label": "P21_C_branch_easy",
+    "cat": "C_branch",
+    "diff": "easy",
+    "seed": 20500,
+    "grid": [
+      5,
+      5,
+      4
+    ],
+    "plan_length": 7,
+    "pipes": 5,
+    "supports": 2,
+    "inventory": {
+      "S1": 2,
+      "L": 2,
+      "I": 3,
+      "T": 1
+    },
+    "out_dir": "P21_C_branch_easy_seed20500",
+    "n_solutions": 1,
+    "capped": false,
+    "min_pipes": 5,
+    "staircase_ok": false,
+    "n_portals": 3,
+    "n_networks": 6,
+    "score": 4.33
+  },
+  {
+    "label": "P22_C_branch_easy",
+    "cat": "C_branch",
+    "diff": "easy",
+    "seed": 21000,
+    "grid": [
+      5,
+      5,
+      4
+    ],
+    "plan_length": 8,
+    "pipes": 6,
+    "supports": 2,
+    "inventory": {
+      "S1": 1,
+      "S2": 1,
+      "L": 5,
+      "T": 1,
+      "I": 1
+    },
+    "out_dir": "P22_C_branch_easy_seed21000",
+    "n_solutions": 4,
+    "capped": false,
+    "min_pipes": 6,
+    "staircase_ok": false,
+    "n_portals": 3,
+    "n_networks": 18,
+    "score": 4.17
+  },
+  {
+    "label": "P23_C_branch_easy",
+    "cat": "C_branch",
+    "diff": "easy",
+    "seed": 21500,
+    "grid": [
+      5,
+      5,
+      4
+    ],
+    "plan_length": 7,
+    "pipes": 6,
+    "supports": 1,
+    "inventory": {
+      "S1": 1,
+      "L": 4,
+      "I": 2,
+      "T": 1
+    },
+    "out_dir": "P23_C_branch_easy_seed21500",
+    "n_solutions": 4,
+    "capped": false,
+    "min_pipes": 6,
+    "staircase_ok": false,
+    "n_portals": 3,
+    "n_networks": 18,
+    "score": 3.92
+  },
+  {
+    "label": "P24_C_branch_medium",
+    "cat": "C_branch",
+    "diff": "medium",
+    "seed": 22000,
+    "grid": [
+      5,
+      5,
+      4
+    ],
+    "plan_length": 11,
+    "pipes": 9,
+    "supports": 2,
+    "inventory": {
+      "S1": 3,
+      "L": 8,
+      "T": 1
+    },
+    "out_dir": "P24_C_branch_medium_seed22000",
+    "n_solutions": 4,
+    "capped": false,
+    "min_pipes": 9,
+    "staircase_ok": false,
+    "n_portals": 3,
+    "n_networks": 62,
+    "score": 6.7
+  },
+  {
+    "label": "P25_C_branch_medium",
+    "cat": "C_branch",
+    "diff": "medium",
+    "seed": 22501,
+    "grid": [
+      5,
+      5,
+      4
+    ],
+    "plan_length": 9,
+    "pipes": 8,
+    "supports": 1,
+    "inventory": {
+      "S1": 2,
+      "L": 5,
+      "T": 1,
+      "I": 2
+    },
+    "out_dir": "P25_C_branch_medium_seed22501",
+    "n_solutions": 3,
+    "capped": false,
+    "min_pipes": 7,
+    "staircase_ok": false,
+    "n_portals": 3,
+    "n_networks": 32,
+    "score": 5.67
+  },
+  {
+    "label": "P26_C_branch_medium",
+    "cat": "C_branch",
+    "diff": "medium",
+    "seed": 23001,
+    "grid": [
+      5,
+      5,
+      4
+    ],
+    "plan_length": 11,
+    "pipes": 8,
+    "supports": 3,
+    "inventory": {
+      "S2": 2,
+      "S1": 1,
+      "L": 5,
+      "I": 3,
+      "T": 1
+    },
+    "out_dir": "P26_C_branch_medium_seed23001",
+    "n_solutions": 10,
+    "capped": false,
+    "min_pipes": 8,
+    "staircase_ok": false,
+    "n_portals": 3,
+    "n_networks": 84,
+    "score": 5.82
+  },
+  {
+    "label": "P27_C_branch_medium",
+    "cat": "C_branch",
+    "diff": "medium",
+    "seed": 23503,
+    "grid": [
+      5,
+      5,
+      4
+    ],
+    "plan_length": 9,
+    "pipes": 9,
+    "supports": 0,
+    "inventory": {
+      "L": 6,
+      "T": 1,
+      "I": 3
+    },
+    "out_dir": "P27_C_branch_medium_seed23503",
+    "n_solutions": 18,
+    "capped": false,
+    "min_pipes": 7,
+    "staircase_ok": false,
+    "n_portals": 3,
+    "n_networks": 789,
+    "score": 7.7
+  },
+  {
+    "label": "P28_C_branch_hard",
+    "cat": "C_branch",
+    "diff": "hard",
+    "seed": 24000,
+    "grid": [
+      6,
+      5,
+      4
+    ],
+    "plan_length": 10,
+    "pipes": 10,
+    "supports": 0,
+    "inventory": {
+      "L": 5,
+      "I": 5,
+      "T": 1
+    },
+    "out_dir": "P28_C_branch_hard_seed24000",
+    "n_solutions": 7,
+    "capped": false,
+    "min_pipes": 10,
+    "staircase_ok": false,
+    "n_portals": 3,
+    "n_networks": 1768,
+    "score": 10.48
+  },
+  {
+    "label": "P29_C_branch_hard",
+    "cat": "C_branch",
+    "diff": "hard",
+    "seed": 24510,
+    "grid": [
+      6,
+      5,
+      4
+    ],
+    "plan_length": 12,
+    "pipes": 10,
+    "supports": 2,
+    "inventory": {
+      "S1": 2,
+      "L": 5,
+      "T": 1,
+      "I": 5
+    },
+    "out_dir": "P29_C_branch_hard_seed24510",
+    "n_solutions": 12,
+    "capped": false,
+    "min_pipes": 8,
+    "staircase_ok": false,
+    "n_portals": 3,
+    "n_networks": 2746,
+    "score": 10.84
+  },
+  {
+    "label": "P30_C_branch_hard",
+    "cat": "C_branch",
+    "diff": "hard",
+    "seed": 25000,
+    "grid": [
+      6,
+      5,
+      4
+    ],
+    "plan_length": 13,
+    "pipes": 9,
+    "supports": 4,
+    "inventory": {
+      "S1": 2,
+      "S2": 2,
+      "L": 9,
+      "T": 1
+    },
+    "out_dir": "P30_C_branch_hard_seed25000",
+    "n_solutions": 3,
+    "capped": false,
+    "min_pipes": 9,
+    "staircase_ok": false,
+    "n_portals": 3,
+    "n_networks": 346,
+    "score": 10.1
+  },
+  {
+    "label": "P31_D_tall_easy",
+    "cat": "D_tall",
+    "diff": "easy",
+    "seed": 25500,
+    "grid": [
+      4,
+      4,
+      5
+    ],
+    "plan_length": 6,
+    "pipes": 5,
+    "supports": 1,
+    "inventory": {
+      "S1": 2,
+      "L": 4,
+      "I": 1
+    },
+    "out_dir": "P31_D_tall_easy_seed25500",
+    "n_solutions": 2,
+    "capped": false,
+    "min_pipes": 5,
+    "staircase_ok": false,
+    "n_portals": 2,
+    "n_networks": 4,
+    "score": 2.5
+  },
+  {
+    "label": "P32_D_tall_easy",
+    "cat": "D_tall",
+    "diff": "easy",
+    "seed": 26000,
+    "grid": [
+      4,
+      4,
+      5
+    ],
+    "plan_length": 7,
+    "pipes": 6,
+    "supports": 1,
+    "inventory": {
+      "S2": 1,
+      "I": 3,
+      "L": 4
+    },
+    "out_dir": "P32_D_tall_easy_seed26000",
+    "n_solutions": 3,
+    "capped": false,
+    "min_pipes": 6,
+    "staircase_ok": false,
+    "n_portals": 2,
+    "n_networks": 20,
+    "score": 4.49
+  },
+  {
+    "label": "P33_D_tall_easy",
+    "cat": "D_tall",
+    "diff": "easy",
+    "seed": 26500,
+    "grid": [
+      4,
+      4,
+      5
+    ],
+    "plan_length": 5,
+    "pipes": 4,
+    "supports": 1,
+    "inventory": {
+      "S2": 1,
+      "L": 3,
+      "I": 2
+    },
+    "out_dir": "P33_D_tall_easy_seed26500",
+    "n_solutions": 2,
+    "capped": false,
+    "min_pipes": 4,
+    "staircase_ok": true,
+    "n_portals": 2,
+    "n_networks": 3,
+    "score": 1.83
+  },
+  {
+    "label": "P34_D_tall_medium",
+    "cat": "D_tall",
+    "diff": "medium",
+    "seed": 27004,
+    "grid": [
+      5,
+      4,
+      5
+    ],
+    "plan_length": 10,
+    "pipes": 8,
+    "supports": 2,
+    "inventory": {
+      "S1": 1,
+      "S2": 1,
+      "L": 5,
+      "I": 4
+    },
+    "out_dir": "P34_D_tall_medium_seed27004",
+    "n_solutions": 20,
+    "capped": false,
+    "min_pipes": 6,
+    "staircase_ok": false,
+    "n_portals": 2,
+    "n_networks": 252,
+    "score": 6.16
+  },
+  {
+    "label": "P35_D_tall_medium",
+    "cat": "D_tall",
+    "diff": "medium",
+    "seed": 27500,
+    "grid": [
+      5,
+      4,
+      5
+    ],
+    "plan_length": 9,
+    "pipes": 8,
+    "supports": 1,
+    "inventory": {
+      "S2": 1,
+      "I": 4,
+      "L": 5
+    },
+    "out_dir": "P35_D_tall_medium_seed27500",
+    "n_solutions": 8,
+    "capped": false,
+    "min_pipes": 6,
+    "staircase_ok": false,
+    "n_portals": 2,
+    "n_networks": 163,
+    "score": 6.6
+  },
+  {
+    "label": "P36_D_tall_medium",
+    "cat": "D_tall",
+    "diff": "medium",
+    "seed": 28002,
+    "grid": [
+      5,
+      4,
+      5
+    ],
+    "plan_length": 12,
+    "pipes": 8,
+    "supports": 4,
+    "inventory": {
+      "S2": 4,
+      "L": 7,
+      "I": 2
+    },
+    "out_dir": "P36_D_tall_medium_seed28002",
+    "n_solutions": 6,
+    "capped": false,
+    "min_pipes": 8,
+    "staircase_ok": false,
+    "n_portals": 2,
+    "n_networks": 170,
+    "score": 7.82
+  },
+  {
+    "label": "P37_D_tall_medium",
+    "cat": "D_tall",
+    "diff": "medium",
+    "seed": 28500,
+    "grid": [
+      5,
+      4,
+      5
+    ],
+    "plan_length": 10,
+    "pipes": 7,
+    "supports": 3,
+    "inventory": {
+      "S1": 4,
+      "L": 4,
+      "I": 3
+    },
+    "out_dir": "P37_D_tall_medium_seed28500",
+    "n_solutions": 7,
+    "capped": false,
+    "min_pipes": 5,
+    "staircase_ok": false,
+    "n_portals": 2,
+    "n_networks": 68,
+    "score": 5.78
+  },
+  {
+    "label": "P38_D_tall_hard",
+    "cat": "D_tall",
+    "diff": "hard",
+    "seed": 29037,
+    "grid": [
+      5,
+      5,
+      5
+    ],
+    "plan_length": 12,
+    "pipes": 10,
+    "supports": 2,
+    "inventory": {
+      "S1": 1,
+      "S2": 1,
+      "L": 10,
+      "I": 1
+    },
+    "out_dir": "P38_D_tall_hard_seed29037",
+    "n_solutions": 4,
+    "capped": false,
+    "min_pipes": 8,
+    "staircase_ok": false,
+    "n_portals": 2,
+    "n_networks": 1358,
+    "score": 11.41
+  },
+  {
+    "label": "P39_D_tall_hard",
+    "cat": "D_tall",
+    "diff": "hard",
+    "seed": 29509,
+    "grid": [
+      5,
+      5,
+      5
+    ],
+    "plan_length": 12,
+    "pipes": 10,
+    "supports": 2,
+    "inventory": {
+      "S1": 2,
+      "S2": 1,
+      "I": 1,
+      "L": 9
+    },
+    "out_dir": "P39_D_tall_hard_seed29509",
+    "n_solutions": 5,
+    "capped": false,
+    "min_pipes": 10,
+    "staircase_ok": false,
+    "n_portals": 2,
+    "n_networks": 1364,
+    "score": 11.09
+  },
+  {
+    "label": "P40_D_tall_hard",
+    "cat": "D_tall",
+    "diff": "hard",
+    "seed": 30025,
+    "grid": [
+      5,
+      5,
+      5
+    ],
+    "plan_length": 15,
+    "pipes": 10,
+    "supports": 5,
+    "inventory": {
+      "S1": 2,
+      "S2": 3,
+      "L": 10,
+      "I": 1
+    },
+    "out_dir": "P40_D_tall_hard_seed30025",
+    "n_solutions": 11,
+    "capped": false,
+    "min_pipes": 10,
+    "staircase_ok": false,
+    "n_portals": 2,
+    "n_networks": 1154,
+    "score": 10.46
+  },
+  {
+    "label": "P41_E_mixed_easy",
+    "cat": "E_mixed",
+    "diff": "easy",
+    "seed": 30504,
+    "grid": [
+      5,
+      5,
+      4
+    ],
+    "plan_length": 7,
+    "pipes": 7,
+    "supports": 0,
+    "inventory": {
+      "I": 3,
+      "L": 4,
+      "T": 1
+    },
+    "out_dir": "P41_E_mixed_easy_seed30504",
+    "n_solutions": 6,
+    "capped": false,
+    "min_pipes": 5,
+    "staircase_ok": false,
+    "n_portals": 3,
+    "n_networks": 40,
+    "score": 4.49
+  },
+  {
+    "label": "P42_E_mixed_easy",
+    "cat": "E_mixed",
+    "diff": "easy",
+    "seed": 31000,
+    "grid": [
+      5,
+      5,
+      4
+    ],
+    "plan_length": 8,
+    "pipes": 7,
+    "supports": 1,
+    "inventory": {
+      "S1": 2,
+      "L": 4,
+      "I": 2,
+      "T": 1
+    },
+    "out_dir": "P42_E_mixed_easy_seed31000",
+    "n_solutions": 1,
+    "capped": false,
+    "min_pipes": 7,
+    "staircase_ok": false,
+    "n_portals": 3,
+    "n_networks": 2,
+    "score": 3.0
+  },
+  {
+    "label": "P43_E_mixed_easy",
+    "cat": "E_mixed",
+    "diff": "easy",
+    "seed": 31503,
+    "grid": [
+      5,
+      5,
+      4
+    ],
+    "plan_length": 7,
+    "pipes": 7,
+    "supports": 0,
+    "inventory": {
+      "L": 5,
+      "T": 1,
+      "I": 1,
+      "S1": 1
+    },
+    "out_dir": "P43_E_mixed_easy_seed31503",
+    "n_solutions": 2,
+    "capped": false,
+    "min_pipes": 7,
+    "staircase_ok": false,
+    "n_portals": 3,
+    "n_networks": 13,
+    "score": 4.45
+  },
+  {
+    "label": "P44_E_mixed_medium",
+    "cat": "E_mixed",
+    "diff": "medium",
+    "seed": 32002,
+    "grid": [
+      5,
+      5,
+      5
+    ],
+    "plan_length": 10,
+    "pipes": 9,
+    "supports": 1,
+    "inventory": {
+      "S1": 1,
+      "L": 6,
+      "I": 3,
+      "T": 1
+    },
+    "out_dir": "P44_E_mixed_medium_seed32002",
+    "n_solutions": 7,
+    "capped": false,
+    "min_pipes": 9,
+    "staircase_ok": false,
+    "n_portals": 3,
+    "n_networks": 272,
+    "score": 7.78
+  },
+  {
+    "label": "P45_E_mixed_medium",
+    "cat": "E_mixed",
+    "diff": "medium",
+    "seed": 32500,
+    "grid": [
+      5,
+      5,
+      5
+    ],
+    "plan_length": 10,
+    "pipes": 8,
+    "supports": 2,
+    "inventory": {
+      "S1": 2,
+      "L": 4,
+      "I": 4,
+      "T": 1
+    },
+    "out_dir": "P45_E_mixed_medium_seed32500",
+    "n_solutions": 8,
+    "capped": false,
+    "min_pipes": 6,
+    "staircase_ok": false,
+    "n_portals": 3,
+    "n_networks": 71,
+    "score": 5.65
+  },
+  {
+    "label": "P46_E_mixed_medium",
+    "cat": "E_mixed",
+    "diff": "medium",
+    "seed": 33000,
+    "grid": [
+      5,
+      5,
+      5
+    ],
+    "plan_length": 12,
+    "pipes": 10,
+    "supports": 2,
+    "inventory": {
+      "S1": 1,
+      "S2": 1,
+      "L": 9,
+      "T": 1,
+      "I": 1
+    },
+    "out_dir": "P46_E_mixed_medium_seed33000",
+    "n_solutions": 20,
+    "capped": false,
+    "min_pipes": 9,
+    "staircase_ok": false,
+    "n_portals": 3,
+    "n_networks": 533,
+    "score": 7.74
+  },
+  {
+    "label": "P47_E_mixed_medium",
+    "cat": "E_mixed",
+    "diff": "medium",
+    "seed": 33503,
+    "grid": [
+      5,
+      5,
+      5
+    ],
+    "plan_length": 12,
+    "pipes": 9,
+    "supports": 3,
+    "inventory": {
+      "S2": 2,
+      "S1": 1,
+      "L": 4,
+      "I": 5,
+      "T": 1
+    },
+    "out_dir": "P47_E_mixed_medium_seed33503",
+    "n_solutions": 7,
+    "capped": false,
+    "min_pipes": 8,
+    "staircase_ok": false,
+    "n_portals": 3,
+    "n_networks": 180,
+    "score": 7.68
+  },
+  {
+    "label": "P48_E_mixed_hard",
+    "cat": "E_mixed",
+    "diff": "hard",
+    "seed": 34059,
+    "grid": [
+      6,
+      5,
+      5
+    ],
+    "plan_length": 12,
+    "pipes": 11,
+    "supports": 1,
+    "inventory": {
+      "S2": 1,
+      "L": 6,
+      "I": 5,
+      "T": 1
+    },
+    "out_dir": "P48_E_mixed_hard_seed34059",
+    "n_solutions": 7,
+    "capped": false,
+    "min_pipes": 8,
+    "staircase_ok": false,
+    "n_portals": 3,
+    "n_networks": 5400,
+    "score": 12.59
+  },
+  {
+    "label": "P49_E_mixed_hard",
+    "cat": "E_mixed",
+    "diff": "hard",
+    "seed": 34502,
+    "grid": [
+      6,
+      5,
+      5
+    ],
+    "plan_length": 20,
+    "pipes": 14,
+    "supports": 6,
+    "inventory": {
+      "S1": 2,
+      "S2": 4,
+      "L": 8,
+      "I": 6,
+      "T": 1
+    },
+    "out_dir": "P49_E_mixed_hard_seed34502",
+    "n_solutions": 9,
+    "capped": false,
+    "min_pipes": 13,
+    "staircase_ok": false,
+    "n_portals": 3,
+    "n_networks": 12543,
+    "score": 15.44
+  },
+  {
+    "label": "P50_E_mixed_hard",
+    "cat": "E_mixed",
+    "diff": "hard",
+    "seed": 35002,
+    "grid": [
+      6,
+      5,
+      5
+    ],
+    "plan_length": 18,
+    "pipes": 12,
+    "supports": 6,
+    "inventory": {
+      "S2": 5,
+      "S1": 1,
+      "L": 5,
+      "I": 7,
+      "T": 1
+    },
+    "out_dir": "P50_E_mixed_hard_seed35002",
+    "n_solutions": 11,
+    "capped": false,
+    "min_pipes": 12,
+    "staircase_ok": false,
+    "n_portals": 3,
+    "n_networks": 5215,
+    "score": 13.39
+  }
+]

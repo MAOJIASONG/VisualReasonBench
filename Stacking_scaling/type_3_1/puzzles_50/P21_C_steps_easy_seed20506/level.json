@@ -1,0 +1,115 @@
+{
+  "grid_size": [
+    5,
+    5,
+    3
+  ],
+  "fixed_pieces": [
+    [
+      "B",
+      [
+        2,
+        5,
+        1
+      ]
+    ],
+    [
+      "G",
+      [
+        2,
+        5,
+        2
+      ]
+    ],
+    [
+      "B",
+      [
+        3,
+        5,
+        1
+      ]
+    ],
+    [
+      "D",
+      [
+        4,
+        5,
+        1
+      ]
+    ],
+    [
+      "S",
+      [
+        5,
+        5,
+        1
+      ]
+    ]
+  ],
+  "inventory": {
+    "D": 1
+  },
+  "push_budget": 1,
+  "meta": {
+    "rules": "v2",
+    "seed": 20506,
+    "attempt": 1,
+    "tier": "easy",
+    "grid_size": [
+      5,
+      5,
+      3
+    ],
+    "patch_count": 1,
+    "fixed_count": 5,
+    "use_height": true,
+    "use_split": false,
+    "n_decoys": 0,
+    "origin": [
+      5,
+      5,
+      1
+    ],
+    "origin_dir": "-x",
+    "solution_patches": [
+      [
+        3,
+        5,
+        2
+      ]
+    ],
+    "patch_pieces": [
+      [
+        "D",
+        [
+          3,
+          5,
+          2
+        ]
+      ]
+    ],
+    "pushes": [
+      [
+        [
+          5,
+          5,
+          1
+        ],
+        "-x"
+      ]
+    ],
+    "push_budget": 1,
+    "difficulty": {
+      "n_solutions": 1,
+      "p_wavefill": 0.5,
+      "min_patches": 1,
+      "gaps": 1,
+      "decoy_gaps": 0,
+      "raised": 1,
+      "p_random": 0.0133,
+      "p_gapfill": 1.0,
+      "score": 1.5
+    },
+    "insight": "A piece on a step needs the step under it, and a falling piece only reaches one level up or down."
+  }
+}

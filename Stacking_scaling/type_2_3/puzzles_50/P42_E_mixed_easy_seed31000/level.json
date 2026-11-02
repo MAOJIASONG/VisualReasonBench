@@ -1,0 +1,142 @@
+{
+  "grid_size": [
+    5,
+    5,
+    4
+  ],
+  "entrances": [
+    [
+      3,
+      5,
+      1
+    ]
+  ],
+  "exits": [
+    [
+      5,
+      3,
+      4
+    ],
+    [
+      4,
+      1,
+      2
+    ]
+  ],
+  "obstacles": [
+    [
+      4,
+      4,
+      2
+    ]
+  ],
+  "obstacle_shapes": [
+    [
+      [
+        4,
+        4,
+        2
+      ]
+    ]
+  ],
+  "inventory": {
+    "S1": 2,
+    "L": 4,
+    "I": 2,
+    "T": 1
+  },
+  "meta": {
+    "rules": "v2",
+    "seed": 31000,
+    "attempt": 49,
+    "tier": "easy",
+    "plan": [
+      [
+        "S1",
+        [
+          4,
+          2,
+          1
+        ],
+        0
+      ],
+      [
+        "L",
+        [
+          3,
+          4,
+          1
+        ],
+        0
+      ],
+      [
+        "L",
+        [
+          4,
+          3,
+          1
+        ],
+        8
+      ],
+      [
+        "L",
+        [
+          4,
+          4,
+          1
+        ],
+        3
+      ],
+      [
+        "I",
+        [
+          4,
+          2,
+          2
+        ],
+        1
+      ],
+      [
+        "T",
+        [
+          4,
+          3,
+          2
+        ],
+        11
+      ],
+      [
+        "I",
+        [
+          4,
+          3,
+          3
+        ],
+        2
+      ],
+      [
+        "L",
+        [
+          4,
+          3,
+          4
+        ],
+        5
+      ]
+    ],
+    "plan_length": 8,
+    "n_pipes": 7,
+    "n_supports": 1,
+    "difficulty": {
+      "n_solutions": 1,
+      "capped": false,
+      "min_pipes": 7,
+      "staircase_ok": false,
+      "n_portals": 3,
+      "plan_length": 8,
+      "n_networks": 2,
+      "score": 3.0
+    },
+    "insight": "Two exits, obstacles and supports together."
+  }
+}

@@ -207,3 +207,13 @@ Stacking_scaling/puzzles_full_10/2x3x3/_signatures/e9745972dd02427d17be8e8509c90
 # Exclude JSON and PNG files
 *.json
 *.png
+
+# CHAIN games: the level files are the benchmark itself (images stay local;
+# regenerate them with generate_50 / play_batch)
+!Stacking_scaling/type_2_3/puzzles_50/**/*.json
+!Stacking_scaling/type_2_3/images_batch/**/*.json
+!Stacking_scaling/type_3/puzzles_50/**/*.json
+!Stacking_scaling/type_3/images_batch/**/*.json
+!Stacking_scaling/type_3_1/puzzles_50/**/*.json
+!Stacking_scaling/type_3_1/images_batch/**/*.json
+!Stacking_scaling/type_*/analysis_exp*/*.json

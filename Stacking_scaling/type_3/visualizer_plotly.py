@@ -651,7 +651,7 @@ def _hud(state: GameState, caption: str) -> "hud.Hud":
         hud.LegendEntry(hud.icon_valve(open_=True), "Valve (opened)",
                         "opening is permanent"),
         hud.LegendEntry(hud.icon_block_x(PROTECTED_FACE), "Protected",
-                        "fluid touching it = lose (a stub shows its feed)"),
+                        "fluid touching it = lose; a stub = its feed"),
     ]
     return hud.Hud(
         title="FLUIDNET",

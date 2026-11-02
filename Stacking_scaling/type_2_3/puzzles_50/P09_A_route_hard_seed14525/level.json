@@ -1,0 +1,174 @@
+{
+  "grid_size": [
+    6,
+    6,
+    4
+  ],
+  "entrances": [
+    [
+      6,
+      3,
+      1
+    ]
+  ],
+  "exits": [
+    [
+      1,
+      5,
+      3
+    ]
+  ],
+  "obstacles": [
+    [
+      4,
+      3,
+      2
+    ],
+    [
+      2,
+      6,
+      2
+    ]
+  ],
+  "obstacle_shapes": [
+    [
+      [
+        4,
+        3,
+        2
+      ]
+    ],
+    [
+      [
+        2,
+        6,
+        2
+      ]
+    ]
+  ],
+  "inventory": {
+    "S1": 1,
+    "L": 11
+  },
+  "meta": {
+    "rules": "v2",
+    "seed": 14525,
+    "attempt": 100,
+    "tier": "hard",
+    "plan": [
+      [
+        "S1",
+        [
+          2,
+          5,
+          1
+        ],
+        0
+      ],
+      [
+        "L",
+        [
+          2,
+          4,
+          1
+        ],
+        4
+      ],
+      [
+        "L",
+        [
+          3,
+          3,
+          1
+        ],
+        0
+      ],
+      [
+        "L",
+        [
+          3,
+          4,
+          1
+        ],
+        3
+      ],
+      [
+        "L",
+        [
+          4,
+          3,
+          1
+        ],
+        2
+      ],
+      [
+        "L",
+        [
+          4,
+          4,
+          1
+        ],
+        1
+      ],
+      [
+        "L",
+        [
+          5,
+          3,
+          1
+        ],
+        0
+      ],
+      [
+        "L",
+        [
+          5,
+          4,
+          1
+        ],
+        3
+      ],
+      [
+        "L",
+        [
+          2,
+          4,
+          2
+        ],
+        9
+      ],
+      [
+        "L",
+        [
+          2,
+          5,
+          2
+        ],
+        10
+      ],
+      [
+        "L",
+        [
+          2,
+          5,
+          3
+        ],
+        7
+      ]
+    ],
+    "plan_length": 11,
+    "n_pipes": 10,
+    "n_supports": 1,
+    "difficulty": {
+      "n_solutions": 12,
+      "capped": false,
+      "min_pipes": 8,
+      "staircase_ok": false,
+      "n_portals": 2,
+      "plan_length": 11,
+      "n_networks": 2804,
+      "score": 10.62
+    },
+    "insight": "Count the parts: the bin holds exactly one route's worth of corners and straights (plus one spare)."
+  }
+}

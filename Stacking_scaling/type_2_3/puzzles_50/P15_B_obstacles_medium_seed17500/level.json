@@ -1,0 +1,178 @@
+{
+  "grid_size": [
+    5,
+    5,
+    4
+  ],
+  "entrances": [
+    [
+      1,
+      3,
+      1
+    ]
+  ],
+  "exits": [
+    [
+      4,
+      1,
+      4
+    ]
+  ],
+  "obstacles": [
+    [
+      4,
+      3,
+      3
+    ],
+    [
+      3,
+      1,
+      1
+    ],
+    [
+      3,
+      4,
+      1
+    ]
+  ],
+  "obstacle_shapes": [
+    [
+      [
+        4,
+        3,
+        3
+      ]
+    ],
+    [
+      [
+        3,
+        1,
+        1
+      ]
+    ],
+    [
+      [
+        3,
+        4,
+        1
+      ]
+    ]
+  ],
+  "inventory": {
+    "S1": 1,
+    "L": 9,
+    "I": 1
+  },
+  "meta": {
+    "rules": "v2",
+    "seed": 17500,
+    "attempt": 27,
+    "tier": "medium",
+    "plan": [
+      [
+        "S1",
+        [
+          4,
+          2,
+          1
+        ],
+        0
+      ],
+      [
+        "L",
+        [
+          2,
+          2,
+          1
+        ],
+        0
+      ],
+      [
+        "L",
+        [
+          2,
+          3,
+          1
+        ],
+        3
+      ],
+      [
+        "L",
+        [
+          3,
+          2,
+          1
+        ],
+        2
+      ],
+      [
+        "L",
+        [
+          3,
+          3,
+          1
+        ],
+        1
+      ],
+      [
+        "L",
+        [
+          4,
+          3,
+          1
+        ],
+        6
+      ],
+      [
+        "L",
+        [
+          4,
+          2,
+          2
+        ],
+        8
+      ],
+      [
+        "L",
+        [
+          4,
+          3,
+          2
+        ],
+        11
+      ],
+      [
+        "I",
+        [
+          4,
+          2,
+          3
+        ],
+        2
+      ],
+      [
+        "L",
+        [
+          4,
+          2,
+          4
+        ],
+        11
+      ]
+    ],
+    "plan_length": 10,
+    "n_pipes": 9,
+    "n_supports": 1,
+    "difficulty": {
+      "n_solutions": 14,
+      "capped": false,
+      "min_pipes": 7,
+      "staircase_ok": false,
+      "n_portals": 2,
+      "plan_length": 10,
+      "n_networks": 763,
+      "score": 8.27
+    },
+    "insight": "The obvious step-and-climb route is blocked; find the detour your parts allow."
+  }
+}

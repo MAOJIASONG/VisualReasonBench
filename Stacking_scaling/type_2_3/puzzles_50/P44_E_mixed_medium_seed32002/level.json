@@ -1,0 +1,172 @@
+{
+  "grid_size": [
+    5,
+    5,
+    5
+  ],
+  "entrances": [
+    [
+      3,
+      1,
+      1
+    ]
+  ],
+  "exits": [
+    [
+      5,
+      4,
+      2
+    ],
+    [
+      1,
+      3,
+      4
+    ]
+  ],
+  "obstacles": [
+    [
+      3,
+      3,
+      2
+    ],
+    [
+      4,
+      2,
+      1
+    ]
+  ],
+  "obstacle_shapes": [
+    [
+      [
+        3,
+        3,
+        2
+      ]
+    ],
+    [
+      [
+        4,
+        2,
+        1
+      ]
+    ]
+  ],
+  "inventory": {
+    "S1": 1,
+    "L": 6,
+    "I": 3,
+    "T": 1
+  },
+  "meta": {
+    "rules": "v2",
+    "seed": 32002,
+    "attempt": 76,
+    "tier": "medium",
+    "plan": [
+      [
+        "S1",
+        [
+          4,
+          4,
+          1
+        ],
+        0
+      ],
+      [
+        "L",
+        [
+          2,
+          3,
+          1
+        ],
+        4
+      ],
+      [
+        "I",
+        [
+          3,
+          2,
+          1
+        ],
+        1
+      ],
+      [
+        "T",
+        [
+          3,
+          3,
+          1
+        ],
+        1
+      ],
+      [
+        "L",
+        [
+          4,
+          3,
+          1
+        ],
+        6
+      ],
+      [
+        "I",
+        [
+          2,
+          3,
+          2
+        ],
+        2
+      ],
+      [
+        "L",
+        [
+          4,
+          3,
+          2
+        ],
+        9
+      ],
+      [
+        "L",
+        [
+          4,
+          4,
+          2
+        ],
+        1
+      ],
+      [
+        "I",
+        [
+          2,
+          3,
+          3
+        ],
+        2
+      ],
+      [
+        "L",
+        [
+          2,
+          3,
+          4
+        ],
+        7
+      ]
+    ],
+    "plan_length": 10,
+    "n_pipes": 9,
+    "n_supports": 1,
+    "difficulty": {
+      "n_solutions": 7,
+      "capped": false,
+      "min_pipes": 9,
+      "staircase_ok": false,
+      "n_portals": 3,
+      "plan_length": 10,
+      "n_networks": 272,
+      "score": 7.78
+    },
+    "insight": "Two exits, obstacles and supports together."
+  }
+}

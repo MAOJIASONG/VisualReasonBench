@@ -1,0 +1,118 @@
+{
+  "grid_size": [
+    5,
+    4,
+    4
+  ],
+  "entrances": [
+    [
+      1,
+      2,
+      1
+    ]
+  ],
+  "exits": [
+    [
+      2,
+      4,
+      3
+    ]
+  ],
+  "obstacles": [
+    [
+      3,
+      3,
+      1
+    ]
+  ],
+  "obstacle_shapes": [
+    [
+      [
+        3,
+        3,
+        1
+      ]
+    ]
+  ],
+  "inventory": {
+    "L": 5,
+    "I": 1,
+    "S1": 1
+  },
+  "meta": {
+    "rules": "v2",
+    "seed": 16000,
+    "attempt": 22,
+    "tier": "easy",
+    "plan": [
+      [
+        "L",
+        [
+          2,
+          2,
+          1
+        ],
+        2
+      ],
+      [
+        "L",
+        [
+          2,
+          3,
+          1
+        ],
+        10
+      ],
+      [
+        "L",
+        [
+          2,
+          2,
+          2
+        ],
+        8
+      ],
+      [
+        "L",
+        [
+          2,
+          3,
+          2
+        ],
+        11
+      ],
+      [
+        "L",
+        [
+          2,
+          2,
+          3
+        ],
+        9
+      ],
+      [
+        "I",
+        [
+          2,
+          3,
+          3
+        ],
+        1
+      ]
+    ],
+    "plan_length": 6,
+    "n_pipes": 6,
+    "n_supports": 0,
+    "difficulty": {
+      "n_solutions": 7,
+      "capped": false,
+      "min_pipes": 4,
+      "staircase_ok": true,
+      "n_portals": 2,
+      "plan_length": 6,
+      "n_networks": 32,
+      "score": 3.69
+    },
+    "insight": "The obvious step-and-climb route is blocked; find the detour your parts allow."
+  }
+}

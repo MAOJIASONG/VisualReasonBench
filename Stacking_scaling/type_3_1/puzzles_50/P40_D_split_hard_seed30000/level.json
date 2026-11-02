@@ -1,0 +1,186 @@
+{
+  "grid_size": [
+    8,
+    7,
+    3
+  ],
+  "fixed_pieces": [
+    [
+      "P",
+      [
+        2,
+        1,
+        1
+      ]
+    ],
+    [
+      "S",
+      [
+        2,
+        3,
+        1
+      ]
+    ],
+    [
+      "D",
+      [
+        2,
+        5,
+        1
+      ]
+    ],
+    [
+      "D",
+      [
+        2,
+        6,
+        1
+      ]
+    ],
+    [
+      "P",
+      [
+        2,
+        7,
+        1
+      ]
+    ],
+    [
+      "P",
+      [
+        6,
+        1,
+        1
+      ]
+    ],
+    [
+      "T",
+      [
+        6,
+        3,
+        1
+      ]
+    ],
+    [
+      "G",
+      [
+        6,
+        5,
+        1
+      ]
+    ],
+    [
+      "P",
+      [
+        6,
+        7,
+        1
+      ]
+    ]
+  ],
+  "inventory": {
+    "D": 4
+  },
+  "push_budget": 1,
+  "meta": {
+    "rules": "v2",
+    "seed": 30000,
+    "attempt": 2,
+    "tier": "hard",
+    "grid_size": [
+      8,
+      7,
+      3
+    ],
+    "patch_count": 4,
+    "fixed_count": 9,
+    "use_height": false,
+    "use_split": true,
+    "n_decoys": 3,
+    "origin": [
+      2,
+      3,
+      1
+    ],
+    "origin_dir": "+x",
+    "solution_patches": [
+      [
+        3,
+        3,
+        1
+      ],
+      [
+        4,
+        3,
+        1
+      ],
+      [
+        5,
+        3,
+        1
+      ],
+      [
+        6,
+        4,
+        1
+      ]
+    ],
+    "patch_pieces": [
+      [
+        "D",
+        [
+          3,
+          3,
+          1
+        ]
+      ],
+      [
+        "D",
+        [
+          4,
+          3,
+          1
+        ]
+      ],
+      [
+        "D",
+        [
+          5,
+          3,
+          1
+        ]
+      ],
+      [
+        "D",
+        [
+          6,
+          4,
+          1
+        ]
+      ]
+    ],
+    "pushes": [
+      [
+        [
+          2,
+          3,
+          1
+        ],
+        "+x"
+      ]
+    ],
+    "push_budget": 1,
+    "difficulty": {
+      "n_solutions": 1,
+      "p_wavefill": 0.125,
+      "min_patches": 4,
+      "gaps": 5,
+      "decoy_gaps": 4,
+      "raised": 0,
+      "p_random": 0.0,
+      "p_gapfill": 0.0,
+      "score": 8.0
+    },
+    "insight": "The splitter sends the wave out to both sides: plan both branches."
+  }
+}

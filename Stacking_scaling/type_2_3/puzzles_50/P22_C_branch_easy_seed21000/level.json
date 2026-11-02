@@ -1,0 +1,129 @@
+{
+  "grid_size": [
+    5,
+    5,
+    4
+  ],
+  "entrances": [
+    [
+      2,
+      1,
+      1
+    ]
+  ],
+  "exits": [
+    [
+      1,
+      2,
+      3
+    ],
+    [
+      2,
+      5,
+      3
+    ]
+  ],
+  "obstacles": [],
+  "obstacle_shapes": [],
+  "inventory": {
+    "S1": 1,
+    "S2": 1,
+    "L": 5,
+    "T": 1,
+    "I": 1
+  },
+  "meta": {
+    "rules": "v2",
+    "seed": 21000,
+    "attempt": 54,
+    "tier": "easy",
+    "plan": [
+      [
+        "S1",
+        [
+          2,
+          3,
+          1
+        ],
+        0
+      ],
+      [
+        "S2",
+        [
+          2,
+          4,
+          1
+        ],
+        0
+      ],
+      [
+        "L",
+        [
+          2,
+          2,
+          1
+        ],
+        10
+      ],
+      [
+        "T",
+        [
+          2,
+          2,
+          2
+        ],
+        10
+      ],
+      [
+        "L",
+        [
+          2,
+          3,
+          2
+        ],
+        10
+      ],
+      [
+        "L",
+        [
+          2,
+          2,
+          3
+        ],
+        7
+      ],
+      [
+        "L",
+        [
+          2,
+          3,
+          3
+        ],
+        9
+      ],
+      [
+        "I",
+        [
+          2,
+          4,
+          3
+        ],
+        1
+      ]
+    ],
+    "plan_length": 8,
+    "n_pipes": 6,
+    "n_supports": 2,
+    "difficulty": {
+      "n_solutions": 4,
+      "capped": false,
+      "min_pipes": 6,
+      "staircase_ok": false,
+      "n_portals": 3,
+      "plan_length": 8,
+      "n_networks": 18,
+      "score": 4.17
+    },
+    "insight": "Two exits: one network with a T junction feeding both."
+  }
+}

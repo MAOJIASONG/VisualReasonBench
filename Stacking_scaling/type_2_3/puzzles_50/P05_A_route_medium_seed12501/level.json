@@ -1,0 +1,145 @@
+{
+  "grid_size": [
+    5,
+    5,
+    4
+  ],
+  "entrances": [
+    [
+      1,
+      4,
+      1
+    ]
+  ],
+  "exits": [
+    [
+      2,
+      1,
+      4
+    ]
+  ],
+  "obstacles": [
+    [
+      2,
+      3,
+      2
+    ]
+  ],
+  "obstacle_shapes": [
+    [
+      [
+        2,
+        3,
+        2
+      ]
+    ]
+  ],
+  "inventory": {
+    "S2": 1,
+    "L": 6,
+    "I": 3
+  },
+  "meta": {
+    "rules": "v2",
+    "seed": 12501,
+    "attempt": 27,
+    "tier": "medium",
+    "plan": [
+      [
+        "S2",
+        [
+          1,
+          2,
+          1
+        ],
+        0
+      ],
+      [
+        "L",
+        [
+          2,
+          2,
+          1
+        ],
+        8
+      ],
+      [
+        "I",
+        [
+          2,
+          3,
+          1
+        ],
+        1
+      ],
+      [
+        "L",
+        [
+          2,
+          4,
+          1
+        ],
+        3
+      ],
+      [
+        "I",
+        [
+          2,
+          2,
+          2
+        ],
+        2
+      ],
+      [
+        "L",
+        [
+          1,
+          2,
+          3
+        ],
+        4
+      ],
+      [
+        "L",
+        [
+          2,
+          2,
+          3
+        ],
+        7
+      ],
+      [
+        "L",
+        [
+          1,
+          2,
+          4
+        ],
+        5
+      ],
+      [
+        "L",
+        [
+          2,
+          2,
+          4
+        ],
+        3
+      ]
+    ],
+    "plan_length": 9,
+    "n_pipes": 8,
+    "n_supports": 1,
+    "difficulty": {
+      "n_solutions": 12,
+      "capped": false,
+      "min_pipes": 6,
+      "staircase_ok": false,
+      "n_portals": 2,
+      "plan_length": 9,
+      "n_networks": 175,
+      "score": 6.12
+    },
+    "insight": "Count the parts: the bin holds exactly one route's worth of corners and straights (plus one spare)."
+  }
+}

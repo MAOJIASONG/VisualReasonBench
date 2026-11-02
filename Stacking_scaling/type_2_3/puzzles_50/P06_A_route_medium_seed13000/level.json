@@ -1,0 +1,155 @@
+{
+  "grid_size": [
+    5,
+    5,
+    4
+  ],
+  "entrances": [
+    [
+      3,
+      1,
+      1
+    ]
+  ],
+  "exits": [
+    [
+      3,
+      5,
+      3
+    ]
+  ],
+  "obstacles": [
+    [
+      3,
+      3,
+      1
+    ]
+  ],
+  "obstacle_shapes": [
+    [
+      [
+        3,
+        3,
+        1
+      ]
+    ]
+  ],
+  "inventory": {
+    "S1": 1,
+    "S2": 2,
+    "L": 7,
+    "I": 1
+  },
+  "meta": {
+    "rules": "v2",
+    "seed": 13000,
+    "attempt": 57,
+    "tier": "medium",
+    "plan": [
+      [
+        "S1",
+        [
+          4,
+          3,
+          1
+        ],
+        0
+      ],
+      [
+        "S2",
+        [
+          3,
+          4,
+          1
+        ],
+        0
+      ],
+      [
+        "S2",
+        [
+          4,
+          4,
+          1
+        ],
+        0
+      ],
+      [
+        "L",
+        [
+          3,
+          2,
+          1
+        ],
+        1
+      ],
+      [
+        "L",
+        [
+          4,
+          2,
+          1
+        ],
+        6
+      ],
+      [
+        "L",
+        [
+          4,
+          2,
+          2
+        ],
+        9
+      ],
+      [
+        "L",
+        [
+          4,
+          3,
+          2
+        ],
+        10
+      ],
+      [
+        "L",
+        [
+          3,
+          4,
+          3
+        ],
+        0
+      ],
+      [
+        "L",
+        [
+          4,
+          3,
+          3
+        ],
+        9
+      ],
+      [
+        "L",
+        [
+          4,
+          4,
+          3
+        ],
+        3
+      ]
+    ],
+    "plan_length": 10,
+    "n_pipes": 7,
+    "n_supports": 3,
+    "difficulty": {
+      "n_solutions": 8,
+      "capped": false,
+      "min_pipes": 7,
+      "staircase_ok": false,
+      "n_portals": 2,
+      "plan_length": 10,
+      "n_networks": 87,
+      "score": 5.94
+    },
+    "insight": "Count the parts: the bin holds exactly one route's worth of corners and straights (plus one spare)."
+  }
+}

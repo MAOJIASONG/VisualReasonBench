@@ -1,0 +1,164 @@
+{
+  "grid_size": [
+    5,
+    5,
+    4
+  ],
+  "entrances": [
+    [
+      5,
+      4,
+      1
+    ]
+  ],
+  "exits": [
+    [
+      3,
+      1,
+      3
+    ]
+  ],
+  "obstacles": [
+    [
+      4,
+      3,
+      1
+    ]
+  ],
+  "obstacle_shapes": [
+    [
+      [
+        4,
+        3,
+        1
+      ]
+    ]
+  ],
+  "inventory": {
+    "S2": 2,
+    "S1": 2,
+    "L": 4,
+    "I": 4
+  },
+  "meta": {
+    "rules": "v2",
+    "seed": 12000,
+    "attempt": 39,
+    "tier": "medium",
+    "plan": [
+      [
+        "S2",
+        [
+          3,
+          2,
+          1
+        ],
+        0
+      ],
+      [
+        "S2",
+        [
+          3,
+          3,
+          1
+        ],
+        0
+      ],
+      [
+        "S1",
+        [
+          3,
+          3,
+          3
+        ],
+        0
+      ],
+      [
+        "L",
+        [
+          3,
+          4,
+          1
+        ],
+        4
+      ],
+      [
+        "I",
+        [
+          4,
+          4,
+          1
+        ],
+        0
+      ],
+      [
+        "I",
+        [
+          3,
+          4,
+          2
+        ],
+        2
+      ],
+      [
+        "L",
+        [
+          3,
+          2,
+          3
+        ],
+        10
+      ],
+      [
+        "I",
+        [
+          3,
+          4,
+          3
+        ],
+        2
+      ],
+      [
+        "L",
+        [
+          3,
+          2,
+          4
+        ],
+        9
+      ],
+      [
+        "I",
+        [
+          3,
+          3,
+          4
+        ],
+        1
+      ],
+      [
+        "L",
+        [
+          3,
+          4,
+          4
+        ],
+        11
+      ]
+    ],
+    "plan_length": 11,
+    "n_pipes": 8,
+    "n_supports": 3,
+    "difficulty": {
+      "n_solutions": 19,
+      "capped": false,
+      "min_pipes": 6,
+      "staircase_ok": false,
+      "n_portals": 2,
+      "plan_length": 11,
+      "n_networks": 286,
+      "score": 6.66
+    },
+    "insight": "Count the parts: the bin holds exactly one route's worth of corners and straights (plus one spare)."
+  }
+}

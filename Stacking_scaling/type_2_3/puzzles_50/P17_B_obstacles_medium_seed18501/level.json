@@ -1,0 +1,169 @@
+{
+  "grid_size": [
+    5,
+    5,
+    4
+  ],
+  "entrances": [
+    [
+      4,
+      1,
+      1
+    ]
+  ],
+  "exits": [
+    [
+      2,
+      5,
+      3
+    ]
+  ],
+  "obstacles": [
+    [
+      3,
+      2,
+      2
+    ],
+    [
+      3,
+      3,
+      1
+    ],
+    [
+      1,
+      4,
+      2
+    ]
+  ],
+  "obstacle_shapes": [
+    [
+      [
+        3,
+        2,
+        2
+      ]
+    ],
+    [
+      [
+        3,
+        3,
+        1
+      ]
+    ],
+    [
+      [
+        1,
+        4,
+        2
+      ]
+    ]
+  ],
+  "inventory": {
+    "L": 6,
+    "I": 3,
+    "S1": 1
+  },
+  "meta": {
+    "rules": "v2",
+    "seed": 18501,
+    "attempt": 4,
+    "tier": "medium",
+    "plan": [
+      [
+        "L",
+        [
+          2,
+          1,
+          1
+        ],
+        0
+      ],
+      [
+        "I",
+        [
+          2,
+          2,
+          1
+        ],
+        1
+      ],
+      [
+        "I",
+        [
+          2,
+          3,
+          1
+        ],
+        1
+      ],
+      [
+        "L",
+        [
+          2,
+          4,
+          1
+        ],
+        10
+      ],
+      [
+        "L",
+        [
+          3,
+          1,
+          1
+        ],
+        2
+      ],
+      [
+        "L",
+        [
+          3,
+          2,
+          1
+        ],
+        1
+      ],
+      [
+        "L",
+        [
+          4,
+          2,
+          1
+        ],
+        3
+      ],
+      [
+        "I",
+        [
+          2,
+          4,
+          2
+        ],
+        2
+      ],
+      [
+        "L",
+        [
+          2,
+          4,
+          3
+        ],
+        9
+      ]
+    ],
+    "plan_length": 9,
+    "n_pipes": 9,
+    "n_supports": 0,
+    "difficulty": {
+      "n_solutions": 16,
+      "capped": false,
+      "min_pipes": 7,
+      "staircase_ok": false,
+      "n_portals": 2,
+      "plan_length": 9,
+      "n_networks": 696,
+      "score": 7.69
+    },
+    "insight": "The obvious step-and-climb route is blocked; find the detour your parts allow."
+  }
+}

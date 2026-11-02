@@ -1,0 +1,112 @@
+{
+  "grid_size": [
+    4,
+    4,
+    5
+  ],
+  "entrances": [
+    [
+      4,
+      2,
+      1
+    ]
+  ],
+  "exits": [
+    [
+      1,
+      2,
+      5
+    ]
+  ],
+  "obstacles": [],
+  "obstacle_shapes": [],
+  "inventory": {
+    "S1": 2,
+    "L": 4,
+    "I": 2
+  },
+  "meta": {
+    "rules": "v2",
+    "seed": 3000,
+    "attempt": 7,
+    "tier": "easy",
+    "plan": [
+      [
+        "S1",
+        [
+          2,
+          2,
+          1
+        ],
+        0
+      ],
+      [
+        "L",
+        [
+          3,
+          2,
+          1
+        ],
+        4
+      ],
+      [
+        "L",
+        [
+          2,
+          2,
+          2
+        ],
+        4
+      ],
+      [
+        "L",
+        [
+          3,
+          2,
+          2
+        ],
+        7
+      ],
+      [
+        "I",
+        [
+          2,
+          2,
+          3
+        ],
+        2
+      ],
+      [
+        "I",
+        [
+          2,
+          2,
+          4
+        ],
+        2
+      ],
+      [
+        "L",
+        [
+          2,
+          2,
+          5
+        ],
+        7
+      ]
+    ],
+    "plan_length": 7,
+    "n_pipes": 6,
+    "n_supports": 1,
+    "difficulty": {
+      "n_solutions": 2,
+      "capped": false,
+      "min_pipes": 6,
+      "staircase_ok": false,
+      "n_portals": 2,
+      "plan_length": 7,
+      "n_networks": 5,
+      "score": 3.07
+    }
+  }
+}

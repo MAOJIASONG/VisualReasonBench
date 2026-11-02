@@ -1,0 +1,178 @@
+{
+  "grid_size": [
+    9,
+    8,
+    3
+  ],
+  "fixed_pieces": [
+    [
+      "P",
+      [
+        2,
+        8,
+        1
+      ]
+    ],
+    [
+      "D",
+      [
+        3,
+        8,
+        1
+      ]
+    ],
+    [
+      "D",
+      [
+        4,
+        8,
+        1
+      ]
+    ],
+    [
+      "P",
+      [
+        6,
+        1,
+        1
+      ]
+    ],
+    [
+      "G",
+      [
+        6,
+        3,
+        1
+      ]
+    ],
+    [
+      "S",
+      [
+        6,
+        8,
+        1
+      ]
+    ],
+    [
+      "D",
+      [
+        8,
+        8,
+        1
+      ]
+    ],
+    [
+      "P",
+      [
+        9,
+        8,
+        1
+      ]
+    ]
+  ],
+  "inventory": {
+    "D": 4
+  },
+  "push_budget": 1,
+  "meta": {
+    "rules": "v2",
+    "seed": 20000,
+    "attempt": 0,
+    "tier": "hard",
+    "grid_size": [
+      9,
+      8,
+      3
+    ],
+    "patch_count": 4,
+    "fixed_count": 8,
+    "use_height": false,
+    "use_split": false,
+    "n_decoys": 3,
+    "origin": [
+      6,
+      8,
+      1
+    ],
+    "origin_dir": "-y",
+    "solution_patches": [
+      [
+        6,
+        4,
+        1
+      ],
+      [
+        6,
+        5,
+        1
+      ],
+      [
+        6,
+        6,
+        1
+      ],
+      [
+        6,
+        7,
+        1
+      ]
+    ],
+    "patch_pieces": [
+      [
+        "D",
+        [
+          6,
+          4,
+          1
+        ]
+      ],
+      [
+        "D",
+        [
+          6,
+          5,
+          1
+        ]
+      ],
+      [
+        "D",
+        [
+          6,
+          6,
+          1
+        ]
+      ],
+      [
+        "D",
+        [
+          6,
+          7,
+          1
+        ]
+      ]
+    ],
+    "pushes": [
+      [
+        [
+          6,
+          8,
+          1
+        ],
+        "-y"
+      ]
+    ],
+    "push_budget": 1,
+    "difficulty": {
+      "n_solutions": 1,
+      "p_wavefill": 0.3333,
+      "min_patches": 4,
+      "gaps": 3,
+      "decoy_gaps": 3,
+      "raised": 0,
+      "p_random": 0.0,
+      "p_gapfill": 0.0,
+      "score": 6.09
+    },
+    "insight": "Not every hole is yours: some lead to a red piece and must stay empty."
+  }
+}

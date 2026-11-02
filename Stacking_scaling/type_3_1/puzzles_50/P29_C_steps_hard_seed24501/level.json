@@ -1,0 +1,234 @@
+{
+  "grid_size": [
+    8,
+    6,
+    4
+  ],
+  "fixed_pieces": [
+    [
+      "B",
+      [
+        1,
+        4,
+        1
+      ]
+    ],
+    [
+      "P",
+      [
+        1,
+        4,
+        2
+      ]
+    ],
+    [
+      "B",
+      [
+        2,
+        4,
+        1
+      ]
+    ],
+    [
+      "B",
+      [
+        3,
+        4,
+        1
+      ]
+    ],
+    [
+      "G",
+      [
+        3,
+        4,
+        2
+      ]
+    ],
+    [
+      "B",
+      [
+        4,
+        4,
+        1
+      ]
+    ],
+    [
+      "B",
+      [
+        4,
+        4,
+        2
+      ]
+    ],
+    [
+      "B",
+      [
+        5,
+        4,
+        1
+      ]
+    ],
+    [
+      "B",
+      [
+        5,
+        4,
+        2
+      ]
+    ],
+    [
+      "B",
+      [
+        6,
+        4,
+        1
+      ]
+    ],
+    [
+      "B",
+      [
+        7,
+        4,
+        1
+      ]
+    ],
+    [
+      "P",
+      [
+        8,
+        1,
+        1
+      ]
+    ],
+    [
+      "D",
+      [
+        8,
+        2,
+        1
+      ]
+    ],
+    [
+      "S",
+      [
+        8,
+        4,
+        1
+      ]
+    ],
+    [
+      "P",
+      [
+        8,
+        6,
+        1
+      ]
+    ]
+  ],
+  "inventory": {
+    "D": 4
+  },
+  "push_budget": 1,
+  "meta": {
+    "rules": "v2",
+    "seed": 24501,
+    "attempt": 0,
+    "tier": "hard",
+    "grid_size": [
+      8,
+      6,
+      4
+    ],
+    "patch_count": 4,
+    "fixed_count": 15,
+    "use_height": true,
+    "use_split": false,
+    "n_decoys": 3,
+    "origin": [
+      8,
+      4,
+      1
+    ],
+    "origin_dir": "-x",
+    "solution_patches": [
+      [
+        4,
+        4,
+        3
+      ],
+      [
+        5,
+        4,
+        3
+      ],
+      [
+        6,
+        4,
+        2
+      ],
+      [
+        7,
+        4,
+        2
+      ]
+    ],
+    "patch_pieces": [
+      [
+        "D",
+        [
+          4,
+          4,
+          3
+        ]
+      ],
+      [
+        "D",
+        [
+          5,
+          4,
+          3
+        ]
+      ],
+      [
+        "D",
+        [
+          6,
+          4,
+          2
+        ]
+      ],
+      [
+        "D",
+        [
+          7,
+          4,
+          2
+        ]
+      ]
+    ],
+    "pushes": [
+      [
+        [
+          8,
+          4,
+          1
+        ],
+        "-x"
+      ]
+    ],
+    "push_budget": 1,
+    "difficulty": {
+      "n_solutions": 1,
+      "p_wavefill": 0.3333,
+      "min_patches": 4,
+      "gaps": 3,
+      "decoy_gaps": 3,
+      "raised": 4,
+      "p_random": 0.0,
+      "p_gapfill": 0.0,
+      "score": 8.09
+    },
+    "insight": "A piece on a step needs the step under it, and a falling piece only reaches one level up or down."
+  }
+}

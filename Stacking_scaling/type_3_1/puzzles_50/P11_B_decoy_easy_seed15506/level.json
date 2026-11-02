@@ -1,0 +1,120 @@
+{
+  "grid_size": [
+    5,
+    5,
+    3
+  ],
+  "fixed_pieces": [
+    [
+      "P",
+      [
+        1,
+        1,
+        1
+      ]
+    ],
+    [
+      "D",
+      [
+        1,
+        2,
+        1
+      ]
+    ],
+    [
+      "S",
+      [
+        1,
+        4,
+        1
+      ]
+    ],
+    [
+      "G",
+      [
+        4,
+        4,
+        1
+      ]
+    ]
+  ],
+  "inventory": {
+    "D": 2
+  },
+  "push_budget": 1,
+  "meta": {
+    "rules": "v2",
+    "seed": 15506,
+    "attempt": 0,
+    "tier": "easy",
+    "grid_size": [
+      5,
+      5,
+      3
+    ],
+    "patch_count": 2,
+    "fixed_count": 4,
+    "use_height": false,
+    "use_split": false,
+    "n_decoys": 1,
+    "origin": [
+      1,
+      4,
+      1
+    ],
+    "origin_dir": "+x",
+    "solution_patches": [
+      [
+        2,
+        4,
+        1
+      ],
+      [
+        3,
+        4,
+        1
+      ]
+    ],
+    "patch_pieces": [
+      [
+        "D",
+        [
+          2,
+          4,
+          1
+        ]
+      ],
+      [
+        "D",
+        [
+          3,
+          4,
+          1
+        ]
+      ]
+    ],
+    "pushes": [
+      [
+        [
+          1,
+          4,
+          1
+        ],
+        "+x"
+      ]
+    ],
+    "push_budget": 1,
+    "difficulty": {
+      "n_solutions": 1,
+      "p_wavefill": 0.3333,
+      "min_patches": 2,
+      "gaps": 1,
+      "decoy_gaps": 1,
+      "raised": 0,
+      "p_random": 0.0,
+      "p_gapfill": 0.0,
+      "score": 3.09
+    },
+    "insight": "Not every hole is yours: some lead to a red piece and must stay empty."
+  }
+}

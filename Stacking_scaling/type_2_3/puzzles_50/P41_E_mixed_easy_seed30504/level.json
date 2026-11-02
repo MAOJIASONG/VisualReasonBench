@@ -1,0 +1,132 @@
+{
+  "grid_size": [
+    5,
+    5,
+    4
+  ],
+  "entrances": [
+    [
+      1,
+      4,
+      1
+    ]
+  ],
+  "exits": [
+    [
+      5,
+      4,
+      2
+    ],
+    [
+      3,
+      5,
+      2
+    ]
+  ],
+  "obstacles": [
+    [
+      4,
+      3,
+      1
+    ]
+  ],
+  "obstacle_shapes": [
+    [
+      [
+        4,
+        3,
+        1
+      ]
+    ]
+  ],
+  "inventory": {
+    "I": 3,
+    "L": 4,
+    "T": 1
+  },
+  "meta": {
+    "rules": "v2",
+    "seed": 30504,
+    "attempt": 115,
+    "tier": "easy",
+    "plan": [
+      [
+        "I",
+        [
+          2,
+          4,
+          1
+        ],
+        0
+      ],
+      [
+        "L",
+        [
+          3,
+          3,
+          1
+        ],
+        8
+      ],
+      [
+        "T",
+        [
+          3,
+          4,
+          1
+        ],
+        1
+      ],
+      [
+        "L",
+        [
+          4,
+          4,
+          1
+        ],
+        6
+      ],
+      [
+        "L",
+        [
+          3,
+          3,
+          2
+        ],
+        9
+      ],
+      [
+        "I",
+        [
+          3,
+          4,
+          2
+        ],
+        1
+      ],
+      [
+        "L",
+        [
+          4,
+          4,
+          2
+        ],
+        5
+      ]
+    ],
+    "plan_length": 7,
+    "n_pipes": 7,
+    "n_supports": 0,
+    "difficulty": {
+      "n_solutions": 6,
+      "capped": false,
+      "min_pipes": 5,
+      "staircase_ok": false,
+      "n_portals": 3,
+      "plan_length": 7,
+      "n_networks": 40,
+      "score": 4.49
+    },
+    "insight": "Two exits, obstacles and supports together."
+  }
+}
