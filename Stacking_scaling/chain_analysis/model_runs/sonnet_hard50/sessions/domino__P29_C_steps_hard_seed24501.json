@@ -1,0 +1,146 @@
+{
+ "level": "type_3_1/puzzles_50/P29_C_steps_hard_seed24501",
+ "game": "domino",
+ "actions": [
+  [
+   "place",
+   [
+    4,
+    3,
+    1
+   ]
+  ],
+  [
+   "remove",
+   [
+    4,
+    3,
+    1
+   ]
+  ],
+  [
+   "place",
+   [
+    7,
+    4,
+    2
+   ]
+  ],
+  [
+   "place",
+   [
+    6,
+    4,
+    2
+   ]
+  ],
+  [
+   "place",
+   [
+    5,
+    4,
+    3
+   ]
+  ],
+  [
+   "place",
+   [
+    4,
+    4,
+    3
+   ]
+  ],
+  [
+   "submit_placement"
+  ],
+  [
+   "push",
+   "-x"
+  ]
+ ],
+ "n_actions": 8,
+ "fails": 0,
+ "status": "win",
+ "max_actions": 40,
+ "log": [
+  {
+   "action": [
+    "place",
+    [
+     4,
+     3,
+     1
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "remove",
+    [
+     4,
+     3,
+     1
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    [
+     7,
+     4,
+     2
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    [
+     6,
+     4,
+     2
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    [
+     5,
+     4,
+     3
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    [
+     4,
+     4,
+     3
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "submit_placement"
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "push",
+    "-x"
+   ],
+   "result": "WIN"
+  }
+ ]
+}

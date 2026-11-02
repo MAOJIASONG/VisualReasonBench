@@ -1,0 +1,611 @@
+{
+ "level": "type_2_3/puzzles_50/P28_C_branch_hard_seed24000",
+ "game": "pipefit",
+ "actions": [
+  [
+   "place",
+   "I",
+   [
+    5,
+    5,
+    3
+   ],
+   0
+  ],
+  [
+   "place",
+   "I",
+   [
+    5,
+    5,
+    1
+   ],
+   0
+  ],
+  [
+   "remove",
+   [
+    5,
+    5,
+    1
+   ]
+  ],
+  [
+   "remove",
+   [
+    5,
+    5,
+    3
+   ]
+  ],
+  [
+   "place",
+   "I",
+   [
+    5,
+    2,
+    1
+   ],
+   1
+  ],
+  [
+   "place",
+   "T",
+   [
+    5,
+    3,
+    1
+   ],
+   3
+  ],
+  [
+   "place",
+   "L",
+   [
+    5,
+    4,
+    1
+   ],
+   10
+  ],
+  [
+   "place",
+   "L",
+   [
+    5,
+    4,
+    2
+   ],
+   5
+  ],
+  [
+   "place",
+   "I",
+   [
+    4,
+    3,
+    1
+   ],
+   0
+  ],
+  [
+   "place",
+   "L",
+   [
+    3,
+    3,
+    1
+   ],
+   4
+  ],
+  [
+   "place",
+   "I",
+   [
+    3,
+    3,
+    2
+   ],
+   2
+  ],
+  [
+   "place",
+   "I",
+   [
+    3,
+    3,
+    3
+   ],
+   2
+  ],
+  [
+   "place",
+   "L",
+   [
+    3,
+    3,
+    4
+   ],
+   9
+  ],
+  [
+   "place",
+   "I",
+   [
+    3,
+    4,
+    4
+   ],
+   1
+  ],
+  [
+   "submit"
+  ],
+  [
+   "reset"
+  ],
+  [
+   "place",
+   "I",
+   [
+    5,
+    2,
+    1
+   ],
+   1
+  ],
+  [
+   "place",
+   "T",
+   [
+    5,
+    3,
+    1
+   ],
+   3
+  ],
+  [
+   "place",
+   "L",
+   [
+    5,
+    4,
+    1
+   ],
+   10
+  ],
+  [
+   "place",
+   "L",
+   [
+    5,
+    4,
+    2
+   ],
+   5
+  ],
+  [
+   "place",
+   "I",
+   [
+    4,
+    3,
+    1
+   ],
+   0
+  ],
+  [
+   "place",
+   "L",
+   [
+    3,
+    3,
+    1
+   ],
+   0
+  ],
+  [
+   "place",
+   "L",
+   [
+    3,
+    4,
+    1
+   ],
+   10
+  ],
+  [
+   "place",
+   "I",
+   [
+    3,
+    4,
+    2
+   ],
+   2
+  ],
+  [
+   "place",
+   "I",
+   [
+    3,
+    4,
+    3
+   ],
+   2
+  ],
+  [
+   "place",
+   "L",
+   [
+    3,
+    4,
+    4
+   ],
+   9
+  ],
+  [
+   "submit"
+  ]
+ ],
+ "n_actions": 28,
+ "fails": 1,
+ "status": "win",
+ "max_actions": 40,
+ "log": [
+  {
+   "action": [
+    "place",
+    "I",
+    [
+     3,
+     5,
+     4
+    ],
+    1
+   ],
+   "result": "EntranceExitOccupied",
+   "rejected": true
+  },
+  {
+   "action": [
+    "place",
+    "I",
+    [
+     5,
+     5,
+     3
+    ],
+    0
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    "I",
+    [
+     6,
+     4,
+     2
+    ],
+    1
+   ],
+   "result": "EntranceExitOccupied",
+   "rejected": true
+  },
+  {
+   "action": [
+    "place",
+    "I",
+    [
+     5,
+     5,
+     1
+    ],
+    0
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "remove",
+    [
+     5,
+     5,
+     1
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "remove",
+    [
+     5,
+     5,
+     3
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    "I",
+    [
+     5,
+     2,
+     1
+    ],
+    1
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    "T",
+    [
+     5,
+     3,
+     1
+    ],
+    3
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    "L",
+    [
+     5,
+     4,
+     1
+    ],
+    10
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    "L",
+    [
+     5,
+     4,
+     2
+    ],
+    5
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    "I",
+    [
+     4,
+     3,
+     1
+    ],
+    0
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    "L",
+    [
+     3,
+     3,
+     1
+    ],
+    4
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    "I",
+    [
+     3,
+     3,
+     2
+    ],
+    2
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    "I",
+    [
+     3,
+     3,
+     3
+    ],
+    2
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    "L",
+    [
+     3,
+     3,
+     4
+    ],
+    9
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    "I",
+    [
+     3,
+     4,
+     4
+    ],
+    1
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "submit"
+   ],
+   "result": "Unsupported"
+  },
+  {
+   "action": [
+    "reset"
+   ],
+   "result": "reset"
+  },
+  {
+   "action": [
+    "place",
+    "I",
+    [
+     5,
+     2,
+     1
+    ],
+    1
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    "T",
+    [
+     5,
+     3,
+     1
+    ],
+    3
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    "L",
+    [
+     5,
+     4,
+     1
+    ],
+    10
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    "L",
+    [
+     5,
+     4,
+     2
+    ],
+    5
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    "I",
+    [
+     4,
+     3,
+     1
+    ],
+    0
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    "L",
+    [
+     3,
+     3,
+     1
+    ],
+    0
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    "L",
+    [
+     3,
+     4,
+     1
+    ],
+    10
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    "I",
+    [
+     3,
+     4,
+     2
+    ],
+    2
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    "I",
+    [
+     3,
+     4,
+     3
+    ],
+    2
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    "L",
+    [
+     3,
+     4,
+     4
+    ],
+    9
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "submit"
+   ],
+   "result": "WIN"
+  }
+ ]
+}

@@ -1,0 +1,167 @@
+{
+ "level": "type_3/puzzles_50/P08_trace_hard_seed14004",
+ "game": "fluidnet",
+ "actions": [
+  [
+   "open",
+   [
+    5,
+    3,
+    1
+   ]
+  ],
+  [
+   "open",
+   [
+    5,
+    5,
+    2
+   ]
+  ],
+  [
+   "open",
+   [
+    5,
+    3,
+    4
+   ]
+  ],
+  [
+   "open",
+   [
+    3,
+    2,
+    4
+   ]
+  ],
+  [
+   "open",
+   [
+    1,
+    2,
+    5
+   ]
+  ]
+ ],
+ "n_actions": 10,
+ "fails": 0,
+ "status": "win",
+ "max_actions": 40,
+ "log": [
+  {
+   "action": [
+    "open",
+    [
+     5,
+     3,
+     1
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "open",
+    [
+     5,
+     5,
+     2
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "open",
+    [
+     5,
+     4,
+     3
+    ]
+   ],
+   "result": "ValveNotFound",
+   "rejected": true
+  },
+  {
+   "action": [
+    "open",
+    [
+     4,
+     5,
+     3
+    ]
+   ],
+   "result": "ValveNotFound",
+   "rejected": true
+  },
+  {
+   "action": [
+    "open",
+    [
+     4,
+     4,
+     3
+    ]
+   ],
+   "result": "ValveNotFound",
+   "rejected": true
+  },
+  {
+   "action": [
+    "open",
+    [
+     3,
+     5,
+     2
+    ]
+   ],
+   "result": "ValveNotFound",
+   "rejected": true
+  },
+  {
+   "action": [
+    "open",
+    [
+     4,
+     4,
+     4
+    ]
+   ],
+   "result": "ValveNotFound",
+   "rejected": true
+  },
+  {
+   "action": [
+    "open",
+    [
+     5,
+     3,
+     4
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "open",
+    [
+     3,
+     2,
+     4
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "open",
+    [
+     1,
+     2,
+     5
+    ]
+   ],
+   "result": "Win"
+  }
+ ]
+}

@@ -1,0 +1,353 @@
+{
+ "level": "type_2_3/puzzles_50/P40_D_tall_hard_seed30025",
+ "game": "pipefit",
+ "actions": [
+  [
+   "place",
+   "S1",
+   [
+    3,
+    3,
+    1
+   ],
+   0
+  ],
+  [
+   "remove",
+   [
+    3,
+    3,
+    1
+   ]
+  ],
+  [
+   "place",
+   "I",
+   [
+    4,
+    4,
+    1
+   ],
+   1
+  ],
+  [
+   "place",
+   "L",
+   [
+    4,
+    3,
+    1
+   ],
+   2
+  ],
+  [
+   "place",
+   "L",
+   [
+    3,
+    3,
+    1
+   ],
+   4
+  ],
+  [
+   "place",
+   "L",
+   [
+    3,
+    3,
+    2
+   ],
+   11
+  ],
+  [
+   "place",
+   "S1",
+   [
+    3,
+    2,
+    1
+   ],
+   0
+  ],
+  [
+   "place",
+   "L",
+   [
+    3,
+    2,
+    2
+   ],
+   8
+  ],
+  [
+   "place",
+   "L",
+   [
+    3,
+    2,
+    3
+   ],
+   7
+  ],
+  [
+   "place",
+   "S2",
+   [
+    2,
+    2,
+    1
+   ],
+   0
+  ],
+  [
+   "place",
+   "L",
+   [
+    2,
+    2,
+    3
+   ],
+   4
+  ],
+  [
+   "place",
+   "L",
+   [
+    2,
+    2,
+    4
+   ],
+   5
+  ],
+  [
+   "place",
+   "L",
+   [
+    3,
+    2,
+    4
+   ],
+   6
+  ],
+  [
+   "place",
+   "L",
+   [
+    3,
+    2,
+    5
+   ],
+   11
+  ],
+  [
+   "submit"
+  ]
+ ],
+ "n_actions": 16,
+ "fails": 0,
+ "status": "win",
+ "max_actions": 40,
+ "log": [
+  {
+   "action": [
+    "place",
+    "S1",
+    [
+     3,
+     3,
+     1
+    ],
+    0
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    "L",
+    [
+     4,
+     5,
+     1
+    ],
+    8
+   ],
+   "result": "EntranceExitOccupied",
+   "rejected": true
+  },
+  {
+   "action": [
+    "remove",
+    [
+     3,
+     3,
+     1
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    "I",
+    [
+     4,
+     4,
+     1
+    ],
+    1
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    "L",
+    [
+     4,
+     3,
+     1
+    ],
+    2
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    "L",
+    [
+     3,
+     3,
+     1
+    ],
+    4
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    "L",
+    [
+     3,
+     3,
+     2
+    ],
+    11
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    "S1",
+    [
+     3,
+     2,
+     1
+    ],
+    0
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    "L",
+    [
+     3,
+     2,
+     2
+    ],
+    8
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    "L",
+    [
+     3,
+     2,
+     3
+    ],
+    7
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    "S2",
+    [
+     2,
+     2,
+     1
+    ],
+    0
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    "L",
+    [
+     2,
+     2,
+     3
+    ],
+    4
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    "L",
+    [
+     2,
+     2,
+     4
+    ],
+    5
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    "L",
+    [
+     3,
+     2,
+     4
+    ],
+    6
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    "L",
+    [
+     3,
+     2,
+     5
+    ],
+    11
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "submit"
+   ],
+   "result": "WIN"
+  }
+ ]
+}

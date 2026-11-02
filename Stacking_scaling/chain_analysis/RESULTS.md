@@ -71,3 +71,22 @@ played closed loop through `play_cli.py` with a 40-action budget.
   the current hard tier does not stop a strong model.  This is a 15-episode
   pilot; the `puzzles_50` levels, several seeds and other models are needed
   before drawing conclusions.
+
+## Claude Sonnet on the hard tier of `puzzles_50` (45 episodes)
+
+All 15 hard levels per game, one episode each; details and audit in
+`model_runs/sonnet_hard50/README.md`.
+
+| game | solved | first-verify wins | hard-tier success at 1 verify: Sonnet / best baseline | dead-end steps (Exp 1) |
+|---|---|---|---|---|
+| FluidNet | 15 / 15 | 13 / 15 | 87% / 13% (greedy) | 2 runs; breach shown at once, won after reset |
+| Domino | 15 / 15 | 13 / 15 | 87% / 0% | 8 runs; 7 repaired before the push |
+| PipeFit | 15 / 15 | 11 / 15 | 73% / 0% | 10 runs; all repaired before submit, 4 later submit failures |
+
+* The hard tier separates the search baselines sharply (Domino and PipeFit
+  hard: 0–4% even with 64 verifies) but not Sonnet under step-by-step visual
+  feedback.  Sonnet's remaining costs are perception (misread cells: 2.5
+  rejected actions per FluidNet episode) and PipeFit gravity mistakes that
+  only a submit reveals.
+* Two Domino episodes used a Python homography as a coordinate calculator
+  (flagged in the audit); excluding them does not change the picture.

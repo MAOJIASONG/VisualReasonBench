@@ -1,0 +1,15 @@
+{"model": "claude-sonnet", "level": "P08_A_route_hard_seed14072", "win": true, "verifies": 1, "actions": 16, "rejected": 1}
+{"model": "claude-sonnet", "level": "P09_A_route_hard_seed14525", "win": true, "verifies": 2, "actions": 25, "rejected": 1}
+{"model": "claude-sonnet", "level": "P10_A_route_hard_seed15014", "win": true, "verifies": 1, "actions": 12, "rejected": 1}
+{"model": "claude-sonnet", "level": "P18_B_obstacles_hard_seed19013", "win": true, "verifies": 1, "actions": 15, "rejected": 1}
+{"model": "claude-sonnet", "level": "P19_B_obstacles_hard_seed19532", "win": true, "verifies": 1, "actions": 18, "rejected": 1}
+{"model": "claude-sonnet", "level": "P20_B_obstacles_hard_seed20020", "win": true, "verifies": 1, "actions": 24, "rejected": 2}
+{"model": "claude-sonnet", "level": "P28_C_branch_hard_seed24000", "win": true, "verifies": 2, "actions": 28, "rejected": 2}
+{"model": "claude-sonnet", "level": "P29_C_branch_hard_seed24510", "win": true, "verifies": 1, "actions": 10, "rejected": 1}
+{"model": "claude-sonnet", "level": "P30_C_branch_hard_seed25000", "win": true, "verifies": 1, "actions": 17, "rejected": 1}
+{"model": "claude-sonnet", "level": "P38_D_tall_hard_seed29037", "win": true, "verifies": 2, "actions": 28, "rejected": 0}
+{"model": "claude-sonnet", "level": "P39_D_tall_hard_seed29509", "win": true, "verifies": 1, "actions": 14, "rejected": 1}
+{"model": "claude-sonnet", "level": "P40_D_tall_hard_seed30025", "win": true, "verifies": 1, "actions": 16, "rejected": 1}
+{"model": "claude-sonnet", "level": "P48_E_mixed_hard_seed34059", "win": true, "verifies": 2, "actions": 26, "rejected": 1}
+{"model": "claude-sonnet", "level": "P49_E_mixed_hard_seed34502", "win": true, "verifies": 1, "actions": 20, "rejected": 2}
+{"model": "claude-sonnet", "level": "P50_E_mixed_hard_seed35002", "win": true, "verifies": 1, "actions": 15, "rejected": 1}

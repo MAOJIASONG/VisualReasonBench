@@ -1,0 +1,136 @@
+{
+ "level": "type_3/puzzles_50/P10_trace_hard_seed15037",
+ "game": "fluidnet",
+ "actions": [
+  [
+   "open",
+   [
+    5,
+    1,
+    3
+   ]
+  ],
+  [
+   "open",
+   [
+    5,
+    2,
+    5
+   ]
+  ],
+  [
+   "open",
+   [
+    3,
+    5,
+    5
+   ]
+  ],
+  [
+   "open",
+   [
+    1,
+    5,
+    5
+   ]
+  ]
+ ],
+ "n_actions": 8,
+ "fails": 0,
+ "status": "win",
+ "max_actions": 40,
+ "log": [
+  {
+   "action": [
+    "open",
+    [
+     5,
+     1,
+     2
+    ]
+   ],
+   "result": "ValveNotFound",
+   "rejected": true
+  },
+  {
+   "action": [
+    "open",
+    [
+     4,
+     2,
+     2
+    ]
+   ],
+   "result": "ValveNotFound",
+   "rejected": true
+  },
+  {
+   "action": [
+    "open",
+    [
+     4,
+     2,
+     3
+    ]
+   ],
+   "result": "ValveNotFound",
+   "rejected": true
+  },
+  {
+   "action": [
+    "open",
+    [
+     3,
+     3,
+     2
+    ]
+   ],
+   "result": "ValveNotFound",
+   "rejected": true
+  },
+  {
+   "action": [
+    "open",
+    [
+     5,
+     1,
+     3
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "open",
+    [
+     5,
+     2,
+     5
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "open",
+    [
+     3,
+     5,
+     5
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "open",
+    [
+     1,
+     5,
+     5
+    ]
+   ],
+   "result": "Win"
+  }
+ ]
+}

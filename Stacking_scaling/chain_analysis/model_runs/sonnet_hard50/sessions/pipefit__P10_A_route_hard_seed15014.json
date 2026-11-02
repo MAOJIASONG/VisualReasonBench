@@ -1,0 +1,265 @@
+{
+ "level": "type_2_3/puzzles_50/P10_A_route_hard_seed15014",
+ "game": "pipefit",
+ "actions": [
+  [
+   "place",
+   "L",
+   [
+    2,
+    2,
+    1
+   ],
+   2
+  ],
+  [
+   "place",
+   "I",
+   [
+    2,
+    3,
+    1
+   ],
+   1
+  ],
+  [
+   "place",
+   "L",
+   [
+    2,
+    4,
+    1
+   ],
+   1
+  ],
+  [
+   "place",
+   "I",
+   [
+    3,
+    4,
+    1
+   ],
+   0
+  ],
+  [
+   "place",
+   "I",
+   [
+    4,
+    4,
+    1
+   ],
+   0
+  ],
+  [
+   "place",
+   "L",
+   [
+    5,
+    4,
+    1
+   ],
+   2
+  ],
+  [
+   "place",
+   "L",
+   [
+    5,
+    5,
+    1
+   ],
+   10
+  ],
+  [
+   "place",
+   "I",
+   [
+    5,
+    5,
+    2
+   ],
+   2
+  ],
+  [
+   "place",
+   "I",
+   [
+    5,
+    5,
+    3
+   ],
+   2
+  ],
+  [
+   "place",
+   "L",
+   [
+    5,
+    5,
+    4
+   ],
+   9
+  ],
+  [
+   "submit"
+  ]
+ ],
+ "n_actions": 12,
+ "fails": 0,
+ "status": "win",
+ "max_actions": 40,
+ "log": [
+  {
+   "action": [
+    "place",
+    "I",
+    [
+     1,
+     2,
+     1
+    ],
+    0
+   ],
+   "result": "EntranceExitOccupied",
+   "rejected": true
+  },
+  {
+   "action": [
+    "place",
+    "L",
+    [
+     2,
+     2,
+     1
+    ],
+    2
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    "I",
+    [
+     2,
+     3,
+     1
+    ],
+    1
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    "L",
+    [
+     2,
+     4,
+     1
+    ],
+    1
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    "I",
+    [
+     3,
+     4,
+     1
+    ],
+    0
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    "I",
+    [
+     4,
+     4,
+     1
+    ],
+    0
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    "L",
+    [
+     5,
+     4,
+     1
+    ],
+    2
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    "L",
+    [
+     5,
+     5,
+     1
+    ],
+    10
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    "I",
+    [
+     5,
+     5,
+     2
+    ],
+    2
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    "I",
+    [
+     5,
+     5,
+     3
+    ],
+    2
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    "L",
+    [
+     5,
+     5,
+     4
+    ],
+    9
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "submit"
+   ],
+   "result": "WIN"
+  }
+ ]
+}

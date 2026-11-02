@@ -1,0 +1,15 @@
+{"model": "claude-sonnet", "level": "P08_trace_hard_seed14004", "win": true, "verifies": 1, "actions": 10, "rejected": 5}
+{"model": "claude-sonnet", "level": "P09_trace_hard_seed14558", "win": true, "verifies": 1, "actions": 5, "rejected": 1}
+{"model": "claude-sonnet", "level": "P10_trace_hard_seed15037", "win": true, "verifies": 1, "actions": 8, "rejected": 4}
+{"model": "claude-sonnet", "level": "P18_series_hard_seed19007", "win": true, "verifies": 1, "actions": 4, "rejected": 0}
+{"model": "claude-sonnet", "level": "P19_series_hard_seed19517", "win": true, "verifies": 1, "actions": 4, "rejected": 0}
+{"model": "claude-sonnet", "level": "P20_series_hard_seed20027", "win": true, "verifies": 1, "actions": 4, "rejected": 0}
+{"model": "claude-sonnet", "level": "P28_backdoor_hard_seed24073", "win": true, "verifies": 4, "actions": 13, "rejected": 3}
+{"model": "claude-sonnet", "level": "P29_backdoor_hard_seed25059", "win": true, "verifies": 1, "actions": 6, "rejected": 2}
+{"model": "claude-sonnet", "level": "P30_backdoor_hard_seed25389", "win": true, "verifies": 1, "actions": 4, "rejected": 1}
+{"model": "claude-sonnet", "level": "P38_two_pumps_hard_seed29000", "win": true, "verifies": 1, "actions": 14, "rejected": 10}
+{"model": "claude-sonnet", "level": "P39_two_pumps_hard_seed29520", "win": true, "verifies": 1, "actions": 8, "rejected": 3}
+{"model": "claude-sonnet", "level": "P40_two_pumps_hard_seed30005", "win": true, "verifies": 2, "actions": 11, "rejected": 1}
+{"model": "claude-sonnet", "level": "P48_mixed_hard_seed34034", "win": true, "verifies": 1, "actions": 5, "rejected": 1}
+{"model": "claude-sonnet", "level": "P49_mixed_hard_seed34517", "win": true, "verifies": 1, "actions": 9, "rejected": 5}
+{"model": "claude-sonnet", "level": "P50_mixed_hard_seed35041", "win": true, "verifies": 1, "actions": 5, "rejected": 1}

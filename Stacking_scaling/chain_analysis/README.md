@@ -102,8 +102,9 @@ PipeFit pipes take their ends instead of an orientation index
 check.  Each session has a 40-action budget (`--max-actions`); a rejected
 action (occupied cell, wrong phase, ...) costs one action and changes
 nothing; after a loss the player may `["reset"]` (counted as a failed
-verify).  Any agent that can read images and run a shell command can play;
-`model_runs/` holds a pilot with Claude Sonnet (see below).
+verify).  Any agent that can read images and run a shell command can play.
+`model_runs/` holds two Claude Sonnet runs: `sonnet_pilot/` (15 demo levels)
+and `sonnet_hard50/` (all 45 hard levels of `puzzles_50`).
 
 ## Caveats
 

@@ -1,0 +1,120 @@
+{
+ "level": "type_3_1/puzzles_50/P28_C_steps_hard_seed24033",
+ "game": "domino",
+ "actions": [
+  [
+   "place",
+   [
+    4,
+    4,
+    2
+   ]
+  ],
+  [
+   "place",
+   [
+    2,
+    4,
+    2
+   ]
+  ],
+  [
+   "place",
+   [
+    3,
+    4,
+    2
+   ]
+  ],
+  [
+   "place",
+   [
+    5,
+    4,
+    2
+   ]
+  ],
+  [
+   "submit_placement"
+  ],
+  [
+   "push",
+   "+x"
+  ]
+ ],
+ "n_actions": 7,
+ "fails": 0,
+ "status": "win",
+ "max_actions": 40,
+ "log": [
+  {
+   "action": [
+    "place",
+    [
+     4,
+     5,
+     2
+    ]
+   ],
+   "result": "NoPhysicalSupport",
+   "rejected": true
+  },
+  {
+   "action": [
+    "place",
+    [
+     4,
+     4,
+     2
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    [
+     2,
+     4,
+     2
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    [
+     3,
+     4,
+     2
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    [
+     5,
+     4,
+     2
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "submit_placement"
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "push",
+    "+x"
+   ],
+   "result": "WIN"
+  }
+ ]
+}

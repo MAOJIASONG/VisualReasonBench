@@ -29,6 +29,7 @@ import argparse
 import json
 import os
 import sys
+import time
 from typing import Dict, List, Tuple
 
 from .envs import game_of
@@ -138,7 +139,14 @@ def _render(st: Dict, gs, session: str, title: str) -> List[str]:
     paths = []
     for v in VIEWS[game]:
         p = os.path.join(session, f"obs_{n:03d}_{v}.png")
-        vis.render_state(gs, save_path=p, title=title, view=v)
+        for attempt in range(5):         # kaleido fails now and then under load
+            try:
+                vis.render_state(gs, save_path=p, title=title, view=v)
+                break
+            except ValueError:
+                if attempt == 4:
+                    raise
+                time.sleep(1 + attempt)
         paths.append(p)
     return paths
 
@@ -159,8 +167,8 @@ def cmd_start(level_dir: str, session: str, max_actions: int) -> None:
           "actions": [], "n_actions": 0, "fails": 0, "status": "",
           "max_actions": max_actions, "log": []}
     gs, _ = _replay(st["game"], st["level"], [])
-    paths = _render(st, gs, session, "initial")
     _save(session, st)
+    paths = _render(st, gs, session, "initial")
     _report(st, f"started {st['game']}", paths)
 
 
@@ -186,8 +194,8 @@ def cmd_act(session: str, raw: str) -> None:
         st["status"] = ""
         gs, _ = _replay(game, st["level"], [])
         st["log"].append({"action": a, "result": "reset"})
-        paths = _render(st, gs, session, "initial (reset)")
         _save(session, st)
+        paths = _render(st, gs, session, "initial (reset)")
         _report(st, "level reset", paths)
         return
     if st["status"] == "lose":
@@ -214,9 +222,9 @@ def cmd_act(session: str, raw: str) -> None:
     detail = getattr(last, "detail", None) or {}
     msg = f"{code}: {last.message}" + (f"  {detail}" if detail and st["status"] else "")
     st["log"].append({"action": a, "result": code})
+    _save(session, st)
     title = f"step {len(ep) + 1}: {json.dumps(a)} -> {code}"
     paths = _render(st, gs, session, title)
-    _save(session, st)
     _report(st, msg, paths)
 
 

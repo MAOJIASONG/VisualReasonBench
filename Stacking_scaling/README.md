@@ -267,5 +267,5 @@ python -m chain_analysis.play_cli act runs/s01 '["open", [3, 4, 4]]'
 ```
 
 Details: `chain_analysis/README.md`; baseline results:
-`chain_analysis/RESULTS.md`; a 15-episode Claude Sonnet pilot:
-`chain_analysis/model_runs/sonnet_pilot/`.
+`chain_analysis/RESULTS.md`; Claude Sonnet runs (15 demo levels, all 45 hard
+levels): `chain_analysis/model_runs/`.
