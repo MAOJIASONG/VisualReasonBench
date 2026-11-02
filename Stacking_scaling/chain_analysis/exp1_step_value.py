@@ -125,6 +125,10 @@ def analyze_trajectory(env: ChainEnv, actions: List, rng: random.Random,
         "mean_V": round(statistics.mean(vs), 4) if vs else None,
         "mean_V_minus_rand": round(statistics.mean(gain), 4) if gain else None,
         "illegal": sum(1 for r in steps if "illegal" in r),
+        # a won game must have left every dead end; if not, the oracle
+        # missed a solution (N(s) is a lower bound) -- reported, not hidden
+        "oracle_miss": bool(fatal is not None and repaired is None and exposed is None
+                            and any(r.get("status") == "win" for r in steps)),
         "steps": steps,
     }
 
@@ -266,7 +270,9 @@ def main(argv=None):
           "first such step; *delay* steps until the game exposes it (failed verify); "
           "*hidden at end* fatal runs whose dead end was never exposed or repaired; "
           "*V* = N(s')/N(s); *V − V_rand* mean gain over a random legal move in the "
-          "same state; *wasted* steps with d(s') ≥ d(s).", ""]
+          "same state; *wasted* steps with d(s') ≥ d(s).", "",
+          f"Oracle check: {sum(r['oracle_miss'] for r in tr_rows)} won trajectories "
+          "still marked as stuck in a dead end (0 = the oracle saw every winning line).", ""]
     open(os.path.join(out, "REPORT.md"), "w").write("\n".join(L))
     print("\n".join(L))
     print(f"\n-> {out}")

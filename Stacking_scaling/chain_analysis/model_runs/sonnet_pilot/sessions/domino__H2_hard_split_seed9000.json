@@ -1,0 +1,108 @@
+{
+ "level": "type_3_1/images_batch/H2_hard_split_seed9000",
+ "game": "domino",
+ "actions": [
+  [
+   "place",
+   [
+    2,
+    3,
+    1
+   ]
+  ],
+  [
+   "place",
+   [
+    3,
+    4,
+    1
+   ]
+  ],
+  [
+   "place",
+   [
+    4,
+    4,
+    1
+   ]
+  ],
+  [
+   "place",
+   [
+    5,
+    4,
+    1
+   ]
+  ],
+  [
+   "submit_placement"
+  ],
+  [
+   "push",
+   "-x"
+  ]
+ ],
+ "n_actions": 6,
+ "fails": 0,
+ "status": "win",
+ "max_actions": 40,
+ "log": [
+  {
+   "action": [
+    "place",
+    [
+     2,
+     3,
+     1
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    [
+     3,
+     4,
+     1
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    [
+     4,
+     4,
+     1
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    [
+     5,
+     4,
+     1
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "submit_placement"
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "push",
+    "-x"
+   ],
+   "result": "WIN"
+  }
+ ]
+}

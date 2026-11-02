@@ -1,10 +1,11 @@
 # Baseline results on the current level sets
 
-All numbers come from `puzzles_50/` of each game (15 easy / 20 medium / 15
-hard).  No model trajectories have been analysed yet: Experiment 1 uses the
-reference plan and one random rollout per level, Experiment 2 uses only the
-search baselines.  Full tables: `<game>/analysis_exp1/REPORT.md`,
-`<game>/analysis_exp2/REPORT.md`.
+The baseline numbers come from `puzzles_50/` of each game (15 easy / 20
+medium / 15 hard): Experiment 1 uses the reference plan and one random
+rollout per level, Experiment 2 the search baselines.  Full tables:
+`<game>/analysis_exp1/REPORT.md`, `<game>/analysis_exp2/REPORT.md`.  A first
+model run (Claude Sonnet, 15 episodes on the demo levels) is summarised at
+the end and detailed in `model_runs/sonnet_pilot/README.md`.
 
 The model scores in the paper's Table 1 were measured on the earlier
 30-level sets, so they are not directly comparable with these numbers.
@@ -49,3 +50,24 @@ Every level offers a dead-end move at step 1 (`earliest trap step` = 1).
 * Greedy + undo is weaker than plain greedy on Domino: depth-first
   backtracking keeps varying the last patch and push, while the mistake is
   usually the first patch.
+
+## Pilot: Claude Sonnet (15 episodes, demo levels)
+
+Five levels per game (2 easy, 1 medium, 2 hard) from `images_batch/`,
+played closed loop through `play_cli.py` with a 40-action budget.
+
+| game | solved | first-verify wins | mean actions | dead-end steps (Exp 1) | baselines at Sonnet's level (Exp 2) |
+|---|---|---|---|---|---|
+| FluidNet | 5 / 5 | 4 / 5 | 5.0 | 1 run, exposed at once, won after a reset | greedy + undo needs 36 verifies; others > 64 |
+| Domino | 5 / 5 | 5 / 5 | 5.6 | 1 probe patch, removed next step | all > 64 verifies |
+| PipeFit | 5 / 5 | 5 / 5 | 16.2 | 4 runs, all repaired by removals before submit | all > 64 verifies |
+
+* Sonnet's wins are not reproducible by trial and error at its budget: it
+  needed 1–2 verifies where the baselines need dozens or never get there.
+* Its mistakes are early and local (a misread coordinate, a pipe in a
+  portal's wall cell) and it repairs them before verifying, so they cost
+  steps, not attempts.
+* Every hard demo level was solved, so under step-by-step visual feedback
+  the current hard tier does not stop a strong model.  This is a 15-episode
+  pilot; the `puzzles_50` levels, several seeds and other models are needed
+  before drawing conclusions.

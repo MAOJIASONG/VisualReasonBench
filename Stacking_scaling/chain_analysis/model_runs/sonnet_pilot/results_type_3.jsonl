@@ -1,0 +1,5 @@
+{"model": "claude-sonnet", "level": "level_01_easy_trace_seed1000", "win": true, "verifies": 1, "actions": 1, "rejected": 0}
+{"model": "claude-sonnet", "level": "level_02_easy_series_seed2000", "win": true, "verifies": 1, "actions": 3, "rejected": 1}
+{"model": "claude-sonnet", "level": "level_04_medium_trace_seed4003", "win": true, "verifies": 1, "actions": 5, "rejected": 2}
+{"model": "claude-sonnet", "level": "level_09_hard_backdoor_seed9225", "win": true, "verifies": 1, "actions": 5, "rejected": 1}
+{"model": "claude-sonnet", "level": "level_10_hard_mixed_seed10004", "win": true, "verifies": 2, "actions": 11, "rejected": 2}

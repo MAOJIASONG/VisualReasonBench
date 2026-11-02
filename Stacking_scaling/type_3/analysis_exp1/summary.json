@@ -567,7 +567,8 @@
    "wasted": 0,
    "mean_V": 1.0,
    "mean_V_minus_rand": 0.5,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "random",
@@ -584,7 +585,8 @@
    "wasted": 1,
    "mean_V": 0.0,
    "mean_V_minus_rand": -0.5,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "reference",
@@ -601,7 +603,8 @@
    "wasted": 0,
    "mean_V": 1.0,
    "mean_V_minus_rand": 0.5,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "random",
@@ -618,7 +621,8 @@
    "wasted": 1,
    "mean_V": 0.0,
    "mean_V_minus_rand": -0.5,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "reference",
@@ -635,7 +639,8 @@
    "wasted": 0,
    "mean_V": 1.0,
    "mean_V_minus_rand": 0.5,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "random",
@@ -652,7 +657,8 @@
    "wasted": 0,
    "mean_V": 1.0,
    "mean_V_minus_rand": 0.5,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "reference",
@@ -669,7 +675,8 @@
    "wasted": 0,
    "mean_V": 1.0,
    "mean_V_minus_rand": 0.5222,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "random",
@@ -686,7 +693,8 @@
    "wasted": 1,
    "mean_V": 0.0,
    "mean_V_minus_rand": -0.6,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "reference",
@@ -703,7 +711,8 @@
    "wasted": 0,
    "mean_V": 1.0,
    "mean_V_minus_rand": 0.5222,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "random",
@@ -720,7 +729,8 @@
    "wasted": 1,
    "mean_V": 0.6667,
    "mean_V_minus_rand": 0.1889,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "reference",
@@ -737,7 +747,8 @@
    "wasted": 0,
    "mean_V": 1.0,
    "mean_V_minus_rand": 0.5222,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "random",
@@ -754,7 +765,8 @@
    "wasted": 1,
    "mean_V": 0.6667,
    "mean_V_minus_rand": 0.1889,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "reference",
@@ -771,7 +783,8 @@
    "wasted": 0,
    "mean_V": 1.0,
    "mean_V_minus_rand": 0.5222,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "random",
@@ -788,7 +801,8 @@
    "wasted": 2,
    "mean_V": 0.0,
    "mean_V_minus_rand": -0.6,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "reference",
@@ -805,7 +819,8 @@
    "wasted": 0,
    "mean_V": 1.0,
    "mean_V_minus_rand": 0.5307,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "random",
@@ -822,7 +837,8 @@
    "wasted": 0,
    "mean_V": 1.0,
    "mean_V_minus_rand": 0.5307,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "reference",
@@ -839,7 +855,8 @@
    "wasted": 0,
    "mean_V": 1.0,
    "mean_V_minus_rand": 0.5696,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "random",
@@ -856,7 +873,8 @@
    "wasted": 4,
    "mean_V": 0.0,
    "mean_V_minus_rand": -0.5714,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "reference",
@@ -873,7 +891,8 @@
    "wasted": 0,
    "mean_V": 1.0,
    "mean_V_minus_rand": 0.5696,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "random",
@@ -890,7 +909,8 @@
    "wasted": 1,
    "mean_V": 0.0,
    "mean_V_minus_rand": -0.5714,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "reference",
@@ -907,7 +927,8 @@
    "wasted": 0,
    "mean_V": 1.0,
    "mean_V_minus_rand": 0.4167,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "random",
@@ -924,7 +945,8 @@
    "wasted": 1,
    "mean_V": 0.5,
    "mean_V_minus_rand": -0.0833,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "reference",
@@ -941,7 +963,8 @@
    "wasted": 0,
    "mean_V": 1.0,
    "mean_V_minus_rand": 0.4167,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "random",
@@ -958,7 +981,8 @@
    "wasted": 3,
    "mean_V": 0.0,
    "mean_V_minus_rand": -0.6667,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "reference",
@@ -975,7 +999,8 @@
    "wasted": 0,
    "mean_V": 1.0,
    "mean_V_minus_rand": 0.4167,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "random",
@@ -992,7 +1017,8 @@
    "wasted": 3,
    "mean_V": 0.0,
    "mean_V_minus_rand": -0.6667,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "reference",
@@ -1009,7 +1035,8 @@
    "wasted": 0,
    "mean_V": 1.0,
    "mean_V_minus_rand": 0.5222,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "random",
@@ -1026,7 +1053,8 @@
    "wasted": 2,
    "mean_V": 0.6667,
    "mean_V_minus_rand": 0.1889,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "reference",
@@ -1043,7 +1071,8 @@
    "wasted": 0,
    "mean_V": 1.0,
    "mean_V_minus_rand": 0.5222,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "random",
@@ -1060,7 +1089,8 @@
    "wasted": 1,
    "mean_V": 0.6667,
    "mean_V_minus_rand": 0.1889,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "reference",
@@ -1077,7 +1107,8 @@
    "wasted": 0,
    "mean_V": 1.0,
    "mean_V_minus_rand": 0.5222,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "random",
@@ -1094,7 +1125,8 @@
    "wasted": 0,
    "mean_V": 1.0,
    "mean_V_minus_rand": 0.5222,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "reference",
@@ -1111,7 +1143,8 @@
    "wasted": 0,
    "mean_V": 1.0,
    "mean_V_minus_rand": 0.5222,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "random",
@@ -1128,7 +1161,8 @@
    "wasted": 0,
    "mean_V": 1.0,
    "mean_V_minus_rand": 0.5222,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "reference",
@@ -1145,7 +1179,8 @@
    "wasted": 0,
    "mean_V": 1.0,
    "mean_V_minus_rand": 0.5696,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "random",
@@ -1162,7 +1197,8 @@
    "wasted": 1,
    "mean_V": 0.6667,
    "mean_V_minus_rand": 0.1762,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "reference",
@@ -1179,7 +1215,8 @@
    "wasted": 0,
    "mean_V": 1.0,
    "mean_V_minus_rand": 0.5696,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "random",
@@ -1196,7 +1233,8 @@
    "wasted": 4,
    "mean_V": 0.0,
    "mean_V_minus_rand": -0.5714,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "reference",
@@ -1213,7 +1251,8 @@
    "wasted": 0,
    "mean_V": 1.0,
    "mean_V_minus_rand": 0.5696,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "random",
@@ -1230,7 +1269,8 @@
    "wasted": 3,
    "mean_V": 0.0,
    "mean_V_minus_rand": -0.5714,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "reference",
@@ -1247,7 +1287,8 @@
    "wasted": 0,
    "mean_V": 1.0,
    "mean_V_minus_rand": 0.5834,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "random",
@@ -1264,7 +1305,8 @@
    "wasted": 1,
    "mean_V": 0.0,
    "mean_V_minus_rand": -0.5,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "reference",
@@ -1281,7 +1323,8 @@
    "wasted": 0,
    "mean_V": 1.0,
    "mean_V_minus_rand": 0.5834,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "random",
@@ -1298,7 +1341,8 @@
    "wasted": 0,
    "mean_V": 1.0,
    "mean_V_minus_rand": 0.5834,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "reference",
@@ -1315,7 +1359,8 @@
    "wasted": 0,
    "mean_V": 1.0,
    "mean_V_minus_rand": 0.5834,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "random",
@@ -1332,7 +1377,8 @@
    "wasted": 1,
    "mean_V": 0.0,
    "mean_V_minus_rand": -0.5,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "reference",
@@ -1349,7 +1395,8 @@
    "wasted": 0,
    "mean_V": 1.0,
    "mean_V_minus_rand": 0.5222,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "random",
@@ -1366,7 +1413,8 @@
    "wasted": 4,
    "mean_V": 0.0,
    "mean_V_minus_rand": -0.6,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "reference",
@@ -1383,7 +1431,8 @@
    "wasted": 0,
    "mean_V": 1.0,
    "mean_V_minus_rand": 0.5222,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "random",
@@ -1400,7 +1449,8 @@
    "wasted": 1,
    "mean_V": 0.6667,
    "mean_V_minus_rand": 0.1889,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "reference",
@@ -1417,7 +1467,8 @@
    "wasted": 0,
    "mean_V": 1.0,
    "mean_V_minus_rand": 0.475,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "random",
@@ -1434,7 +1485,8 @@
    "wasted": 4,
    "mean_V": 0.5,
    "mean_V_minus_rand": -0.1333,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "reference",
@@ -1451,7 +1503,8 @@
    "wasted": 0,
    "mean_V": 1.0,
    "mean_V_minus_rand": 0.5222,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "random",
@@ -1468,7 +1521,8 @@
    "wasted": 2,
    "mean_V": 0.6667,
    "mean_V_minus_rand": 0.1889,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "reference",
@@ -1485,7 +1539,8 @@
    "wasted": 0,
    "mean_V": 1.0,
    "mean_V_minus_rand": 0.6345,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "random",
@@ -1502,7 +1557,8 @@
    "wasted": 3,
    "mean_V": 0.0,
    "mean_V_minus_rand": -0.5,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "reference",
@@ -1519,7 +1575,8 @@
    "wasted": 0,
    "mean_V": 1.0,
    "mean_V_minus_rand": 0.6345,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "random",
@@ -1536,7 +1593,8 @@
    "wasted": 2,
    "mean_V": 0.0,
    "mean_V_minus_rand": -0.5,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "reference",
@@ -1553,7 +1611,8 @@
    "wasted": 0,
    "mean_V": 1.0,
    "mean_V_minus_rand": 0.6794,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "random",
@@ -1570,7 +1629,8 @@
    "wasted": 1,
    "mean_V": 0.5,
    "mean_V_minus_rand": 0.1191,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "reference",
@@ -1587,7 +1647,8 @@
    "wasted": 0,
    "mean_V": 1.0,
    "mean_V_minus_rand": 0.4167,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "random",
@@ -1604,7 +1665,8 @@
    "wasted": 1,
    "mean_V": 0.0,
    "mean_V_minus_rand": -0.6667,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "reference",
@@ -1621,7 +1683,8 @@
    "wasted": 0,
    "mean_V": 1.0,
    "mean_V_minus_rand": 0.4167,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "random",
@@ -1638,7 +1701,8 @@
    "wasted": 0,
    "mean_V": 1.0,
    "mean_V_minus_rand": 0.4167,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "reference",
@@ -1655,7 +1719,8 @@
    "wasted": 0,
    "mean_V": 1.0,
    "mean_V_minus_rand": 0.4167,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "random",
@@ -1672,7 +1737,8 @@
    "wasted": 0,
    "mean_V": 1.0,
    "mean_V_minus_rand": 0.4167,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "reference",
@@ -1689,7 +1755,8 @@
    "wasted": 0,
    "mean_V": 1.0,
    "mean_V_minus_rand": 0.475,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "random",
@@ -1706,7 +1773,8 @@
    "wasted": 3,
    "mean_V": 0.6667,
    "mean_V_minus_rand": 0.0778,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "reference",
@@ -1723,7 +1791,8 @@
    "wasted": 0,
    "mean_V": 1.0,
    "mean_V_minus_rand": 0.5222,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "random",
@@ -1740,7 +1809,8 @@
    "wasted": 1,
    "mean_V": 0.5,
    "mean_V_minus_rand": -0.05,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "reference",
@@ -1757,7 +1827,8 @@
    "wasted": 0,
    "mean_V": 1.0,
    "mean_V_minus_rand": 0.5222,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "random",
@@ -1774,7 +1845,8 @@
    "wasted": 1,
    "mean_V": 0.5,
    "mean_V_minus_rand": -0.05,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "reference",
@@ -1791,7 +1863,8 @@
    "wasted": 0,
    "mean_V": 1.0,
    "mean_V_minus_rand": 0.5222,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "random",
@@ -1808,7 +1881,8 @@
    "wasted": 3,
    "mean_V": 0.0,
    "mean_V_minus_rand": -0.6,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "reference",
@@ -1825,7 +1899,8 @@
    "wasted": 0,
    "mean_V": 1.0,
    "mean_V_minus_rand": 0.5696,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "random",
@@ -1842,7 +1917,8 @@
    "wasted": 2,
    "mean_V": 0.0,
    "mean_V_minus_rand": -0.5714,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "reference",
@@ -1859,7 +1935,8 @@
    "wasted": 0,
    "mean_V": 1.0,
    "mean_V_minus_rand": 0.5307,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "random",
@@ -1876,7 +1953,8 @@
    "wasted": 3,
    "mean_V": 0.75,
    "mean_V_minus_rand": 0.2259,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "reference",
@@ -1893,7 +1971,8 @@
    "wasted": 0,
    "mean_V": 1.0,
    "mean_V_minus_rand": 0.5307,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "random",
@@ -1910,7 +1989,8 @@
    "wasted": 1,
    "mean_V": 0.75,
    "mean_V_minus_rand": 0.2259,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "reference",
@@ -1927,7 +2007,8 @@
    "wasted": 0,
    "mean_V": 1.0,
    "mean_V_minus_rand": 0.5834,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "random",
@@ -1944,7 +2025,8 @@
    "wasted": 1,
    "mean_V": 0.5,
    "mean_V_minus_rand": 0.0834,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "reference",
@@ -1961,7 +2043,8 @@
    "wasted": 0,
    "mean_V": 1.0,
    "mean_V_minus_rand": 0.5834,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "random",
@@ -1978,7 +2061,8 @@
    "wasted": 1,
    "mean_V": 0.5,
    "mean_V_minus_rand": 0.0834,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "reference",
@@ -1995,7 +2079,8 @@
    "wasted": 0,
    "mean_V": 1.0,
    "mean_V_minus_rand": 0.5834,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "random",
@@ -2012,7 +2097,8 @@
    "wasted": 0,
    "mean_V": 1.0,
    "mean_V_minus_rand": 0.5834,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "reference",
@@ -2029,7 +2115,8 @@
    "wasted": 0,
    "mean_V": 1.0,
    "mean_V_minus_rand": 0.6167,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "random",
@@ -2046,7 +2133,8 @@
    "wasted": 1,
    "mean_V": 0.0,
    "mean_V_minus_rand": -0.5,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "reference",
@@ -2063,7 +2151,8 @@
    "wasted": 0,
    "mean_V": 1.0,
    "mean_V_minus_rand": 0.6167,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "random",
@@ -2080,7 +2169,8 @@
    "wasted": 2,
    "mean_V": 0.5,
    "mean_V_minus_rand": 0.05,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "reference",
@@ -2097,7 +2187,8 @@
    "wasted": 0,
    "mean_V": 1.0,
    "mean_V_minus_rand": 0.6167,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "random",
@@ -2114,7 +2205,8 @@
    "wasted": 2,
    "mean_V": 0.0,
    "mean_V_minus_rand": -0.5,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "reference",
@@ -2131,7 +2223,8 @@
    "wasted": 0,
    "mean_V": 1.0,
    "mean_V_minus_rand": 0.5222,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "random",
@@ -2148,7 +2241,8 @@
    "wasted": 1,
    "mean_V": 0.0,
    "mean_V_minus_rand": -0.6,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "reference",
@@ -2165,7 +2259,8 @@
    "wasted": 0,
    "mean_V": 1.0,
    "mean_V_minus_rand": 0.6345,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "random",
@@ -2182,7 +2277,8 @@
    "wasted": 4,
    "mean_V": 0.0,
    "mean_V_minus_rand": -0.5,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "reference",
@@ -2199,7 +2295,8 @@
    "wasted": 0,
    "mean_V": 1.0,
    "mean_V_minus_rand": 0.6345,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "random",
@@ -2216,7 +2313,8 @@
    "wasted": 4,
    "mean_V": 0.0,
    "mean_V_minus_rand": -0.5,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "reference",
@@ -2233,7 +2331,8 @@
    "wasted": 0,
    "mean_V": 1.0,
    "mean_V_minus_rand": 0.6345,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   },
   {
    "model": "random",
@@ -2250,7 +2349,8 @@
    "wasted": 4,
    "mean_V": 0.5,
    "mean_V_minus_rand": 0.0357,
-   "illegal": 0
+   "illegal": 0,
+   "oracle_miss": false
   }
  ]
 }

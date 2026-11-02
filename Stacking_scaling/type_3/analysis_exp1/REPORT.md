@@ -20,3 +20,5 @@
 | reference | hard | 15 | 100 | 0 | – | – | 0 | – | 1 | 0.591 | 0 |
 
 Columns: *fatal %* trajectories that ever walk into a dead end; *fatal step* first such step; *delay* steps until the game exposes it (failed verify); *hidden at end* fatal runs whose dead end was never exposed or repaired; *V* = N(s')/N(s); *V − V_rand* mean gain over a random legal move in the same state; *wasted* steps with d(s') ≥ d(s).
+
+Oracle check: 0 won trajectories still marked as stuck in a dead end (0 = the oracle saw every winning line).

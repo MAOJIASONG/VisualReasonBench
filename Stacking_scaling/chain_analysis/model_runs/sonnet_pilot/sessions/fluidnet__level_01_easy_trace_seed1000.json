@@ -1,0 +1,31 @@
+{
+ "level": "type_3/images_batch/level_01_easy_trace_seed1000",
+ "game": "fluidnet",
+ "actions": [
+  [
+   "open",
+   [
+    3,
+    4,
+    4
+   ]
+  ]
+ ],
+ "n_actions": 1,
+ "fails": 0,
+ "status": "win",
+ "max_actions": 40,
+ "log": [
+  {
+   "action": [
+    "open",
+    [
+     3,
+     4,
+     4
+    ]
+   ],
+   "result": "Win"
+  }
+ ]
+}

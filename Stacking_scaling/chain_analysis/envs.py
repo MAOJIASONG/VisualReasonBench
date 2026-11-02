@@ -356,14 +356,32 @@ class PipeFitEnv(ChainEnv):
         return [("place", p.type.value, tuple(p.pos), p.orientation) for p in plan] + [("submit",)]
 
     # -- oracle --------------------------------------------------------
-    def _agrees(self, sol, p) -> bool:
+    def _agrees(self, sol, p, sup_cells=frozenset()) -> bool:
+        """Does placed piece p fit solution `sol`?  A pipe must be exactly
+        the solution's pipe.  A support may also stand where the solution
+        has none (an extra support is harmless) as long as it takes no pipe
+        cell and rests on the floor, the solution or another support."""
         pt, pos, o = p
         if pt in ("S1", "S2"):
-            return all(sol.get(c) == ("S",) for c in self._cells(pt, pos))
+            cells = self._cells(pt, pos)
+            if any(sol.get(c, ("S",))[0] != "S" for c in cells):
+                return False
+            below = (pos[0], pos[1], pos[2] - 1)
+            return pos[2] == 1 or below in sol or below in sup_cells
         return sol.get(pos) == (pt, o)
 
+    def _fits(self, sol, pieces) -> bool:
+        sup_cells = {c for p in pieces if p[0] in ("S1", "S2") for c in self._cells(p[0], p[1])}
+        if not all(self._agrees(sol, p, sup_cells) for p in pieces):
+            return False
+        # the solution's uncovered support cells must still fit the stock
+        need = sum(1 for c, t in sol.items() if t[0] == "S" and c not in sup_cells)
+        left = self._left(pieces)
+        s2 = min(max(0, left.get("S2", 0)), need // 2)
+        return need - 2 * s2 <= max(0, left.get("S1", 0))
+
     def _consistent(self, pieces) -> List[Dict[Vec3, tuple]]:
-        return [sol for sol in self.sols if all(self._agrees(sol, p) for p in pieces)]
+        return [sol for sol in self.sols if self._fits(sol, pieces)]
 
     def n_solutions(self, s):
         pieces, st = s
@@ -372,8 +390,9 @@ class PipeFitEnv(ChainEnv):
         return len(self._consistent(pieces))
 
     def n_after(self, s, actions):
-        """Placing one piece keeps exactly the consistent solutions that
-        agree with it, so N(s') for every placement is one count lookup."""
+        """Placing a pipe keeps exactly the consistent solutions that have
+        that pipe, so N(s') for every pipe placement is one count lookup;
+        supports are checked against the consistent solutions only."""
         pieces, st = s
         cons = self._consistent(pieces) if st != "lose" else []
         cnt: Dict[tuple, int] = {}
@@ -382,16 +401,11 @@ class PipeFitEnv(ChainEnv):
                 cnt[(c,) + tok] = cnt.get((c,) + tok, 0) + 1
         out = []
         for a in actions:
-            if a[0] == "place":
-                pt, pos, o = a[1], tuple(a[2]), a[3]
-                if pt == "S1":
-                    out.append(cnt.get((pos, "S"), 0))
-                elif pt == "S2":
-                    top = (pos[0], pos[1], pos[2] + 1)
-                    out.append(sum(1 for sol in cons if sol.get(pos) == ("S",)
-                                   and sol.get(top) == ("S",)))
-                else:
-                    out.append(cnt.get((pos, pt, o), 0))
+            if a[0] == "place" and a[1] in ("S1", "S2"):
+                nxt = pieces | {(a[1], tuple(a[2]), a[3])}
+                out.append(sum(1 for sol in cons if self._fits(sol, nxt)))
+            elif a[0] == "place":
+                out.append(cnt.get((tuple(a[2]), a[1], a[3]), 0))
             else:
                 out.append(self.n_solutions(self.step(s, a)[0]))
         return out
@@ -405,7 +419,9 @@ class PipeFitEnv(ChainEnv):
         s2_total = self.inv.get("S2", 0)
         best = None
         for sol in self.sols:
-            good = [p for p in pieces if self._agrees(sol, p)]
+            sup_cells = {c for p in pieces if p[0] in ("S1", "S2")
+                         for c in self._cells(p[0], p[1])}
+            good = [p for p in pieces if self._agrees(sol, p, sup_cells)]
             bad = len(pieces) - len(good)
             have = {c for p in good for c in self._cells(p[0], p[1])}
             pipes = sum(1 for c, t in sol.items() if t[0] != "S" and c not in have)

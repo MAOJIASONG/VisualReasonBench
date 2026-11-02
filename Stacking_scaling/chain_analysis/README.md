@@ -10,6 +10,7 @@ Analysis code for FluidNet (`type_3`), Domino (`type_3_1`) and PipeFit
 | `verify_levels.py` | replays every level's reference plan through the game rules and checks the oracle agrees |
 | `exp1_step_value.py` | Experiment 1: dead ends, consequence delay, solution retention V, distance change Δd |
 | `exp2_budget_search.py` | Experiment 2: random / greedy / greedy+undo / DFS / BFS under the same verify and action budget |
+| `play_cli.py` | closed-loop play of one level by an outside agent (a model or a person): renders the observation after every action, records the trajectory, exports it for both experiments |
 
 ```bash
 python -m chain_analysis.verify_levels type_3/puzzles_50 type_3_1/puzzles_50 type_2_3/puzzles_50
@@ -74,6 +75,35 @@ verify and action counts at the first win give the success rate under every
 smaller budget.  `--models` takes model results (`{"model", "level", "win",
 "verifies", "actions"}` per line) and adds the verify budget each baseline
 needs to match each model.
+
+## Running a model
+
+`play_cli.py` keeps the game state in a session folder; the player only
+sees the rendered images (`obs_<n>_front.png`, plus `_back.png` for FluidNet
+and PipeFit) and a one-line result after each action.  The rules are the
+real mechanics of each game package.
+
+```bash
+# 1. open a session (the player never sees the level path)
+python -m chain_analysis.play_cli start type_3/images_batch/level_09_hard_backdoor_seed9225 runs/s01
+# 2. the player looks at runs/s01/obs_000_*.png and acts, one JSON action per call
+python -m chain_analysis.play_cli act runs/s01 '["open", [2, 3, 1]]'
+python -m chain_analysis.play_cli act runs/s01 '["reset"]'          # after a loss
+# 3. export every session: exp1 trajectories + exp2 result lines
+python -m chain_analysis.play_cli export runs/s* --model sonnet \
+    --out runs/traj.jsonl --results runs/results.jsonl
+# 4. run both experiments on the level set the sessions came from
+python -m chain_analysis.exp1_step_value --root type_3/images_batch --traj runs/traj.jsonl
+python -m chain_analysis.exp2_budget_search --root type_3/images_batch --models runs/results.jsonl
+```
+
+PipeFit pipes take their ends instead of an orientation index
+(`["place", "L", [2,3,1], ["+x", "-y"]]`); Domino's push also runs the final
+check.  Each session has a 40-action budget (`--max-actions`); a rejected
+action (occupied cell, wrong phase, ...) costs one action and changes
+nothing; after a loss the player may `["reset"]` (counted as a failed
+verify).  Any agent that can read images and run a shell command can play;
+`model_runs/` holds a pilot with Claude Sonnet (see below).
 
 ## Caveats
 

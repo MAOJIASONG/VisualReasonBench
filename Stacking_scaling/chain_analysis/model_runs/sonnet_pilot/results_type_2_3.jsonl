@@ -1,0 +1,5 @@
+{"model": "claude-sonnet", "level": "level_01_easy_seed1000", "win": true, "verifies": 1, "actions": 8, "rejected": 0}
+{"model": "claude-sonnet", "level": "level_02_easy_seed2000", "win": true, "verifies": 1, "actions": 16, "rejected": 1}
+{"model": "claude-sonnet", "level": "level_04_medium_seed4000", "win": true, "verifies": 1, "actions": 10, "rejected": 1}
+{"model": "claude-sonnet", "level": "level_09_hard_seed9000", "win": true, "verifies": 1, "actions": 24, "rejected": 2}
+{"model": "claude-sonnet", "level": "level_10_hard_seed10025", "win": true, "verifies": 1, "actions": 23, "rejected": 2}

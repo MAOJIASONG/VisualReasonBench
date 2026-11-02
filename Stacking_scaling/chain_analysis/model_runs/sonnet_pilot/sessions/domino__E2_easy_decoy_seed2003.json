@@ -1,0 +1,70 @@
+{
+ "level": "type_3_1/images_batch/E2_easy_decoy_seed2003",
+ "game": "domino",
+ "actions": [
+  [
+   "place",
+   [
+    4,
+    4,
+    1
+   ]
+  ],
+  [
+   "place",
+   [
+    3,
+    4,
+    1
+   ]
+  ],
+  [
+   "submit_placement"
+  ],
+  [
+   "push",
+   "-x"
+  ]
+ ],
+ "n_actions": 4,
+ "fails": 0,
+ "status": "win",
+ "max_actions": 40,
+ "log": [
+  {
+   "action": [
+    "place",
+    [
+     4,
+     4,
+     1
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    [
+     3,
+     4,
+     1
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "submit_placement"
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "push",
+    "-x"
+   ],
+   "result": "WIN"
+  }
+ ]
+}

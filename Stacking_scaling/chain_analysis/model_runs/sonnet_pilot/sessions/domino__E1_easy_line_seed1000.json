@@ -1,0 +1,63 @@
+{
+ "level": "type_3_1/images_batch/E1_easy_line_seed1000",
+ "game": "domino",
+ "actions": [
+  [
+   "place",
+   [
+    2,
+    2,
+    1
+   ]
+  ],
+  [
+   "submit_placement"
+  ],
+  [
+   "push",
+   "+x"
+  ]
+ ],
+ "n_actions": 4,
+ "fails": 0,
+ "status": "win",
+ "max_actions": 40,
+ "log": [
+  {
+   "action": [
+    "place",
+    [
+     5,
+     2,
+     1
+    ]
+   ],
+   "result": "CellOccupied",
+   "rejected": true
+  },
+  {
+   "action": [
+    "place",
+    [
+     2,
+     2,
+     1
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "submit_placement"
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "push",
+    "+x"
+   ],
+   "result": "WIN"
+  }
+ ]
+}

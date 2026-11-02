@@ -1,0 +1,93 @@
+{
+ "level": "type_3/images_batch/level_04_medium_trace_seed4003",
+ "game": "fluidnet",
+ "actions": [
+  [
+   "open",
+   [
+    4,
+    1,
+    4
+   ]
+  ],
+  [
+   "open",
+   [
+    2,
+    1,
+    4
+   ]
+  ],
+  [
+   "open",
+   [
+    1,
+    5,
+    4
+   ]
+  ]
+ ],
+ "n_actions": 5,
+ "fails": 0,
+ "status": "win",
+ "max_actions": 40,
+ "log": [
+  {
+   "action": [
+    "open",
+    [
+     3,
+     2,
+     3
+    ]
+   ],
+   "result": "ValveNotFound",
+   "rejected": true
+  },
+  {
+   "action": [
+    "open",
+    [
+     4,
+     1,
+     4
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "open",
+    [
+     1,
+     1,
+     4
+    ]
+   ],
+   "result": "ValveNotFound",
+   "rejected": true
+  },
+  {
+   "action": [
+    "open",
+    [
+     2,
+     1,
+     4
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "open",
+    [
+     1,
+     5,
+     4
+    ]
+   ],
+   "result": "Win"
+  }
+ ]
+}

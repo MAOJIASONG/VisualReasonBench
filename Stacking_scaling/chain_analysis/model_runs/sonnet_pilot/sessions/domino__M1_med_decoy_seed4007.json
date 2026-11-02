@@ -1,0 +1,127 @@
+{
+ "level": "type_3_1/images_batch/M1_med_decoy_seed4007",
+ "game": "domino",
+ "actions": [
+  [
+   "place",
+   [
+    4,
+    3,
+    1
+   ]
+  ],
+  [
+   "remove",
+   [
+    4,
+    3,
+    1
+   ]
+  ],
+  [
+   "place",
+   [
+    3,
+    3,
+    1
+   ]
+  ],
+  [
+   "place",
+   [
+    3,
+    4,
+    1
+   ]
+  ],
+  [
+   "place",
+   [
+    3,
+    5,
+    1
+   ]
+  ],
+  [
+   "submit_placement"
+  ],
+  [
+   "push",
+   "-y"
+  ]
+ ],
+ "n_actions": 7,
+ "fails": 0,
+ "status": "win",
+ "max_actions": 40,
+ "log": [
+  {
+   "action": [
+    "place",
+    [
+     4,
+     3,
+     1
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "remove",
+    [
+     4,
+     3,
+     1
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    [
+     3,
+     3,
+     1
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    [
+     3,
+     4,
+     1
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    [
+     3,
+     5,
+     1
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "submit_placement"
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "push",
+    "-y"
+   ],
+   "result": "WIN"
+  }
+ ]
+}

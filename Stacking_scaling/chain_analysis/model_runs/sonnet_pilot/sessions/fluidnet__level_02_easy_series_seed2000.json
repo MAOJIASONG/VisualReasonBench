@@ -1,0 +1,62 @@
+{
+ "level": "type_3/images_batch/level_02_easy_series_seed2000",
+ "game": "fluidnet",
+ "actions": [
+  [
+   "open",
+   [
+    3,
+    4,
+    1
+   ]
+  ],
+  [
+   "open",
+   [
+    1,
+    4,
+    1
+   ]
+  ]
+ ],
+ "n_actions": 3,
+ "fails": 0,
+ "status": "win",
+ "max_actions": 40,
+ "log": [
+  {
+   "action": [
+    "open",
+    [
+     1,
+     1,
+     1
+    ]
+   ],
+   "result": "ValveNotFound",
+   "rejected": true
+  },
+  {
+   "action": [
+    "open",
+    [
+     3,
+     4,
+     1
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "open",
+    [
+     1,
+     4,
+     1
+    ]
+   ],
+   "result": "Win"
+  }
+ ]
+}

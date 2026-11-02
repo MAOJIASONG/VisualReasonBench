@@ -1,0 +1,219 @@
+{
+ "level": "type_2_3/images_batch/level_04_medium_seed4000",
+ "game": "pipefit",
+ "actions": [
+  [
+   "place",
+   "I",
+   [
+    2,
+    4,
+    1
+   ],
+   0
+  ],
+  [
+   "place",
+   "L",
+   [
+    3,
+    4,
+    1
+   ],
+   3
+  ],
+  [
+   "place",
+   "L",
+   [
+    3,
+    3,
+    1
+   ],
+   0
+  ],
+  [
+   "place",
+   "L",
+   [
+    4,
+    3,
+    1
+   ],
+   3
+  ],
+  [
+   "place",
+   "L",
+   [
+    4,
+    2,
+    1
+   ],
+   8
+  ],
+  [
+   "place",
+   "I",
+   [
+    4,
+    2,
+    2
+   ],
+   2
+  ],
+  [
+   "place",
+   "I",
+   [
+    4,
+    2,
+    3
+   ],
+   2
+  ],
+  [
+   "place",
+   "L",
+   [
+    4,
+    2,
+    4
+   ],
+   5
+  ],
+  [
+   "submit"
+  ]
+ ],
+ "n_actions": 10,
+ "fails": 0,
+ "status": "win",
+ "max_actions": 40,
+ "log": [
+  {
+   "action": [
+    "place",
+    "I",
+    [
+     1,
+     4,
+     1
+    ],
+    0
+   ],
+   "result": "EntranceExitOccupied",
+   "rejected": true
+  },
+  {
+   "action": [
+    "place",
+    "I",
+    [
+     2,
+     4,
+     1
+    ],
+    0
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    "L",
+    [
+     3,
+     4,
+     1
+    ],
+    3
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    "L",
+    [
+     3,
+     3,
+     1
+    ],
+    0
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    "L",
+    [
+     4,
+     3,
+     1
+    ],
+    3
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    "L",
+    [
+     4,
+     2,
+     1
+    ],
+    8
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    "I",
+    [
+     4,
+     2,
+     2
+    ],
+    2
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    "I",
+    [
+     4,
+     2,
+     3
+    ],
+    2
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    "L",
+    [
+     4,
+     2,
+     4
+    ],
+    5
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "submit"
+   ],
+   "result": "WIN"
+  }
+ ]
+}

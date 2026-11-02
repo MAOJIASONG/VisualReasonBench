@@ -246,3 +246,26 @@ kaleido>=1, which needs a separate Chrome install):
 ```bash
 pip install "plotly<6" "kaleido==0.2.1"
 ```
+
+## CHAIN 3D tasks: levels, verification and analysis (`chain_analysis/`)
+
+Each game ships 50 levels (`<game>/puzzles_50/`, 15 easy / 20 medium /
+15 hard) and a 10-level demo batch (`<game>/images_batch/`).  The level
+files (`level.json`, `index.json`) are in git; the images are not —
+regenerate them with `python -m <game>.generate_50` and
+`python -m <game>.play_batch` (same seeds give the same levels).
+
+```bash
+# every reference plan replays to a win through the game rules
+python -m chain_analysis.verify_levels type_3/puzzles_50 type_3_1/puzzles_50 type_2_3/puzzles_50
+# Experiment 1 (dead ends, step value) and 2 (search under a verify budget)
+python -m chain_analysis.exp1_step_value --root type_3/puzzles_50
+python -m chain_analysis.exp2_budget_search --root type_3/puzzles_50
+# let a model / person play one level closed loop
+python -m chain_analysis.play_cli start type_3/images_batch/level_01_easy_trace_seed1000 runs/s01
+python -m chain_analysis.play_cli act runs/s01 '["open", [3, 4, 4]]'
+```
+
+Details: `chain_analysis/README.md`; baseline results:
+`chain_analysis/RESULTS.md`; a 15-episode Claude Sonnet pilot:
+`chain_analysis/model_runs/sonnet_pilot/`.

@@ -1,0 +1,5 @@
+{"model": "claude-sonnet", "level": "E1_easy_line_seed1000", "actions": [["place", [2, 2, 1]], ["submit_placement"], ["push", "+x"]]}
+{"model": "claude-sonnet", "level": "E2_easy_decoy_seed2003", "actions": [["place", [4, 4, 1]], ["place", [3, 4, 1]], ["submit_placement"], ["push", "-x"]]}
+{"model": "claude-sonnet", "level": "M1_med_decoy_seed4007", "actions": [["place", [4, 3, 1]], ["remove", [4, 3, 1]], ["place", [3, 3, 1]], ["place", [3, 4, 1]], ["place", [3, 5, 1]], ["submit_placement"], ["push", "-y"]]}
+{"model": "claude-sonnet", "level": "H2_hard_split_seed9000", "actions": [["place", [2, 3, 1]], ["place", [3, 4, 1]], ["place", [4, 4, 1]], ["place", [5, 4, 1]], ["submit_placement"], ["push", "-x"]]}
+{"model": "claude-sonnet", "level": "H3_hard_full_seed10000", "actions": [["place", [6, 2, 2]], ["place", [4, 3, 1]], ["place", [5, 3, 1]], ["place", [6, 4, 2]], ["submit_placement"], ["push", "+x"]]}

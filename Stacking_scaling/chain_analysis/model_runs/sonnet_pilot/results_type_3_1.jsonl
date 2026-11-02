@@ -1,0 +1,5 @@
+{"model": "claude-sonnet", "level": "E1_easy_line_seed1000", "win": true, "verifies": 1, "actions": 4, "rejected": 1}
+{"model": "claude-sonnet", "level": "E2_easy_decoy_seed2003", "win": true, "verifies": 1, "actions": 4, "rejected": 0}
+{"model": "claude-sonnet", "level": "M1_med_decoy_seed4007", "win": true, "verifies": 1, "actions": 7, "rejected": 0}
+{"model": "claude-sonnet", "level": "H2_hard_split_seed9000", "win": true, "verifies": 1, "actions": 6, "rejected": 0}
+{"model": "claude-sonnet", "level": "H3_hard_full_seed10000", "win": true, "verifies": 1, "actions": 7, "rejected": 1}
