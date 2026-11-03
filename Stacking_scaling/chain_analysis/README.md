@@ -10,7 +10,9 @@ Analysis code for FluidNet (`type_3`), Domino (`type_3_1`) and PipeFit
 | `verify_levels.py` | replays every level's reference plan through the game rules and checks the oracle agrees |
 | `exp1_step_value.py` | Experiment 1: dead ends, consequence delay, solution retention V, distance change Δd |
 | `exp2_budget_search.py` | Experiment 2: random / greedy / greedy+undo / DFS / BFS under the same verify and action budget |
-| `play_cli.py` | closed-loop play of one level by an outside agent (a model or a person): renders the observation after every action, records the trajectory, exports it for both experiments |
+| `play_cli.py` | play of one level by an outside agent (a model or a person), closed loop (`act`, an image after every action) or one-shot (`plan`, the whole action list in one call); records the trajectory and exports it for both experiments |
+| `RESULTS.md` | baseline results and every model run so far |
+| `model_runs/` | model runs: sessions, trajectories, Exp 1 / 2 reports (index in `model_runs/README.md`) |
 
 ```bash
 python -m chain_analysis.verify_levels type_3/puzzles_50 type_3_1/puzzles_50 type_2_3/puzzles_50
@@ -108,14 +110,28 @@ verify).  `plan` (one-shot) plays a whole action list from the start state,
 skips rejected actions, and closes the session; it must be the session's
 first call.  Any agent that can read images and run a shell command can play.
 
-`model_runs/`:
+## Model runs
+
+Four runs so far, all in `model_runs/` (index, protocols, audit and how to
+reproduce: `model_runs/README.md`).  Wins out of 15 on the hard tier of
+`puzzles_50`:
+
+| game | Sonnet closed loop: solved / 1st verify | Sonnet one-shot | gpt-6-luna one-shot (Codex) | best baseline at 1 / 64 verifies |
+|---|---|---|---|---|
+| FluidNet | 15 / 13 | 15 | 0 | 13% / 100% |
+| Domino | 15 / 13 | 12 | 2 | 0% / 4% |
+| PipeFit | 15 / 11 | 10 | 0 | 0% / 1% |
 
 | run | model | protocol | levels |
 |---|---|---|---|
-| `sonnet_pilot/` | Claude Sonnet | closed loop | 15 demo levels |
+| `sonnet_pilot/` | Claude Sonnet | closed loop | 15 demo levels (all solved, 14 on the 1st verify) |
 | `sonnet_hard50/` | Claude Sonnet | closed loop | 45 hard levels of `puzzles_50` |
 | `sonnet_oneshot50/` | Claude Sonnet | one-shot | same 45 |
 | `gpt6luna_oneshot50/` | Codex gpt-6-luna | one-shot (images attached to `codex exec`) | same 45 |
+
+The hard tier stops the search baselines and separates the two models, but
+Sonnet plans the hard levels from the start image alone: its failures are
+misread cells, not planning.  Full discussion: `RESULTS.md`.
 
 ## Caveats
 

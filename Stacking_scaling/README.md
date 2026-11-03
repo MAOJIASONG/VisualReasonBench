@@ -261,11 +261,28 @@ python -m chain_analysis.verify_levels type_3/puzzles_50 type_3_1/puzzles_50 typ
 # Experiment 1 (dead ends, step value) and 2 (search under a verify budget)
 python -m chain_analysis.exp1_step_value --root type_3/puzzles_50
 python -m chain_analysis.exp2_budget_search --root type_3/puzzles_50
-# let a model / person play one level closed loop
+# let a model / person play one level closed loop (an image after every action)
 python -m chain_analysis.play_cli start type_3/images_batch/level_01_easy_trace_seed1000 runs/s01
 python -m chain_analysis.play_cli act runs/s01 '["open", [3, 4, 4]]'
+# ... or one-shot: the whole plan in one call, from the start image only
+python -m chain_analysis.play_cli start type_3/images_batch/level_01_easy_trace_seed1000 runs/s02
+python -m chain_analysis.play_cli plan runs/s02 '[["open", [3, 4, 4]]]'
 ```
 
-Details: `chain_analysis/README.md`; baseline results:
-`chain_analysis/RESULTS.md`; model runs (Claude Sonnet closed loop and
-one-shot, Codex gpt-6-luna one-shot): `chain_analysis/model_runs/`.
+Model runs on the 15 hard levels of each game's `puzzles_50/` (wins out of
+15; baselines are the best search method at 1 / 64 verifies):
+
+| game | Claude Sonnet closed loop: solved / 1st verify | Claude Sonnet one-shot | Codex gpt-6-luna one-shot | best baseline |
+|---|---|---|---|---|
+| FluidNet | 15 / 13 | 15 | 0 | 13% / 100% |
+| Domino | 15 / 13 | 12 | 2 | 0% / 4% |
+| PipeFit | 15 / 11 | 10 | 0 | 0% / 1% |
+
+The hard tier defeats the search baselines and separates the two models,
+but Sonnet solves most hard levels from the start image alone; its
+remaining failures are misread cells, so the tier tests perception more than
+planning depth for a strong model.
+
+Details: `chain_analysis/README.md`; baseline results and discussion:
+`chain_analysis/RESULTS.md`; model runs (sessions, audits, Exp 1 / 2 reports,
+how to reproduce): `chain_analysis/model_runs/README.md`.
