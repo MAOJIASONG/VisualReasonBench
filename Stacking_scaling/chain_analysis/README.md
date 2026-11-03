@@ -89,6 +89,8 @@ python -m chain_analysis.play_cli start type_3/images_batch/level_09_hard_backdo
 # 2. the player looks at runs/s01/obs_000_*.png and acts, one JSON action per call
 python -m chain_analysis.play_cli act runs/s01 '["open", [2, 3, 1]]'
 python -m chain_analysis.play_cli act runs/s01 '["reset"]'          # after a loss
+#    or one-shot: the whole plan in one call, no observation in between
+python -m chain_analysis.play_cli plan runs/s02 '[["open", [2, 3, 1]], ["open", [4, 3, 1]]]'
 # 3. export every session: exp1 trajectories + exp2 result lines
 python -m chain_analysis.play_cli export runs/s* --model sonnet \
     --out runs/traj.jsonl --results runs/results.jsonl
@@ -102,9 +104,18 @@ PipeFit pipes take their ends instead of an orientation index
 check.  Each session has a 40-action budget (`--max-actions`); a rejected
 action (occupied cell, wrong phase, ...) costs one action and changes
 nothing; after a loss the player may `["reset"]` (counted as a failed
-verify).  Any agent that can read images and run a shell command can play.
-`model_runs/` holds two Claude Sonnet runs: `sonnet_pilot/` (15 demo levels)
-and `sonnet_hard50/` (all 45 hard levels of `puzzles_50`).
+verify).  `plan` (one-shot) plays a whole action list from the start state,
+skips rejected actions, and closes the session; it must be the session's
+first call.  Any agent that can read images and run a shell command can play.
+
+`model_runs/`:
+
+| run | model | protocol | levels |
+|---|---|---|---|
+| `sonnet_pilot/` | Claude Sonnet | closed loop | 15 demo levels |
+| `sonnet_hard50/` | Claude Sonnet | closed loop | 45 hard levels of `puzzles_50` |
+| `sonnet_oneshot50/` | Claude Sonnet | one-shot | same 45 |
+| `gpt6luna_oneshot50/` | Codex gpt-6-luna | one-shot (images attached to `codex exec`) | same 45 |
 
 ## Caveats
 

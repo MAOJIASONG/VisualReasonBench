@@ -1,0 +1,123 @@
+{
+ "level": "type_3/puzzles_50/P48_mixed_hard_seed34034",
+ "game": "fluidnet",
+ "actions": [
+  [
+   "open",
+   [
+    6,
+    5,
+    1
+   ]
+  ],
+  [
+   "open",
+   [
+    6,
+    3,
+    1
+   ]
+  ],
+  [
+   "open",
+   [
+    6,
+    4,
+    3
+   ]
+  ],
+  [
+   "open",
+   [
+    4,
+    6,
+    3
+   ]
+  ]
+ ],
+ "n_actions": 4,
+ "fails": 0,
+ "status": "win",
+ "max_actions": 40,
+ "log": [
+  {
+   "action": [
+    "open",
+    [
+     6,
+     5,
+     1
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "open",
+    [
+     6,
+     3,
+     1
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "open",
+    [
+     6,
+     4,
+     3
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "open",
+    [
+     4,
+     6,
+     3
+    ]
+   ],
+   "result": "Win"
+  }
+ ],
+ "oneshot": true,
+ "plan": [
+  [
+   "open",
+   [
+    6,
+    5,
+    1
+   ]
+  ],
+  [
+   "open",
+   [
+    6,
+    3,
+    1
+   ]
+  ],
+  [
+   "open",
+   [
+    6,
+    4,
+    3
+   ]
+  ],
+  [
+   "open",
+   [
+    4,
+    6,
+    3
+   ]
+  ]
+ ]
+}

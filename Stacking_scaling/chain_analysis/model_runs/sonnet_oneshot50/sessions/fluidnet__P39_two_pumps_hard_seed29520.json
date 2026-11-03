@@ -1,0 +1,150 @@
+{
+ "level": "type_3/puzzles_50/P39_two_pumps_hard_seed29520",
+ "game": "fluidnet",
+ "actions": [
+  [
+   "open",
+   [
+    3,
+    3,
+    3
+   ]
+  ],
+  [
+   "open",
+   [
+    5,
+    5,
+    3
+   ]
+  ],
+  [
+   "open",
+   [
+    1,
+    5,
+    3
+   ]
+  ],
+  [
+   "open",
+   [
+    1,
+    5,
+    1
+   ]
+  ],
+  [
+   "open",
+   [
+    4,
+    1,
+    1
+   ]
+  ]
+ ],
+ "n_actions": 5,
+ "fails": 0,
+ "status": "win",
+ "max_actions": 40,
+ "log": [
+  {
+   "action": [
+    "open",
+    [
+     3,
+     3,
+     3
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "open",
+    [
+     5,
+     5,
+     3
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "open",
+    [
+     1,
+     5,
+     3
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "open",
+    [
+     1,
+     5,
+     1
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "open",
+    [
+     4,
+     1,
+     1
+    ]
+   ],
+   "result": "Win"
+  }
+ ],
+ "oneshot": true,
+ "plan": [
+  [
+   "open",
+   [
+    3,
+    3,
+    3
+   ]
+  ],
+  [
+   "open",
+   [
+    5,
+    5,
+    3
+   ]
+  ],
+  [
+   "open",
+   [
+    1,
+    5,
+    3
+   ]
+  ],
+  [
+   "open",
+   [
+    1,
+    5,
+    1
+   ]
+  ],
+  [
+   "open",
+   [
+    4,
+    1,
+    1
+   ]
+  ]
+ ]
+}

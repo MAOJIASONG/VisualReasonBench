@@ -1,0 +1,150 @@
+{
+ "level": "type_3_1/puzzles_50/P50_E_full_hard_seed35000",
+ "game": "domino",
+ "actions": [
+  [
+   "place",
+   [
+    4,
+    3,
+    1
+   ]
+  ],
+  [
+   "place",
+   [
+    6,
+    2,
+    2
+   ]
+  ],
+  [
+   "place",
+   [
+    6,
+    4,
+    2
+   ]
+  ],
+  [
+   "place",
+   [
+    6,
+    5,
+    2
+   ]
+  ],
+  [
+   "submit_placement"
+  ],
+  [
+   "push",
+   "+x"
+  ]
+ ],
+ "n_actions": 6,
+ "fails": 0,
+ "status": "win",
+ "max_actions": 40,
+ "log": [
+  {
+   "action": [
+    "place",
+    [
+     4,
+     3,
+     1
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    [
+     6,
+     2,
+     2
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    [
+     6,
+     4,
+     2
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    [
+     6,
+     5,
+     2
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "submit_placement"
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "push",
+    "+x"
+   ],
+   "result": "WIN"
+  }
+ ],
+ "oneshot": true,
+ "plan": [
+  [
+   "place",
+   [
+    4,
+    3,
+    1
+   ]
+  ],
+  [
+   "place",
+   [
+    6,
+    2,
+    2
+   ]
+  ],
+  [
+   "place",
+   [
+    6,
+    4,
+    2
+   ]
+  ],
+  [
+   "place",
+   [
+    6,
+    5,
+    2
+   ]
+  ],
+  [
+   "submit_placement"
+  ],
+  [
+   "push",
+   "+x"
+  ]
+ ]
+}

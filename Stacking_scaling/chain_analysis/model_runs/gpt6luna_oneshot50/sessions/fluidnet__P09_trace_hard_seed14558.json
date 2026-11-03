@@ -1,0 +1,74 @@
+{
+ "level": "type_3/puzzles_50/P09_trace_hard_seed14558",
+ "game": "fluidnet",
+ "actions": [],
+ "n_actions": 3,
+ "fails": 0,
+ "status": "",
+ "max_actions": 40,
+ "log": [
+  {
+   "action": [
+    "open",
+    [
+     2,
+     2,
+     2
+    ]
+   ],
+   "result": "ValveNotFound",
+   "rejected": true
+  },
+  {
+   "action": [
+    "open",
+    [
+     3,
+     1,
+     4
+    ]
+   ],
+   "result": "ValveNotFound",
+   "rejected": true
+  },
+  {
+   "action": [
+    "open",
+    [
+     4,
+     2,
+     1
+    ]
+   ],
+   "result": "ValveNotFound",
+   "rejected": true
+  }
+ ],
+ "oneshot": true,
+ "plan": [
+  [
+   "open",
+   [
+    2,
+    2,
+    2
+   ]
+  ],
+  [
+   "open",
+   [
+    3,
+    1,
+    4
+   ]
+  ],
+  [
+   "open",
+   [
+    4,
+    2,
+    1
+   ]
+  ]
+ ]
+}

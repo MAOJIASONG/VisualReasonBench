@@ -1,0 +1,171 @@
+{
+ "level": "type_3_1/puzzles_50/P29_C_steps_hard_seed24501",
+ "game": "domino",
+ "actions": [
+  [
+   "place",
+   [
+    7,
+    4,
+    2
+   ]
+  ],
+  [
+   "place",
+   [
+    6,
+    4,
+    2
+   ]
+  ]
+ ],
+ "n_actions": 8,
+ "fails": 0,
+ "status": "",
+ "max_actions": 40,
+ "log": [
+  {
+   "action": [
+    "place",
+    [
+     7,
+     4,
+     2
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    [
+     6,
+     4,
+     2
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    [
+     5,
+     4,
+     2
+    ]
+   ],
+   "result": "CellOccupied",
+   "rejected": true
+  },
+  {
+   "action": [
+    "place",
+    [
+     5,
+     4,
+     1
+    ]
+   ],
+   "result": "CellOccupied",
+   "rejected": true
+  },
+  {
+   "action": [
+    "place",
+    [
+     4,
+     4,
+     2
+    ]
+   ],
+   "result": "CellOccupied",
+   "rejected": true
+  },
+  {
+   "action": [
+    "place",
+    [
+     4,
+     4,
+     1
+    ]
+   ],
+   "result": "CellOccupied",
+   "rejected": true
+  },
+  {
+   "action": [
+    "submit_placement"
+   ],
+   "result": "InventoryNotEmpty",
+   "rejected": true
+  },
+  {
+   "action": [
+    "push",
+    "-x"
+   ],
+   "result": "BadPhase",
+   "rejected": true
+  }
+ ],
+ "oneshot": true,
+ "plan": [
+  [
+   "place",
+   [
+    7,
+    4,
+    2
+   ]
+  ],
+  [
+   "place",
+   [
+    6,
+    4,
+    2
+   ]
+  ],
+  [
+   "place",
+   [
+    5,
+    4,
+    2
+   ]
+  ],
+  [
+   "place",
+   [
+    5,
+    4,
+    1
+   ]
+  ],
+  [
+   "place",
+   [
+    4,
+    4,
+    2
+   ]
+  ],
+  [
+   "place",
+   [
+    4,
+    4,
+    1
+   ]
+  ],
+  [
+   "submit_placement"
+  ],
+  [
+   "push",
+   "-x"
+  ]
+ ]
+}

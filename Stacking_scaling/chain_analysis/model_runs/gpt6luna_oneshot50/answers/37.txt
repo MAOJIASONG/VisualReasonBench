@@ -1,0 +1,1 @@
+I can’t determine a reliable action plan from these views: the portal-adjacent cells and wall-facing directions aren’t clear enough to identify exact coordinates. A guessed plan would likely be skipped or leave leaks.

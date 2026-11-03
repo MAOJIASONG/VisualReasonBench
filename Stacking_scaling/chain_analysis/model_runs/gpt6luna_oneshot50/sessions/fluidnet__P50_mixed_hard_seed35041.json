@@ -1,0 +1,74 @@
+{
+ "level": "type_3/puzzles_50/P50_mixed_hard_seed35041",
+ "game": "fluidnet",
+ "actions": [],
+ "n_actions": 3,
+ "fails": 0,
+ "status": "",
+ "max_actions": 40,
+ "log": [
+  {
+   "action": [
+    "open",
+    [
+     1,
+     6,
+     2
+    ]
+   ],
+   "result": "ValveNotFound",
+   "rejected": true
+  },
+  {
+   "action": [
+    "open",
+    [
+     1,
+     1,
+     5
+    ]
+   ],
+   "result": "ValveNotFound",
+   "rejected": true
+  },
+  {
+   "action": [
+    "open",
+    [
+     5,
+     1,
+     2
+    ]
+   ],
+   "result": "ValveNotFound",
+   "rejected": true
+  }
+ ],
+ "oneshot": true,
+ "plan": [
+  [
+   "open",
+   [
+    1,
+    6,
+    2
+   ]
+  ],
+  [
+   "open",
+   [
+    1,
+    1,
+    5
+   ]
+  ],
+  [
+   "open",
+   [
+    5,
+    1,
+    2
+   ]
+  ]
+ ]
+}

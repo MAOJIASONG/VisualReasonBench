@@ -90,3 +90,27 @@ All 15 hard levels per game, one episode each; details and audit in
   only a submit reveals.
 * Two Domino episodes used a Python homography as a coordinate calculator
   (flagged in the audit); excluding them does not change the picture.
+
+## One-shot: Claude Sonnet and Codex gpt-6-luna (45 hard levels each)
+
+Same 45 hard levels, but the player sees only the start images and submits
+its whole plan once (`play_cli plan`); no observation in between.  Details:
+`model_runs/sonnet_oneshot50/README.md`, `model_runs/gpt6luna_oneshot50/README.md`.
+
+| game | Sonnet closed loop, 1st verify | Sonnet one-shot | gpt-6-luna one-shot | best baseline at 1 verify |
+|---|---|---|---|---|
+| FluidNet | 13 / 15 | 15 / 15 | 0 / 15 | 13% (greedy) |
+| Domino | 13 / 15 | 12 / 15 | 2 / 15 | 0% |
+| PipeFit | 11 / 15 | 10 / 15 | 0 / 15 | 0% |
+
+* Removing feedback costs Sonnet little: its one-shot score is within 1–2
+  levels of its closed-loop first attempt, and 17 of its 44 plans equal the
+  action list it ended with in closed loop.  On these levels Sonnet plans
+  from the start image; the feedback mainly catches misread cells.
+* gpt-6-luna fails mostly on reading coordinates: in FluidNet 3.7 of its
+  ~4 valves per plan do not exist where it names them, and 4 PipeFit answers
+  decline to give a plan.  Its accepted moves are rarely traps (no FluidNet
+  dead end), so the gap is perception, not planning.
+* So the hard tier separates models (Sonnet vs gpt-6-luna) and search
+  baselines, but not by planning depth for Sonnet: its failures, closed loop
+  or one-shot, are misread step heights, portal wall cells and supports.

@@ -1,0 +1,1 @@
+I can’t determine a reliable action list from these views alone: the portal cells, heights, and wall-facing directions aren’t clear enough to place pipes that will connect without leaks. A guessed plan would likely fail the one-shot puzzle.

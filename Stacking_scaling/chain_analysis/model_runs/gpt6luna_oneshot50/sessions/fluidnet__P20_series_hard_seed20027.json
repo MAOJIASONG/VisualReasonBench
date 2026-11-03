@@ -1,0 +1,74 @@
+{
+ "level": "type_3/puzzles_50/P20_series_hard_seed20027",
+ "game": "fluidnet",
+ "actions": [],
+ "n_actions": 3,
+ "fails": 0,
+ "status": "",
+ "max_actions": 40,
+ "log": [
+  {
+   "action": [
+    "open",
+    [
+     3,
+     3,
+     2
+    ]
+   ],
+   "result": "ValveNotFound",
+   "rejected": true
+  },
+  {
+   "action": [
+    "open",
+    [
+     4,
+     3,
+     3
+    ]
+   ],
+   "result": "ValveNotFound",
+   "rejected": true
+  },
+  {
+   "action": [
+    "open",
+    [
+     3,
+     5,
+     5
+    ]
+   ],
+   "result": "ValveNotFound",
+   "rejected": true
+  }
+ ],
+ "oneshot": true,
+ "plan": [
+  [
+   "open",
+   [
+    3,
+    3,
+    2
+   ]
+  ],
+  [
+   "open",
+   [
+    4,
+    3,
+    3
+   ]
+  ],
+  [
+   "open",
+   [
+    3,
+    5,
+    5
+   ]
+  ]
+ ]
+}

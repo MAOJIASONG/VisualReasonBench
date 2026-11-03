@@ -1,0 +1,54 @@
+{
+ "level": "type_3/puzzles_50/P29_backdoor_hard_seed25059",
+ "game": "fluidnet",
+ "actions": [],
+ "n_actions": 2,
+ "fails": 0,
+ "status": "",
+ "max_actions": 40,
+ "log": [
+  {
+   "action": [
+    "open",
+    [
+     2,
+     4,
+     3
+    ]
+   ],
+   "result": "ValveNotFound",
+   "rejected": true
+  },
+  {
+   "action": [
+    "open",
+    [
+     5,
+     2,
+     4
+    ]
+   ],
+   "result": "ValveNotFound",
+   "rejected": true
+  }
+ ],
+ "oneshot": true,
+ "plan": [
+  [
+   "open",
+   [
+    2,
+    4,
+    3
+   ]
+  ],
+  [
+   "open",
+   [
+    5,
+    2,
+    4
+   ]
+  ]
+ ]
+}

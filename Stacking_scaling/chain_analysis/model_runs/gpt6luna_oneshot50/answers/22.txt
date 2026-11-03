@@ -1,0 +1,1 @@
+[["place", [3, 3, 2]], ["place", [4, 3, 2]], ["place", [5, 3, 2]], ["place", [6, 3, 2]], ["submit_placement"], ["push", "+x"]]

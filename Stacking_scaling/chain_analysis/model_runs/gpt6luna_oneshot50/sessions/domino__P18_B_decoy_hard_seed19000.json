@@ -1,0 +1,138 @@
+{
+ "level": "type_3_1/puzzles_50/P18_B_decoy_hard_seed19000",
+ "game": "domino",
+ "actions": [
+  [
+   "place",
+   [
+    5,
+    6,
+    1
+   ]
+  ],
+  [
+   "place",
+   [
+    4,
+    6,
+    1
+   ]
+  ],
+  [
+   "place",
+   [
+    2,
+    6,
+    1
+   ]
+  ]
+ ],
+ "n_actions": 6,
+ "fails": 0,
+ "status": "",
+ "max_actions": 40,
+ "log": [
+  {
+   "action": [
+    "place",
+    [
+     5,
+     6,
+     1
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    [
+     4,
+     6,
+     1
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    [
+     3,
+     6,
+     1
+    ]
+   ],
+   "result": "CellOccupied",
+   "rejected": true
+  },
+  {
+   "action": [
+    "place",
+    [
+     2,
+     6,
+     1
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "submit_placement"
+   ],
+   "result": "InventoryNotEmpty",
+   "rejected": true
+  },
+  {
+   "action": [
+    "push",
+    "-x"
+   ],
+   "result": "BadPhase",
+   "rejected": true
+  }
+ ],
+ "oneshot": true,
+ "plan": [
+  [
+   "place",
+   [
+    5,
+    6,
+    1
+   ]
+  ],
+  [
+   "place",
+   [
+    4,
+    6,
+    1
+   ]
+  ],
+  [
+   "place",
+   [
+    3,
+    6,
+    1
+   ]
+  ],
+  [
+   "place",
+   [
+    2,
+    6,
+    1
+   ]
+  ],
+  [
+   "submit_placement"
+  ],
+  [
+   "push",
+   "-x"
+  ]
+ ]
+}

@@ -1,0 +1,142 @@
+{
+ "level": "type_3/puzzles_50/P40_two_pumps_hard_seed30005",
+ "game": "fluidnet",
+ "actions": [
+  [
+   "open",
+   [
+    4,
+    3,
+    1
+   ]
+  ]
+ ],
+ "n_actions": 6,
+ "fails": 0,
+ "status": "",
+ "max_actions": 40,
+ "log": [
+  {
+   "action": [
+    "open",
+    [
+     2,
+     5,
+     2
+    ]
+   ],
+   "result": "ValveNotFound",
+   "rejected": true
+  },
+  {
+   "action": [
+    "open",
+    [
+     5,
+     2,
+     1
+    ]
+   ],
+   "result": "ValveNotFound",
+   "rejected": true
+  },
+  {
+   "action": [
+    "open",
+    [
+     4,
+     3,
+     1
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "open",
+    [
+     5,
+     2,
+     4
+    ]
+   ],
+   "result": "ValveNotFound",
+   "rejected": true
+  },
+  {
+   "action": [
+    "open",
+    [
+     3,
+     4,
+     2
+    ]
+   ],
+   "result": "ValveNotFound",
+   "rejected": true
+  },
+  {
+   "action": [
+    "open",
+    [
+     4,
+     3,
+     3
+    ]
+   ],
+   "result": "ValveNotFound",
+   "rejected": true
+  }
+ ],
+ "oneshot": true,
+ "plan": [
+  [
+   "open",
+   [
+    2,
+    5,
+    2
+   ]
+  ],
+  [
+   "open",
+   [
+    5,
+    2,
+    1
+   ]
+  ],
+  [
+   "open",
+   [
+    4,
+    3,
+    1
+   ]
+  ],
+  [
+   "open",
+   [
+    5,
+    2,
+    4
+   ]
+  ],
+  [
+   "open",
+   [
+    3,
+    4,
+    2
+   ]
+  ],
+  [
+   "open",
+   [
+    4,
+    3,
+    3
+   ]
+  ]
+ ]
+}

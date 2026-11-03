@@ -1,0 +1,339 @@
+{
+ "level": "type_2_3/puzzles_50/P39_D_tall_hard_seed29509",
+ "game": "pipefit",
+ "actions": [
+  [
+   "place",
+   "L",
+   [
+    4,
+    2,
+    1
+   ],
+   6
+  ],
+  [
+   "place",
+   "L",
+   [
+    4,
+    2,
+    2
+   ],
+   5
+  ],
+  [
+   "place",
+   "L",
+   [
+    5,
+    2,
+    2
+   ],
+   6
+  ],
+  [
+   "place",
+   "L",
+   [
+    5,
+    2,
+    3
+   ],
+   5
+  ],
+  [
+   "place",
+   "L",
+   [
+    4,
+    2,
+    3
+   ],
+   6
+  ],
+  [
+   "place",
+   "I",
+   [
+    4,
+    2,
+    4
+   ],
+   2
+  ],
+  [
+   "place",
+   "L",
+   [
+    4,
+    2,
+    5
+   ],
+   5
+  ],
+  [
+   "submit"
+  ]
+ ],
+ "n_actions": 10,
+ "fails": 1,
+ "status": "lose",
+ "max_actions": 40,
+ "log": [
+  {
+   "action": [
+    "place",
+    "L",
+    [
+     2,
+     2,
+     1
+    ],
+    [
+     "-x",
+     "+x"
+    ]
+   ],
+   "result": "invalid: a L pipe cannot have ends ['-x', '+x']",
+   "rejected": true
+  },
+  {
+   "action": [
+    "place",
+    "L",
+    [
+     3,
+     2,
+     1
+    ],
+    [
+     "-x",
+     "+x"
+    ]
+   ],
+   "result": "invalid: a L pipe cannot have ends ['-x', '+x']",
+   "rejected": true
+  },
+  {
+   "action": [
+    "place",
+    "L",
+    [
+     4,
+     2,
+     1
+    ],
+    6
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    "L",
+    [
+     4,
+     2,
+     2
+    ],
+    5
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    "L",
+    [
+     5,
+     2,
+     2
+    ],
+    6
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    "L",
+    [
+     5,
+     2,
+     3
+    ],
+    5
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    "L",
+    [
+     4,
+     2,
+     3
+    ],
+    6
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    "I",
+    [
+     4,
+     2,
+     4
+    ],
+    2
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    "L",
+    [
+     4,
+     2,
+     5
+    ],
+    5
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "submit"
+   ],
+   "result": "Leak"
+  }
+ ],
+ "oneshot": true,
+ "plan": [
+  [
+   "place",
+   "L",
+   [
+    2,
+    2,
+    1
+   ],
+   [
+    "-x",
+    "+x"
+   ]
+  ],
+  [
+   "place",
+   "L",
+   [
+    3,
+    2,
+    1
+   ],
+   [
+    "-x",
+    "+x"
+   ]
+  ],
+  [
+   "place",
+   "L",
+   [
+    4,
+    2,
+    1
+   ],
+   [
+    "-x",
+    "+z"
+   ]
+  ],
+  [
+   "place",
+   "L",
+   [
+    4,
+    2,
+    2
+   ],
+   [
+    "-z",
+    "+x"
+   ]
+  ],
+  [
+   "place",
+   "L",
+   [
+    5,
+    2,
+    2
+   ],
+   [
+    "-x",
+    "+z"
+   ]
+  ],
+  [
+   "place",
+   "L",
+   [
+    5,
+    2,
+    3
+   ],
+   [
+    "-z",
+    "+x"
+   ]
+  ],
+  [
+   "place",
+   "L",
+   [
+    4,
+    2,
+    3
+   ],
+   [
+    "-x",
+    "+z"
+   ]
+  ],
+  [
+   "place",
+   "I",
+   [
+    4,
+    2,
+    4
+   ],
+   [
+    "-z",
+    "+z"
+   ]
+  ],
+  [
+   "place",
+   "L",
+   [
+    4,
+    2,
+    5
+   ],
+   [
+    "-z",
+    "+x"
+   ]
+  ],
+  [
+   "submit"
+  ]
+ ]
+}

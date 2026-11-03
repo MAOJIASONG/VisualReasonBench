@@ -1,0 +1,12 @@
+{
+ "level": "type_2_3/puzzles_50/P30_C_branch_hard_seed25000",
+ "game": "pipefit",
+ "actions": [],
+ "n_actions": 0,
+ "fails": 0,
+ "status": "",
+ "max_actions": 40,
+ "log": [],
+ "oneshot": true,
+ "plan": []
+}

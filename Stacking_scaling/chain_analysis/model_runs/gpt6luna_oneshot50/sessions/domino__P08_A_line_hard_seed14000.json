@@ -1,0 +1,138 @@
+{
+ "level": "type_3_1/puzzles_50/P08_A_line_hard_seed14000",
+ "game": "domino",
+ "actions": [
+  [
+   "place",
+   [
+    4,
+    4,
+    1
+   ]
+  ],
+  [
+   "place",
+   [
+    6,
+    4,
+    1
+   ]
+  ],
+  [
+   "place",
+   [
+    9,
+    1,
+    1
+   ]
+  ]
+ ],
+ "n_actions": 6,
+ "fails": 0,
+ "status": "",
+ "max_actions": 40,
+ "log": [
+  {
+   "action": [
+    "place",
+    [
+     4,
+     4,
+     1
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    [
+     6,
+     4,
+     1
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    [
+     1,
+     7,
+     1
+    ]
+   ],
+   "result": "CellOccupied",
+   "rejected": true
+  },
+  {
+   "action": [
+    "place",
+    [
+     9,
+     1,
+     1
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "submit_placement"
+   ],
+   "result": "InventoryNotEmpty",
+   "rejected": true
+  },
+  {
+   "action": [
+    "push",
+    "+x"
+   ],
+   "result": "BadPhase",
+   "rejected": true
+  }
+ ],
+ "oneshot": true,
+ "plan": [
+  [
+   "place",
+   [
+    4,
+    4,
+    1
+   ]
+  ],
+  [
+   "place",
+   [
+    6,
+    4,
+    1
+   ]
+  ],
+  [
+   "place",
+   [
+    1,
+    7,
+    1
+   ]
+  ],
+  [
+   "place",
+   [
+    9,
+    1,
+    1
+   ]
+  ],
+  [
+   "submit_placement"
+  ],
+  [
+   "push",
+   "+x"
+  ]
+ ]
+}

@@ -1,0 +1,82 @@
+{
+ "level": "type_3/puzzles_50/P39_two_pumps_hard_seed29520",
+ "game": "fluidnet",
+ "actions": [
+  [
+   "open",
+   [
+    3,
+    3,
+    3
+   ]
+  ]
+ ],
+ "n_actions": 3,
+ "fails": 0,
+ "status": "",
+ "max_actions": 40,
+ "log": [
+  {
+   "action": [
+    "open",
+    [
+     3,
+     3,
+     3
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "open",
+    [
+     4,
+     2,
+     1
+    ]
+   ],
+   "result": "ValveNotFound",
+   "rejected": true
+  },
+  {
+   "action": [
+    "open",
+    [
+     5,
+     3,
+     2
+    ]
+   ],
+   "result": "ValveNotFound",
+   "rejected": true
+  }
+ ],
+ "oneshot": true,
+ "plan": [
+  [
+   "open",
+   [
+    3,
+    3,
+    3
+   ]
+  ],
+  [
+   "open",
+   [
+    4,
+    2,
+    1
+   ]
+  ],
+  [
+   "open",
+   [
+    5,
+    3,
+    2
+   ]
+  ]
+ ]
+}

@@ -1,0 +1,15 @@
+{"model": "gpt-6-luna-oneshot", "level": "P08_trace_hard_seed14004", "actions": [["open", [5, 3, 1]]]}
+{"model": "gpt-6-luna-oneshot", "level": "P09_trace_hard_seed14558", "actions": []}
+{"model": "gpt-6-luna-oneshot", "level": "P10_trace_hard_seed15037", "actions": []}
+{"model": "gpt-6-luna-oneshot", "level": "P18_series_hard_seed19007", "actions": [["open", [1, 3, 5]]]}
+{"model": "gpt-6-luna-oneshot", "level": "P19_series_hard_seed19517", "actions": [["open", [1, 3, 5]]]}
+{"model": "gpt-6-luna-oneshot", "level": "P20_series_hard_seed20027", "actions": []}
+{"model": "gpt-6-luna-oneshot", "level": "P28_backdoor_hard_seed24073", "actions": []}
+{"model": "gpt-6-luna-oneshot", "level": "P29_backdoor_hard_seed25059", "actions": []}
+{"model": "gpt-6-luna-oneshot", "level": "P30_backdoor_hard_seed25389", "actions": [["open", [5, 5, 3]], ["open", [5, 5, 5]]]}
+{"model": "gpt-6-luna-oneshot", "level": "P38_two_pumps_hard_seed29000", "actions": [["open", [2, 5, 4]]]}
+{"model": "gpt-6-luna-oneshot", "level": "P39_two_pumps_hard_seed29520", "actions": [["open", [3, 3, 3]]]}
+{"model": "gpt-6-luna-oneshot", "level": "P40_two_pumps_hard_seed30005", "actions": [["open", [4, 3, 1]]]}
+{"model": "gpt-6-luna-oneshot", "level": "P48_mixed_hard_seed34034", "actions": []}
+{"model": "gpt-6-luna-oneshot", "level": "P49_mixed_hard_seed34517", "actions": []}
+{"model": "gpt-6-luna-oneshot", "level": "P50_mixed_hard_seed35041", "actions": []}

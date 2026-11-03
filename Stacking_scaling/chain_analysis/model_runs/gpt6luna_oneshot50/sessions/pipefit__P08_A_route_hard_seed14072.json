@@ -1,0 +1,12 @@
+{
+ "level": "type_2_3/puzzles_50/P08_A_route_hard_seed14072",
+ "game": "pipefit",
+ "actions": [],
+ "n_actions": 0,
+ "fails": 0,
+ "status": "",
+ "max_actions": 40,
+ "log": [],
+ "oneshot": true,
+ "plan": []
+}

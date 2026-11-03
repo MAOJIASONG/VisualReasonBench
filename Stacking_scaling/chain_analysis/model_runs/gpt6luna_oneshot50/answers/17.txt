@@ -1,0 +1,3 @@
+The chain runs along `-x` from the green START through the cream domino and into the gold goal. The extra patch is placed away from that line.
+
+[["place", [8, 3, 1]], ["place", [6, 3, 1]], ["place", [5, 3, 1]], ["place", [1, 1, 1]], ["submit_placement"], ["push", "-x"]]

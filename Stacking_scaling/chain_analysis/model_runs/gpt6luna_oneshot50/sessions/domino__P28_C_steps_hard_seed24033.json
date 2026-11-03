@@ -1,0 +1,116 @@
+{
+ "level": "type_3_1/puzzles_50/P28_C_steps_hard_seed24033",
+ "game": "domino",
+ "actions": [],
+ "n_actions": 6,
+ "fails": 0,
+ "status": "",
+ "max_actions": 40,
+ "log": [
+  {
+   "action": [
+    "place",
+    [
+     3,
+     3,
+     2
+    ]
+   ],
+   "result": "NoPhysicalSupport",
+   "rejected": true
+  },
+  {
+   "action": [
+    "place",
+    [
+     4,
+     3,
+     2
+    ]
+   ],
+   "result": "NoPhysicalSupport",
+   "rejected": true
+  },
+  {
+   "action": [
+    "place",
+    [
+     5,
+     3,
+     2
+    ]
+   ],
+   "result": "NoPhysicalSupport",
+   "rejected": true
+  },
+  {
+   "action": [
+    "place",
+    [
+     6,
+     3,
+     2
+    ]
+   ],
+   "result": "NoPhysicalSupport",
+   "rejected": true
+  },
+  {
+   "action": [
+    "submit_placement"
+   ],
+   "result": "InventoryNotEmpty",
+   "rejected": true
+  },
+  {
+   "action": [
+    "push",
+    "+x"
+   ],
+   "result": "BadPhase",
+   "rejected": true
+  }
+ ],
+ "oneshot": true,
+ "plan": [
+  [
+   "place",
+   [
+    3,
+    3,
+    2
+   ]
+  ],
+  [
+   "place",
+   [
+    4,
+    3,
+    2
+   ]
+  ],
+  [
+   "place",
+   [
+    5,
+    3,
+    2
+   ]
+  ],
+  [
+   "place",
+   [
+    6,
+    3,
+    2
+   ]
+  ],
+  [
+   "submit_placement"
+  ],
+  [
+   "push",
+   "+x"
+  ]
+ ]
+}

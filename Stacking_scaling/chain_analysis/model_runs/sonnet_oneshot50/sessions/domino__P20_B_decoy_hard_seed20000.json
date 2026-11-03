@@ -1,0 +1,150 @@
+{
+ "level": "type_3_1/puzzles_50/P20_B_decoy_hard_seed20000",
+ "game": "domino",
+ "actions": [
+  [
+   "place",
+   [
+    6,
+    7,
+    1
+   ]
+  ],
+  [
+   "place",
+   [
+    6,
+    6,
+    1
+   ]
+  ],
+  [
+   "place",
+   [
+    6,
+    5,
+    1
+   ]
+  ],
+  [
+   "place",
+   [
+    6,
+    4,
+    1
+   ]
+  ],
+  [
+   "submit_placement"
+  ],
+  [
+   "push",
+   "-y"
+  ]
+ ],
+ "n_actions": 6,
+ "fails": 0,
+ "status": "win",
+ "max_actions": 40,
+ "log": [
+  {
+   "action": [
+    "place",
+    [
+     6,
+     7,
+     1
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    [
+     6,
+     6,
+     1
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    [
+     6,
+     5,
+     1
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    [
+     6,
+     4,
+     1
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "submit_placement"
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "push",
+    "-y"
+   ],
+   "result": "WIN"
+  }
+ ],
+ "oneshot": true,
+ "plan": [
+  [
+   "place",
+   [
+    6,
+    7,
+    1
+   ]
+  ],
+  [
+   "place",
+   [
+    6,
+    6,
+    1
+   ]
+  ],
+  [
+   "place",
+   [
+    6,
+    5,
+    1
+   ]
+  ],
+  [
+   "place",
+   [
+    6,
+    4,
+    1
+   ]
+  ],
+  [
+   "submit_placement"
+  ],
+  [
+   "push",
+   "-y"
+  ]
+ ]
+}

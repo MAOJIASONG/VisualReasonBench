@@ -6,6 +6,7 @@ rendered observation and a one-line result, never the level file.
 
     python -m chain_analysis.play_cli start <level_dir> <session_dir> [--max-actions 40]
     python -m chain_analysis.play_cli act <session_dir> '<json action>'
+    python -m chain_analysis.play_cli plan <session_dir> '<json list of actions>'
     python -m chain_analysis.play_cli export <session_dir>... --model NAME --out runs.jsonl
 
 Actions (JSON lists):
@@ -18,7 +19,9 @@ Actions (JSON lists):
             ["quit"]   give up
 
 Every call renders `obs_<n>_front.png` (and `_back.png` for FluidNet /
-PipeFit) in the session folder and prints the result.  The game rules are
+PipeFit) in the session folder and prints the result.  `plan` is the
+one-shot protocol: the whole action list is played at once from the start
+state without intermediate observations, and the session is then closed.  The game rules are
 the real mechanics of each package.  `export` writes the trajectories in
 exp1's format and a per-episode result line for exp2 (`--results`).
 """
@@ -37,6 +40,7 @@ from .envs import game_of
 STATE = ".state.json"
 VIEWS = {"fluidnet": ("front", "back"), "pipefit": ("front", "back"),
          "domino": ("front",)}
+MODS = {"fluidnet": "type_3", "domino": "type_3_1", "pipefit": "type_2_3"}
 
 
 def _load(session: str) -> Dict:
@@ -133,8 +137,7 @@ def _terminal(gs, last) -> str:
 
 def _render(st: Dict, gs, session: str, title: str) -> List[str]:
     game = st["game"]
-    mod = {"fluidnet": "type_3", "domino": "type_3_1", "pipefit": "type_2_3"}[game]
-    vis = __import__(f"{mod}.visualizer_plotly", fromlist=["render_state"])
+    vis = __import__(f"{MODS[game]}.visualizer_plotly", fromlist=["render_state"])
     n = len(st["actions"])
     paths = []
     for v in VIEWS[game]:
@@ -175,6 +178,9 @@ def cmd_start(level_dir: str, session: str, max_actions: int) -> None:
 def cmd_act(session: str, raw: str) -> None:
     st = _load(session)
     game = st["game"]
+    if st.get("oneshot"):
+        print("one-shot session: the plan has been played; no more actions")
+        return
     if st["status"] in ("win", "quit") or st["n_actions"] >= st["max_actions"]:
         print(f"episode finished ({st['status'] or 'out of actions'}); no more actions")
         return
@@ -228,6 +234,56 @@ def cmd_act(session: str, raw: str) -> None:
     _report(st, msg, paths)
 
 
+def cmd_plan(session: str, raw: str) -> None:
+    """One-shot: play a whole action list from the start, then close."""
+    st = _load(session)
+    game = st["game"]
+    if st.get("oneshot") or st["actions"] or st["n_actions"]:
+        print("this session already has actions; a plan must be the first and only call")
+        return
+    try:
+        plan = json.loads(raw)
+        if not isinstance(plan, list) or not all(isinstance(a, list) for a in plan):
+            raise ValueError("a plan is a JSON list of actions")
+    except (ValueError, json.JSONDecodeError) as e:
+        print(f"invalid plan: {e}")             # nothing used: the call can be repeated
+        return
+    st["oneshot"] = True
+    gs, last = _replay(game, st["level"], [])
+    for raw_a in plan:
+        if st["n_actions"] >= st["max_actions"] or st["status"]:
+            break
+        st["n_actions"] += 1
+        try:
+            a = _normalise(game, raw_a)
+            if a[0] in ("reset", "quit"):
+                raise ValueError(f"{a[0]} is not allowed in a plan")
+            gs, last = _replay(game, st["level"], st["actions"] + [a])
+        except Exception as e:
+            st["log"].append({"action": raw_a, "result": f"invalid: {e}", "rejected": True})
+            continue
+        code = last.code.value if last is not None else "OK"
+        if code.upper() not in ("OK", "WIN") and not gs.terminal:
+            st["log"].append({"action": a, "result": code, "rejected": True})
+            continue
+        st["actions"].append(a)
+        st["status"] = _terminal(gs, last)
+        st["log"].append({"action": a, "result": code})
+    if st["status"] == "lose":
+        st["fails"] += 1
+    st["plan"] = plan
+    _save(session, st)
+    gs, _ = _replay(game, st["level"], st["actions"])
+    vis = __import__(f"{MODS[game]}.visualizer_plotly", fromlist=["render_state"])
+    try:                                        # final state, for inspection only
+        for v in VIEWS[game]:
+            vis.render_state(gs, save_path=os.path.join(session, f"final_{v}.png"),
+                             title="final", view=v)
+    except ValueError:
+        pass
+    print(f"plan received ({len(plan)} actions); the episode is closed")
+
+
 def cmd_export(sessions: List[str], model: str, out: str, results: str) -> None:
     with open(out, "a") as f, open(results, "a") as g:
         for s in sessions:
@@ -251,6 +307,8 @@ def main(argv=None):
     p.add_argument("--max-actions", type=int, default=40)
     p = sub.add_parser("act")
     p.add_argument("session"); p.add_argument("action")
+    p = sub.add_parser("plan")
+    p.add_argument("session"); p.add_argument("plan")
     p = sub.add_parser("export")
     p.add_argument("sessions", nargs="+")
     p.add_argument("--model", required=True)
@@ -261,6 +319,8 @@ def main(argv=None):
         cmd_start(a.level, a.session, a.max_actions)
     elif a.cmd == "act":
         cmd_act(a.session, a.action)
+    elif a.cmd == "plan":
+        cmd_plan(a.session, a.plan)
     else:
         cmd_export(a.sessions, a.model, a.out, a.results)
 

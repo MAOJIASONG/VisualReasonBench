@@ -1,0 +1,15 @@
+{"model": "gpt-6-luna-oneshot", "level": "P08_A_line_hard_seed14000", "win": false, "verifies": 0, "actions": 6, "rejected": 3}
+{"model": "gpt-6-luna-oneshot", "level": "P09_A_line_hard_seed14500", "win": false, "verifies": 1, "actions": 6, "rejected": 0}
+{"model": "gpt-6-luna-oneshot", "level": "P10_A_line_hard_seed15000", "win": false, "verifies": 0, "actions": 6, "rejected": 3}
+{"model": "gpt-6-luna-oneshot", "level": "P18_B_decoy_hard_seed19000", "win": false, "verifies": 0, "actions": 6, "rejected": 3}
+{"model": "gpt-6-luna-oneshot", "level": "P19_B_decoy_hard_seed19500", "win": false, "verifies": 1, "actions": 6, "rejected": 0}
+{"model": "gpt-6-luna-oneshot", "level": "P20_B_decoy_hard_seed20000", "win": false, "verifies": 0, "actions": 6, "rejected": 3}
+{"model": "gpt-6-luna-oneshot", "level": "P28_C_steps_hard_seed24033", "win": false, "verifies": 0, "actions": 6, "rejected": 6}
+{"model": "gpt-6-luna-oneshot", "level": "P29_C_steps_hard_seed24501", "win": false, "verifies": 0, "actions": 6, "rejected": 4}
+{"model": "gpt-6-luna-oneshot", "level": "P30_C_steps_hard_seed25002", "win": false, "verifies": 0, "actions": 6, "rejected": 5}
+{"model": "gpt-6-luna-oneshot", "level": "P38_D_split_hard_seed29000", "win": false, "verifies": 1, "actions": 6, "rejected": 0}
+{"model": "gpt-6-luna-oneshot", "level": "P39_D_split_hard_seed29500", "win": true, "verifies": 1, "actions": 6, "rejected": 0}
+{"model": "gpt-6-luna-oneshot", "level": "P40_D_split_hard_seed30000", "win": true, "verifies": 1, "actions": 6, "rejected": 0}
+{"model": "gpt-6-luna-oneshot", "level": "P48_E_full_hard_seed34000", "win": false, "verifies": 0, "actions": 6, "rejected": 3}
+{"model": "gpt-6-luna-oneshot", "level": "P49_E_full_hard_seed34500", "win": false, "verifies": 1, "actions": 6, "rejected": 0}
+{"model": "gpt-6-luna-oneshot", "level": "P50_E_full_hard_seed35000", "win": false, "verifies": 0, "actions": 6, "rejected": 6}

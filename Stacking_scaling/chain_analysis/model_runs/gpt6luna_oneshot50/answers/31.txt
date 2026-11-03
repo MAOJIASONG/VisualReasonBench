@@ -1,0 +1,1 @@
+I can’t reliably determine the portal cells and their directions from these views, so I can’t give a plan I’d expect to connect both portals without leaks. Any action list would be a guess.

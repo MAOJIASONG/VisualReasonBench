@@ -1,0 +1,123 @@
+{
+ "level": "type_3/puzzles_50/P20_series_hard_seed20027",
+ "game": "fluidnet",
+ "actions": [
+  [
+   "open",
+   [
+    5,
+    5,
+    1
+   ]
+  ],
+  [
+   "open",
+   [
+    5,
+    5,
+    3
+   ]
+  ],
+  [
+   "open",
+   [
+    5,
+    3,
+    5
+   ]
+  ],
+  [
+   "open",
+   [
+    5,
+    1,
+    5
+   ]
+  ]
+ ],
+ "n_actions": 4,
+ "fails": 0,
+ "status": "win",
+ "max_actions": 40,
+ "log": [
+  {
+   "action": [
+    "open",
+    [
+     5,
+     5,
+     1
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "open",
+    [
+     5,
+     5,
+     3
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "open",
+    [
+     5,
+     3,
+     5
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "open",
+    [
+     5,
+     1,
+     5
+    ]
+   ],
+   "result": "Win"
+  }
+ ],
+ "oneshot": true,
+ "plan": [
+  [
+   "open",
+   [
+    5,
+    5,
+    1
+   ]
+  ],
+  [
+   "open",
+   [
+    5,
+    5,
+    3
+   ]
+  ],
+  [
+   "open",
+   [
+    5,
+    3,
+    5
+   ]
+  ],
+  [
+   "open",
+   [
+    5,
+    1,
+    5
+   ]
+  ]
+ ]
+}
