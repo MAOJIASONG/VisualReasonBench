@@ -553,16 +553,16 @@ MIN_PIECE_FALLBACK = 3
 MAX_PIECE_CELLS = 5
 
 PER_SIZE_CFG = {
-    #(2,2,2):  {"linear_count": 1, "nonlinear_count": 1, "difficulty_nodes": 0,   "max_pieces": 2},
+    (2,2,2):  {"linear_count": 1, "nonlinear_count": 1, "difficulty_nodes": 0,   "max_pieces": 2},
     (2,2,3):  {"linear_count":10, "nonlinear_count": 0, "difficulty_nodes": 10,  "max_pieces": 4},
     (2,3,3):  {"linear_count":10, "nonlinear_count": 0, "difficulty_nodes": 20,  "max_pieces": 5},
-    # (3,3,3):  {"linear_count":10, "nonlinear_count": 0, "difficulty_nodes": 140, "max_pieces": 6},
-    # (2,2,4):  {"linear_count":10, "nonlinear_count": 0, "difficulty_nodes": 80,  "max_pieces": 4},
-    # (2,3,4):  {"linear_count":10, "nonlinear_count": 0, "difficulty_nodes": 120, "max_pieces": 6},
-    # (3,3,4):  {"linear_count":10, "nonlinear_count": 0, "difficulty_nodes": 160, "max_pieces": 8},
-    # (2,4,4):  {"linear_count":10, "nonlinear_count": 0, "difficulty_nodes": 150, "max_pieces": 7},
-    # (3,4,4):  {"linear_count":10, "nonlinear_count": 0, "difficulty_nodes": 200, "max_pieces":10},
-    # (4,4,4):  {"linear_count":10, "nonlinear_count": 0, "difficulty_nodes": 260, "max_pieces":13},
+    (3,3,3):  {"linear_count":10, "nonlinear_count": 0, "difficulty_nodes": 140, "max_pieces": 6},
+    (2,2,4):  {"linear_count":10, "nonlinear_count": 0, "difficulty_nodes": 80,  "max_pieces": 4},
+    (2,3,4):  {"linear_count":10, "nonlinear_count": 0, "difficulty_nodes": 120, "max_pieces": 6},
+    (3,3,4):  {"linear_count":10, "nonlinear_count": 0, "difficulty_nodes": 160, "max_pieces": 8},
+    (2,4,4):  {"linear_count":10, "nonlinear_count": 0, "difficulty_nodes": 150, "max_pieces": 7},
+    (3,4,4):  {"linear_count":10, "nonlinear_count": 0, "difficulty_nodes": 200, "max_pieces":10},
+    (4,4,4):  {"linear_count":10, "nonlinear_count": 0, "difficulty_nodes": 260, "max_pieces":13},
 }
 
 # ============== MP task ==============
