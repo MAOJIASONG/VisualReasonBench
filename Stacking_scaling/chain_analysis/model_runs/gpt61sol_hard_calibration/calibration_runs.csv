@@ -1,0 +1,523 @@
+set,effort,set_note,game,level,outcome,accepted,rejected,first_reject,last_result,n_valves,min_plan,traps,patches,raised,plan_length,n_solutions,score
+old_hard,high,previous hard tier of puzzles_50,fluidnet,P08_trace_hard_seed14004,win,5,0,,Win,8,5,3,,,,,7.59
+old_hard,high,previous hard tier of puzzles_50,fluidnet,P09_trace_hard_seed14558,win,4,0,,Win,7,4,3,,,,,7.0
+old_hard,high,previous hard tier of puzzles_50,fluidnet,P10_trace_hard_seed15037,win,4,0,,Win,7,4,3,,,,,7.59
+old_hard,high,previous hard tier of puzzles_50,fluidnet,P18_series_hard_seed19007,win,4,0,,Win,7,4,3,,,,,7.59
+old_hard,high,previous hard tier of puzzles_50,fluidnet,P19_series_hard_seed19517,win,4,0,,Win,7,4,3,,,,,7.0
+old_hard,high,previous hard tier of puzzles_50,fluidnet,P20_series_hard_seed20027,win,4,0,,Win,7,4,3,,,,,7.18
+old_hard,high,previous hard tier of puzzles_50,fluidnet,P28_backdoor_hard_seed24073,win,4,0,,Win,8,4,4,,,,,8.0
+old_hard,high,previous hard tier of puzzles_50,fluidnet,P29_backdoor_hard_seed25059,win,4,0,,Win,8,4,4,,,,,9.0
+old_hard,high,previous hard tier of puzzles_50,fluidnet,P30_backdoor_hard_seed25389,win,3,0,,Win,7,3,4,,,,,7.0
+old_hard,high,previous hard tier of puzzles_50,fluidnet,P38_two_pumps_hard_seed29000,win,4,0,,Win,7,4,3,,,,,7.11
+old_hard,high,previous hard tier of puzzles_50,fluidnet,P39_two_pumps_hard_seed29520,win,5,0,,Win,8,5,3,,,,,10.35
+old_hard,high,previous hard tier of puzzles_50,fluidnet,P40_two_pumps_hard_seed30005,win,5,0,,Win,8,5,3,,,,,13.8
+old_hard,high,previous hard tier of puzzles_50,fluidnet,P48_mixed_hard_seed34034,win,4,0,,Win,8,4,4,,,,,17.34
+old_hard,high,previous hard tier of puzzles_50,fluidnet,P49_mixed_hard_seed34517,win,4,0,,Win,8,4,4,,,,,10.39
+old_hard,high,previous hard tier of puzzles_50,fluidnet,P50_mixed_hard_seed35041,win,4,0,,Win,8,4,4,,,,,8.8
+old_hard,high,previous hard tier of puzzles_50,domino,P08_A_line_hard_seed14000,win,6,0,,WIN,,,,4,0,,1,6.09
+old_hard,high,previous hard tier of puzzles_50,domino,P09_A_line_hard_seed14500,win,6,0,,WIN,,,,4,0,,1,6.09
+old_hard,high,previous hard tier of puzzles_50,domino,P10_A_line_hard_seed15000,win,6,0,,WIN,,,,4,0,,1,6.09
+old_hard,high,previous hard tier of puzzles_50,domino,P18_B_decoy_hard_seed19000,win,6,0,,WIN,,,,4,0,,1,6.09
+old_hard,high,previous hard tier of puzzles_50,domino,P19_B_decoy_hard_seed19500,win,6,0,,WIN,,,,4,0,,1,6.09
+old_hard,high,previous hard tier of puzzles_50,domino,P20_B_decoy_hard_seed20000,win,6,0,,WIN,,,,4,0,,1,6.09
+old_hard,high,previous hard tier of puzzles_50,domino,P28_C_steps_hard_seed24033,win,6,0,,WIN,,,,4,4,,1,8.09
+old_hard,high,previous hard tier of puzzles_50,domino,P29_C_steps_hard_seed24501,win,6,0,,WIN,,,,4,4,,1,8.09
+old_hard,high,previous hard tier of puzzles_50,domino,P30_C_steps_hard_seed25002,win,6,0,,WIN,,,,4,2,,1,7.09
+old_hard,high,previous hard tier of puzzles_50,domino,P38_D_split_hard_seed29000,win,6,0,,WIN,,,,4,0,,1,9.0
+old_hard,high,previous hard tier of puzzles_50,domino,P39_D_split_hard_seed29500,win,6,0,,WIN,,,,4,0,,1,7.58
+old_hard,high,previous hard tier of puzzles_50,domino,P40_D_split_hard_seed30000,win,6,0,,WIN,,,,4,0,,1,8.0
+old_hard,high,previous hard tier of puzzles_50,domino,P48_E_full_hard_seed34000,win,6,0,,WIN,,,,4,2,,1,7.92
+old_hard,high,previous hard tier of puzzles_50,domino,P49_E_full_hard_seed34500,win,6,0,,WIN,,,,4,3,,1,9.0
+old_hard,high,previous hard tier of puzzles_50,domino,P50_E_full_hard_seed35000,win,6,0,,WIN,,,,4,3,,1,8.19
+old_hard,high,previous hard tier of puzzles_50,pipefit,P08_A_route_hard_seed14072,win,11,0,,WIN,,,,,,12,8,9.53
+old_hard,high,previous hard tier of puzzles_50,pipefit,P09_A_route_hard_seed14525,win,12,0,,WIN,,,,,,11,12,10.62
+old_hard,high,previous hard tier of puzzles_50,pipefit,P10_A_route_hard_seed15014,win,11,0,,WIN,,,,,,14,7,10.77
+old_hard,high,previous hard tier of puzzles_50,pipefit,P18_B_obstacles_hard_seed19013,win,12,0,,WIN,,,,,,11,10,10.14
+old_hard,high,previous hard tier of puzzles_50,pipefit,P19_B_obstacles_hard_seed19532,win,14,0,,WIN,,,,,,12,10,12.29
+old_hard,high,previous hard tier of puzzles_50,pipefit,P20_B_obstacles_hard_seed20020,win,12,0,,WIN,,,,,,13,3,12.81
+old_hard,high,previous hard tier of puzzles_50,pipefit,P28_C_branch_hard_seed24000,win,11,0,,WIN,,,,,,10,7,10.48
+old_hard,high,previous hard tier of puzzles_50,pipefit,P29_C_branch_hard_seed24510,win,9,0,,WIN,,,,,,12,12,10.84
+old_hard,high,previous hard tier of puzzles_50,pipefit,P30_C_branch_hard_seed25000,win,14,0,,WIN,,,,,,13,3,10.1
+old_hard,high,previous hard tier of puzzles_50,pipefit,P38_D_tall_hard_seed29037,lose,12,0,,Unsupported,,,,,,12,4,11.41
+old_hard,high,previous hard tier of puzzles_50,pipefit,P39_D_tall_hard_seed29509,win,12,0,,WIN,,,,,,12,5,11.09
+old_hard,high,previous hard tier of puzzles_50,pipefit,P40_D_tall_hard_seed30025,win,15,0,,WIN,,,,,,15,11,10.46
+old_hard,high,previous hard tier of puzzles_50,pipefit,P48_E_mixed_hard_seed34059,win,10,0,,WIN,,,,,,12,7,12.59
+old_hard,high,previous hard tier of puzzles_50,pipefit,P49_E_mixed_hard_seed34502,win,12,0,,WIN,,,,,,20,9,15.44
+old_hard,high,previous hard tier of puzzles_50,pipefit,P50_E_mixed_hard_seed35002,win,19,0,,WIN,,,,,,18,11,13.39
+old_hard,low,previous hard tier of puzzles_50,fluidnet,P08_trace_hard_seed14004,none,3,1,ValveNotFound,OK,8,5,3,,,,,7.59
+old_hard,low,previous hard tier of puzzles_50,fluidnet,P09_trace_hard_seed14558,win,4,0,,Win,7,4,3,,,,,7.0
+old_hard,low,previous hard tier of puzzles_50,fluidnet,P10_trace_hard_seed15037,win,4,0,,Win,7,4,3,,,,,7.59
+old_hard,low,previous hard tier of puzzles_50,fluidnet,P18_series_hard_seed19007,win,4,0,,Win,7,4,3,,,,,7.59
+old_hard,low,previous hard tier of puzzles_50,fluidnet,P19_series_hard_seed19517,win,4,0,,Win,7,4,3,,,,,7.0
+old_hard,low,previous hard tier of puzzles_50,fluidnet,P20_series_hard_seed20027,win,4,0,,Win,7,4,3,,,,,7.18
+old_hard,low,previous hard tier of puzzles_50,fluidnet,P28_backdoor_hard_seed24073,none,0,0,,,8,4,4,,,,,8.0
+old_hard,low,previous hard tier of puzzles_50,fluidnet,P29_backdoor_hard_seed25059,win,4,0,,Win,8,4,4,,,,,9.0
+old_hard,low,previous hard tier of puzzles_50,fluidnet,P30_backdoor_hard_seed25389,win,3,0,,Win,7,3,4,,,,,7.0
+old_hard,low,previous hard tier of puzzles_50,fluidnet,P38_two_pumps_hard_seed29000,none,2,1,ValveNotFound,OK,7,4,3,,,,,7.11
+old_hard,low,previous hard tier of puzzles_50,fluidnet,P39_two_pumps_hard_seed29520,none,2,1,ValveNotFound,OK,8,5,3,,,,,10.35
+old_hard,low,previous hard tier of puzzles_50,fluidnet,P40_two_pumps_hard_seed30005,win,5,0,,Win,8,5,3,,,,,13.8
+old_hard,low,previous hard tier of puzzles_50,fluidnet,P48_mixed_hard_seed34034,none,3,1,ValveNotFound,OK,8,4,4,,,,,17.34
+old_hard,low,previous hard tier of puzzles_50,fluidnet,P49_mixed_hard_seed34517,none,3,1,ValveNotFound,ValveNotFound,8,4,4,,,,,10.39
+old_hard,low,previous hard tier of puzzles_50,fluidnet,P50_mixed_hard_seed35041,win,4,0,,Win,8,4,4,,,,,8.8
+old_hard,low,previous hard tier of puzzles_50,domino,P08_A_line_hard_seed14000,win,6,0,,WIN,,,,4,0,,1,6.09
+old_hard,low,previous hard tier of puzzles_50,domino,P09_A_line_hard_seed14500,win,6,0,,WIN,,,,4,0,,1,6.09
+old_hard,low,previous hard tier of puzzles_50,domino,P10_A_line_hard_seed15000,win,6,0,,WIN,,,,4,0,,1,6.09
+old_hard,low,previous hard tier of puzzles_50,domino,P18_B_decoy_hard_seed19000,win,6,0,,WIN,,,,4,0,,1,6.09
+old_hard,low,previous hard tier of puzzles_50,domino,P19_B_decoy_hard_seed19500,win,6,0,,WIN,,,,4,0,,1,6.09
+old_hard,low,previous hard tier of puzzles_50,domino,P20_B_decoy_hard_seed20000,win,6,0,,WIN,,,,4,0,,1,6.09
+old_hard,low,previous hard tier of puzzles_50,domino,P28_C_steps_hard_seed24033,win,6,0,,WIN,,,,4,4,,1,8.09
+old_hard,low,previous hard tier of puzzles_50,domino,P29_C_steps_hard_seed24501,win,6,0,,WIN,,,,4,4,,1,8.09
+old_hard,low,previous hard tier of puzzles_50,domino,P30_C_steps_hard_seed25002,win,6,0,,WIN,,,,4,2,,1,7.09
+old_hard,low,previous hard tier of puzzles_50,domino,P38_D_split_hard_seed29000,win,6,0,,WIN,,,,4,0,,1,9.0
+old_hard,low,previous hard tier of puzzles_50,domino,P39_D_split_hard_seed29500,win,6,0,,WIN,,,,4,0,,1,7.58
+old_hard,low,previous hard tier of puzzles_50,domino,P40_D_split_hard_seed30000,win,6,0,,WIN,,,,4,0,,1,8.0
+old_hard,low,previous hard tier of puzzles_50,domino,P48_E_full_hard_seed34000,win,6,0,,WIN,,,,4,2,,1,7.92
+old_hard,low,previous hard tier of puzzles_50,domino,P49_E_full_hard_seed34500,none,1,5,NoPhysicalSupport,BadPhase,,,,4,3,,1,9.0
+old_hard,low,previous hard tier of puzzles_50,domino,P50_E_full_hard_seed35000,win,6,0,,WIN,,,,4,3,,1,8.19
+old_hard,low,previous hard tier of puzzles_50,pipefit,P08_A_route_hard_seed14072,win,12,0,,WIN,,,,,,12,8,9.53
+old_hard,low,previous hard tier of puzzles_50,pipefit,P09_A_route_hard_seed14525,lose,12,0,,Leak,,,,,,11,12,10.62
+old_hard,low,previous hard tier of puzzles_50,pipefit,P10_A_route_hard_seed15014,win,13,0,,WIN,,,,,,14,7,10.77
+old_hard,low,previous hard tier of puzzles_50,pipefit,P18_B_obstacles_hard_seed19013,lose,12,1,EntranceExitOccupied,Leak,,,,,,11,10,10.14
+old_hard,low,previous hard tier of puzzles_50,pipefit,P19_B_obstacles_hard_seed19532,lose,11,2,EntranceExitOccupied,Leak,,,,,,12,10,12.29
+old_hard,low,previous hard tier of puzzles_50,pipefit,P20_B_obstacles_hard_seed20020,lose,12,1,EntranceExitOccupied,Leak,,,,,,13,3,12.81
+old_hard,low,previous hard tier of puzzles_50,pipefit,P28_C_branch_hard_seed24000,win,11,0,,WIN,,,,,,10,7,10.48
+old_hard,low,previous hard tier of puzzles_50,pipefit,P29_C_branch_hard_seed24510,win,11,0,,WIN,,,,,,12,12,10.84
+old_hard,low,previous hard tier of puzzles_50,pipefit,P30_C_branch_hard_seed25000,lose,11,4,EntranceExitOccupied,Leak,,,,,,13,3,10.1
+old_hard,low,previous hard tier of puzzles_50,pipefit,P38_D_tall_hard_seed29037,lose,13,0,,Leak,,,,,,12,4,11.41
+old_hard,low,previous hard tier of puzzles_50,pipefit,P39_D_tall_hard_seed29509,lose,11,3,EntranceExitOccupied,Leak,,,,,,12,5,11.09
+old_hard,low,previous hard tier of puzzles_50,pipefit,P40_D_tall_hard_seed30025,lose,16,1,EntranceExitOccupied,Leak,,,,,,15,11,10.46
+old_hard,low,previous hard tier of puzzles_50,pipefit,P48_E_mixed_hard_seed34059,lose,12,1,InventoryEmpty,Leak,,,,,,12,7,12.59
+old_hard,low,previous hard tier of puzzles_50,pipefit,P49_E_mixed_hard_seed34502,lose,16,8,CellOccupied,Leak,,,,,,20,9,15.44
+old_hard,low,previous hard tier of puzzles_50,pipefit,P50_E_mixed_hard_seed35002,lose,12,0,,Leak,,,,,,18,11,13.39
+old_hard_fluidnet_rerun,low,"previous FluidNet hard tier, second run",fluidnet,P08_trace_hard_seed14004,none,4,0,,OK,8,5,3,,,,,7.59
+old_hard_fluidnet_rerun,low,"previous FluidNet hard tier, second run",fluidnet,P09_trace_hard_seed14558,win,4,0,,Win,7,4,3,,,,,7.0
+old_hard_fluidnet_rerun,low,"previous FluidNet hard tier, second run",fluidnet,P10_trace_hard_seed15037,win,4,0,,Win,7,4,3,,,,,7.59
+old_hard_fluidnet_rerun,low,"previous FluidNet hard tier, second run",fluidnet,P18_series_hard_seed19007,win,4,0,,Win,7,4,3,,,,,7.59
+old_hard_fluidnet_rerun,low,"previous FluidNet hard tier, second run",fluidnet,P19_series_hard_seed19517,win,4,0,,Win,7,4,3,,,,,7.0
+old_hard_fluidnet_rerun,low,"previous FluidNet hard tier, second run",fluidnet,P20_series_hard_seed20027,win,4,0,,Win,7,4,3,,,,,7.18
+old_hard_fluidnet_rerun,low,"previous FluidNet hard tier, second run",fluidnet,P28_backdoor_hard_seed24073,win,4,0,,Win,8,4,4,,,,,8.0
+old_hard_fluidnet_rerun,low,"previous FluidNet hard tier, second run",fluidnet,P29_backdoor_hard_seed25059,win,4,0,,Win,8,4,4,,,,,9.0
+old_hard_fluidnet_rerun,low,"previous FluidNet hard tier, second run",fluidnet,P30_backdoor_hard_seed25389,win,3,0,,Win,7,3,4,,,,,7.0
+old_hard_fluidnet_rerun,low,"previous FluidNet hard tier, second run",fluidnet,P38_two_pumps_hard_seed29000,win,4,1,ValveNotFound,Win,7,4,3,,,,,7.11
+old_hard_fluidnet_rerun,low,"previous FluidNet hard tier, second run",fluidnet,P39_two_pumps_hard_seed29520,none,3,2,ValveNotFound,OK,8,5,3,,,,,10.35
+old_hard_fluidnet_rerun,low,"previous FluidNet hard tier, second run",fluidnet,P40_two_pumps_hard_seed30005,win,5,0,,Win,8,5,3,,,,,13.8
+old_hard_fluidnet_rerun,low,"previous FluidNet hard tier, second run",fluidnet,P48_mixed_hard_seed34034,win,4,0,,Win,8,4,4,,,,,17.34
+old_hard_fluidnet_rerun,low,"previous FluidNet hard tier, second run",fluidnet,P49_mixed_hard_seed34517,none,3,1,ValveNotFound,ValveNotFound,8,4,4,,,,,10.39
+old_hard_fluidnet_rerun,low,"previous FluidNet hard tier, second run",fluidnet,P50_mixed_hard_seed35041,none,3,0,,OK,8,4,4,,,,,8.8
+old_hard_pipefit_rerun,low,"PipeFit hard tier (kept), second run",pipefit,P08_A_route_hard_seed14072,lose,12,1,EntranceExitOccupied,Leak,,,,,,12,8,9.53
+old_hard_pipefit_rerun,low,"PipeFit hard tier (kept), second run",pipefit,P09_A_route_hard_seed14525,win,12,0,,WIN,,,,,,11,12,10.62
+old_hard_pipefit_rerun,low,"PipeFit hard tier (kept), second run",pipefit,P10_A_route_hard_seed15014,lose,14,1,EntranceExitOccupied,Leak,,,,,,14,7,10.77
+old_hard_pipefit_rerun,low,"PipeFit hard tier (kept), second run",pipefit,P18_B_obstacles_hard_seed19013,lose,11,1,EntranceExitOccupied,Leak,,,,,,11,10,10.14
+old_hard_pipefit_rerun,low,"PipeFit hard tier (kept), second run",pipefit,P19_B_obstacles_hard_seed19532,lose,11,2,EntranceExitOccupied,Leak,,,,,,12,10,12.29
+old_hard_pipefit_rerun,low,"PipeFit hard tier (kept), second run",pipefit,P20_B_obstacles_hard_seed20020,win,12,0,,WIN,,,,,,13,3,12.81
+old_hard_pipefit_rerun,low,"PipeFit hard tier (kept), second run",pipefit,P28_C_branch_hard_seed24000,lose,9,11,InventoryEmpty,Unsupported,,,,,,10,7,10.48
+old_hard_pipefit_rerun,low,"PipeFit hard tier (kept), second run",pipefit,P29_C_branch_hard_seed24510,win,11,0,,WIN,,,,,,12,12,10.84
+old_hard_pipefit_rerun,low,"PipeFit hard tier (kept), second run",pipefit,P30_C_branch_hard_seed25000,win,14,0,,WIN,,,,,,13,3,10.1
+old_hard_pipefit_rerun,low,"PipeFit hard tier (kept), second run",pipefit,P38_D_tall_hard_seed29037,lose,12,2,EntranceExitOccupied,Leak,,,,,,12,4,11.41
+old_hard_pipefit_rerun,low,"PipeFit hard tier (kept), second run",pipefit,P39_D_tall_hard_seed29509,win,12,0,,WIN,,,,,,12,5,11.09
+old_hard_pipefit_rerun,low,"PipeFit hard tier (kept), second run",pipefit,P40_D_tall_hard_seed30025,lose,15,1,ObstacleHit,Leak,,,,,,15,11,10.46
+old_hard_pipefit_rerun,low,"PipeFit hard tier (kept), second run",pipefit,P48_E_mixed_hard_seed34059,lose,13,0,,Unsupported,,,,,,12,7,12.59
+old_hard_pipefit_rerun,low,"PipeFit hard tier (kept), second run",pipefit,P49_E_mixed_hard_seed34502,lose,13,1,ObstacleHit,Unsupported,,,,,,20,9,15.44
+old_hard_pipefit_rerun,low,"PipeFit hard tier (kept), second run",pipefit,P50_E_mixed_hard_seed35002,lose,15,4,ObstacleHit,Leak,,,,,,18,11,13.39
+fluid_f1,high,"tree, 7x7x5, 10-12 valves",fluidnet,H01_trace_hard_seed90500,win,7,0,,Win,12,7,5,,,,,8.0
+fluid_f1,high,"tree, 7x7x5, 10-12 valves",fluidnet,H02_trace_hard_seed91000,win,6,0,,Win,10,6,4,,,,,8.0
+fluid_f1,high,"tree, 7x7x5, 10-12 valves",fluidnet,H03_trace_hard_seed91500,win,5,0,,Win,10,5,5,,,,,8.0
+fluid_f1,high,"tree, 7x7x5, 10-12 valves",fluidnet,H04_trace_hard_seed92000,win,5,0,,Win,10,5,5,,,,,7.08
+fluid_f1,high,"tree, 7x7x5, 10-12 valves",fluidnet,H05_series_hard_seed92501,win,7,0,,Win,10,7,3,,,,,8.0
+fluid_f1,high,"tree, 7x7x5, 10-12 valves",fluidnet,H06_series_hard_seed93000,win,5,0,,Win,10,5,5,,,,,8.0
+fluid_f1,high,"tree, 7x7x5, 10-12 valves",fluidnet,H07_series_hard_seed93501,win,5,0,,Win,10,5,5,,,,,8.0
+fluid_f1,high,"tree, 7x7x5, 10-12 valves",fluidnet,H08_series_hard_seed94000,win,8,0,,Win,11,8,3,,,,,8.0
+fluid_f1,low,"tree, 7x7x5, 10-12 valves",fluidnet,H01_trace_hard_seed90500,win,7,0,,Win,12,7,5,,,,,8.0
+fluid_f1,low,"tree, 7x7x5, 10-12 valves",fluidnet,H02_trace_hard_seed91000,none,5,0,,OK,10,6,4,,,,,8.0
+fluid_f1,low,"tree, 7x7x5, 10-12 valves",fluidnet,H03_trace_hard_seed91500,none,4,1,ValveNotFound,OK,10,5,5,,,,,8.0
+fluid_f1,low,"tree, 7x7x5, 10-12 valves",fluidnet,H04_trace_hard_seed92000,none,2,3,ValveNotFound,ValveNotFound,10,5,5,,,,,7.08
+fluid_f1,low,"tree, 7x7x5, 10-12 valves",fluidnet,H05_series_hard_seed92501,lose,1,0,,ProtectedBreach,10,7,3,,,,,8.0
+fluid_f1,low,"tree, 7x7x5, 10-12 valves",fluidnet,H06_series_hard_seed93000,win,5,0,,Win,10,5,5,,,,,8.0
+fluid_f1,low,"tree, 7x7x5, 10-12 valves",fluidnet,H07_series_hard_seed93501,win,5,0,,Win,10,5,5,,,,,8.0
+fluid_f1,low,"tree, 7x7x5, 10-12 valves",fluidnet,H08_series_hard_seed94000,none,5,1,ValveNotFound,OK,11,8,3,,,,,8.0
+fluid_f2,high,"loops 3-4, two pumps, 9-13 valves",fluidnet,H01_two_pumps_hard_seed90500,lose,4,0,,ColorContamination,9,5,4,,,,,12.0
+fluid_f2,high,"loops 3-4, two pumps, 9-13 valves",fluidnet,H02_two_pumps_hard_seed91000,win,7,0,,Win,11,7,4,,,,,10.0
+fluid_f2,high,"loops 3-4, two pumps, 9-13 valves",fluidnet,H03_two_pumps_hard_seed91500,lose,6,0,,ProtectedBreach,10,6,4,,,,,7.02
+fluid_f2,high,"loops 3-4, two pumps, 9-13 valves",fluidnet,H04_two_pumps_hard_seed92000,win,7,0,,Win,9,7,2,,,,,7.76
+fluid_f2,high,"loops 3-4, two pumps, 9-13 valves",fluidnet,H05_mixed_hard_seed92504,lose,1,0,,ProtectedBreach,11,5,6,,,,,8.0
+fluid_f2,high,"loops 3-4, two pumps, 9-13 valves",fluidnet,H06_mixed_hard_seed93000,win,5,0,,Win,11,5,6,,,,,9.0
+fluid_f2,high,"loops 3-4, two pumps, 9-13 valves",fluidnet,H07_mixed_hard_seed93505,win,5,0,,Win,9,5,4,,,,,7.12
+fluid_f2,high,"loops 3-4, two pumps, 9-13 valves",fluidnet,H08_mixed_hard_seed94000,win,4,0,,Win,11,4,7,,,,,8.0
+fluid_f2,low,"loops 3-4, two pumps, 9-13 valves",fluidnet,H01_two_pumps_hard_seed90500,none,2,3,ValveNotFound,OK,9,5,4,,,,,12.0
+fluid_f2,low,"loops 3-4, two pumps, 9-13 valves",fluidnet,H02_two_pumps_hard_seed91000,none,5,0,,OK,11,7,4,,,,,10.0
+fluid_f2,low,"loops 3-4, two pumps, 9-13 valves",fluidnet,H03_two_pumps_hard_seed91500,none,5,1,ValveNotFound,OK,10,6,4,,,,,7.02
+fluid_f2,low,"loops 3-4, two pumps, 9-13 valves",fluidnet,H04_two_pumps_hard_seed92000,none,4,2,ValveNotFound,OK,9,7,2,,,,,7.76
+fluid_f2,low,"loops 3-4, two pumps, 9-13 valves",fluidnet,H05_mixed_hard_seed92504,win,5,1,ValveNotFound,Win,11,5,6,,,,,8.0
+fluid_f2,low,"loops 3-4, two pumps, 9-13 valves",fluidnet,H06_mixed_hard_seed93000,none,2,3,ValveNotFound,OK,11,5,6,,,,,9.0
+fluid_f2,low,"loops 3-4, two pumps, 9-13 valves",fluidnet,H07_mixed_hard_seed93505,none,2,3,ValveNotFound,ValveNotFound,9,5,4,,,,,7.12
+fluid_f2,low,"loops 3-4, two pumps, 9-13 valves",fluidnet,H08_mixed_hard_seed94000,none,0,6,ValveNotFound,ValveNotFound,11,4,7,,,,,8.0
+fluid_f3,high,"loops, 11-14 valves, score>=9",fluidnet,H01_trace_hard_seed90500,lose,3,0,,ProtectedBreach,12,5,7,,,,,9.0
+fluid_f3,high,"loops, 11-14 valves, score>=9",fluidnet,H05_backdoor_hard_seed92543,lose,5,0,,ProtectedBreach,12,5,7,,,,,9.0
+fluid_f3,high,"loops, 11-14 valves, score>=9",fluidnet,H07_two_pumps_hard_seed93521,win,6,0,,Win,11,6,5,,,,,10.34
+fluid_f3,high,"loops, 11-14 valves, score>=9",fluidnet,H08_two_pumps_hard_seed94035,lose,6,0,,ColorContamination,12,7,5,,,,,9.17
+fluid_f3,high,"loops, 11-14 valves, score>=9",fluidnet,H10_mixed_hard_seed95008,win,5,0,,Win,12,5,7,,,,,10.34
+fluid_f3,low,"loops, 11-14 valves, score>=9",fluidnet,H01_trace_hard_seed90500,lose,5,1,ValveNotFound,ProtectedBreach,12,5,7,,,,,9.0
+fluid_f3,low,"loops, 11-14 valves, score>=9",fluidnet,H05_backdoor_hard_seed92543,lose,1,3,ValveNotFound,ProtectedBreach,12,5,7,,,,,9.0
+fluid_f3,low,"loops, 11-14 valves, score>=9",fluidnet,H07_two_pumps_hard_seed93521,none,4,3,ValveNotFound,ValveNotFound,11,6,5,,,,,10.34
+fluid_f3,low,"loops, 11-14 valves, score>=9",fluidnet,H08_two_pumps_hard_seed94035,lose,5,1,ValveNotFound,ColorContamination,12,7,5,,,,,9.17
+fluid_f3,low,"loops, 11-14 valves, score>=9",fluidnet,H10_mixed_hard_seed95008,win,5,0,,Win,12,5,7,,,,,10.34
+fluid_f4,high,"loops, 12-15 valves, score>=10",fluidnet,H10_two_pumps_hard_seed95035,win,9,0,,Win,14,9,5,,,,,20.51
+fluid_f4,high,"loops, 12-15 valves, score>=10",fluidnet,H11_two_pumps_hard_seed95502,win,8,0,,Win,12,8,4,,,,,12.0
+fluid_f4,high,"loops, 12-15 valves, score>=10",fluidnet,H12_two_pumps_hard_seed96019,win,7,0,,Win,12,7,5,,,,,15.17
+fluid_f4,high,"loops, 12-15 valves, score>=10",fluidnet,H13_mixed_hard_seed96585,lose,3,0,,ProtectedBreach,12,6,6,,,,,10.0
+fluid_f4,high,"loops, 12-15 valves, score>=10",fluidnet,H14_mixed_hard_seed97075,lose,2,0,,ColorContamination,13,6,7,,,,,11.04
+fluid_f4,high,"loops, 12-15 valves, score>=10",fluidnet,H15_mixed_hard_seed97523,win,6,0,,Win,13,6,7,,,,,12.11
+fluid_f4,low,"loops, 12-15 valves, score>=10",fluidnet,H10_two_pumps_hard_seed95035,none,7,0,,OK,14,9,5,,,,,20.51
+fluid_f4,low,"loops, 12-15 valves, score>=10",fluidnet,H11_two_pumps_hard_seed95502,none,3,4,ValveNotFound,ValveNotFound,12,8,4,,,,,12.0
+fluid_f4,low,"loops, 12-15 valves, score>=10",fluidnet,H12_two_pumps_hard_seed96019,none,2,5,ValveNotFound,ValveNotFound,12,7,5,,,,,15.17
+fluid_f4,low,"loops, 12-15 valves, score>=10",fluidnet,H13_mixed_hard_seed96585,lose,5,0,,ColorContamination,12,6,6,,,,,10.0
+fluid_f4,low,"loops, 12-15 valves, score>=10",fluidnet,H14_mixed_hard_seed97075,lose,2,0,,WrongColorTarget,13,6,7,,,,,11.04
+fluid_f4,low,"loops, 12-15 valves, score>=10",fluidnet,H15_mixed_hard_seed97523,none,4,4,ValveNotFound,ValveNotFound,13,6,7,,,,,12.11
+fluid_f5,high,"single pump, 12-15 valves",fluidnet,H01_trace_hard_seed90593,lose,7,0,,ProtectedBreach,13,6,7,,,,,8.0
+fluid_f5,high,"single pump, 12-15 valves",fluidnet,H02_trace_hard_seed91234,win,6,0,,Win,12,6,6,,,,,9.0
+fluid_f5,high,"single pump, 12-15 valves",fluidnet,H03_trace_hard_seed91569,win,6,0,,Win,13,6,7,,,,,8.0
+fluid_f5,high,"single pump, 12-15 valves",fluidnet,H04_series_hard_seed92117,win,6,0,,Win,13,6,7,,,,,8.0
+fluid_f5,high,"single pump, 12-15 valves",fluidnet,H05_series_hard_seed92544,lose,8,0,,ProtectedBreach,13,7,6,,,,,8.0
+fluid_f5,high,"single pump, 12-15 valves",fluidnet,H06_series_hard_seed93115,win,6,0,,Win,12,6,6,,,,,8.0
+fluid_f5,high,"single pump, 12-15 valves",fluidnet,H09_backdoor_hard_seed94620,lose,2,0,,ProtectedBreach,13,6,7,,,,,9.0
+fluid_f5,low,"single pump, 12-15 valves",fluidnet,H01_trace_hard_seed90593,lose,6,2,ValveNotFound,ProtectedBreach,13,6,7,,,,,8.0
+fluid_f5,low,"single pump, 12-15 valves",fluidnet,H02_trace_hard_seed91234,none,3,4,ValveNotFound,OK,12,6,6,,,,,9.0
+fluid_f5,low,"single pump, 12-15 valves",fluidnet,H03_trace_hard_seed91569,lose,4,0,,ProtectedBreach,13,6,7,,,,,8.0
+fluid_f5,low,"single pump, 12-15 valves",fluidnet,H04_series_hard_seed92117,lose,4,0,,ProtectedBreach,13,6,7,,,,,8.0
+fluid_f5,low,"single pump, 12-15 valves",fluidnet,H05_series_hard_seed92544,none,5,3,ValveNotFound,OK,13,7,6,,,,,8.0
+fluid_f5,low,"single pump, 12-15 valves",fluidnet,H06_series_hard_seed93115,none,1,11,ValveNotFound,ValveNotFound,12,6,6,,,,,8.0
+fluid_f5,low,"single pump, 12-15 valves",fluidnet,H09_backdoor_hard_seed94620,lose,4,1,ValveNotFound,ProtectedBreach,13,6,7,,,,,9.0
+fluid_f6,low,"6x6x5-7x6x5, 9-11 valves",fluidnet,H01_trace_hard_seed90504,none,4,12,ValveNotFound,ValveNotFound,10,6,4,,,,,8.0
+fluid_f6,low,"6x6x5-7x6x5, 9-11 valves",fluidnet,H02_trace_hard_seed91000,lose,3,0,,ProtectedBreach,9,5,4,,,,,7.8
+fluid_f6,low,"6x6x5-7x6x5, 9-11 valves",fluidnet,H03_trace_hard_seed91508,none,4,0,,OK,9,6,3,,,,,8.0
+fluid_f6,low,"6x6x5-7x6x5, 9-11 valves",fluidnet,H04_series_hard_seed92001,none,3,3,ValveNotFound,ValveNotFound,10,6,4,,,,,8.0
+fluid_f6,low,"6x6x5-7x6x5, 9-11 valves",fluidnet,H05_series_hard_seed92501,win,5,0,,Win,9,5,4,,,,,8.0
+fluid_f6,low,"6x6x5-7x6x5, 9-11 valves",fluidnet,H06_series_hard_seed93006,none,4,1,ValveNotFound,OK,9,5,4,,,,,8.0
+fluid_f6,low,"6x6x5-7x6x5, 9-11 valves",fluidnet,H07_backdoor_hard_seed93524,lose,6,0,,ProtectedBreach,10,6,4,,,,,9.0
+fluid_f6,low,"6x6x5-7x6x5, 9-11 valves",fluidnet,H08_backdoor_hard_seed94001,lose,1,0,,ProtectedBreach,10,5,5,,,,,9.0
+fluid_f6,low,"6x6x5-7x6x5, 9-11 valves",fluidnet,H09_backdoor_hard_seed94500,none,0,2,ValveNotFound,ValveNotFound,9,4,5,,,,,8.93
+fluid_f6,low,"6x6x5-7x6x5, 9-11 valves",fluidnet,H10_two_pumps_hard_seed95000,none,5,2,ValveNotFound,OK,10,7,3,,,,,11.17
+fluid_f6,low,"6x6x5-7x6x5, 9-11 valves",fluidnet,H11_two_pumps_hard_seed95500,none,4,2,ValveNotFound,OK,10,6,4,,,,,8.83
+fluid_f6,low,"6x6x5-7x6x5, 9-11 valves",fluidnet,H12_two_pumps_hard_seed96008,none,3,2,ValveNotFound,OK,9,6,3,,,,,10.0
+fluid_f6,low,"6x6x5-7x6x5, 9-11 valves",fluidnet,H13_mixed_hard_seed96520,none,3,3,ValveNotFound,ValveNotFound,11,6,5,,,,,11.0
+fluid_f6,low,"6x6x5-7x6x5, 9-11 valves",fluidnet,H14_mixed_hard_seed97001,none,3,1,ValveNotFound,ValveNotFound,10,4,6,,,,,10.31
+fluid_f6,low,"6x6x5-7x6x5, 9-11 valves",fluidnet,H15_mixed_hard_seed97513,none,3,1,ValveNotFound,OK,10,5,5,,,,,11.46
+fluid_f7,low,"8-9 valves, extra red cell, route valves",fluidnet,H01_trace_hard_seed90558,lose,1,0,,ProtectedBreach,8,4,4,,,,,7.9
+fluid_f7,low,"8-9 valves, extra red cell, route valves",fluidnet,H02_trace_hard_seed91001,lose,3,1,ValveNotFound,ProtectedBreach,8,5,3,,,,,7.8
+fluid_f7,low,"8-9 valves, extra red cell, route valves",fluidnet,H03_trace_hard_seed91530,none,4,0,,OK,8,5,3,,,,,8.0
+fluid_f7,low,"8-9 valves, extra red cell, route valves",fluidnet,H04_series_hard_seed92020,none,4,1,ValveNotFound,ValveNotFound,8,5,3,,,,,7.76
+fluid_f7,low,"8-9 valves, extra red cell, route valves",fluidnet,H05_series_hard_seed92708,none,4,1,ValveNotFound,OK,8,6,2,,,,,7.33
+fluid_f7,low,"8-9 valves, extra red cell, route valves",fluidnet,H06_series_hard_seed93036,lose,1,0,,ProtectedBreach,8,5,3,,,,,8.0
+fluid_f7,low,"8-9 valves, extra red cell, route valves",fluidnet,H07_backdoor_hard_seed93740,none,1,2,ValveNotFound,OK,8,4,4,,,,,8.08
+fluid_f7,low,"8-9 valves, extra red cell, route valves",fluidnet,H08_backdoor_hard_seed94091,none,4,1,ValveNotFound,OK,8,4,4,,,,,8.18
+fluid_f7,low,"8-9 valves, extra red cell, route valves",fluidnet,H09_backdoor_hard_seed94601,none,3,1,ValveNotFound,OK,9,4,5,,,,,7.32
+fluid_f7,low,"8-9 valves, extra red cell, route valves",fluidnet,H10_two_pumps_hard_seed95073,win,5,0,,Win,9,5,4,,,,,9.64
+fluid_f7,low,"8-9 valves, extra red cell, route valves",fluidnet,H11_two_pumps_hard_seed95516,lose,3,0,,WrongColorTarget,8,4,4,,,,,12.63
+fluid_f7,low,"8-9 valves, extra red cell, route valves",fluidnet,H12_two_pumps_hard_seed96046,none,4,1,ValveNotFound,ValveNotFound,9,5,4,,,,,11.0
+fluid_f7,low,"8-9 valves, extra red cell, route valves",fluidnet,H13_mixed_hard_seed96511,none,2,3,ValveNotFound,ValveNotFound,9,4,5,,,,,10.05
+fluid_f7,low,"8-9 valves, extra red cell, route valves",fluidnet,H14_mixed_hard_seed97032,none,4,0,,OK,8,5,3,,,,,8.52
+fluid_f7,low,"8-9 valves, extra red cell, route valves",fluidnet,H15_mixed_hard_seed97522,none,2,2,ValveNotFound,OK,8,4,4,,,,,7.27
+fluid_f8,low,"original settings, 8-9 valves",fluidnet,H01_trace_hard_seed90525,none,4,1,ValveNotFound,ValveNotFound,8,5,3,,,,,7.8
+fluid_f8,low,"original settings, 8-9 valves",fluidnet,H02_trace_hard_seed91103,win,5,0,,Win,8,5,3,,,,,7.33
+fluid_f8,low,"original settings, 8-9 valves",fluidnet,H03_trace_hard_seed91521,win,5,0,,Win,8,5,3,,,,,7.59
+fluid_f8,low,"original settings, 8-9 valves",fluidnet,H07_backdoor_hard_seed93616,win,4,0,,Win,8,4,4,,,,,8.0
+fluid_f8,low,"original settings, 8-9 valves",fluidnet,H08_backdoor_hard_seed94073,none,5,1,ValveNotFound,OK,9,5,4,,,,,9.0
+fluid_f8,low,"original settings, 8-9 valves",fluidnet,H09_backdoor_hard_seed94817,win,4,0,,Win,8,4,4,,,,,7.0
+fluid_f8,low,"original settings, 8-9 valves",fluidnet,H10_two_pumps_hard_seed95037,win,5,0,,Win,8,5,3,,,,,14.34
+fluid_f8,low,"original settings, 8-9 valves",fluidnet,H11_two_pumps_hard_seed95528,none,4,1,ValveNotFound,OK,8,5,3,,,,,8.2
+fluid_f8,low,"original settings, 8-9 valves",fluidnet,H12_two_pumps_hard_seed96027,none,0,4,ValveNotFound,ValveNotFound,8,5,3,,,,,10.0
+fluid_f8,low,"original settings, 8-9 valves",fluidnet,H13_mixed_hard_seed96513,none,3,1,ValveNotFound,OK,8,4,4,,,,,7.47
+fluid_f8,low,"original settings, 8-9 valves",fluidnet,H14_mixed_hard_seed97061,none,3,0,,OK,8,4,4,,,,,13.82
+fluid_f8,low,"original settings, 8-9 valves",fluidnet,H15_mixed_hard_seed97512,none,2,4,ValveNotFound,ValveNotFound,9,5,4,,,,,8.05
+fluid_f9,low,9-10 valves (pruned),fluidnet,H04_series_hard_seed92412,none,5,0,,OK,9,6,3,,,,,8.0
+fluid_f9,low,9-10 valves (pruned),fluidnet,H05_series_hard_seed92591,none,4,1,ValveNotFound,OK,9,5,4,,,,,8.0
+fluid_f9,low,9-10 valves (pruned),fluidnet,H06_series_hard_seed93100,win,6,0,,Win,10,6,4,,,,,7.59
+fluid_f9,low,9-10 valves (pruned),fluidnet,H07_backdoor_hard_seed93501,lose,4,1,ValveNotFound,ProtectedBreach,9,5,4,,,,,8.36
+fluid_f9,low,9-10 valves (pruned),fluidnet,H08_backdoor_hard_seed94159,none,1,1,ValveNotFound,OK,9,5,4,,,,,9.0
+fluid_f9,low,9-10 valves (pruned),fluidnet,H09_backdoor_hard_seed94816,none,4,0,,OK,9,5,4,,,,,9.0
+fluid_f9,low,9-10 valves (pruned),fluidnet,H13_mixed_hard_seed96531,win,5,0,,Win,9,5,4,,,,,10.98
+fluid_f9,low,9-10 valves (pruned),fluidnet,H14_mixed_hard_seed97033,none,1,3,ValveNotFound,ValveNotFound,9,5,4,,,,,11.17
+fluid_f9,low,9-10 valves (pruned),fluidnet,H15_mixed_hard_seed97502,win,5,13,ValveNotFound,Win,9,5,4,,,,,8.69
+fluid_f10,low,"9-10 valves (pruned), trace / two_pumps",fluidnet,H01_trace_hard_seed90562,win,5,0,,Win,9,5,4,,,,,8.0
+fluid_f10,low,"9-10 valves (pruned), trace / two_pumps",fluidnet,H02_trace_hard_seed91027,win,5,21,ValveNotFound,Win,9,5,4,,,,,8.0
+fluid_f10,low,"9-10 valves (pruned), trace / two_pumps",fluidnet,H03_trace_hard_seed91705,none,2,1,ValveNotFound,OK,9,5,4,,,,,8.0
+fluid_f10,low,"9-10 valves (pruned), trace / two_pumps",fluidnet,H04_two_pumps_hard_seed92005,none,2,1,ValveNotFound,ValveNotFound,9,5,4,,,,,14.34
+fluid_f10,low,"9-10 valves (pruned), trace / two_pumps",fluidnet,H05_two_pumps_hard_seed92572,none,0,0,,,9,5,4,,,,,14.0
+fluid_f10,low,"9-10 valves (pruned), trace / two_pumps",fluidnet,H06_two_pumps_hard_seed93003,win,5,0,,Win,9,5,4,,,,,9.64
+fluid_f11,low,10-11 valves (pruned),fluidnet,H13_mixed_hard_seed96562,none,4,2,ValveNotFound,ValveNotFound,10,6,4,,,,,8.64
+fluid_f11,low,10-11 valves (pruned),fluidnet,H14_mixed_hard_seed97043,none,3,0,,OK,10,6,4,,,,,10.25
+fluid_f11,low,10-11 valves (pruned),fluidnet,H15_mixed_hard_seed97644,none,3,2,ValveNotFound,ValveNotFound,10,6,4,,,,,13.31
+domino_d1,high,"6 patches, split",domino,H07_D_split_hard_seed93500,win,8,0,,WIN,,,,6,0,,1,12.5
+domino_d1,high,"6 patches, split",domino,H08_D_split_hard_seed94000,win,8,0,,WIN,,,,6,0,,1,10.5
+domino_d1,high,"6 patches, split",domino,H09_E_full_hard_seed94500,win,8,0,,WIN,,,,6,3,,1,10.92
+domino_d1,high,"6 patches, split",domino,H10_E_full_hard_seed95000,win,8,0,,WIN,,,,6,5,,1,13.5
+domino_d3,high,"7 patches, split + steps",domino,H03_D_split_hard_seed91500,win,9,0,,WIN,,,,7,5,,1,14.5
+domino_d3,high,"7 patches, split + steps",domino,H04_D_split_hard_seed92000,win,9,0,,WIN,,,,7,5,,1,13.5
+domino_d3,high,"7 patches, split + steps",domino,H05_E_full_hard_seed92500,none,6,10,CellOccupied,BadPhase,,,,7,4,,1,15.0
+domino_d3,high,"7 patches, split + steps",domino,H06_E_full_hard_seed93000,win,9,0,,WIN,,,,7,6,,1,13.54
+domino_d4,high,two-level splitter tree,domino,H01_B_decoy_hard_seed90500,win,9,0,,WIN,,,,7,0,,1,15.0
+domino_d4,high,two-level splitter tree,domino,H02_B_decoy_hard_seed91000,win,9,0,,WIN,,,,7,0,,1,14.5
+domino_d4,high,two-level splitter tree,domino,H03_C_steps_hard_seed91500,win,9,0,,WIN,,,,7,4,,1,17.0
+domino_d4,high,two-level splitter tree,domino,H04_C_steps_hard_seed92000,none,6,3,NoPhysicalSupport,BadPhase,,,,7,6,,1,17.0
+domino_d4,high,two-level splitter tree,domino,H05_D_split_hard_seed92500,win,9,0,,WIN,,,,7,0,,1,13.15
+domino_d4,high,two-level splitter tree,domino,H06_D_split_hard_seed93000,win,9,0,,WIN,,,,7,0,,1,13.21
+domino_d4,high,two-level splitter tree,domino,H07_E_full_hard_seed93500,win,10,0,,WIN,,,,8,3,,1,16.5
+domino_d4,high,two-level splitter tree,domino,H08_E_full_hard_seed94000,win,10,0,,WIN,,,,8,3,,1,12.95
+domino_d5,high,"two-level tree, heavy steps",domino,H03_B_decoy_hard_seed91500,win,9,0,,WIN,,,,7,6,,1,18.0
+domino_d5,high,"two-level tree, heavy steps",domino,H04_B_decoy_hard_seed92001,win,9,0,,WIN,,,,7,5,,1,17.0
+domino_d5,high,"two-level tree, heavy steps",domino,H05_C_steps_hard_seed92500,win,9,0,,WIN,,,,7,7,,1,18.0
+domino_d5,high,"two-level tree, heavy steps",domino,H06_C_steps_hard_seed93000,win,9,0,,WIN,,,,7,6,,1,18.0
+domino_d5,high,"two-level tree, heavy steps",domino,H07_D_split_hard_seed93500,win,9,0,,WIN,,,,7,5,,1,12.19
+domino_d5,high,"two-level tree, heavy steps",domino,H08_D_split_hard_seed94000,win,9,0,,WIN,,,,7,6,,1,15.43
+domino_d5,high,"two-level tree, heavy steps",domino,H09_E_full_hard_seed94500,win,10,0,,WIN,,,,8,7,,1,17.94
+domino_d5,high,"two-level tree, heavy steps",domino,H10_E_full_hard_seed95000,win,10,0,,WIN,,,,8,7,,1,18.5
+domino_d6,high,"three-level tree, front view only",domino,H01_A_line_hard_seed90500,win,11,0,,WIN,,,,9,0,,1,16.5
+domino_d6,high,"three-level tree, front view only",domino,H02_A_line_hard_seed91000,win,11,0,,WIN,,,,9,0,,1,16.5
+domino_d6,high,"three-level tree, front view only",domino,H03_B_decoy_hard_seed91500,win,11,0,,WIN,,,,9,6,,1,18.13
+domino_d6,high,"three-level tree, front view only",domino,H04_B_decoy_hard_seed92000,win,11,0,,WIN,,,,9,2,,1,18.5
+domino_d6,high,"three-level tree, front view only",domino,H05_C_steps_hard_seed92500,none,8,3,CellOccupied,BadPhase,,,,9,5,,1,19.0
+domino_d6,high,"three-level tree, front view only",domino,H06_C_steps_hard_seed93000,none,7,4,NoPhysicalSupport,BadPhase,,,,9,8,,1,17.59
+domino_d6,high,"three-level tree, front view only",domino,H07_D_split_hard_seed93500,win,12,0,,WIN,,,,10,0,,1,17.5
+domino_d6,high,"three-level tree, front view only",domino,H08_D_split_hard_seed94000,win,12,0,,WIN,,,,10,0,,1,17.0
+domino_d6,high,"three-level tree, front view only",domino,H09_E_full_hard_seed94500,none,8,4,NoPhysicalSupport,BadPhase,,,,10,7,,1,20.5
+domino_d6,high,"three-level tree, front view only",domino,H10_E_full_hard_seed95000,win,12,0,,WIN,,,,10,5,,1,19.5
+domino_d6,high,"three-level tree, front + back",domino,H01_A_line_hard_seed90500,win,11,0,,WIN,,,,9,0,,1,16.5
+domino_d6,high,"three-level tree, front + back",domino,H02_A_line_hard_seed91000,win,11,0,,WIN,,,,9,0,,1,16.5
+domino_d6,high,"three-level tree, front + back",domino,H03_B_decoy_hard_seed91500,win,11,0,,WIN,,,,9,6,,1,18.13
+domino_d6,high,"three-level tree, front + back",domino,H04_B_decoy_hard_seed92000,win,11,0,,WIN,,,,9,2,,1,18.5
+domino_d6,high,"three-level tree, front + back",domino,H05_C_steps_hard_seed92500,win,11,0,,WIN,,,,9,5,,1,19.0
+domino_d6,high,"three-level tree, front + back",domino,H06_C_steps_hard_seed93000,win,11,0,,WIN,,,,9,8,,1,17.59
+domino_d6,high,"three-level tree, front + back",domino,H07_D_split_hard_seed93500,win,12,0,,WIN,,,,10,0,,1,17.5
+domino_d6,high,"three-level tree, front + back",domino,H08_D_split_hard_seed94000,win,12,0,,WIN,,,,10,0,,1,17.0
+domino_d6,high,"three-level tree, front + back",domino,H09_E_full_hard_seed94500,win,12,0,,WIN,,,,10,7,,1,20.5
+domino_d6,high,"three-level tree, front + back",domino,H10_E_full_hard_seed95000,win,12,0,,WIN,,,,10,5,,1,19.5
+domino_d6,low,"three-level tree, front + back",domino,H01_A_line_hard_seed90500,win,11,0,,WIN,,,,9,0,,1,16.5
+domino_d6,low,"three-level tree, front + back",domino,H02_A_line_hard_seed91000,win,11,0,,WIN,,,,9,0,,1,16.5
+domino_d6,low,"three-level tree, front + back",domino,H03_B_decoy_hard_seed91500,none,8,3,CellOccupied,BadPhase,,,,9,6,,1,18.13
+domino_d6,low,"three-level tree, front + back",domino,H04_B_decoy_hard_seed92000,win,11,0,,WIN,,,,9,2,,1,18.5
+domino_d6,low,"three-level tree, front + back",domino,H05_C_steps_hard_seed92500,none,4,7,CellOccupied,BadPhase,,,,9,5,,1,19.0
+domino_d6,low,"three-level tree, front + back",domino,H06_C_steps_hard_seed93000,none,6,5,CellOccupied,BadPhase,,,,9,8,,1,17.59
+domino_d6,low,"three-level tree, front + back",domino,H07_D_split_hard_seed93500,win,12,0,,WIN,,,,10,0,,1,17.5
+domino_d6,low,"three-level tree, front + back",domino,H08_D_split_hard_seed94000,win,12,0,,WIN,,,,10,0,,1,17.0
+domino_d6,low,"three-level tree, front + back",domino,H09_E_full_hard_seed94500,none,6,6,NoPhysicalSupport,BadPhase,,,,10,7,,1,20.5
+domino_d6,low,"three-level tree, front + back",domino,H10_E_full_hard_seed95000,win,12,0,,WIN,,,,10,5,,1,19.5
+domino_d7,low,three-level tree on steps (= new hard settings),domino,H01_A_line_hard_seed90500,win,11,0,,WIN,,,,9,6,,1,19.5
+domino_d7,low,three-level tree on steps (= new hard settings),domino,H02_A_line_hard_seed91000,none,8,3,NoPhysicalSupport,BadPhase,,,,9,5,,1,19.0
+domino_d7,low,three-level tree on steps (= new hard settings),domino,H03_A_line_hard_seed91500,none,7,4,NoPhysicalSupport,BadPhase,,,,9,8,,1,21.0
+domino_d7,low,three-level tree on steps (= new hard settings),domino,H04_B_decoy_hard_seed92000,none,7,4,CellOccupied,BadPhase,,,,9,5,,1,19.5
+domino_d7,low,three-level tree on steps (= new hard settings),domino,H05_B_decoy_hard_seed92500,none,8,3,CellOccupied,BadPhase,,,,9,4,,1,18.0
+domino_d7,low,three-level tree on steps (= new hard settings),domino,H06_B_decoy_hard_seed93000,win,11,0,,WIN,,,,9,8,,1,22.0
+domino_d7,low,three-level tree on steps (= new hard settings),domino,H07_C_steps_hard_seed93501,none,5,6,NoPhysicalSupport,BadPhase,,,,9,5,,1,17.28
+domino_d7,low,three-level tree on steps (= new hard settings),domino,H08_C_steps_hard_seed94000,none,6,5,CellOccupied,BadPhase,,,,9,7,,1,20.0
+domino_d7,low,three-level tree on steps (= new hard settings),domino,H09_C_steps_hard_seed94500,none,8,3,NoPhysicalSupport,BadPhase,,,,9,8,,1,20.0
+domino_d7,low,three-level tree on steps (= new hard settings),domino,H10_D_split_hard_seed95000,win,12,0,,WIN,,,,10,5,,1,19.5
+domino_d7,low,three-level tree on steps (= new hard settings),domino,H11_D_split_hard_seed95500,none,9,3,CellOccupied,BadPhase,,,,10,5,,1,18.53
+domino_d7,low,three-level tree on steps (= new hard settings),domino,H12_D_split_hard_seed96000,none,5,7,CellOccupied,BadPhase,,,,10,5,,1,20.0
+domino_d7,low,three-level tree on steps (= new hard settings),domino,H13_E_full_hard_seed96500,win,12,0,,WIN,,,,10,5,,1,20.0
+domino_d7,low,three-level tree on steps (= new hard settings),domino,H14_E_full_hard_seed97000,none,9,3,NoPhysicalSupport,BadPhase,,,,10,8,,1,20.5
+domino_d7,low,three-level tree on steps (= new hard settings),domino,H15_E_full_hard_seed97500,none,5,7,CellOccupied,BadPhase,,,,10,7,,1,20.5
+domino_x1,high,tree + extra interacting line segments,domino,X201,win,8,0,,WIN,,,,6,0,,1,12.34
+domino_x1,high,tree + extra interacting line segments,domino,X207,win,8,0,,WIN,,,,6,0,,1,16.0
+domino_x1,high,tree + extra interacting line segments,domino,X208,win,8,0,,WIN,,,,6,0,,1,13.0
+domino_x1,high,tree + extra interacting line segments,domino,X209,win,8,0,,WIN,,,,6,0,,1,11.86
+domino_x1,high,tree + extra interacting line segments,domino,X210,win,8,0,,WIN,,,,6,0,,1,14.19
+domino_x1,high,tree + extra interacting line segments,domino,X216,win,8,0,,WIN,,,,6,0,,1,13.5
+domino_x1,high,tree + extra interacting line segments,domino,X219,win,8,0,,WIN,,,,6,0,,1,14.0
+domino_x1,high,tree + extra interacting line segments,domino,X220,win,8,0,,WIN,,,,6,0,,1,15.48
+domino_x1,high,tree + extra interacting line segments,domino,X222,win,8,0,,WIN,,,,6,0,,1,14.13
+domino_x1,high,tree + extra interacting line segments,domino,X225,win,8,0,,WIN,,,,6,0,,1,14.51
+domino_x1,high,tree + extra interacting line segments,domino,X226,win,8,0,,WIN,,,,6,0,,1,15.62
+domino_x1,high,tree + extra interacting line segments,domino,X228,win,8,0,,WIN,,,,6,0,,1,14.09
+domino_x1,high,tree + extra interacting line segments,domino,X229,win,12,0,,WIN,,,,10,0,,1,17.0
+domino_x1,high,tree + extra interacting line segments,domino,X231,win,8,0,,WIN,,,,6,0,,1,13.79
+domino_x1,low,tree + extra interacting line segments,domino,X201,win,8,0,,WIN,,,,6,0,,1,12.34
+domino_x1,low,tree + extra interacting line segments,domino,X207,win,8,0,,WIN,,,,6,0,,1,16.0
+domino_x1,low,tree + extra interacting line segments,domino,X208,win,8,0,,WIN,,,,6,0,,1,13.0
+domino_x1,low,tree + extra interacting line segments,domino,X209,win,8,0,,WIN,,,,6,0,,1,11.86
+domino_x1,low,tree + extra interacting line segments,domino,X210,win,8,0,,WIN,,,,6,0,,1,14.19
+domino_x1,low,tree + extra interacting line segments,domino,X216,win,8,0,,WIN,,,,6,0,,1,13.5
+domino_x1,low,tree + extra interacting line segments,domino,X219,win,8,0,,WIN,,,,6,0,,1,14.0
+domino_x1,low,tree + extra interacting line segments,domino,X220,win,8,0,,WIN,,,,6,0,,1,15.48
+domino_x1,low,tree + extra interacting line segments,domino,X222,win,8,0,,WIN,,,,6,0,,1,14.13
+domino_x1,low,tree + extra interacting line segments,domino,X225,win,8,0,,WIN,,,,6,0,,1,14.51
+domino_x1,low,tree + extra interacting line segments,domino,X226,win,8,0,,WIN,,,,6,0,,1,15.62
+domino_x1,low,tree + extra interacting line segments,domino,X228,win,8,0,,WIN,,,,6,0,,1,14.09
+domino_x1,low,tree + extra interacting line segments,domino,X229,win,12,0,,WIN,,,,10,0,,1,17.0
+domino_x1,low,tree + extra interacting line segments,domino,X231,win,8,0,,WIN,,,,6,0,,1,13.79
+domino_x2,high,"three-level tree + segments + steps, 13x13x4",domino,Y300,win,11,0,,WIN,,,,9,4,,1,22.5
+domino_x2,high,"three-level tree + segments + steps, 13x13x4",domino,Y301,win,12,0,,WIN,,,,10,4,,1,19.85
+domino_x2,high,"three-level tree + segments + steps, 13x13x4",domino,Y302,lose,11,0,,GoalNotToppled,,,,9,6,,1,22.5
+domino_x2,high,"three-level tree + segments + steps, 13x13x4",domino,Y303,none,8,3,CellOccupied,BadPhase,,,,9,4,,1,19.5
+domino_x2,high,"three-level tree + segments + steps, 13x13x4",domino,Y304,none,8,3,NoPhysicalSupport,BadPhase,,,,9,5,,1,21.0
+domino_x2,high,"three-level tree + segments + steps, 13x13x4",domino,Y305,none,7,4,NoPhysicalSupport,BadPhase,,,,9,7,,1,18.34
+domino_x2,high,"three-level tree + segments + steps, 13x13x4",domino,Y306,none,8,3,CellOccupied,BadPhase,,,,9,3,,1,20.5
+domino_x2,high,"three-level tree + segments + steps, 13x13x4",domino,Y308,none,8,3,NoPhysicalSupport,BadPhase,,,,9,8,,1,22.5
+domino_x2,high,"three-level tree + segments + steps, 13x13x4",domino,Y309,none,7,4,NoPhysicalSupport,BadPhase,,,,9,7,,1,19.14
+domino_x2,high,"three-level tree + segments + steps, 13x13x4",domino,Y312,win,11,0,,WIN,,,,9,8,,1,17.56
+domino_x2,low,"three-level tree + segments + steps, 13x13x4",domino,Y300,win,11,0,,WIN,,,,9,4,,1,22.5
+domino_x2,low,"three-level tree + segments + steps, 13x13x4",domino,Y301,win,12,0,,WIN,,,,10,4,,1,19.85
+domino_x2,low,"three-level tree + segments + steps, 13x13x4",domino,Y302,none,7,4,NoPhysicalSupport,BadPhase,,,,9,6,,1,22.5
+domino_x2,low,"three-level tree + segments + steps, 13x13x4",domino,Y303,none,8,3,CellOccupied,BadPhase,,,,9,4,,1,19.5
+domino_x2,low,"three-level tree + segments + steps, 13x13x4",domino,Y304,none,2,9,CellOccupied,BadPhase,,,,9,5,,1,21.0
+domino_x2,low,"three-level tree + segments + steps, 13x13x4",domino,Y305,none,7,4,CellOccupied,BadPhase,,,,9,7,,1,18.34
+domino_x2,low,"three-level tree + segments + steps, 13x13x4",domino,Y306,win,11,0,,WIN,,,,9,3,,1,20.5
+domino_x2,low,"three-level tree + segments + steps, 13x13x4",domino,Y308,none,7,4,NoPhysicalSupport,BadPhase,,,,9,8,,1,22.5
+domino_x2,low,"three-level tree + segments + steps, 13x13x4",domino,Y309,none,6,5,CellOccupied,BadPhase,,,,9,7,,1,19.14
+domino_x2,low,"three-level tree + segments + steps, 13x13x4",domino,Y312,none,1,10,NoPhysicalSupport,BadPhase,,,,9,8,,1,17.56
+pipe_p3,high,"long plans, many solutions",pipefit,H01_A_route_hard_seed90528,win,11,0,,WIN,,,,,,20,84,8.31
+pipe_p3,high,"long plans, many solutions",pipefit,H02_A_route_hard_seed91010,win,14,0,,WIN,,,,,,19,86,7.56
+pipe_p3,high,"long plans, many solutions",pipefit,H07_E_mixed_hard_seed93596,win,15,0,,WIN,,,,,,19,64,9.83
+pipe_p4,high,"raised portals, exact inventory",pipefit,H01_A_route_hard_seed90500,win,14,0,,WIN,,,,,,19,4,7.0
+pipe_p4,high,"raised portals, exact inventory",pipefit,H02_A_route_hard_seed91002,win,20,0,,WIN,,,,,,19,1,9.61
+pipe_p4,high,"raised portals, exact inventory",pipefit,H03_B_obstacles_hard_seed91510,win,17,0,,WIN,,,,,,16,4,8.79
+pipe_p4,high,"raised portals, exact inventory",pipefit,H04_B_obstacles_hard_seed92113,win,15,0,,WIN,,,,,,20,9,10.12
+pipe_p4,high,"raised portals, exact inventory",pipefit,H05_C_branch_hard_seed92504,win,22,0,,WIN,,,,,,21,4,6.25
+pipe_p4,high,"raised portals, exact inventory",pipefit,H06_C_branch_hard_seed93003,win,16,0,,WIN,,,,,,21,6,7.52
+pipe_p4,high,"raised portals, exact inventory",pipefit,H07_D_tall_hard_seed93500,win,13,0,,WIN,,,,,,18,12,10.35
+pipe_p4,high,"raised portals, exact inventory",pipefit,H08_D_tall_hard_seed94002,win,17,0,,WIN,,,,,,16,8,8.79
+pipe_p4,high,"raised portals, exact inventory",pipefit,H09_E_mixed_hard_seed94507,win,20,0,,WIN,,,,,,19,7,6.4
+pipe_p4,high,"raised portals, exact inventory",pipefit,H10_E_mixed_hard_seed95011,win,13,0,,WIN,,,,,,16,9,6.19
+pipe_p5,high,"7x6x6, 26-31 pieces",pipefit,H01_A_route_hard_seed90521,win,30,0,,WIN,,,,,,29,19,13.22
+pipe_p5,high,"7x6x6, 26-31 pieces",pipefit,H02_A_route_hard_seed91014,win,25,0,,WIN,,,,,,30,16,13.55
+pipe_p5,high,"7x6x6, 26-31 pieces",pipefit,H03_B_obstacles_hard_seed91527,win,25,0,,WIN,,,,,,30,15,12.94
+pipe_p5,high,"7x6x6, 26-31 pieces",pipefit,H04_B_obstacles_hard_seed92008,win,28,0,,WIN,,,,,,27,3,12.85
+pipe_p5,high,"7x6x6, 26-31 pieces",pipefit,H05_C_branch_hard_seed92503,win,31,0,,WIN,,,,,,30,14,9.72
+pipe_p5,high,"7x6x6, 26-31 pieces",pipefit,H06_C_branch_hard_seed93010,win,26,0,,WIN,,,,,,31,23,11.68
+pipe_p5,high,"7x6x6, 26-31 pieces",pipefit,H07_D_tall_hard_seed93509,win,22,0,,WIN,,,,,,27,6,12.37
+pipe_p5,high,"7x6x6, 26-31 pieces",pipefit,H08_D_tall_hard_seed94014,win,28,0,,WIN,,,,,,27,7,11.6
+pipe_p5,high,"7x6x6, 26-31 pieces",pipefit,H09_E_mixed_hard_seed94533,win,22,0,,WIN,,,,,,26,13,12.11
+new_hard,low,new Domino hard tier of puzzles_50,domino,P08_A_line_hard_seed14000,none,8,3,CellOccupied,BadPhase,,,,9,7,,1,19.5
+new_hard,low,new Domino hard tier of puzzles_50,domino,P09_A_line_hard_seed14500,none,6,5,NoPhysicalSupport,BadPhase,,,,9,7,,1,21.0
+new_hard,low,new Domino hard tier of puzzles_50,domino,P10_A_line_hard_seed15000,none,7,4,CellOccupied,BadPhase,,,,9,7,,1,19.5
+new_hard,low,new Domino hard tier of puzzles_50,domino,P18_B_decoy_hard_seed19000,win,11,0,,WIN,,,,9,5,,1,19.5
+new_hard,low,new Domino hard tier of puzzles_50,domino,P19_B_decoy_hard_seed19501,none,7,4,CellOccupied,BadPhase,,,,9,5,,1,21.0
+new_hard,low,new Domino hard tier of puzzles_50,domino,P20_B_decoy_hard_seed20000,none,7,4,CellOccupied,BadPhase,,,,9,5,,1,16.51
+new_hard,low,new Domino hard tier of puzzles_50,domino,P28_C_steps_hard_seed24000,none,3,8,NoPhysicalSupport,BadPhase,,,,9,5,,1,19.0
+new_hard,low,new Domino hard tier of puzzles_50,domino,P29_C_steps_hard_seed24500,none,8,3,CellOccupied,BadPhase,,,,9,5,,1,19.5
+new_hard,low,new Domino hard tier of puzzles_50,domino,P30_C_steps_hard_seed25000,none,7,4,CellOccupied,BadPhase,,,,9,6,,1,20.5
+new_hard,low,new Domino hard tier of puzzles_50,domino,P38_D_split_hard_seed29000,none,7,5,NoPhysicalSupport,BadPhase,,,,10,6,,1,20.5
+new_hard,low,new Domino hard tier of puzzles_50,domino,P39_D_split_hard_seed29501,none,8,4,NoPhysicalSupport,BadPhase,,,,10,4,,1,18.5
+new_hard,low,new Domino hard tier of puzzles_50,domino,P40_D_split_hard_seed30000,none,9,3,CellOccupied,BadPhase,,,,10,6,,1,20.5
+new_hard,low,new Domino hard tier of puzzles_50,domino,P48_E_full_hard_seed34001,none,4,8,NoPhysicalSupport,BadPhase,,,,10,6,,1,18.08
+new_hard,low,new Domino hard tier of puzzles_50,domino,P49_E_full_hard_seed34500,win,12,0,,WIN,,,,10,6,,1,20.18
+new_hard,low,new Domino hard tier of puzzles_50,domino,P50_E_full_hard_seed35000,win,12,0,,WIN,,,,10,5,,1,20.0
+fluid_final_plan56,low,"FluidNet 9-10 valves, 5-6 valve plan (first final candidate; levels replaced)",fluidnet,P08_trace_hard_seed14029,win,5,0,,Win,,,,,,,,
+fluid_final_plan56,low,"FluidNet 9-10 valves, 5-6 valve plan (first final candidate; levels replaced)",fluidnet,P09_trace_hard_seed14586,none,2,4,ValveNotFound,ValveNotFound,,,,,,,,
+fluid_final_plan56,low,"FluidNet 9-10 valves, 5-6 valve plan (first final candidate; levels replaced)",fluidnet,P10_trace_hard_seed15099,win,5,0,,Win,,,,,,,,
+fluid_final_plan56,low,"FluidNet 9-10 valves, 5-6 valve plan (first final candidate; levels replaced)",fluidnet,P18_series_hard_seed19296,none,4,1,ValveNotFound,OK,,,,,,,,
+fluid_final_plan56,low,"FluidNet 9-10 valves, 5-6 valve plan (first final candidate; levels replaced)",fluidnet,P19_series_hard_seed19729,win,5,0,,Win,,,,,,,,
+fluid_final_plan56,low,"FluidNet 9-10 valves, 5-6 valve plan (first final candidate; levels replaced)",fluidnet,P20_series_hard_seed20102,none,5,1,ValveNotFound,OK,,,,,,,,
+fluid_final_plan56,low,"FluidNet 9-10 valves, 5-6 valve plan (first final candidate; levels replaced)",fluidnet,P28_backdoor_hard_seed24073,lose,3,1,ValveNotFound,ProtectedBreach,,,,,,,,
+fluid_final_plan56,low,"FluidNet 9-10 valves, 5-6 valve plan (first final candidate; levels replaced)",fluidnet,P29_backdoor_hard_seed24612,none,0,0,,,,,,,,,,
+fluid_final_plan56,low,"FluidNet 9-10 valves, 5-6 valve plan (first final candidate; levels replaced)",fluidnet,P30_backdoor_hard_seed25049,none,4,1,ValveNotFound,OK,,,,,,,,
+fluid_final_plan56,low,"FluidNet 9-10 valves, 5-6 valve plan (first final candidate; levels replaced)",fluidnet,P38_two_pumps_hard_seed29018,win,6,0,,Win,,,,,,,,
+fluid_final_plan56,low,"FluidNet 9-10 valves, 5-6 valve plan (first final candidate; levels replaced)",fluidnet,P39_two_pumps_hard_seed29501,none,5,0,,OK,,,,,,,,
+fluid_final_plan56,low,"FluidNet 9-10 valves, 5-6 valve plan (first final candidate; levels replaced)",fluidnet,P40_two_pumps_hard_seed30029,none,4,1,ValveNotFound,OK,,,,,,,,
+fluid_final_plan56,low,"FluidNet 9-10 valves, 5-6 valve plan (first final candidate; levels replaced)",fluidnet,P48_mixed_hard_seed34003,win,5,0,,Win,,,,,,,,
+fluid_final_plan56,low,"FluidNet 9-10 valves, 5-6 valve plan (first final candidate; levels replaced)",fluidnet,P49_mixed_hard_seed34508,win,5,0,,Win,,,,,,,,
+fluid_final_plan56,low,"FluidNet 9-10 valves, 5-6 valve plan (first final candidate; levels replaced)",fluidnet,P50_mixed_hard_seed35056,none,5,1,ValveNotFound,ValveNotFound,,,,,,,,
+new_hard,low,new FluidNet hard tier of puzzles_50,fluidnet,P08_trace_hard_seed14060,none,3,1,ValveNotFound,OK,9,6,3,,,,,7.83
+new_hard,low,new FluidNet hard tier of puzzles_50,fluidnet,P09_trace_hard_seed14586,none,1,0,,OK,9,6,3,,,,,8.0
+new_hard,low,new FluidNet hard tier of puzzles_50,fluidnet,P10_trace_hard_seed15104,none,5,0,,OK,9,6,3,,,,,8.0
+new_hard,low,new FluidNet hard tier of puzzles_50,fluidnet,P18_series_hard_seed19844,win,6,0,,Win,9,6,3,,,,,8.0
+new_hard,low,new FluidNet hard tier of puzzles_50,fluidnet,P19_series_hard_seed20102,none,3,3,ValveNotFound,ValveNotFound,9,6,3,,,,,8.0
+new_hard,low,new FluidNet hard tier of puzzles_50,fluidnet,P20_series_hard_seed20352,none,3,0,,OK,9,6,3,,,,,8.0
+new_hard,low,new FluidNet hard tier of puzzles_50,fluidnet,P28_backdoor_hard_seed24073,none,3,2,ValveNotFound,OK,10,6,4,,,,,9.0
+new_hard,low,new FluidNet hard tier of puzzles_50,fluidnet,P29_backdoor_hard_seed25109,none,3,0,,OK,9,6,3,,,,,7.57
+new_hard,low,new FluidNet hard tier of puzzles_50,fluidnet,P30_backdoor_hard_seed25319,win,6,0,,Win,10,6,4,,,,,9.0
+new_hard,low,new FluidNet hard tier of puzzles_50,fluidnet,P38_two_pumps_hard_seed29018,win,6,0,,Win,10,6,4,,,,,12.0
+new_hard,low,new FluidNet hard tier of puzzles_50,fluidnet,P39_two_pumps_hard_seed29501,none,2,2,ValveNotFound,OK,10,6,4,,,,,8.86
+new_hard,low,new FluidNet hard tier of puzzles_50,fluidnet,P40_two_pumps_hard_seed30029,none,5,1,ValveNotFound,OK,9,6,3,,,,,9.08
+new_hard,low,new FluidNet hard tier of puzzles_50,fluidnet,P48_mixed_hard_seed34056,win,6,0,,Win,10,6,4,,,,,15.0
+new_hard,low,new FluidNet hard tier of puzzles_50,fluidnet,P49_mixed_hard_seed34524,none,3,3,ValveNotFound,ValveNotFound,9,6,3,,,,,10.0
+new_hard,low,new FluidNet hard tier of puzzles_50,fluidnet,P50_mixed_hard_seed35056,lose,6,0,,ColorContamination,10,6,4,,,,,14.0
+new_hard_confirm,low,"all 45 final hard levels, second run",fluidnet,P08_trace_hard_seed14060,none,4,1,ValveNotFound,OK,9,6,3,,,,,7.83
+new_hard_confirm,low,"all 45 final hard levels, second run",fluidnet,P09_trace_hard_seed14586,none,0,4,ValveNotFound,ValveNotFound,9,6,3,,,,,8.0
+new_hard_confirm,low,"all 45 final hard levels, second run",fluidnet,P10_trace_hard_seed15104,win,6,0,,Win,9,6,3,,,,,8.0
+new_hard_confirm,low,"all 45 final hard levels, second run",fluidnet,P18_series_hard_seed19844,win,6,0,,Win,9,6,3,,,,,8.0
+new_hard_confirm,low,"all 45 final hard levels, second run",fluidnet,P19_series_hard_seed20102,win,6,0,,Win,9,6,3,,,,,8.0
+new_hard_confirm,low,"all 45 final hard levels, second run",fluidnet,P20_series_hard_seed20352,none,2,1,ValveNotFound,ValveNotFound,9,6,3,,,,,8.0
+new_hard_confirm,low,"all 45 final hard levels, second run",fluidnet,P28_backdoor_hard_seed24073,lose,3,0,,ProtectedBreach,10,6,4,,,,,9.0
+new_hard_confirm,low,"all 45 final hard levels, second run",fluidnet,P29_backdoor_hard_seed25109,lose,4,0,,ProtectedBreach,9,6,3,,,,,7.57
+new_hard_confirm,low,"all 45 final hard levels, second run",fluidnet,P30_backdoor_hard_seed25319,win,6,0,,Win,10,6,4,,,,,9.0
+new_hard_confirm,low,"all 45 final hard levels, second run",fluidnet,P38_two_pumps_hard_seed29018,none,5,1,ValveNotFound,ValveNotFound,10,6,4,,,,,12.0
+new_hard_confirm,low,"all 45 final hard levels, second run",fluidnet,P39_two_pumps_hard_seed29501,lose,5,0,,WrongColorTarget,10,6,4,,,,,8.86
+new_hard_confirm,low,"all 45 final hard levels, second run",fluidnet,P40_two_pumps_hard_seed30029,none,5,0,,OK,9,6,3,,,,,9.08
+new_hard_confirm,low,"all 45 final hard levels, second run",fluidnet,P48_mixed_hard_seed34056,none,4,0,,OK,10,6,4,,,,,15.0
+new_hard_confirm,low,"all 45 final hard levels, second run",fluidnet,P49_mixed_hard_seed34524,none,5,1,ValveNotFound,ValveNotFound,9,6,3,,,,,10.0
+new_hard_confirm,low,"all 45 final hard levels, second run",fluidnet,P50_mixed_hard_seed35056,none,5,1,ValveNotFound,ValveNotFound,10,6,4,,,,,14.0
+new_hard_confirm,low,"all 45 final hard levels, second run",domino,P08_A_line_hard_seed14000,none,8,3,CellOccupied,BadPhase,,,,9,7,,1,19.5
+new_hard_confirm,low,"all 45 final hard levels, second run",domino,P09_A_line_hard_seed14500,none,6,5,NoPhysicalSupport,BadPhase,,,,9,7,,1,21.0
+new_hard_confirm,low,"all 45 final hard levels, second run",domino,P10_A_line_hard_seed15000,none,5,6,CellOccupied,BadPhase,,,,9,7,,1,19.5
+new_hard_confirm,low,"all 45 final hard levels, second run",domino,P18_B_decoy_hard_seed19000,win,11,0,,WIN,,,,9,5,,1,19.5
+new_hard_confirm,low,"all 45 final hard levels, second run",domino,P19_B_decoy_hard_seed19501,win,11,0,,WIN,,,,9,5,,1,21.0
+new_hard_confirm,low,"all 45 final hard levels, second run",domino,P20_B_decoy_hard_seed20000,none,7,4,CellOccupied,BadPhase,,,,9,5,,1,16.51
+new_hard_confirm,low,"all 45 final hard levels, second run",domino,P28_C_steps_hard_seed24000,none,1,10,NoPhysicalSupport,BadPhase,,,,9,5,,1,19.0
+new_hard_confirm,low,"all 45 final hard levels, second run",domino,P29_C_steps_hard_seed24500,none,8,3,CellOccupied,BadPhase,,,,9,5,,1,19.5
+new_hard_confirm,low,"all 45 final hard levels, second run",domino,P30_C_steps_hard_seed25000,none,6,5,CellOccupied,BadPhase,,,,9,6,,1,20.5
+new_hard_confirm,low,"all 45 final hard levels, second run",domino,P38_D_split_hard_seed29000,none,7,5,CellOccupied,BadPhase,,,,10,6,,1,20.5
+new_hard_confirm,low,"all 45 final hard levels, second run",domino,P39_D_split_hard_seed29501,none,7,5,NoPhysicalSupport,BadPhase,,,,10,4,,1,18.5
+new_hard_confirm,low,"all 45 final hard levels, second run",domino,P40_D_split_hard_seed30000,none,8,4,CellOccupied,BadPhase,,,,10,6,,1,20.5
+new_hard_confirm,low,"all 45 final hard levels, second run",domino,P48_E_full_hard_seed34001,none,7,5,NoPhysicalSupport,BadPhase,,,,10,6,,1,18.08
+new_hard_confirm,low,"all 45 final hard levels, second run",domino,P49_E_full_hard_seed34500,none,9,3,CellOccupied,BadPhase,,,,10,6,,1,20.18
+new_hard_confirm,low,"all 45 final hard levels, second run",domino,P50_E_full_hard_seed35000,win,12,0,,WIN,,,,10,5,,1,20.0
+new_hard_confirm,low,"all 45 final hard levels, second run",pipefit,P08_A_route_hard_seed14072,lose,10,3,EntranceExitOccupied,Leak,,,,,,12,8,9.53
+new_hard_confirm,low,"all 45 final hard levels, second run",pipefit,P09_A_route_hard_seed14525,win,10,0,,WIN,,,,,,11,12,10.62
+new_hard_confirm,low,"all 45 final hard levels, second run",pipefit,P10_A_route_hard_seed15014,lose,15,0,,Leak,,,,,,14,7,10.77
+new_hard_confirm,low,"all 45 final hard levels, second run",pipefit,P18_B_obstacles_hard_seed19013,lose,12,0,,Leak,,,,,,11,10,10.14
+new_hard_confirm,low,"all 45 final hard levels, second run",pipefit,P19_B_obstacles_hard_seed19532,lose,11,2,EntranceExitOccupied,Leak,,,,,,12,10,12.29
+new_hard_confirm,low,"all 45 final hard levels, second run",pipefit,P20_B_obstacles_hard_seed20020,lose,13,4,EntranceExitOccupied,Leak,,,,,,13,3,12.81
+new_hard_confirm,low,"all 45 final hard levels, second run",pipefit,P28_C_branch_hard_seed24000,lose,9,10,EntranceExitOccupied,Unsupported,,,,,,10,7,10.48
+new_hard_confirm,low,"all 45 final hard levels, second run",pipefit,P29_C_branch_hard_seed24510,lose,11,3,EntranceExitOccupied,Leak,,,,,,12,12,10.84
+new_hard_confirm,low,"all 45 final hard levels, second run",pipefit,P30_C_branch_hard_seed25000,lose,12,3,"invalid: a L pipe cannot have ends ['-y', '+y']",Leak,,,,,,13,3,10.1
+new_hard_confirm,low,"all 45 final hard levels, second run",pipefit,P38_D_tall_hard_seed29037,lose,10,3,"invalid: a L pipe cannot have ends ['+y', '-y']",Leak,,,,,,12,4,11.41
+new_hard_confirm,low,"all 45 final hard levels, second run",pipefit,P39_D_tall_hard_seed29509,win,14,0,,WIN,,,,,,12,5,11.09
+new_hard_confirm,low,"all 45 final hard levels, second run",pipefit,P40_D_tall_hard_seed30025,lose,12,2,ObstacleHit,Leak,,,,,,15,11,10.46
+new_hard_confirm,low,"all 45 final hard levels, second run",pipefit,P48_E_mixed_hard_seed34059,lose,10,3,"invalid: a L pipe cannot have ends ['-y', '+y']",Leak,,,,,,12,7,12.59
+new_hard_confirm,low,"all 45 final hard levels, second run",pipefit,P49_E_mixed_hard_seed34502,win,12,0,,WIN,,,,,,20,9,15.44
+new_hard_confirm,low,"all 45 final hard levels, second run",pipefit,P50_E_mixed_hard_seed35002,lose,14,4,"invalid: a L pipe cannot have ends ['+y', '-y']",Leak,,,,,,18,11,13.39
+new_hard_run3,low,"all 45 final hard levels, third run (after the audit and review)",fluidnet,P08_trace_hard_seed14060,none,4,0,,OK,9,6,3,,,,,7.83
+new_hard_run3,low,"all 45 final hard levels, third run (after the audit and review)",fluidnet,P09_trace_hard_seed14586,none,5,1,ValveNotFound,OK,9,6,3,,,,,8.0
+new_hard_run3,low,"all 45 final hard levels, third run (after the audit and review)",fluidnet,P10_trace_hard_seed15104,win,6,0,,Win,9,6,3,,,,,8.0
+new_hard_run3,low,"all 45 final hard levels, third run (after the audit and review)",fluidnet,P18_series_hard_seed19844,win,6,0,,Win,9,6,3,,,,,8.0
+new_hard_run3,low,"all 45 final hard levels, third run (after the audit and review)",fluidnet,P19_series_hard_seed20102,none,5,1,ValveNotFound,OK,9,6,3,,,,,8.0
+new_hard_run3,low,"all 45 final hard levels, third run (after the audit and review)",fluidnet,P20_series_hard_seed20352,win,6,4,ValveNotFound,Win,9,6,3,,,,,8.0
+new_hard_run3,low,"all 45 final hard levels, third run (after the audit and review)",fluidnet,P28_backdoor_hard_seed24073,none,4,1,ValveNotFound,OK,10,6,4,,,,,9.0
+new_hard_run3,low,"all 45 final hard levels, third run (after the audit and review)",fluidnet,P29_backdoor_hard_seed25109,win,6,0,,Win,9,6,3,,,,,7.57
+new_hard_run3,low,"all 45 final hard levels, third run (after the audit and review)",fluidnet,P30_backdoor_hard_seed25319,win,6,0,,Win,10,6,4,,,,,9.0
+new_hard_run3,low,"all 45 final hard levels, third run (after the audit and review)",fluidnet,P38_two_pumps_hard_seed29018,win,6,0,,Win,10,6,4,,,,,12.0
+new_hard_run3,low,"all 45 final hard levels, third run (after the audit and review)",fluidnet,P39_two_pumps_hard_seed29501,none,5,0,,OK,10,6,4,,,,,8.86
+new_hard_run3,low,"all 45 final hard levels, third run (after the audit and review)",fluidnet,P40_two_pumps_hard_seed30029,none,5,0,,OK,9,6,3,,,,,9.08
+new_hard_run3,low,"all 45 final hard levels, third run (after the audit and review)",fluidnet,P48_mixed_hard_seed34056,none,3,1,ValveNotFound,ValveNotFound,10,6,4,,,,,15.0
+new_hard_run3,low,"all 45 final hard levels, third run (after the audit and review)",fluidnet,P49_mixed_hard_seed34524,none,5,1,ValveNotFound,ValveNotFound,9,6,3,,,,,10.0
+new_hard_run3,low,"all 45 final hard levels, third run (after the audit and review)",fluidnet,P50_mixed_hard_seed35056,none,3,3,ValveNotFound,ValveNotFound,10,6,4,,,,,14.0
+new_hard_run3,low,"all 45 final hard levels, third run (after the audit and review)",domino,P08_A_line_hard_seed14000,none,8,3,CellOccupied,BadPhase,,,,9,7,,1,19.5
+new_hard_run3,low,"all 45 final hard levels, third run (after the audit and review)",domino,P09_A_line_hard_seed14500,none,6,5,NoPhysicalSupport,BadPhase,,,,9,7,,1,21.0
+new_hard_run3,low,"all 45 final hard levels, third run (after the audit and review)",domino,P10_A_line_hard_seed15000,none,6,5,NoPhysicalSupport,BadPhase,,,,9,7,,1,19.5
+new_hard_run3,low,"all 45 final hard levels, third run (after the audit and review)",domino,P18_B_decoy_hard_seed19000,none,2,9,CellOccupied,BadPhase,,,,9,5,,1,19.5
+new_hard_run3,low,"all 45 final hard levels, third run (after the audit and review)",domino,P19_B_decoy_hard_seed19501,none,8,3,NoPhysicalSupport,BadPhase,,,,9,5,,1,21.0
+new_hard_run3,low,"all 45 final hard levels, third run (after the audit and review)",domino,P20_B_decoy_hard_seed20000,none,8,3,CellOccupied,BadPhase,,,,9,5,,1,16.51
+new_hard_run3,low,"all 45 final hard levels, third run (after the audit and review)",domino,P28_C_steps_hard_seed24000,win,11,0,,WIN,,,,9,5,,1,19.0
+new_hard_run3,low,"all 45 final hard levels, third run (after the audit and review)",domino,P29_C_steps_hard_seed24500,win,11,0,,WIN,,,,9,5,,1,19.5
+new_hard_run3,low,"all 45 final hard levels, third run (after the audit and review)",domino,P30_C_steps_hard_seed25000,none,8,3,CellOccupied,BadPhase,,,,9,6,,1,20.5
+new_hard_run3,low,"all 45 final hard levels, third run (after the audit and review)",domino,P38_D_split_hard_seed29000,none,6,6,CellOccupied,BadPhase,,,,10,6,,1,20.5
+new_hard_run3,low,"all 45 final hard levels, third run (after the audit and review)",domino,P39_D_split_hard_seed29501,none,6,6,CellOccupied,BadPhase,,,,10,4,,1,18.5
+new_hard_run3,low,"all 45 final hard levels, third run (after the audit and review)",domino,P40_D_split_hard_seed30000,none,9,3,CellOccupied,BadPhase,,,,10,6,,1,20.5
+new_hard_run3,low,"all 45 final hard levels, third run (after the audit and review)",domino,P48_E_full_hard_seed34001,none,7,5,NoPhysicalSupport,BadPhase,,,,10,6,,1,18.08
+new_hard_run3,low,"all 45 final hard levels, third run (after the audit and review)",domino,P49_E_full_hard_seed34500,win,12,0,,WIN,,,,10,6,,1,20.18
+new_hard_run3,low,"all 45 final hard levels, third run (after the audit and review)",domino,P50_E_full_hard_seed35000,none,8,4,CellOccupied,BadPhase,,,,10,5,,1,20.0
+new_hard_run3,low,"all 45 final hard levels, third run (after the audit and review)",pipefit,P08_A_route_hard_seed14072,lose,12,1,"invalid: a L pipe cannot have ends ['+y', '-y']",Leak,,,,,,12,8,9.53
+new_hard_run3,low,"all 45 final hard levels, third run (after the audit and review)",pipefit,P09_A_route_hard_seed14525,lose,11,2,"invalid: a L pipe cannot have ends ['+x', '-x']",Leak,,,,,,11,12,10.62
+new_hard_run3,low,"all 45 final hard levels, third run (after the audit and review)",pipefit,P10_A_route_hard_seed15014,lose,16,0,,Leak,,,,,,14,7,10.77
+new_hard_run3,low,"all 45 final hard levels, third run (after the audit and review)",pipefit,P18_B_obstacles_hard_seed19013,lose,10,2,EntranceExitOccupied,Leak,,,,,,11,10,10.14
+new_hard_run3,low,"all 45 final hard levels, third run (after the audit and review)",pipefit,P19_B_obstacles_hard_seed19532,lose,11,1,ObstacleHit,Leak,,,,,,12,10,12.29
+new_hard_run3,low,"all 45 final hard levels, third run (after the audit and review)",pipefit,P20_B_obstacles_hard_seed20020,lose,13,0,,Leak,,,,,,13,3,12.81
+new_hard_run3,low,"all 45 final hard levels, third run (after the audit and review)",pipefit,P28_C_branch_hard_seed24000,lose,9,7,InventoryEmpty,Leak,,,,,,10,7,10.48
+new_hard_run3,low,"all 45 final hard levels, third run (after the audit and review)",pipefit,P29_C_branch_hard_seed24510,lose,11,3,EntranceExitOccupied,Leak,,,,,,12,12,10.84
+new_hard_run3,low,"all 45 final hard levels, third run (after the audit and review)",pipefit,P30_C_branch_hard_seed25000,win,14,0,,WIN,,,,,,13,3,10.1
+new_hard_run3,low,"all 45 final hard levels, third run (after the audit and review)",pipefit,P38_D_tall_hard_seed29037,win,13,1,EntranceExitOccupied,WIN,,,,,,12,4,11.41
+new_hard_run3,low,"all 45 final hard levels, third run (after the audit and review)",pipefit,P39_D_tall_hard_seed29509,lose,11,3,ObstacleHit,Leak,,,,,,12,5,11.09
+new_hard_run3,low,"all 45 final hard levels, third run (after the audit and review)",pipefit,P40_D_tall_hard_seed30025,lose,15,1,EntranceExitOccupied,Leak,,,,,,15,11,10.46
+new_hard_run3,low,"all 45 final hard levels, third run (after the audit and review)",pipefit,P48_E_mixed_hard_seed34059,win,12,0,,WIN,,,,,,12,7,12.59
+new_hard_run3,low,"all 45 final hard levels, third run (after the audit and review)",pipefit,P49_E_mixed_hard_seed34502,lose,14,4,EntranceExitOccupied,Leak,,,,,,20,9,15.44
+new_hard_run3,low,"all 45 final hard levels, third run (after the audit and review)",pipefit,P50_E_mixed_hard_seed35002,lose,17,2,EntranceExitOccupied,Leak,,,,,,18,11,13.39

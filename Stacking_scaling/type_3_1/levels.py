@@ -9,37 +9,39 @@ from .generator import generate_level
 # Building blocks per category.  Tiers are enforced by measurement against
 # one ladder for the whole game (difficulty.TIERS): every easy level has fewer
 # pieces, fewer decoy holes and a lower score than every medium level, and
-# every medium than every hard.
+# every medium than every hard.  Every hard level is a three-level splitter
+# tree on steps (9-10 patches); the category sets the emphasis (more decoys,
+# more raised patches, a second goal per fork).
 CATEGORY: Dict[str, Dict[str, Dict]] = {
     # straight chain; easy = fill the hole(s)
     "A_line": {
         "easy":   dict(grid_size=(6, 5, 3), n_patches=1, main_len=(3, 5)),
         "medium": dict(grid_size=(8, 5, 3), n_patches=3, main_len=(5, 6), n_decoys=2),
-        "hard":   dict(grid_size=(9, 7, 3), n_patches=4, main_len=(6, 7), n_decoys=3),
+        "hard":   dict(grid_size=(12, 12, 5), n_patches=9, main_len=(3, 5), n_decoys=3, use_split=True, split_depth=3, use_height=True, min_raised=4, p_step=0.5),
     },
     # chain with decoy lines (gap -> dominoes -> red piece) around it
     "B_decoy": {
         "easy":   dict(grid_size=(5, 5, 3), n_patches=2, main_len=(3, 5), n_decoys=1),
         "medium": dict(grid_size=(7, 6, 3), n_patches=3, main_len=(4, 6), n_decoys=2),
-        "hard":   dict(grid_size=(9, 8, 3), n_patches=4, main_len=(4, 6), n_decoys=3),
+        "hard":   dict(grid_size=(12, 12, 5), n_patches=9, main_len=(3, 5), n_decoys=4, use_split=True, split_depth=3, use_height=True, min_raised=4, p_step=0.5),
     },
     # height changes on STEP blocks
     "C_steps": {
         "easy":   dict(grid_size=(5, 5, 3), n_patches=1, main_len=(3, 5), use_height=True, min_raised=1),
         "medium": dict(grid_size=(7, 5, 3), n_patches=3, main_len=(4, 6), n_decoys=2, use_height=True, min_raised=1),
-        "hard":   dict(grid_size=(8, 6, 4), n_patches=4, main_len=(5, 7), n_decoys=3, use_height=True, min_raised=2),
+        "hard":   dict(grid_size=(12, 12, 5), n_patches=9, main_len=(3, 5), n_decoys=3, use_split=True, split_depth=3, use_height=True, min_raised=5, p_step=0.7),
     },
     # a splitter sends the wave both ways
     "D_split": {
         "easy":   dict(grid_size=(6, 6, 3), n_patches=2, main_len=(2, 3), use_split=True, two_goals=True),
         "medium": dict(grid_size=(7, 6, 3), n_patches=3, main_len=(3, 4), n_decoys=1, use_split=True),
-        "hard":   dict(grid_size=(8, 7, 3), n_patches=4, main_len=(3, 5), n_decoys=3, use_split=True),
+        "hard":   dict(grid_size=(12, 12, 5), n_patches=10, main_len=(3, 5), n_decoys=3, use_split=True, split_depth=3, two_goals=True, use_height=True, min_raised=4, p_step=0.5),
     },
     # everything together
     "E_full": {
         "easy":   dict(grid_size=(6, 6, 3), n_patches=1, main_len=(2, 4), use_height=True, min_raised=1, use_split=True),
         "medium": dict(grid_size=(7, 6, 3), n_patches=3, main_len=(3, 4), n_decoys=1, use_height=True, min_raised=1, use_split=True),
-        "hard":   dict(grid_size=(8, 8, 4), n_patches=4, main_len=(4, 5), n_decoys=3, use_height=True, min_raised=1, use_split=True, two_goals=True),
+        "hard":   dict(grid_size=(12, 12, 5), n_patches=10, main_len=(3, 5), n_decoys=3, use_split=True, split_depth=3, two_goals=True, use_height=True, min_raised=5, p_step=0.6),
     },
 }
 

@@ -1,0 +1,96 @@
+{
+ "level": "type_3/puzzles_50/P29_backdoor_hard_seed25109",
+ "game": "fluidnet",
+ "actions": [
+  [
+   "open",
+   [
+    3,
+    1,
+    3
+   ]
+  ],
+  [
+   "open",
+   [
+    3,
+    1,
+    5
+   ]
+  ],
+  [
+   "open",
+   [
+    1,
+    1,
+    5
+   ]
+  ]
+ ],
+ "n_actions": 3,
+ "fails": 0,
+ "status": "",
+ "max_actions": 40,
+ "log": [
+  {
+   "action": [
+    "open",
+    [
+     3,
+     1,
+     3
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "open",
+    [
+     3,
+     1,
+     5
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "open",
+    [
+     1,
+     1,
+     5
+    ]
+   ],
+   "result": "OK"
+  }
+ ],
+ "oneshot": true,
+ "plan": [
+  [
+   "open",
+   [
+    3,
+    1,
+    3
+   ]
+  ],
+  [
+   "open",
+   [
+    3,
+    1,
+    5
+   ]
+  ],
+  [
+   "open",
+   [
+    1,
+    1,
+    5
+   ]
+  ]
+ ]
+}

@@ -1,0 +1,15 @@
+{"model": "gpt-6.1-sol-low", "level": "P08_trace_hard_seed14060", "win": false, "verifies": 0, "actions": 4, "rejected": 1}
+{"model": "gpt-6.1-sol-low", "level": "P09_trace_hard_seed14586", "win": false, "verifies": 0, "actions": 1, "rejected": 0}
+{"model": "gpt-6.1-sol-low", "level": "P10_trace_hard_seed15104", "win": false, "verifies": 0, "actions": 5, "rejected": 0}
+{"model": "gpt-6.1-sol-low", "level": "P18_series_hard_seed19844", "win": true, "verifies": 1, "actions": 6, "rejected": 0}
+{"model": "gpt-6.1-sol-low", "level": "P19_series_hard_seed20102", "win": false, "verifies": 0, "actions": 6, "rejected": 3}
+{"model": "gpt-6.1-sol-low", "level": "P20_series_hard_seed20352", "win": false, "verifies": 0, "actions": 3, "rejected": 0}
+{"model": "gpt-6.1-sol-low", "level": "P28_backdoor_hard_seed24073", "win": false, "verifies": 0, "actions": 5, "rejected": 2}
+{"model": "gpt-6.1-sol-low", "level": "P29_backdoor_hard_seed25109", "win": false, "verifies": 0, "actions": 3, "rejected": 0}
+{"model": "gpt-6.1-sol-low", "level": "P30_backdoor_hard_seed25319", "win": true, "verifies": 1, "actions": 6, "rejected": 0}
+{"model": "gpt-6.1-sol-low", "level": "P38_two_pumps_hard_seed29018", "win": true, "verifies": 1, "actions": 6, "rejected": 0}
+{"model": "gpt-6.1-sol-low", "level": "P39_two_pumps_hard_seed29501", "win": false, "verifies": 0, "actions": 4, "rejected": 2}
+{"model": "gpt-6.1-sol-low", "level": "P40_two_pumps_hard_seed30029", "win": false, "verifies": 0, "actions": 6, "rejected": 1}
+{"model": "gpt-6.1-sol-low", "level": "P48_mixed_hard_seed34056", "win": true, "verifies": 1, "actions": 6, "rejected": 0}
+{"model": "gpt-6.1-sol-low", "level": "P49_mixed_hard_seed34524", "win": false, "verifies": 0, "actions": 6, "rejected": 3}
+{"model": "gpt-6.1-sol-low", "level": "P50_mixed_hard_seed35056", "win": false, "verifies": 1, "actions": 6, "rejected": 0}

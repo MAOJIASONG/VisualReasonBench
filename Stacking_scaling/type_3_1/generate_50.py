@@ -11,11 +11,14 @@ Categories (10 each = 3 easy + 4 medium + 3 hard):
 Tiers are measured, not assumed (difficulty.TIERS): every level has exactly
 one winning (placement, direction), uses all its patches, and the medium /
 hard tiers defeat the "fill the obvious holes" shortcut.  The tiers are one
-ladder for the whole game: easy 1-2 patches / medium 3 / hard 4, decoy holes
-<= 1 / 2 / >= 3, score <= 3.1 / 4-5.6 / >= 6.  Layouts are de-duplicated up
-to rotation, reflection and translation.
+ladder for the whole game: easy 1-2 patches / medium 3 / hard 9-10, decoy
+holes <= 1 / 2 / >= 3, score <= 3.1 / 4-5.6 / >= 14.  Every hard level is a
+three-level splitter tree (1-5 goals) on grey steps, calibrated so that
+gpt-6.1-sol (Codex, default effort, one-shot) solves about a quarter of them.
+Layouts are de-duplicated up to rotation, reflection and translation.
 
-Per puzzle we render (initial, submit) x front and save level.json +
+Per puzzle we render the initial state (front + back), the submitted state
+(front) and save level.json +
 solution.txt.  level.json's meta and solution.txt contain the answer: keep
 both out of model inputs (models should only see the rendered image).
 """
@@ -63,7 +66,7 @@ def _render_one(label: str, spec, meta, plan, out_dir: str) -> None:
     save_level_to_json(spec, os.path.join(out_dir, "level.json"), meta=meta)
     st = init_state(spec)
     render_state_pair(st, out_dir, "00_initial",
-                      title=f"{label}  initial", views=("front",))
+                      title=f"{label}  initial")
     for act in plan:
         kind = act[0]
         if kind == "place":

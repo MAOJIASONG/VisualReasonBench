@@ -215,11 +215,25 @@ The score bands leave a gap, so no two tiers touch:
 |---|---|---|
 | easy | 2–4 | ≤ 3 |
 | medium | 5–6 | 4 – 6 |
-| hard | 7–8 | ≥ 7 |
+| hard | 9–10 | ≥ 7 |
 
 The concept configs were tuned on a 2100-level sample so every (concept,
 tier) pair reaches its rung.  backdoor hard is the rarest (~1 % of seeds),
-so `generate_50` searches 600 seeds per slot.  A `score_band` entry in a
+so `generate_50` searches up to 1200 seeds per slot.
+
+**Hard tier (2026-11).**  Hard levels are built with 10–12 valves and a
+6-valve plan; `concepts.prune_filler` then turns every valve that is
+neither needed nor fatal back into plain pipe (opening it never changed the
+outcome), leaving 9–10 real decisions (trace / series get a fourth red
+cell, two_pumps a 6 × 6 × 5 box).  The tier was calibrated against
+gpt-6.1-sol (Codex, default reasoning effort, one-shot): the earlier 7–8
+valve hard tier was solved about two thirds of the time, and over ~160
+calibration games the solve rate fell with valves (7: 0.93, 8: 0.32,
+9: 0.24) and with plan length (4: 0.50, 5: 0.32, 6: 0.04).  Most losses are
+a valve coordinate misread from the 3D view or one valve of a route left
+shut.  See `../chain_analysis/model_runs/gpt61sol_hard_calibration/`.
+`images_batch/` still holds the earlier demo levels (`play_batch` would now
+build the new hard ones).  A `score_band` entry in a
 concept's params overrides the tier band for experiments.
 
 `generate_50` and `play_batch` search seeds in parallel

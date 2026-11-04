@@ -1,0 +1,42 @@
+{
+ "level": "type_3/puzzles_50/P09_trace_hard_seed14586",
+ "game": "fluidnet",
+ "actions": [
+  [
+   "open",
+   [
+    1,
+    5,
+    2
+   ]
+  ]
+ ],
+ "n_actions": 1,
+ "fails": 0,
+ "status": "",
+ "max_actions": 40,
+ "log": [
+  {
+   "action": [
+    "open",
+    [
+     1,
+     5,
+     2
+    ]
+   ],
+   "result": "OK"
+  }
+ ],
+ "oneshot": true,
+ "plan": [
+  [
+   "open",
+   [
+    1,
+    5,
+    2
+   ]
+  ]
+ ]
+}

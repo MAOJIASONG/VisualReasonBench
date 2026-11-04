@@ -29,7 +29,7 @@ Metrics:
 Tiers (TIERS) are one ladder for the whole game, not per category:
   easy 1-2 patches, <= 1 decoy hole, score <= 3.1
   medium 3 patches, 2 decoy holes,   score 4-5.6
-  hard 4 patches,   >= 3 decoy holes, score >= 6
+  hard 9-10 patches, >= 3 decoy holes, score >= 14
 """
 
 from __future__ import annotations
@@ -263,7 +263,7 @@ TIERS: Dict[str, Dict] = {
     "easy":   dict(patches=(1, 2), decoy_gaps=(0, 1), score=(0, 3.1), max_gapfill=1.0),
     "medium": dict(patches=(3, 3), decoy_gaps=(2, 2), score=(4, 5.6), max_gapfill=0.5,
                    max_wavefill=0.5),
-    "hard":   dict(patches=(4, 4), decoy_gaps=(3, 9), score=(6, 99), max_gapfill=0.0,
+    "hard":   dict(patches=(9, 10), decoy_gaps=(3, 20), score=(14, 99), max_gapfill=0.0,
                    max_wavefill=0.34),
 }
 

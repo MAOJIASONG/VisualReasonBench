@@ -9,9 +9,18 @@ the level files and the hidden game state stay out of reach.
 | run | model | protocol | levels | details |
 |---|---|---|---|---|
 | `sonnet_pilot/` | Claude Sonnet | closed loop | 15 demo levels (`images_batch/`) | [README](sonnet_pilot/README.md) |
-| `sonnet_hard50/` | Claude Sonnet | closed loop | 45 hard levels of `puzzles_50/` | [README](sonnet_hard50/README.md) |
+| `sonnet_hard50/` | Claude Sonnet | closed loop | previous 45 hard levels of `puzzles_50/` | [README](sonnet_hard50/README.md) |
 | `sonnet_oneshot50/` | Claude Sonnet | one-shot | same 45 | [README](sonnet_oneshot50/README.md) |
 | `gpt6luna_oneshot50/` | Codex gpt-6-luna | one-shot | same 45 | [README](gpt6luna_oneshot50/README.md) |
+| `gpt61sol_hard_calibration/` | Codex gpt-6.1-sol | one-shot | current 45 hard levels + all calibration games | [README](gpt61sol_hard_calibration/README.md) |
+
+**The hard tier changed on 2026-11-04.**  FluidNet and Domino hard were
+regenerated so that gpt-6.1-sol (Codex, default effort low, one-shot) solves
+about a quarter of them (FluidNet 4/15, Domino 3/15, PipeFit unchanged
+5/15: 12/45 = 0.27); see `gpt61sol_hard_calibration/`.  The three runs
+above it were made on the previous hard tier (git `de130a7`): their session
+logs name level folders that no longer exist in `puzzles_50/`, and Domino
+then showed the front view only.
 
 ## Protocols
 
@@ -24,7 +33,7 @@ the level files and the hidden game state stay out of reach.
   actions are skipped (they still count toward the 40-action cap), and the
   session is closed.  `reset` / `quit` are not allowed in a plan.
 
-## Results on the 45 hard levels (wins out of 15)
+## Results on the previous 45 hard levels (wins out of 15)
 
 | game | Sonnet closed loop: solved | Sonnet closed loop: 1st verify | Sonnet one-shot | gpt-6-luna one-shot | best baseline at 1 verify | best baseline at 64 verifies |
 |---|---|---|---|---|---|---|
@@ -91,6 +100,8 @@ python chain_analysis/model_runs/sonnet_oneshot50/make_prompts.py <out>
 # 2b. Codex: write the prompts and run codex exec on every session (8 in parallel)
 python chain_analysis/model_runs/gpt6luna_oneshot50/make_codex_prompts.py <out>
 python chain_analysis/model_runs/gpt6luna_oneshot50/run_codex_oneshot.py <out> gpt-6-luna 8
+#     (reasoning effort: EFFORT=low|medium|high, default high; the hard-tier
+#     calibration used EFFORT=low with gpt-6.1-sol)
 # 3. export and score, per game
 python -m chain_analysis.play_cli export <out>/*_type_3 --model <name> \
     --out traj_type_3.jsonl --results results_type_3.jsonl

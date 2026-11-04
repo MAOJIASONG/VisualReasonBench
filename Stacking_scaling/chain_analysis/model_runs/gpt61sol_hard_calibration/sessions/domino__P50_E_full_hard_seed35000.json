@@ -1,0 +1,312 @@
+{
+ "level": "type_3_1/puzzles_50/P50_E_full_hard_seed35000",
+ "game": "domino",
+ "actions": [
+  [
+   "place",
+   [
+    6,
+    4,
+    2
+   ]
+  ],
+  [
+   "place",
+   [
+    5,
+    4,
+    1
+   ]
+  ],
+  [
+   "place",
+   [
+    4,
+    4,
+    2
+   ]
+  ],
+  [
+   "place",
+   [
+    3,
+    3,
+    2
+   ]
+  ],
+  [
+   "place",
+   [
+    4,
+    6,
+    2
+   ]
+  ],
+  [
+   "place",
+   [
+    5,
+    6,
+    1
+   ]
+  ],
+  [
+   "place",
+   [
+    6,
+    6,
+    2
+   ]
+  ],
+  [
+   "place",
+   [
+    2,
+    6,
+    1
+   ]
+  ],
+  [
+   "place",
+   [
+    1,
+    5,
+    1
+   ]
+  ],
+  [
+   "place",
+   [
+    1,
+    8,
+    1
+   ]
+  ],
+  [
+   "submit_placement"
+  ],
+  [
+   "push",
+   "-x"
+  ]
+ ],
+ "n_actions": 12,
+ "fails": 0,
+ "status": "win",
+ "max_actions": 40,
+ "log": [
+  {
+   "action": [
+    "place",
+    [
+     6,
+     4,
+     2
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    [
+     5,
+     4,
+     1
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    [
+     4,
+     4,
+     2
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    [
+     3,
+     3,
+     2
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    [
+     4,
+     6,
+     2
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    [
+     5,
+     6,
+     1
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    [
+     6,
+     6,
+     2
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    [
+     2,
+     6,
+     1
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    [
+     1,
+     5,
+     1
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    [
+     1,
+     8,
+     1
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "submit_placement"
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "push",
+    "-x"
+   ],
+   "result": "WIN"
+  }
+ ],
+ "oneshot": true,
+ "plan": [
+  [
+   "place",
+   [
+    6,
+    4,
+    2
+   ]
+  ],
+  [
+   "place",
+   [
+    5,
+    4,
+    1
+   ]
+  ],
+  [
+   "place",
+   [
+    4,
+    4,
+    2
+   ]
+  ],
+  [
+   "place",
+   [
+    3,
+    3,
+    2
+   ]
+  ],
+  [
+   "place",
+   [
+    4,
+    6,
+    2
+   ]
+  ],
+  [
+   "place",
+   [
+    5,
+    6,
+    1
+   ]
+  ],
+  [
+   "place",
+   [
+    6,
+    6,
+    2
+   ]
+  ],
+  [
+   "place",
+   [
+    2,
+    6,
+    1
+   ]
+  ],
+  [
+   "place",
+   [
+    1,
+    5,
+    1
+   ]
+  ],
+  [
+   "place",
+   [
+    1,
+    8,
+    1
+   ]
+  ],
+  [
+   "submit_placement"
+  ],
+  [
+   "push",
+   "-x"
+  ]
+ ]
+}

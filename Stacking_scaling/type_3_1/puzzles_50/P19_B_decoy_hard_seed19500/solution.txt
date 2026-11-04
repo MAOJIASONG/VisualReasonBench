@@ -1,8 +1,0 @@
-P19_B_decoy_hard
-insight: Not every hole is yours: some lead to a red piece and must stay empty.
-grid: (9, 8, 3)
-fixed: [('P', (1, 1, 1)), ('D', (1, 2, 1)), ('S', (1, 4, 1)), ('D', (1, 6, 1)), ('D', (1, 7, 1)), ('P', (1, 8, 1)), ('D', (2, 4, 1)), ('G', (7, 4, 1)), ('P', (9, 4, 1))]
-inventory: {'D': 4}
-patches: [('D', [3, 4, 1]), ('D', [4, 4, 1]), ('D', [5, 4, 1]), ('D', [6, 4, 1])]
-push:    START [1, 4, 1] dir=+x
-difficulty: {'n_solutions': 1, 'p_wavefill': 0.3333, 'min_patches': 4, 'gaps': 3, 'decoy_gaps': 3, 'raised': 0, 'p_random': 0.0, 'p_gapfill': 0.0, 'score': 6.09}

@@ -188,14 +188,25 @@ gap, so no two tiers touch.
 |---|---|---|---|---|---|
 | easy | 1–2 | 0–1 | ≤ 3.1 | allowed | — |
 | medium | 3 | 2 | 4 – 5.6 | ≤ 50 % | ≤ 50 % |
-| hard | 4 | ≥ 3 | ≥ 6 | 0 % | ≤ 33 % |
+| hard | 9–10 | ≥ 3 | ≥ 14 | 0 % | ≤ 33 % |
 
 The configs in `levels.CATEGORY` were tuned on a 1500-level sample so every
 (category, tier) pair can reach its rung: e.g. E_full easy is a single patch
-on a step behind a splitter, and A_line / B_decoy hard need 4 patches and 3
-decoys (the generator places at most 3 decoy lines, which is why the hard
-floor is 6: 3 + 1.5 + log2 3).  `score_band=` on `generate_level` overrides
-the tier's band for experiments.
+on a step behind a splitter.  `score_band=` on `generate_level` overrides the
+tier's band for experiments.
+
+**Hard tier (2026-11).**  Every hard level is a three-level splitter tree
+(`split_depth=3`: a fork's side leads on to a deeper splitter, a goal or a
+trap) on a 12 × 12 × 5 board with grey steps (`p_step` 0.5–0.7, 4–5 raised
+patches), 9–10 patches and 1–5 goals; the category sets the emphasis (more
+decoys, more raised patches, two goals per fork).  The tier was calibrated
+against gpt-6.1-sol (Codex, default reasoning effort, one-shot, front + back
+views): the earlier hard tier (4 patches, no splitter tree) was solved 14/15,
+this one about a quarter of the time; its losses are patches put at the wrong
+height (`CellOccupied`, `NoPhysicalSupport`).  See
+`../chain_analysis/model_runs/gpt61sol_hard_calibration/`.  `images_batch/`
+still holds the earlier demo levels (`play_batch` would now build the new
+hard ones).
 
 `generate_50` / `play_batch` search seeds in parallel (`../chain_search.py`).
 
@@ -219,7 +230,7 @@ and `solution.txt` — the one thing the player has to notice.
 Each category is 3 easy + 4 medium + 3 hard; layouts are de-duplicated up
 to rotation / reflection / translation and every slot scans its own seeds.
 Per puzzle: `level.json`, `solution.txt`, `00_initial_front.png`,
-`99_submit_front.png`; plus `SUMMARY.md` and `index.json` with the measured
+`00_initial_back.png`, `99_submit_front.png`; plus `SUMMARY.md` and `index.json` with the measured
 difficulty.  `level.json`'s meta and `solution.txt` contain the answer —
 keep them out of model inputs.
 

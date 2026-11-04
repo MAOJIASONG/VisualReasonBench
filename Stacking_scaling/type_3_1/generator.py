@@ -5,7 +5,9 @@ Construction:
   1. START (green) on the floor, facing a random direction.
   2. Main chain: dominoes one cell apart, optionally stepping up or down one
      level onto grey STEP blocks, ending at a gold GOAL -- or at a SPLITTER
-     whose two side branches end at goals (or one goal and a trap).
+     whose two side branches end at goals (or one goal and a trap).  With
+     split_depth > 1 a branch may end at a further splitter, building a tree
+     of forks (the hard tier uses three levels).
   3. Decoy lines: an empty, supported gap followed by dominoes and a red
      PROTECTED piece.  They are placed beside START (wrong push direction),
      after the goal (the wave keeps travelling past a falling goal) and on
@@ -89,6 +91,40 @@ def _line(bd: _Board, c: Col, b: int, d: str, n: int, end: PieceType,
     return out
 
 
+def _forks(bd: _Board, c: Col, b: int, d_in: str, depth: int,
+           rng: random.Random, p_step: float, both_goals: bool):
+    """Both sides of the splitter at (c, b), hit while travelling d_in:
+    the first side always leads on (to a goal, or to a deeper splitter while
+    depth > 1), the second to a goal / deeper splitter if `both_goals`, else
+    to a goal or a trap at random.  (chain cells, ends, end dirs) or None."""
+    chain, ends, end_dirs = [], [], []
+    sides = perp_dirs(d_in)
+    rng.shuffle(sides)
+    for i, sd in enumerate(sides):
+        if i == 1 and not both_goals and rng.random() < 0.5:
+            if not _trap(bd, c, b, sd, rng):
+                return None
+            continue
+        deeper = depth > 1 and (i == 0 or rng.random() < 0.5)
+        line = _line(bd, c, b, sd, rng.randint(2, 4),
+                     PieceType.SPLITTER if deeper else PieceType.GOAL, rng, p_step)
+        if line is None:
+            return None
+        chain += line
+        if deeper:
+            sub = _forks(bd, line[-1][0], line[-1][1], sd, depth - 1, rng, p_step,
+                         rng.random() < 0.5)
+            if sub is None:
+                return None
+            chain += sub[0]
+            ends += sub[1]
+            end_dirs += sub[2]
+        else:
+            ends.append(line[-1])
+            end_dirs.append(sd)
+    return chain, ends, end_dirs
+
+
 def _trap(bd: _Board, c: Col, b: int, d: str, rng: random.Random) -> bool:
     """Gap (kept empty, on a step if needed) then 1-2 dominoes and a P."""
     g = _step(c, d)
@@ -116,6 +152,8 @@ def generate_level(grid_size: Vec3 = (6, 5, 3),
                    n_decoys: int = 0,
                    n_protected: int = 0,
                    min_raised: int = 0,
+                   p_step: Optional[float] = None,
+                   split_depth: int = 1,
                    tier: Optional[str] = None,
                    score_band: Optional[Tuple[float, float]] = None,
                    max_attempts: int = 300,
@@ -124,7 +162,8 @@ def generate_level(grid_size: Vec3 = (6, 5, 3),
     plain P pieces away from every wave line (pure scenery)."""
     rng = random.Random(seed)
     A, B, C = grid_size
-    p_step = 0.4 if use_height else 0.0
+    if p_step is None:
+        p_step = 0.4 if use_height else 0.0
     for attempt in range(max_attempts):
         bd = _Board(grid_size)
         L = rng.randint(*main_len)
@@ -155,22 +194,31 @@ def generate_level(grid_size: Vec3 = (6, 5, 3),
             tc, tb = main[-1]
             sides = perp_dirs(d0)
             rng.shuffle(sides)
-            a = _line(bd, tc, tb, sides[0], rng.randint(2, 4), PieceType.GOAL,
-                      rng, p_step)
-            if a is None:
-                continue
-            chain += a
-            ends, end_dirs = [a[-1]], [sides[0]]
-            if two_goals:
-                b2 = _line(bd, tc, tb, sides[1], rng.randint(2, 4),
-                           PieceType.GOAL, rng, p_step)
-                if b2 is None:
+            if split_depth >= 2:
+                # a tree of splitters: every fork sends one side on toward a
+                # goal (or a deeper splitter), the other to a goal or a trap
+                sub = _forks(bd, tc, tb, d0, split_depth, rng, p_step, two_goals)
+                if sub is None:
                     continue
-                chain += b2
-                ends.append(b2[-1])
-                end_dirs.append(sides[1])
-            elif not _trap(bd, tc, tb, sides[1], rng):
-                continue
+                chain += sub[0]
+                ends, end_dirs = sub[1], sub[2]
+            else:
+                a = _line(bd, tc, tb, sides[0], rng.randint(2, 4), PieceType.GOAL,
+                          rng, p_step)
+                if a is None:
+                    continue
+                chain += a
+                ends, end_dirs = [a[-1]], [sides[0]]
+                if two_goals:
+                    b2 = _line(bd, tc, tb, sides[1], rng.randint(2, 4),
+                               PieceType.GOAL, rng, p_step)
+                    if b2 is None:
+                        continue
+                    chain += b2
+                    ends.append(b2[-1])
+                    end_dirs.append(sides[1])
+                elif not _trap(bd, tc, tb, sides[1], rng):
+                    continue
         else:
             main = _line(bd, start, 1, d0, L, PieceType.GOAL, rng, p_step)
             if main is None:

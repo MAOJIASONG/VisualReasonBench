@@ -8,6 +8,8 @@ Analysis code for FluidNet (`type_3`), Domino (`type_3_1`) and PipeFit
 |---|---|
 | `envs.py` | one pure, hashable-state interface over the three games + an exact oracle: N(s) (winning end states still reachable) and d(s) (fewest actions to win, counting the removals a wrong piece needs) |
 | `verify_levels.py` | replays every level's reference plan through the game rules and checks the oracle agrees |
+| `review_hard.py` | per-level review sheet of the hard levels: parts, answer and the effect of every wrong move |
+| `audit_hard.py` | logic audit of every hard level (unique answer, every valve / patch / obstacle meaningful, no decorative piece); `--selftest` plants defects and checks they are caught |
 | `exp1_step_value.py` | Experiment 1: dead ends, consequence delay, solution retention V, distance change Δd |
 | `exp2_budget_search.py` | Experiment 2: random / greedy / greedy+undo / DFS / BFS under the same verify and action budget |
 | `play_cli.py` | play of one level by an outside agent (a model or a person), closed loop (`act`, an image after every action) or one-shot (`plan`, the whole action list in one call); records the trajectory and exports it for both experiments |
@@ -16,6 +18,7 @@ Analysis code for FluidNet (`type_3`), Domino (`type_3_1`) and PipeFit
 
 ```bash
 python -m chain_analysis.verify_levels type_3/puzzles_50 type_3_1/puzzles_50 type_2_3/puzzles_50
+python -m chain_analysis.audit_hard [--selftest]
 python -m chain_analysis.exp1_step_value --root type_3/puzzles_50 [--traj runs.jsonl]
 python -m chain_analysis.exp2_budget_search --root type_3/puzzles_50 [--models models.jsonl]
 ```
@@ -81,9 +84,10 @@ needs to match each model.
 ## Running a model
 
 `play_cli.py` keeps the game state in a session folder; the player only
-sees the rendered images (`obs_<n>_front.png`, plus `_back.png` for FluidNet
-and PipeFit) and a one-line result after each action.  The rules are the
-real mechanics of each game package.
+sees the rendered images (`obs_<n>_front.png` and `obs_<n>_back.png`; Domino
+had the front view only before 2026-11-04, when stacked steps on the larger
+boards made heights ambiguous from one side) and a one-line result after
+each action.  The rules are the real mechanics of each game package.
 
 ```bash
 # 1. open a session (the player never sees the level path)
@@ -112,26 +116,38 @@ first call.  Any agent that can read images and run a shell command can play.
 
 ## Model runs
 
-Four runs so far, all in `model_runs/` (index, protocols, audit and how to
-reproduce: `model_runs/README.md`).  Wins out of 15 on the hard tier of
-`puzzles_50`:
+All runs are in `model_runs/` (index, protocols, audit and how to
+reproduce: `model_runs/README.md`).
 
-| game | Sonnet closed loop: solved / 1st verify | Sonnet one-shot | gpt-6-luna one-shot (Codex) | best baseline at 1 / 64 verifies |
+**Current hard tier** (FluidNet and Domino regenerated on 2026-11-04,
+PipeFit unchanged), calibrated against gpt-6.1-sol (Codex, default effort
+low, one-shot) to a 20–30 % solve rate (`model_runs/gpt61sol_hard_calibration/`):
+
+| game | gpt-6.1-sol low, one-shot | best search baseline at 1 / 64 verifies |
+|---|---|---|
+| FluidNet | 4 / 15 | 7% / 93% (greedy, greedy + undo) |
+| Domino | 3 / 15 | 0% / 0% |
+| PipeFit | 5 / 15 | 0% / 1% |
+
+**Previous hard tier** (git `de130a7`), wins out of 15:
+
+| game | Sonnet closed loop: solved / 1st verify | Sonnet one-shot | gpt-6-luna one-shot (Codex) | gpt-6.1-sol one-shot, effort high / low |
 |---|---|---|---|---|
-| FluidNet | 15 / 13 | 15 | 0 | 13% / 100% |
-| Domino | 15 / 13 | 12 | 2 | 0% / 4% |
-| PipeFit | 15 / 11 | 10 | 0 | 0% / 1% |
+| FluidNet | 15 / 13 | 15 | 0 | 15 / 9 |
+| Domino | 15 / 13 | 12 | 2 | 15 / 14 |
+| PipeFit | 15 / 11 | 10 | 0 | 14 / 4 |
 
 | run | model | protocol | levels |
 |---|---|---|---|
 | `sonnet_pilot/` | Claude Sonnet | closed loop | 15 demo levels (all solved, 14 on the 1st verify) |
-| `sonnet_hard50/` | Claude Sonnet | closed loop | 45 hard levels of `puzzles_50` |
+| `sonnet_hard50/` | Claude Sonnet | closed loop | previous 45 hard levels of `puzzles_50` |
 | `sonnet_oneshot50/` | Claude Sonnet | one-shot | same 45 |
 | `gpt6luna_oneshot50/` | Codex gpt-6-luna | one-shot (images attached to `codex exec`) | same 45 |
+| `gpt61sol_hard_calibration/` | Codex gpt-6.1-sol | one-shot | current 45 hard levels, plus every calibration game (`calibration_runs.csv`) |
 
-The hard tier stops the search baselines and separates the two models, but
-Sonnet plans the hard levels from the start image alone: its failures are
-misread cells, not planning.  Full discussion: `RESULTS.md`.
+On the previous hard tier Sonnet (and gpt-6.1-sol at effort high) planned
+the levels from the start image alone; their failures were misread cells,
+not planning.  Full discussion: `RESULTS.md`.
 
 ## Caveats
 

@@ -1,0 +1,177 @@
+{
+ "level": "type_3/puzzles_50/P30_backdoor_hard_seed25319",
+ "game": "fluidnet",
+ "actions": [
+  [
+   "open",
+   [
+    5,
+    5,
+    3
+   ]
+  ],
+  [
+   "open",
+   [
+    5,
+    5,
+    5
+   ]
+  ],
+  [
+   "open",
+   [
+    3,
+    5,
+    5
+   ]
+  ],
+  [
+   "open",
+   [
+    1,
+    5,
+    5
+   ]
+  ],
+  [
+   "open",
+   [
+    1,
+    3,
+    5
+   ]
+  ],
+  [
+   "open",
+   [
+    1,
+    1,
+    4
+   ]
+  ]
+ ],
+ "n_actions": 6,
+ "fails": 0,
+ "status": "win",
+ "max_actions": 40,
+ "log": [
+  {
+   "action": [
+    "open",
+    [
+     5,
+     5,
+     3
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "open",
+    [
+     5,
+     5,
+     5
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "open",
+    [
+     3,
+     5,
+     5
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "open",
+    [
+     1,
+     5,
+     5
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "open",
+    [
+     1,
+     3,
+     5
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "open",
+    [
+     1,
+     1,
+     4
+    ]
+   ],
+   "result": "Win"
+  }
+ ],
+ "oneshot": true,
+ "plan": [
+  [
+   "open",
+   [
+    5,
+    5,
+    3
+   ]
+  ],
+  [
+   "open",
+   [
+    5,
+    5,
+    5
+   ]
+  ],
+  [
+   "open",
+   [
+    3,
+    5,
+    5
+   ]
+  ],
+  [
+   "open",
+   [
+    1,
+    5,
+    5
+   ]
+  ],
+  [
+   "open",
+   [
+    1,
+    3,
+    5
+   ]
+  ],
+  [
+   "open",
+   [
+    1,
+    1,
+    4
+   ]
+  ]
+ ]
+}

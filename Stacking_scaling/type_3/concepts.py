@@ -143,49 +143,56 @@ class Net:
 # Concept parameters per tier and acceptance rules
 # ---------------------------------------------------------------------------
 
-# One ladder for the whole game.  Valves: easy <= 4, medium 5-6, hard 7-8
+# One ladder for the whole game.  Valves: easy <= 4, medium 5-6, hard 9-10
 # (the `valves` ranges below); score bands leave a gap between tiers.
 TIER_SCORE: Dict[str, Tuple[float, float]] = {
     "easy": (0, 3), "medium": (4, 6), "hard": (7, 99),
 }
+
+# Hard levels are built with 10-12 valves and a 6-valve plan; prune_filler
+# then turns every valve that is neither needed nor fatal back into pipe,
+# leaving 9-10 real decisions.  Calibrated against gpt-6.1-sol (Codex, default effort,
+# one-shot): about a quarter of such levels solved, against ~2/3 of the
+# earlier 7-8 valve hard tier.
+HARD = dict(prune=True, final_valves=(9, 10))
 
 CONCEPTS: Dict[str, Dict[str, Dict]] = {
     "trace": {
         "easy":   dict(grid=(4, 4, 4), pumps=1, targets=1, reds=1, loops=0, valves=(2, 3), plan=(1, 2)),
         "medium": dict(grid=(5, 5, 4), pumps=1, targets=2, reds=2, loops=0, valves=(5, 6), plan=(2, 3),
                        nonlocal_traps=1, max_frontier=0.6),
-        "hard":   dict(grid=(5, 5, 5), pumps=1, targets=2, reds=3, loops=0, valves=(7, 8), plan=(3, 5),
-                       nonlocal_traps=2, max_frontier=0.35, max_greedy=0.35),
+        "hard":   dict(grid=(5, 5, 5), pumps=1, targets=2, reds=4, loops=0, valves=(10, 12), plan=(6, 6),
+                       nonlocal_traps=2, max_frontier=0.35, max_greedy=0.35, **HARD),
     },
     "series": {
         "easy":   dict(grid=(4, 4, 4), pumps=1, targets=1, reds=1, loops=0, valves=(3, 3), plan=(2, 2)),
         "medium": dict(grid=(5, 5, 4), pumps=1, targets=1, reds=2, loops=0, valves=(5, 6), plan=(3, 3),
                        nonlocal_traps=1),
-        "hard":   dict(grid=(5, 5, 5), pumps=1, targets=1, reds=3, loops=0, valves=(7, 8), plan=(4, 4),
-                       nonlocal_traps=2, max_frontier=0.35),
+        "hard":   dict(grid=(5, 5, 5), pumps=1, targets=1, reds=4, loops=0, valves=(10, 12), plan=(6, 6),
+                       nonlocal_traps=2, max_frontier=0.35, **HARD),
     },
     "backdoor": {
         "easy":   dict(grid=(4, 4, 4), pumps=1, targets=1, reds=1, loops=1, valves=(3, 4), plan=(1, 3),
                        shortest_fails=True),
         "medium": dict(grid=(5, 5, 4), pumps=1, targets=2, reds=1, loops=1, valves=(5, 6), plan=(2, 4),
                        shortest_fails=True, max_frontier=0.6),
-        "hard":   dict(grid=(5, 5, 5), pumps=1, targets=2, reds=2, loops=2, valves=(7, 8), plan=(3, 5),
-                       shortest_fails=True, max_frontier=0.35, max_greedy=0.5),
+        "hard":   dict(grid=(5, 5, 5), pumps=1, targets=2, reds=2, loops=2, valves=(10, 12), plan=(6, 6),
+                       shortest_fails=True, max_frontier=0.35, max_greedy=0.5, **HARD),
     },
     "two_pumps": {
         "easy":   dict(grid=(5, 5, 4), pumps=2, targets=2, reds=0, loops=1, valves=(3, 4), plan=(2, 3)),
         "medium": dict(grid=(5, 5, 5), pumps=2, targets=2, reds=1, loops=1, valves=(5, 6), plan=(2, 4),
                        max_lookahead=0.75),
-        "hard":   dict(grid=(6, 5, 5), pumps=2, targets=3, reds=1, loops=2, valves=(7, 8), plan=(3, 5),
-                       max_lookahead=0.5, max_frontier=0.35),
+        "hard":   dict(grid=(6, 6, 5), pumps=2, targets=3, reds=2, loops=2, valves=(10, 12), plan=(6, 6),
+                       max_lookahead=0.5, max_frontier=0.35, **HARD),
     },
     "mixed": {
         "easy":   dict(grid=(5, 5, 5), pumps=2, targets=2, reds=1, loops=1, valves=(4, 4), plan=(2, 4),
                        nonlocal_traps=1),
         "medium": dict(grid=(6, 5, 5), pumps=2, targets=2, reds=2, loops=1, valves=(5, 6), plan=(3, 5),
                        nonlocal_traps=2, max_lookahead=0.75),
-        "hard":   dict(grid=(6, 6, 5), pumps=2, targets=3, reds=2, loops=2, valves=(7, 8), plan=(3, 6),
-                       nonlocal_traps=2, max_lookahead=0.75),
+        "hard":   dict(grid=(6, 6, 5), pumps=2, targets=3, reds=2, loops=2, valves=(10, 12), plan=(6, 6),
+                       nonlocal_traps=2, max_lookahead=0.75, **HARD),
     },
 }
 
@@ -374,6 +381,26 @@ def spaced(spec: LevelSpec) -> bool:
     return True
 
 
+def prune_filler(spec: LevelSpec) -> LevelSpec:
+    """Turn every valve that is neither in the shortest winning set nor
+    fatal when added to it back into plain pipe (opening it never changed
+    the outcome), so a big level keeps only real decisions."""
+    from .difficulty import outcome
+    from .solver import solve
+    while True:
+        best = solve(spec)
+        if not best:
+            return spec
+        filler = [v for v in spec.valves
+                  if v not in best and not outcome(spec, set(best) | {v})[0]]
+        if not filler:
+            return spec
+        cells = dict(spec.cells)
+        v = filler[0]
+        cells[v] = Cell(Vec3(*v), CellType.PIPE)
+        spec = LevelSpec(grid_size=spec.grid_size, cells=cells)
+
+
 def generate(concept: str, tier: str, seed: int,
              max_attempts: int = 400) -> Optional[Tuple[LevelSpec, Dict]]:
     p = CONCEPTS[concept][tier]
@@ -382,6 +409,11 @@ def generate(concept: str, tier: str, seed: int,
         spec = _build(p, rng)
         if spec is None or not spaced(spec):
             continue
+        if p.get("prune"):
+            spec = prune_filler(spec)
+            lo, hi = p.get("final_valves", p["valves"])
+            if not lo <= len(spec.valves) <= hi:
+                continue
         m = analyze(spec)
         if not accepts(m, p, tier):
             continue

@@ -36,7 +36,7 @@ DOMINO = """- A 3D board with 1-based coordinates (x, y, z); z points up, axes a
 - Pieces: green START (the only piece you push), cream dominoes D (fall forward and knock the next piece), cream splitters T (send the wave out to both sides), gold goals G (topple every one to win), red protected P (toppling one loses), grey steps (blocks that hold a piece one level up).
 - A falling piece hits the piece in the next cell in its fall direction if that piece stands at most one level higher or lower.
 - Phase 1 — place: you have a fixed number of patch dominoes (see the PATCH DOMINOES panel) and must place ALL of them before pushing. A patch stands on an empty floor cell (base z = 1) or on top of a grey step (base z = 2 when the step is at z = 1).
-    '["place", [x, y, z]]' for each patch, then '["submit_placement"]'.
+    '["place", [x, y, z]]' for each patch, then '["submit_placement"]'.  One place action per patch, at its base cell (it fills both of its cells itself), so the plan holds exactly as many place actions as the panel shows.
 - Phase 2 — push: '["push", "+x"]' (or "-x", "+y", "-y") pushes START once in that direction; the whole chain reaction runs and the game is decided at once.
 - Win: every gold goal toppled and no red piece toppled.
 - Your plan: all placements, then ["submit_placement"], then one push, e.g. [["place", [2, 5, 1]], ["place", [3, 5, 1]], ["submit_placement"], ["push", "+x"]].
@@ -53,7 +53,7 @@ PIPE = """- A 3D box with 1-based coordinates (x, y, z); z points up, axes are l
 """
 
 GAMES = {"type_3": ("FLUIDNET", FLUID, "obs_000_front.png and obs_000_back.png", " (two camera views of the same start state)", '[["open", [2, 3, 1]], ["open", [4, 3, 1]]]'),
-         "type_3_1": ("DOMINO CHAIN", DOMINO, "obs_000_front.png", "", '[["place", [2, 5, 1]], ["submit_placement"], ["push", "+x"]]'),
+         "type_3_1": ("DOMINO CHAIN", DOMINO, "obs_000_front.png and obs_000_back.png", " (two camera views of the same start state)", '[["place", [2, 5, 1]], ["submit_placement"], ["push", "+x"]]'),
          "type_2_3": ("PIPEFIT", PIPE, "obs_000_front.png and obs_000_back.png", " (two camera views of the same start state)", '[["place", "I", [2, 3, 1], ["+x", "-x"]], ["submit"]]')}
 
 def main(O):

@@ -12,6 +12,7 @@ O, MODEL = sys.argv[1], sys.argv[2]
 WORKERS = int(sys.argv[3]) if len(sys.argv) > 3 else 8
 REPO = os.getcwd()          # run from Stacking_scaling/
 ENV = dict(os.environ)      # set HTTPS_PROXY in the environment if Codex needs a proxy
+EFFORT = os.environ.get("EFFORT", "high")   # Codex reasoning effort
 
 
 def last_plan(text):
@@ -35,7 +36,7 @@ def run(line):
                        cwd=REPO, check=True, capture_output=True)
     imgs = sorted(f for f in os.listdir(sess) if f.startswith("obs_000_"))
     empty = tempfile.mkdtemp(prefix="codex_", dir=O)
-    args = ["codex", "exec", "-m", MODEL, "-c", 'model_reasoning_effort="high"',
+    args = ["codex", "exec", "-m", MODEL, "-c", f'model_reasoning_effort="{EFFORT}"',
             "--ignore-user-config", "--skip-git-repo-check", "--ephemeral",
             "-s", "read-only", "-C", empty, "--json",
             "-o", os.path.join(O, "answers", num + ".txt")]

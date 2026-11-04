@@ -1,0 +1,177 @@
+{
+ "level": "type_3/puzzles_50/P48_mixed_hard_seed34056",
+ "game": "fluidnet",
+ "actions": [
+  [
+   "open",
+   [
+    1,
+    6,
+    1
+   ]
+  ],
+  [
+   "open",
+   [
+    6,
+    3,
+    4
+   ]
+  ],
+  [
+   "open",
+   [
+    6,
+    5,
+    5
+   ]
+  ],
+  [
+   "open",
+   [
+    4,
+    6,
+    5
+   ]
+  ],
+  [
+   "open",
+   [
+    1,
+    5,
+    5
+   ]
+  ],
+  [
+   "open",
+   [
+    6,
+    6,
+    1
+   ]
+  ]
+ ],
+ "n_actions": 6,
+ "fails": 0,
+ "status": "win",
+ "max_actions": 40,
+ "log": [
+  {
+   "action": [
+    "open",
+    [
+     1,
+     6,
+     1
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "open",
+    [
+     6,
+     3,
+     4
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "open",
+    [
+     6,
+     5,
+     5
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "open",
+    [
+     4,
+     6,
+     5
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "open",
+    [
+     1,
+     5,
+     5
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "open",
+    [
+     6,
+     6,
+     1
+    ]
+   ],
+   "result": "Win"
+  }
+ ],
+ "oneshot": true,
+ "plan": [
+  [
+   "open",
+   [
+    1,
+    6,
+    1
+   ]
+  ],
+  [
+   "open",
+   [
+    6,
+    3,
+    4
+   ]
+  ],
+  [
+   "open",
+   [
+    6,
+    5,
+    5
+   ]
+  ],
+  [
+   "open",
+   [
+    4,
+    6,
+    5
+   ]
+  ],
+  [
+   "open",
+   [
+    1,
+    5,
+    5
+   ]
+  ],
+  [
+   "open",
+   [
+    6,
+    6,
+    1
+   ]
+  ]
+ ]
+}

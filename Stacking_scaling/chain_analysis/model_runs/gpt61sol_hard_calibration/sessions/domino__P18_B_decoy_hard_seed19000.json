@@ -1,0 +1,285 @@
+{
+ "level": "type_3_1/puzzles_50/P18_B_decoy_hard_seed19000",
+ "game": "domino",
+ "actions": [
+  [
+   "place",
+   [
+    3,
+    11,
+    1
+   ]
+  ],
+  [
+   "place",
+   [
+    3,
+    9,
+    3
+   ]
+  ],
+  [
+   "place",
+   [
+    4,
+    8,
+    3
+   ]
+  ],
+  [
+   "place",
+   [
+    5,
+    8,
+    3
+   ]
+  ],
+  [
+   "place",
+   [
+    6,
+    8,
+    2
+   ]
+  ],
+  [
+   "place",
+   [
+    7,
+    7,
+    1
+   ]
+  ],
+  [
+   "place",
+   [
+    7,
+    6,
+    1
+   ]
+  ],
+  [
+   "place",
+   [
+    6,
+    5,
+    2
+   ]
+  ],
+  [
+   "place",
+   [
+    9,
+    5,
+    1
+   ]
+  ],
+  [
+   "submit_placement"
+  ],
+  [
+   "push",
+   "-y"
+  ]
+ ],
+ "n_actions": 11,
+ "fails": 0,
+ "status": "win",
+ "max_actions": 40,
+ "log": [
+  {
+   "action": [
+    "place",
+    [
+     3,
+     11,
+     1
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    [
+     3,
+     9,
+     3
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    [
+     4,
+     8,
+     3
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    [
+     5,
+     8,
+     3
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    [
+     6,
+     8,
+     2
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    [
+     7,
+     7,
+     1
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    [
+     7,
+     6,
+     1
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    [
+     6,
+     5,
+     2
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    [
+     9,
+     5,
+     1
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "submit_placement"
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "push",
+    "-y"
+   ],
+   "result": "WIN"
+  }
+ ],
+ "oneshot": true,
+ "plan": [
+  [
+   "place",
+   [
+    3,
+    11,
+    1
+   ]
+  ],
+  [
+   "place",
+   [
+    3,
+    9,
+    3
+   ]
+  ],
+  [
+   "place",
+   [
+    4,
+    8,
+    3
+   ]
+  ],
+  [
+   "place",
+   [
+    5,
+    8,
+    3
+   ]
+  ],
+  [
+   "place",
+   [
+    6,
+    8,
+    2
+   ]
+  ],
+  [
+   "place",
+   [
+    7,
+    7,
+    1
+   ]
+  ],
+  [
+   "place",
+   [
+    7,
+    6,
+    1
+   ]
+  ],
+  [
+   "place",
+   [
+    6,
+    5,
+    2
+   ]
+  ],
+  [
+   "place",
+   [
+    9,
+    5,
+    1
+   ]
+  ],
+  [
+   "submit_placement"
+  ],
+  [
+   "push",
+   "-y"
+  ]
+ ]
+}

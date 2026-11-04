@@ -8,7 +8,8 @@ Every level has exactly one minimal winning valve set, no tank is full at
 the start, and every valve is either in that set or fatal when added to it.
 Layouts are de-duplicated up to rotation, reflection and translation.
 Tiers are one ladder for the whole game (concepts.TIER_SCORE): valves
-<= 4 / 5-6 / 7-8 and score <= 3 / 4-6 / >= 7 for easy / medium / hard.
+<= 4 / 5-6 / 9-10 and score <= 3 / 4-6 / >= 7 for easy / medium / hard
+(hard levels are pruned to their real decisions, concepts.prune_filler).
 
 Per puzzle: 00_initial (front + back), 01_solved (front), 02_mistake (front:
 the most tempting losing move), level.json and solution.txt.  level.json's
@@ -147,7 +148,7 @@ def main():
 
     rows: List[Dict] = []
     t_all = time.time()
-    picks = pick_levels(plan, _make, layout_key, n_seeds=600)  # backdoor hard: ~1 % of seeds
+    picks = pick_levels(plan, _make, layout_key, n_seeds=1200)  # series / backdoor hard are rare
     for i, ((label, concept, tier), found) in enumerate(zip(plan, picks), 1):
         print(f"=== [{i:2d}/{len(plan)}] {label}", flush=True)
         if found is None:

@@ -269,19 +269,22 @@ python -m chain_analysis.play_cli start type_3/images_batch/level_01_easy_trace_
 python -m chain_analysis.play_cli plan runs/s02 '[["open", [3, 4, 4]]]'
 ```
 
-Model runs on the 15 hard levels of each game's `puzzles_50/` (wins out of
-15; baselines are the best search method at 1 / 64 verifies):
+Hard tier.  The hard levels of each game's `puzzles_50/` are calibrated
+against gpt-6.1-sol (Codex, default reasoning effort, one-shot from the start
+images): it solves about a quarter of them.  Every level keeps one winning
+answer, checked by exhaustive search.
 
-| game | Claude Sonnet closed loop: solved / 1st verify | Claude Sonnet one-shot | Codex gpt-6-luna one-shot | best baseline |
-|---|---|---|---|---|
-| FluidNet | 15 / 13 | 15 | 0 | 13% / 100% |
-| Domino | 15 / 13 | 12 | 2 | 0% / 4% |
-| PipeFit | 15 / 11 | 10 | 0 | 0% / 1% |
+| game | hard levels (since 2026-11-04) | gpt-6.1-sol one-shot | best search baseline at 1 / 64 verifies |
+|---|---|---|---|
+| FluidNet | 9–10 valves, unique 6-valve plan | 4 / 15 | 7% / 93% |
+| Domino | three-level splitter tree on steps, 9–10 patches | 3 / 15 | 0% / 0% |
+| PipeFit | 10–20 pieces, 3–12 solutions (unchanged) | 5 / 15 | 0% / 1% |
 
-The hard tier defeats the search baselines and separates the two models,
-but Sonnet solves most hard levels from the start image alone; its
-remaining failures are misread cells, so the tier tests perception more than
-planning depth for a strong model.
+On the previous hard tier (git `de130a7`) gpt-6.1-sol solved 27/45 at the
+same effort and 44/45 at effort high; Claude Sonnet solved every level
+closed loop and 37/45 one-shot, Codex gpt-6-luna 2/45 one-shot.  gpt-6.1-sol's losses
+on the new tier are single misread actions in a long plan: a valve
+coordinate, a step height, a portal cell.
 
 Details: `chain_analysis/README.md`; baseline results and discussion:
 `chain_analysis/RESULTS.md`; model runs (sessions, audits, Exp 1 / 2 reports,

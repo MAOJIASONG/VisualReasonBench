@@ -92,7 +92,7 @@
         3,
         1
       ],
-      "type": "pipe"
+      "type": "valve"
     },
     {
       "pos": [
@@ -284,7 +284,7 @@
         1,
         4
       ],
-      "type": "pipe"
+      "type": "valve"
     },
     {
       "pos": [
@@ -383,23 +383,23 @@
     "tier": "hard",
     "insight": "The route with the fewest valves also reaches a red cell through a loop; take the clean detour.",
     "seed": 24073,
-    "attempt": 173,
+    "attempt": 183,
     "difficulty": {
-      "n_valves": 8,
-      "min_plan": 4,
+      "n_valves": 10,
+      "min_plan": 6,
       "n_min_sets": 1,
       "n_win_sets": 1,
       "prefilled": 0,
       "traps": 4,
       "nonlocal_traps": 4,
-      "p_random": 0.0143,
-      "p_frontier": 0.0078,
+      "p_random": 0.0048,
+      "p_frontier": 0.0005,
       "p_greedy": 0.0,
       "p_lookahead": 1.0,
       "shortest_ok": false,
       "filler": 0,
       "n_colors": 1,
-      "score": 8.0
+      "score": 9.0
     }
   }
 }

@@ -10,12 +10,21 @@ the end and detailed in `model_runs/sonnet_pilot/README.md`.
 The model scores in the paper's Table 1 were measured on the earlier
 30-level sets, so they are not directly comparable with these numbers.
 
+**Hard tier recalibrated (2026-11-04).**  The FluidNet and Domino hard
+levels of `puzzles_50/` were regenerated with harder settings so that
+gpt-6.1-sol (Codex, default reasoning effort, one-shot) solves about a
+quarter of them; PipeFit's hard tier already sat there and is unchanged.
+Easy and medium levels are byte-identical.  The baseline tables below are on
+the new levels; the Claude Sonnet and gpt-6-luna sections further down were
+measured on the previous hard tier (git `de130a7`).  Calibration details:
+the last section and `model_runs/gpt61sol_hard_calibration/README.md`.
+
 ## Experiment 1 — dead ends (random rollouts)
 
 | game | tier | runs into a dead end | first fatal step | steps until exposed |
 |---|---|---|---|---|
-| FluidNet | easy / medium / hard | 67% / 90% / 93% | 1.3 / 2.0 / 1.7 | 0.4 / 0.8 / 1.6 |
-| Domino | easy / medium / hard | 93% / 100% / 100% | 1.2 / 1.2 / 1.2 | 2.2 / 3.8 / 4.8 |
+| FluidNet | easy / medium / hard | 73% / 80% / 100% | 1.5 / 2.1 / 2.3 | 0.5 / 0.5 / 1.9 |
+| Domino | easy / medium / hard | 100% / 100% / 100% | 1.1 / 1.3 / 1.3 | 2.3 / 3.8 / 10.1 |
 | PipeFit | easy / medium / hard | 100% / 95% / 100% | 1.5 / 1.8 / 2.0 | 5.1 / 7.2 / 9.4 |
 
 The delay between the fatal move and the moment the game reveals it grows
@@ -26,13 +35,13 @@ Every level offers a dead-end move at step 1 (`earliest trap step` = 1).
 
 | game | method | ≤1 | ≤5 | ≤20 | ≤50 |
 |---|---|---|---|---|---|
-| FluidNet | random | 16 | 40 | 73 | 87 |
-| | greedy | 36 | 54 | 77 | 91 |
-| | greedy + undo | 36 | 82 | 96 | 98 |
-| | DFS | 15 | 62 | 87 | 96 |
-| | BFS | 10 | 30 | 72 | 94 |
+| FluidNet | random | 16 | 36 | 67 | 80 |
+| | greedy | 34 | 51 | 70 | 81 |
+| | greedy + undo | 34 | 74 | 96 | 98 |
+| | DFS | 15 | 57 | 79 | 85 |
+| | BFS | 10 | 30 | 70 | 70 |
 | Domino | random | 3 | 4 | 9 | 16 |
-| | greedy | 24 | 27 | 34 | 38 |
+| | greedy | 24 | 27 | 34 | 37 |
 | | greedy + undo | 24 | 24 | 24 | 28 |
 | | DFS | 1 | 4 | 13 | 23 |
 | | BFS | 0 | 0 | 0 | 0 |
@@ -43,8 +52,9 @@ Every level offers a dead-end move at step 1 (`earliest trap step` = 1).
 | | BFS | 0 | 0 | 0 | 0 |
 
 * FluidNet is the one game where trial and error alone gets far: with 5
-  verifies, greedy + undo solves 82% (73% of hard levels).  A model score in
-  that range on FluidNet does not by itself show planning.
+  verifies, greedy + undo solves 74% (47% of hard levels; 7% at one
+  verify).  A model score in that range on FluidNet does not by itself show
+  planning.
 * Domino and PipeFit resist search: no baseline solves a hard Domino level
   within 64 verifies, and PipeFit hard stays at 0–1%.
 * Greedy + undo is weaker than plain greedy on Domino: depth-first
@@ -72,7 +82,7 @@ played closed loop through `play_cli.py` with a 40-action budget.
   pilot; the `puzzles_50` levels, several seeds and other models are needed
   before drawing conclusions.
 
-## Claude Sonnet on the hard tier of `puzzles_50` (45 episodes)
+## Claude Sonnet on the previous hard tier of `puzzles_50` (45 episodes)
 
 All 15 hard levels per game, one episode each; details and audit in
 `model_runs/sonnet_hard50/README.md`.
@@ -91,7 +101,7 @@ All 15 hard levels per game, one episode each; details and audit in
 * Two Domino episodes used a Python homography as a coordinate calculator
   (flagged in the audit); excluding them does not change the picture.
 
-## One-shot: Claude Sonnet and Codex gpt-6-luna (45 hard levels each)
+## One-shot: Claude Sonnet and Codex gpt-6-luna (previous hard tier, 45 levels each)
 
 Same 45 hard levels, but the player sees only the start images and submits
 its whole plan once (`play_cli plan`); no observation in between.  Details:
@@ -114,3 +124,31 @@ its whole plan once (`play_cli plan`); no observation in between.  Details:
 * So the hard tier separates models (Sonnet vs gpt-6-luna) and search
   baselines, but not by planning depth for Sonnet: its failures, closed loop
   or one-shot, are misread step heights, portal wall cells and supports.
+
+## Current hard tier: calibrated against gpt-6.1-sol (2026-11-04)
+
+The previous hard tier was solved 44/45 by gpt-6.1-sol at effort high and
+27/45 at its default effort low (Codex, one-shot).  With effort low as the
+reference, FluidNet and Domino hard were regenerated harder and PipeFit's
+hard tier (4/15 and 5/15 in two runs) was kept.  Details, failure modes and
+every calibration game: `model_runs/gpt61sol_hard_calibration/README.md`.
+
+| game | new hard levels | gpt-6.1-sol low, one-shot | best baseline at 1 / 64 verifies |
+|---|---|---|---|
+| FluidNet | 9–10 valves, unique 6-valve plan (filler valves pruned) | 4 / 15 | 7% / 93% |
+| Domino | three-level splitter tree on steps, 9–10 patches, 1–5 goals | 3 / 15 | 0% / 0% |
+| PipeFit | unchanged | 5 / 15 | 0% / 1% |
+| all | | 12 / 45 = 0.27 | |
+
+Two more runs on the same 45 levels gave 4 / 3 / 3 = 10 / 45 and
+6 / 3 / 3 = 12 / 45; over the three runs FluidNet 0.31, Domino 0.20,
+PipeFit 0.24, all 34 / 135 = 0.25.
+
+* What separates the tiers for this model is reading the 3D scene exactly
+  (valve coordinates, step heights, portal cells) across a longer plan: a
+  single misread action breaks a one-shot plan.  FluidNet's solve rate drops
+  from 0.93 at 7 valves to 0.24 at 9 and from 0.50 to 0.04 as the plan grows
+  from 4 to 6 valves.
+* Search baselines are no better on the new tiers: Domino and PipeFit hard
+  stay at 0–1% within 64 verifies; on FluidNet hard greedy + undo needs
+  5 verifies for 47% and 64 for 93%.

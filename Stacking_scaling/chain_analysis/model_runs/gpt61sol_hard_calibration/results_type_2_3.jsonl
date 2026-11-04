@@ -1,0 +1,15 @@
+{"model": "gpt-6.1-sol-low", "level": "P08_A_route_hard_seed14072", "win": false, "verifies": 1, "actions": 13, "rejected": 1}
+{"model": "gpt-6.1-sol-low", "level": "P09_A_route_hard_seed14525", "win": true, "verifies": 1, "actions": 12, "rejected": 0}
+{"model": "gpt-6.1-sol-low", "level": "P10_A_route_hard_seed15014", "win": false, "verifies": 1, "actions": 15, "rejected": 1}
+{"model": "gpt-6.1-sol-low", "level": "P18_B_obstacles_hard_seed19013", "win": false, "verifies": 1, "actions": 12, "rejected": 1}
+{"model": "gpt-6.1-sol-low", "level": "P19_B_obstacles_hard_seed19532", "win": false, "verifies": 1, "actions": 13, "rejected": 2}
+{"model": "gpt-6.1-sol-low", "level": "P20_B_obstacles_hard_seed20020", "win": true, "verifies": 1, "actions": 12, "rejected": 0}
+{"model": "gpt-6.1-sol-low", "level": "P28_C_branch_hard_seed24000", "win": false, "verifies": 1, "actions": 20, "rejected": 11}
+{"model": "gpt-6.1-sol-low", "level": "P29_C_branch_hard_seed24510", "win": true, "verifies": 1, "actions": 11, "rejected": 0}
+{"model": "gpt-6.1-sol-low", "level": "P30_C_branch_hard_seed25000", "win": true, "verifies": 1, "actions": 14, "rejected": 0}
+{"model": "gpt-6.1-sol-low", "level": "P38_D_tall_hard_seed29037", "win": false, "verifies": 1, "actions": 14, "rejected": 2}
+{"model": "gpt-6.1-sol-low", "level": "P39_D_tall_hard_seed29509", "win": true, "verifies": 1, "actions": 12, "rejected": 0}
+{"model": "gpt-6.1-sol-low", "level": "P40_D_tall_hard_seed30025", "win": false, "verifies": 1, "actions": 16, "rejected": 1}
+{"model": "gpt-6.1-sol-low", "level": "P48_E_mixed_hard_seed34059", "win": false, "verifies": 1, "actions": 13, "rejected": 0}
+{"model": "gpt-6.1-sol-low", "level": "P49_E_mixed_hard_seed34502", "win": false, "verifies": 1, "actions": 14, "rejected": 1}
+{"model": "gpt-6.1-sol-low", "level": "P50_E_mixed_hard_seed35002", "win": false, "verifies": 1, "actions": 19, "rejected": 4}

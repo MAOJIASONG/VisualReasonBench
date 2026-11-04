@@ -39,7 +39,7 @@ from .envs import game_of
 
 STATE = ".state.json"
 VIEWS = {"fluidnet": ("front", "back"), "pipefit": ("front", "back"),
-         "domino": ("front",)}
+         "domino": ("front", "back")}
 MODS = {"fluidnet": "type_3", "domino": "type_3_1", "pipefit": "type_2_3"}
 
 

@@ -1,0 +1,265 @@
+{
+ "level": "type_3_1/puzzles_50/P48_E_full_hard_seed34001",
+ "game": "domino",
+ "actions": [
+  [
+   "place",
+   [
+    8,
+    6,
+    1
+   ]
+  ],
+  [
+   "place",
+   [
+    5,
+    5,
+    3
+   ]
+  ],
+  [
+   "place",
+   [
+    3,
+    11,
+    4
+   ]
+  ],
+  [
+   "place",
+   [
+    2,
+    11,
+    4
+   ]
+  ]
+ ],
+ "n_actions": 12,
+ "fails": 0,
+ "status": "",
+ "max_actions": 40,
+ "log": [
+  {
+   "action": [
+    "place",
+    [
+     8,
+     6,
+     1
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    [
+     8,
+     7,
+     2
+    ]
+   ],
+   "result": "NoPhysicalSupport",
+   "rejected": true
+  },
+  {
+   "action": [
+    "place",
+    [
+     6,
+     8,
+     2
+    ]
+   ],
+   "result": "NoPhysicalSupport",
+   "rejected": true
+  },
+  {
+   "action": [
+    "place",
+    [
+     4,
+     7,
+     1
+    ]
+   ],
+   "result": "CellOccupied",
+   "rejected": true
+  },
+  {
+   "action": [
+    "place",
+    [
+     4,
+     6,
+     2
+    ]
+   ],
+   "result": "CellOccupied",
+   "rejected": true
+  },
+  {
+   "action": [
+    "place",
+    [
+     5,
+     5,
+     3
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    [
+     4,
+     9,
+     2
+    ]
+   ],
+   "result": "NoPhysicalSupport",
+   "rejected": true
+  },
+  {
+   "action": [
+    "place",
+    [
+     4,
+     10,
+     3
+    ]
+   ],
+   "result": "NoPhysicalSupport",
+   "rejected": true
+  },
+  {
+   "action": [
+    "place",
+    [
+     3,
+     11,
+     4
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "place",
+    [
+     2,
+     11,
+     4
+    ]
+   ],
+   "result": "OK"
+  },
+  {
+   "action": [
+    "submit_placement"
+   ],
+   "result": "InventoryNotEmpty",
+   "rejected": true
+  },
+  {
+   "action": [
+    "push",
+    "+y"
+   ],
+   "result": "BadPhase",
+   "rejected": true
+  }
+ ],
+ "oneshot": true,
+ "plan": [
+  [
+   "place",
+   [
+    8,
+    6,
+    1
+   ]
+  ],
+  [
+   "place",
+   [
+    8,
+    7,
+    2
+   ]
+  ],
+  [
+   "place",
+   [
+    6,
+    8,
+    2
+   ]
+  ],
+  [
+   "place",
+   [
+    4,
+    7,
+    1
+   ]
+  ],
+  [
+   "place",
+   [
+    4,
+    6,
+    2
+   ]
+  ],
+  [
+   "place",
+   [
+    5,
+    5,
+    3
+   ]
+  ],
+  [
+   "place",
+   [
+    4,
+    9,
+    2
+   ]
+  ],
+  [
+   "place",
+   [
+    4,
+    10,
+    3
+   ]
+  ],
+  [
+   "place",
+   [
+    3,
+    11,
+    4
+   ]
+  ],
+  [
+   "place",
+   [
+    2,
+    11,
+    4
+   ]
+  ],
+  [
+   "submit_placement"
+  ],
+  [
+   "push",
+   "+y"
+  ]
+ ]
+}
