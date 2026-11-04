@@ -12,7 +12,8 @@ Analysis code for FluidNet (`type_3`), Domino (`type_3_1`) and PipeFit
 | `audit_hard.py` | logic audit of every hard level (unique answer, every valve / patch / obstacle meaningful, no decorative piece); `--selftest` plants defects and checks they are caught |
 | `exp1_step_value.py` | Experiment 1: dead ends, consequence delay, solution retention V, distance change Δd |
 | `exp2_budget_search.py` | Experiment 2: random / greedy / greedy+undo / DFS / BFS under the same verify and action budget |
-| `play_cli.py` | play of one level by an outside agent (a model or a person), closed loop (`act`, an image after every action) or one-shot (`plan`, the whole action list in one call); records the trajectory and exports it for both experiments |
+| `session.py` | `Session`: one level as a playable session for an outside agent (a model or a person): closed loop (`act`, images after every action), one-shot (`plan`, the whole action list in one call) and `view` (any camera, the agent's choice); every call returns a structured `Result`; `tool_specs(game)` gives LLM tool definitions |
+| `play_cli.py` | command line over `session.py` (`start` / `act` / `view` / `plan` / `status` / `tools` / `export`); exports trajectories for both experiments |
 | `RESULTS.md` | baseline results and every model run so far |
 | `model_runs/` | model runs: sessions, trajectories, Exp 1 / 2 reports (index in `model_runs/README.md`) |
 
@@ -83,11 +84,23 @@ needs to match each model.
 
 ## Running a model
 
-`play_cli.py` keeps the game state in a session folder; the player only
-sees the rendered images (`obs_<n>_front.png` and `obs_<n>_back.png`; Domino
-had the front view only before 2026-11-04, when stacked steps on the larger
-boards made heights ambiguous from one side) and a one-line result after
-each action.  The rules are the real mechanics of each game package.
+`session.Session` (and `play_cli.py` on top of it) keeps the game state in
+a session folder; the player only sees rendered images and a one-line result
+after each action, never the level file.  The rules are the real mechanics
+of each game package.
+
+Cameras.  There are three: `front` and `back` (looking down at the grid
+from opposite corners, so every cell is visible from at least one) and
+`top` (straight down, orthographic; shows the layout but not heights).
+After every action the state is rendered from the session's observation
+cameras, by default front + back (`obs_<n>_front.png`, `obs_<n>_back.png`;
+Domino had the front view only before 2026-11-04).  `start --views
+front,back,top` changes that set.  The player can also ask for a camera
+itself: `view <session> top` renders the current state from that camera
+without changing the game (`obs_<n>_top.png`), also before a one-shot
+plan.  Views are logged (`views` in the session and in the exported result
+line) and cost `--view-cost` actions each (default 0).  The hard-tier
+calibration used the default front + back with no `view` calls.
 
 ```bash
 # 1. open a session (the player never sees the level path)
@@ -95,6 +108,8 @@ python -m chain_analysis.play_cli start type_3/images_batch/level_09_hard_backdo
 # 2. the player looks at runs/s01/obs_000_*.png and acts, one JSON action per call
 python -m chain_analysis.play_cli act runs/s01 '["open", [2, 3, 1]]'
 python -m chain_analysis.play_cli act runs/s01 '["reset"]'          # after a loss
+python -m chain_analysis.play_cli view runs/s01 top                  # another camera, game unchanged
+python -m chain_analysis.play_cli status runs/s01                    # actions used, views, status
 #    or one-shot: the whole plan in one call, no observation in between
 python -m chain_analysis.play_cli plan runs/s02 '[["open", [2, 3, 1]], ["open", [4, 3, 1]]]'
 # 3. export every session: exp1 trajectories + exp2 result lines
@@ -112,7 +127,21 @@ action (occupied cell, wrong phase, ...) costs one action and changes
 nothing; after a loss the player may `["reset"]` (counted as a failed
 verify).  `plan` (one-shot) plays a whole action list from the start state,
 skips rejected actions, and closes the session; it must be the session's
-first call.  Any agent that can read images and run a shell command can play.
+first call (views may come before it).  Any agent that can read images and
+run a shell command can play.
+
+From Python, or as tools of an LLM agent:
+
+```python
+from chain_analysis.session import Session, tool_specs
+s, r = Session.start("type_3_1/puzzles_50/P29_C_steps_hard_seed24500", "runs/s03")
+r = s.view("top")                       # Result(kind, text, status, code, images, ...)
+r = s.act(["place", [7, 7, 1]])
+tools = tool_specs(s.game)              # [act, view] (or [plan, view] with oneshot=True)
+```
+
+`python -m chain_analysis.play_cli tools domino [--oneshot]` prints the same
+tool definitions (name, description, JSON-schema input) as JSON.
 
 ## Model runs
 

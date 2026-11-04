@@ -191,6 +191,8 @@ def coordinate_traces(grid_size: Vec3, view: str = "front",
     label_color = style.label if style else "#4A5059"
     axis_color = style.axis if style else "#1A1F26"
     A, B, C = grid_size
+    if view == "top":
+        return _top_coordinate_traces(grid_size, label_color, axis_color)
     off = 0.62
     back = view == "back"
     y_edge = B + off if back else -off           # where the x labels live
@@ -212,6 +214,24 @@ def coordinate_traces(grid_size: Vec3, view: str = "front",
     traces.append(text_trace(ax_pts, ["<b>+x</b>", "<b>+y</b>"],
                              axis_color, TICK_FONT_SIZE + 3, "axis-names"))
     return traces
+
+
+def _top_coordinate_traces(grid_size: Vec3, label_color: str,
+                           axis_color: str) -> List[go.Scatter3d]:
+    """Top view: bare cell numbers outside the rim (an "x=10" label is wider
+    than a cell seen from above), raised above the rim so it cannot hide
+    them; no z labels, heights are not readable from above."""
+    A, B, _ = grid_size
+    off, lift = 0.95, 0.4
+    xs = [(x - 0.5, -off, lift) for x in range(1, A + 1)]
+    ys = [(-off, y - 0.5, lift) for y in range(1, B + 1)]
+    return [text_trace(xs, [f"<b>{x}</b>" for x in range(1, A + 1)],
+                       label_color, TICK_FONT_SIZE, "x-ticks"),
+            text_trace(ys, [f"<b>{y}</b>" for y in range(1, B + 1)],
+                       label_color, TICK_FONT_SIZE, "y-ticks"),
+            text_trace([(A + 0.9, -off, lift), (-off, B + 0.9, lift)],
+                       ["<b>+x</b>", "<b>+y</b>"], axis_color, TICK_FONT_SIZE + 3,
+                       "axis-names")]
 
 
 def drop_line_traces(cells: Iterable[Vec3], color: str = "rgba(255,255,255,0.55)",
