@@ -1,0 +1,730 @@
+[
+  {
+    "dims": "2x2x2",
+    "folder": "./puzzles_full_10/2x2x2/puzzle_001",
+    "json": "./puzzles_full_10/2x2x2/puzzle_001/puzzle_001_2x2x2.json",
+    "assembly": "./puzzles_full_10/2x2x2/puzzle_001/assembly_2x2x2.png",
+    "sheet": "./puzzles_full_10/2x2x2/puzzle_001/pieces_2x2x2.png",
+    "stats": {
+      "visited_nodes": 2,
+      "solutions": 1
+    },
+    "signature": "4d92019f4eae52c8f982f9aa63ed6faa42df2dd1",
+    "linear_required": true
+  },
+  {
+    "dims": "2x3x3",
+    "folder": "./puzzles_full_10/2x3x3/puzzle_003",
+    "json": "./puzzles_full_10/2x3x3/puzzle_003/puzzle_003_2x3x3.json",
+    "assembly": "./puzzles_full_10/2x3x3/puzzle_003/assembly_2x3x3.png",
+    "sheet": "./puzzles_full_10/2x3x3/puzzle_003/pieces_2x3x3.png",
+    "stats": {
+      "visited_nodes": 24,
+      "solutions": 1
+    },
+    "signature": "06e9d2314e5e94743dc5123a5759182b0ce27549",
+    "linear_required": true
+  },
+  {
+    "dims": "2x3x3",
+    "folder": "./puzzles_full_10/2x3x3/puzzle_004",
+    "json": "./puzzles_full_10/2x3x3/puzzle_004/puzzle_004_2x3x3.json",
+    "assembly": "./puzzles_full_10/2x3x3/puzzle_004/assembly_2x3x3.png",
+    "sheet": "./puzzles_full_10/2x3x3/puzzle_004/pieces_2x3x3.png",
+    "stats": {
+      "visited_nodes": 30,
+      "solutions": 1
+    },
+    "signature": "bd5fa354726b176bd3e4c1d6fdb87f2c0c29e23a",
+    "linear_required": true
+  },
+  {
+    "dims": "2x3x3",
+    "folder": "./puzzles_full_10/2x3x3/puzzle_001",
+    "json": "./puzzles_full_10/2x3x3/puzzle_001/puzzle_001_2x3x3.json",
+    "assembly": "./puzzles_full_10/2x3x3/puzzle_001/assembly_2x3x3.png",
+    "sheet": "./puzzles_full_10/2x3x3/puzzle_001/pieces_2x3x3.png",
+    "stats": {
+      "visited_nodes": 24,
+      "solutions": 1
+    },
+    "signature": "09d6b4ceaeac5832c31b8924804801e45754ef84",
+    "linear_required": true
+  },
+  {
+    "dims": "2x3x3",
+    "folder": "./puzzles_full_10/2x3x3/puzzle_002",
+    "json": "./puzzles_full_10/2x3x3/puzzle_002/puzzle_002_2x3x3.json",
+    "assembly": "./puzzles_full_10/2x3x3/puzzle_002/assembly_2x3x3.png",
+    "sheet": "./puzzles_full_10/2x3x3/puzzle_002/pieces_2x3x3.png",
+    "stats": {
+      "visited_nodes": 22,
+      "solutions": 1
+    },
+    "signature": "b60d654b72fd89d89230228ad6ba257632c90511",
+    "linear_required": true
+  },
+  {
+    "dims": "2x3x3",
+    "folder": "./puzzles_full_10/2x3x3/puzzle_005",
+    "json": "./puzzles_full_10/2x3x3/puzzle_005/puzzle_005_2x3x3.json",
+    "assembly": "./puzzles_full_10/2x3x3/puzzle_005/assembly_2x3x3.png",
+    "sheet": "./puzzles_full_10/2x3x3/puzzle_005/pieces_2x3x3.png",
+    "stats": {
+      "visited_nodes": 20,
+      "solutions": 1
+    },
+    "signature": "a101d138dca3c605d74293094a11197de7f26b10",
+    "linear_required": true
+  },
+  {
+    "dims": "2x3x3",
+    "folder": "./puzzles_full_10/2x3x3/puzzle_006",
+    "json": "./puzzles_full_10/2x3x3/puzzle_006/puzzle_006_2x3x3.json",
+    "assembly": "./puzzles_full_10/2x3x3/puzzle_006/assembly_2x3x3.png",
+    "sheet": "./puzzles_full_10/2x3x3/puzzle_006/pieces_2x3x3.png",
+    "stats": {
+      "visited_nodes": 66,
+      "solutions": 1
+    },
+    "signature": "b39a3c23a0da99371bf56c1b3028baa0d578c53b",
+    "linear_required": true
+  },
+  {
+    "dims": "2x3x3",
+    "folder": "./puzzles_full_10/2x3x3/puzzle_008",
+    "json": "./puzzles_full_10/2x3x3/puzzle_008/puzzle_008_2x3x3.json",
+    "assembly": "./puzzles_full_10/2x3x3/puzzle_008/assembly_2x3x3.png",
+    "sheet": "./puzzles_full_10/2x3x3/puzzle_008/pieces_2x3x3.png",
+    "stats": {
+      "visited_nodes": 21,
+      "solutions": 1
+    },
+    "signature": "e9745972dd02427d17be8e8509c90e0e64611484",
+    "linear_required": true
+  },
+  {
+    "dims": "2x3x3",
+    "folder": "./puzzles_full_10/2x3x3/puzzle_007",
+    "json": "./puzzles_full_10/2x3x3/puzzle_007/puzzle_007_2x3x3.json",
+    "assembly": "./puzzles_full_10/2x3x3/puzzle_007/assembly_2x3x3.png",
+    "sheet": "./puzzles_full_10/2x3x3/puzzle_007/pieces_2x3x3.png",
+    "stats": {
+      "visited_nodes": 20,
+      "solutions": 1
+    },
+    "signature": "8249fa80d4b71d5660efd46895e5c362de865ffe",
+    "linear_required": true
+  },
+  {
+    "dims": "3x3x3",
+    "folder": "./puzzles_full_10/3x3x3/puzzle_002",
+    "json": "./puzzles_full_10/3x3x3/puzzle_002/puzzle_002_3x3x3.json",
+    "assembly": "./puzzles_full_10/3x3x3/puzzle_002/assembly_3x3x3.png",
+    "sheet": "./puzzles_full_10/3x3x3/puzzle_002/pieces_3x3x3.png",
+    "stats": {
+      "visited_nodes": 160,
+      "solutions": 1
+    },
+    "signature": "f6671a539a730d1a36a39c4db8c80c6baa6e8ae6",
+    "linear_required": true
+  },
+  {
+    "dims": "3x3x3",
+    "folder": "./puzzles_full_10/3x3x3/puzzle_001",
+    "json": "./puzzles_full_10/3x3x3/puzzle_001/puzzle_001_3x3x3.json",
+    "assembly": "./puzzles_full_10/3x3x3/puzzle_001/assembly_3x3x3.png",
+    "sheet": "./puzzles_full_10/3x3x3/puzzle_001/pieces_3x3x3.png",
+    "stats": {
+      "visited_nodes": 511,
+      "solutions": 1
+    },
+    "signature": "4ed8b82fa23ea79ecd8ca4535b33e5c6a4b00e54",
+    "linear_required": true
+  },
+  {
+    "dims": "3x3x3",
+    "folder": "./puzzles_full_10/3x3x3/puzzle_008",
+    "json": "./puzzles_full_10/3x3x3/puzzle_008/puzzle_008_3x3x3.json",
+    "assembly": "./puzzles_full_10/3x3x3/puzzle_008/assembly_3x3x3.png",
+    "sheet": "./puzzles_full_10/3x3x3/puzzle_008/pieces_3x3x3.png",
+    "stats": {
+      "visited_nodes": 178,
+      "solutions": 1
+    },
+    "signature": "6aa5e75a1bb68e543fce9a8e372850ed7487b9ec",
+    "linear_required": true
+  },
+  {
+    "dims": "3x3x3",
+    "folder": "./puzzles_full_10/3x3x3/puzzle_006",
+    "json": "./puzzles_full_10/3x3x3/puzzle_006/puzzle_006_3x3x3.json",
+    "assembly": "./puzzles_full_10/3x3x3/puzzle_006/assembly_3x3x3.png",
+    "sheet": "./puzzles_full_10/3x3x3/puzzle_006/pieces_3x3x3.png",
+    "stats": {
+      "visited_nodes": 158,
+      "solutions": 1
+    },
+    "signature": "6ed16eca868302f1c300bf573fb65d20801e99ac",
+    "linear_required": true
+  },
+  {
+    "dims": "3x3x3",
+    "folder": "./puzzles_full_10/3x3x3/puzzle_010",
+    "json": "./puzzles_full_10/3x3x3/puzzle_010/puzzle_010_3x3x3.json",
+    "assembly": "./puzzles_full_10/3x3x3/puzzle_010/assembly_3x3x3.png",
+    "sheet": "./puzzles_full_10/3x3x3/puzzle_010/pieces_3x3x3.png",
+    "stats": {
+      "visited_nodes": 490,
+      "solutions": 1
+    },
+    "signature": "ad770382ea294e1dc6498188560deca0e2b5b277",
+    "linear_required": true
+  },
+  {
+    "dims": "2x3x4",
+    "folder": "./puzzles_full_10/2x3x4/puzzle_001",
+    "json": "./puzzles_full_10/2x3x4/puzzle_001/puzzle_001_2x3x4.json",
+    "assembly": "./puzzles_full_10/2x3x4/puzzle_001/assembly_2x3x4.png",
+    "sheet": "./puzzles_full_10/2x3x4/puzzle_001/pieces_2x3x4.png",
+    "stats": {
+      "visited_nodes": 724,
+      "solutions": 1
+    },
+    "signature": "05d8c16bc4b30d405d1d29c2886696f7be7a547a",
+    "linear_required": true
+  },
+  {
+    "dims": "2x3x4",
+    "folder": "./puzzles_full_10/2x3x4/puzzle_005",
+    "json": "./puzzles_full_10/2x3x4/puzzle_005/puzzle_005_2x3x4.json",
+    "assembly": "./puzzles_full_10/2x3x4/puzzle_005/assembly_2x3x4.png",
+    "sheet": "./puzzles_full_10/2x3x4/puzzle_005/pieces_2x3x4.png",
+    "stats": {
+      "visited_nodes": 366,
+      "solutions": 1
+    },
+    "signature": "d3cf7a8c745c21f4d063e7be3e23dfdbf402b40f",
+    "linear_required": true
+  },
+  {
+    "dims": "2x3x4",
+    "folder": "./puzzles_full_10/2x3x4/puzzle_006",
+    "json": "./puzzles_full_10/2x3x4/puzzle_006/puzzle_006_2x3x4.json",
+    "assembly": "./puzzles_full_10/2x3x4/puzzle_006/assembly_2x3x4.png",
+    "sheet": "./puzzles_full_10/2x3x4/puzzle_006/pieces_2x3x4.png",
+    "stats": {
+      "visited_nodes": 353,
+      "solutions": 1
+    },
+    "signature": "6d0815902916d0d8821dcb8c1eb607d6ede66f65",
+    "linear_required": true
+  },
+  {
+    "dims": "2x3x4",
+    "folder": "./puzzles_full_10/2x3x4/puzzle_004",
+    "json": "./puzzles_full_10/2x3x4/puzzle_004/puzzle_004_2x3x4.json",
+    "assembly": "./puzzles_full_10/2x3x4/puzzle_004/assembly_2x3x4.png",
+    "sheet": "./puzzles_full_10/2x3x4/puzzle_004/pieces_2x3x4.png",
+    "stats": {
+      "visited_nodes": 148,
+      "solutions": 1
+    },
+    "signature": "8faa38fb20bac3291be473c8ab298cc8bd7936a3",
+    "linear_required": true
+  },
+  {
+    "dims": "3x3x4",
+    "folder": "./puzzles_full_10/3x3x4/puzzle_001",
+    "json": "./puzzles_full_10/3x3x4/puzzle_001/puzzle_001_3x3x4.json",
+    "assembly": "./puzzles_full_10/3x3x4/puzzle_001/assembly_3x3x4.png",
+    "sheet": "./puzzles_full_10/3x3x4/puzzle_001/pieces_3x3x4.png",
+    "stats": {
+      "visited_nodes": 316,
+      "solutions": 1
+    },
+    "signature": "29ac12071281bec272b6b19e391ef5baaff33921",
+    "linear_required": true
+  },
+  {
+    "dims": "3x3x4",
+    "folder": "./puzzles_full_10/3x3x4/puzzle_002",
+    "json": "./puzzles_full_10/3x3x4/puzzle_002/puzzle_002_3x3x4.json",
+    "assembly": "./puzzles_full_10/3x3x4/puzzle_002/assembly_3x3x4.png",
+    "sheet": "./puzzles_full_10/3x3x4/puzzle_002/pieces_3x3x4.png",
+    "stats": {
+      "visited_nodes": 194,
+      "solutions": 1
+    },
+    "signature": "6ea942769d5cb3e1d82c06d7335b6467448fb774",
+    "linear_required": true
+  },
+  {
+    "dims": "3x3x4",
+    "folder": "./puzzles_full_10/3x3x4/puzzle_003",
+    "json": "./puzzles_full_10/3x3x4/puzzle_003/puzzle_003_3x3x4.json",
+    "assembly": "./puzzles_full_10/3x3x4/puzzle_003/assembly_3x3x4.png",
+    "sheet": "./puzzles_full_10/3x3x4/puzzle_003/pieces_3x3x4.png",
+    "stats": {
+      "visited_nodes": 1671,
+      "solutions": 1
+    },
+    "signature": "cc1b342452ff847dc6e355730d4a26298aa2f4c8",
+    "linear_required": true
+  },
+  {
+    "dims": "3x3x4",
+    "folder": "./puzzles_full_10/3x3x4/puzzle_004",
+    "json": "./puzzles_full_10/3x3x4/puzzle_004/puzzle_004_3x3x4.json",
+    "assembly": "./puzzles_full_10/3x3x4/puzzle_004/assembly_3x3x4.png",
+    "sheet": "./puzzles_full_10/3x3x4/puzzle_004/pieces_3x3x4.png",
+    "stats": {
+      "visited_nodes": 299,
+      "solutions": 1
+    },
+    "signature": "41a2ebbec84f75d8776efbfd6e286c1a747c84cd",
+    "linear_required": true
+  },
+  {
+    "dims": "3x3x4",
+    "folder": "./puzzles_full_10/3x3x4/puzzle_007",
+    "json": "./puzzles_full_10/3x3x4/puzzle_007/puzzle_007_3x3x4.json",
+    "assembly": "./puzzles_full_10/3x3x4/puzzle_007/assembly_3x3x4.png",
+    "sheet": "./puzzles_full_10/3x3x4/puzzle_007/pieces_3x3x4.png",
+    "stats": {
+      "visited_nodes": 304,
+      "solutions": 1
+    },
+    "signature": "17c189c70ea517d7f68c5f645691b5e246c30134",
+    "linear_required": true
+  },
+  {
+    "dims": "3x3x4",
+    "folder": "./puzzles_full_10/3x3x4/puzzle_005",
+    "json": "./puzzles_full_10/3x3x4/puzzle_005/puzzle_005_3x3x4.json",
+    "assembly": "./puzzles_full_10/3x3x4/puzzle_005/assembly_3x3x4.png",
+    "sheet": "./puzzles_full_10/3x3x4/puzzle_005/pieces_3x3x4.png",
+    "stats": {
+      "visited_nodes": 297,
+      "solutions": 1
+    },
+    "signature": "1002b2c19c44aa1ba0aad0fa92721ec13ac3571f",
+    "linear_required": true
+  },
+  {
+    "dims": "3x3x4",
+    "folder": "./puzzles_full_10/3x3x4/puzzle_006",
+    "json": "./puzzles_full_10/3x3x4/puzzle_006/puzzle_006_3x3x4.json",
+    "assembly": "./puzzles_full_10/3x3x4/puzzle_006/assembly_3x3x4.png",
+    "sheet": "./puzzles_full_10/3x3x4/puzzle_006/pieces_3x3x4.png",
+    "stats": {
+      "visited_nodes": 426,
+      "solutions": 1
+    },
+    "signature": "fce8948a6e48d77c504d1586b8e06bd8236a6c3b",
+    "linear_required": true
+  },
+  {
+    "dims": "3x3x4",
+    "folder": "./puzzles_full_10/3x3x4/puzzle_008",
+    "json": "./puzzles_full_10/3x3x4/puzzle_008/puzzle_008_3x3x4.json",
+    "assembly": "./puzzles_full_10/3x3x4/puzzle_008/assembly_3x3x4.png",
+    "sheet": "./puzzles_full_10/3x3x4/puzzle_008/pieces_3x3x4.png",
+    "stats": {
+      "visited_nodes": 266,
+      "solutions": 1
+    },
+    "signature": "b277e48e00b23eaf65a7a1efd73e046515094337",
+    "linear_required": true
+  },
+  {
+    "dims": "3x3x4",
+    "folder": "./puzzles_full_10/3x3x4/puzzle_010",
+    "json": "./puzzles_full_10/3x3x4/puzzle_010/puzzle_010_3x3x4.json",
+    "assembly": "./puzzles_full_10/3x3x4/puzzle_010/assembly_3x3x4.png",
+    "sheet": "./puzzles_full_10/3x3x4/puzzle_010/pieces_3x3x4.png",
+    "stats": {
+      "visited_nodes": 343,
+      "solutions": 1
+    },
+    "signature": "40a46fe1448c04e77a5506995bb61ebfcd0256ea",
+    "linear_required": true
+  },
+  {
+    "dims": "3x3x4",
+    "folder": "./puzzles_full_10/3x3x4/puzzle_009",
+    "json": "./puzzles_full_10/3x3x4/puzzle_009/puzzle_009_3x3x4.json",
+    "assembly": "./puzzles_full_10/3x3x4/puzzle_009/assembly_3x3x4.png",
+    "sheet": "./puzzles_full_10/3x3x4/puzzle_009/pieces_3x3x4.png",
+    "stats": {
+      "visited_nodes": 302,
+      "solutions": 1
+    },
+    "signature": "87fc34cfe2b99f82321255a1ad6d21e8726f75c9",
+    "linear_required": true
+  },
+  {
+    "dims": "2x4x4",
+    "folder": "./puzzles_full_10/2x4x4/puzzle_001",
+    "json": "./puzzles_full_10/2x4x4/puzzle_001/puzzle_001_2x4x4.json",
+    "assembly": "./puzzles_full_10/2x4x4/puzzle_001/assembly_2x4x4.png",
+    "sheet": "./puzzles_full_10/2x4x4/puzzle_001/pieces_2x4x4.png",
+    "stats": {
+      "visited_nodes": 197,
+      "solutions": 1
+    },
+    "signature": "c1b50389088790553c2ca774c393d8e0672e81e7",
+    "linear_required": true
+  },
+  {
+    "dims": "2x4x4",
+    "folder": "./puzzles_full_10/2x4x4/puzzle_002",
+    "json": "./puzzles_full_10/2x4x4/puzzle_002/puzzle_002_2x4x4.json",
+    "assembly": "./puzzles_full_10/2x4x4/puzzle_002/assembly_2x4x4.png",
+    "sheet": "./puzzles_full_10/2x4x4/puzzle_002/pieces_2x4x4.png",
+    "stats": {
+      "visited_nodes": 224,
+      "solutions": 1
+    },
+    "signature": "71b4f79bc3782a953a730144239a5d2926fe8659",
+    "linear_required": true
+  },
+  {
+    "dims": "2x4x4",
+    "folder": "./puzzles_full_10/2x4x4/puzzle_004",
+    "json": "./puzzles_full_10/2x4x4/puzzle_004/puzzle_004_2x4x4.json",
+    "assembly": "./puzzles_full_10/2x4x4/puzzle_004/assembly_2x4x4.png",
+    "sheet": "./puzzles_full_10/2x4x4/puzzle_004/pieces_2x4x4.png",
+    "stats": {
+      "visited_nodes": 223,
+      "solutions": 1
+    },
+    "signature": "086f62a77b960131cfec814cd71f63d0a1a1c582",
+    "linear_required": true
+  },
+  {
+    "dims": "2x4x4",
+    "folder": "./puzzles_full_10/2x4x4/puzzle_005",
+    "json": "./puzzles_full_10/2x4x4/puzzle_005/puzzle_005_2x4x4.json",
+    "assembly": "./puzzles_full_10/2x4x4/puzzle_005/assembly_2x4x4.png",
+    "sheet": "./puzzles_full_10/2x4x4/puzzle_005/pieces_2x4x4.png",
+    "stats": {
+      "visited_nodes": 268,
+      "solutions": 1
+    },
+    "signature": "49202bcb7d4dfbbf140962c6d68a04372533ab97",
+    "linear_required": true
+  },
+  {
+    "dims": "2x4x4",
+    "folder": "./puzzles_full_10/2x4x4/puzzle_003",
+    "json": "./puzzles_full_10/2x4x4/puzzle_003/puzzle_003_2x4x4.json",
+    "assembly": "./puzzles_full_10/2x4x4/puzzle_003/assembly_2x4x4.png",
+    "sheet": "./puzzles_full_10/2x4x4/puzzle_003/pieces_2x4x4.png",
+    "stats": {
+      "visited_nodes": 164,
+      "solutions": 1
+    },
+    "signature": "139b87bab925d98c36144cc8d742acc2507ec886",
+    "linear_required": true
+  },
+  {
+    "dims": "2x4x4",
+    "folder": "./puzzles_full_10/2x4x4/puzzle_007",
+    "json": "./puzzles_full_10/2x4x4/puzzle_007/puzzle_007_2x4x4.json",
+    "assembly": "./puzzles_full_10/2x4x4/puzzle_007/assembly_2x4x4.png",
+    "sheet": "./puzzles_full_10/2x4x4/puzzle_007/pieces_2x4x4.png",
+    "stats": {
+      "visited_nodes": 219,
+      "solutions": 1
+    },
+    "signature": "8b24ac55a76c294e55e2c7d52ac5585a8b1f174c",
+    "linear_required": true
+  },
+  {
+    "dims": "2x4x4",
+    "folder": "./puzzles_full_10/2x4x4/puzzle_008",
+    "json": "./puzzles_full_10/2x4x4/puzzle_008/puzzle_008_2x4x4.json",
+    "assembly": "./puzzles_full_10/2x4x4/puzzle_008/assembly_2x4x4.png",
+    "sheet": "./puzzles_full_10/2x4x4/puzzle_008/pieces_2x4x4.png",
+    "stats": {
+      "visited_nodes": 215,
+      "solutions": 1
+    },
+    "signature": "a4416d35195ae34a01158733bcf09a196e74af00",
+    "linear_required": true
+  },
+  {
+    "dims": "2x4x4",
+    "folder": "./puzzles_full_10/2x4x4/puzzle_010",
+    "json": "./puzzles_full_10/2x4x4/puzzle_010/puzzle_010_2x4x4.json",
+    "assembly": "./puzzles_full_10/2x4x4/puzzle_010/assembly_2x4x4.png",
+    "sheet": "./puzzles_full_10/2x4x4/puzzle_010/pieces_2x4x4.png",
+    "stats": {
+      "visited_nodes": 809,
+      "solutions": 1
+    },
+    "signature": "d61e7c37f3b0297c3276d7cdd9a42d1545101dcf",
+    "linear_required": true
+  },
+  {
+    "dims": "3x4x4",
+    "folder": "./puzzles_full_10/3x4x4/puzzle_001",
+    "json": "./puzzles_full_10/3x4x4/puzzle_001/puzzle_001_3x4x4.json",
+    "assembly": "./puzzles_full_10/3x4x4/puzzle_001/assembly_3x4x4.png",
+    "sheet": "./puzzles_full_10/3x4x4/puzzle_001/pieces_3x4x4.png",
+    "stats": {
+      "visited_nodes": 395,
+      "solutions": 1
+    },
+    "signature": "42ad46dd482b85f372a548c706f31692174f23ac",
+    "linear_required": true
+  },
+  {
+    "dims": "3x4x4",
+    "folder": "./puzzles_full_10/3x4x4/puzzle_002",
+    "json": "./puzzles_full_10/3x4x4/puzzle_002/puzzle_002_3x4x4.json",
+    "assembly": "./puzzles_full_10/3x4x4/puzzle_002/assembly_3x4x4.png",
+    "sheet": "./puzzles_full_10/3x4x4/puzzle_002/pieces_3x4x4.png",
+    "stats": {
+      "visited_nodes": 226,
+      "solutions": 1
+    },
+    "signature": "4122b62f314b468e78424514f87f0e13cd3c6453",
+    "linear_required": true
+  },
+  {
+    "dims": "3x4x4",
+    "folder": "./puzzles_full_10/3x4x4/puzzle_003",
+    "json": "./puzzles_full_10/3x4x4/puzzle_003/puzzle_003_3x4x4.json",
+    "assembly": "./puzzles_full_10/3x4x4/puzzle_003/assembly_3x4x4.png",
+    "sheet": "./puzzles_full_10/3x4x4/puzzle_003/pieces_3x4x4.png",
+    "stats": {
+      "visited_nodes": 253,
+      "solutions": 1
+    },
+    "signature": "57d77464eb0d31687e364c9c95aa81b1999bff0a",
+    "linear_required": true
+  },
+  {
+    "dims": "3x4x4",
+    "folder": "./puzzles_full_10/3x4x4/puzzle_004",
+    "json": "./puzzles_full_10/3x4x4/puzzle_004/puzzle_004_3x4x4.json",
+    "assembly": "./puzzles_full_10/3x4x4/puzzle_004/assembly_3x4x4.png",
+    "sheet": "./puzzles_full_10/3x4x4/puzzle_004/pieces_3x4x4.png",
+    "stats": {
+      "visited_nodes": 311,
+      "solutions": 1
+    },
+    "signature": "4146aed6b652e5841280406e0f0c053933b0411e",
+    "linear_required": true
+  },
+  {
+    "dims": "3x4x4",
+    "folder": "./puzzles_full_10/3x4x4/puzzle_006",
+    "json": "./puzzles_full_10/3x4x4/puzzle_006/puzzle_006_3x4x4.json",
+    "assembly": "./puzzles_full_10/3x4x4/puzzle_006/assembly_3x4x4.png",
+    "sheet": "./puzzles_full_10/3x4x4/puzzle_006/pieces_3x4x4.png",
+    "stats": {
+      "visited_nodes": 306,
+      "solutions": 1
+    },
+    "signature": "d8c395759f0439cff40b52c2f3f5a0e9fe251b7c",
+    "linear_required": true
+  },
+  {
+    "dims": "3x4x4",
+    "folder": "./puzzles_full_10/3x4x4/puzzle_005",
+    "json": "./puzzles_full_10/3x4x4/puzzle_005/puzzle_005_3x4x4.json",
+    "assembly": "./puzzles_full_10/3x4x4/puzzle_005/assembly_3x4x4.png",
+    "sheet": "./puzzles_full_10/3x4x4/puzzle_005/pieces_3x4x4.png",
+    "stats": {
+      "visited_nodes": 384,
+      "solutions": 1
+    },
+    "signature": "68a03a901408dba0df1a16f952e915f73e41831f",
+    "linear_required": true
+  },
+  {
+    "dims": "3x4x4",
+    "folder": "./puzzles_full_10/3x4x4/puzzle_007",
+    "json": "./puzzles_full_10/3x4x4/puzzle_007/puzzle_007_3x4x4.json",
+    "assembly": "./puzzles_full_10/3x4x4/puzzle_007/assembly_3x4x4.png",
+    "sheet": "./puzzles_full_10/3x4x4/puzzle_007/pieces_3x4x4.png",
+    "stats": {
+      "visited_nodes": 1141,
+      "solutions": 1
+    },
+    "signature": "21678d045bacb334414e1d3d0f40f620066c4457",
+    "linear_required": true
+  },
+  {
+    "dims": "3x4x4",
+    "folder": "./puzzles_full_10/3x4x4/puzzle_009",
+    "json": "./puzzles_full_10/3x4x4/puzzle_009/puzzle_009_3x4x4.json",
+    "assembly": "./puzzles_full_10/3x4x4/puzzle_009/assembly_3x4x4.png",
+    "sheet": "./puzzles_full_10/3x4x4/puzzle_009/pieces_3x4x4.png",
+    "stats": {
+      "visited_nodes": 544,
+      "solutions": 1
+    },
+    "signature": "14924d264513213b90b39bde300bb8be3c26f1b2",
+    "linear_required": true
+  },
+  {
+    "dims": "3x4x4",
+    "folder": "./puzzles_full_10/3x4x4/puzzle_008",
+    "json": "./puzzles_full_10/3x4x4/puzzle_008/puzzle_008_3x4x4.json",
+    "assembly": "./puzzles_full_10/3x4x4/puzzle_008/assembly_3x4x4.png",
+    "sheet": "./puzzles_full_10/3x4x4/puzzle_008/pieces_3x4x4.png",
+    "stats": {
+      "visited_nodes": 7396,
+      "solutions": 1
+    },
+    "signature": "0914558468f789f6dedbb4bd56bc8dc9dcb7aa8a",
+    "linear_required": true
+  },
+  {
+    "dims": "3x4x4",
+    "folder": "./puzzles_full_10/3x4x4/puzzle_010",
+    "json": "./puzzles_full_10/3x4x4/puzzle_010/puzzle_010_3x4x4.json",
+    "assembly": "./puzzles_full_10/3x4x4/puzzle_010/assembly_3x4x4.png",
+    "sheet": "./puzzles_full_10/3x4x4/puzzle_010/pieces_3x4x4.png",
+    "stats": {
+      "visited_nodes": 6687,
+      "solutions": 1
+    },
+    "signature": "162ff11277919b0921509617c2c0ec310f0cebb4",
+    "linear_required": true
+  },
+  {
+    "dims": "4x4x4",
+    "folder": "./puzzles_full_10/4x4x4/puzzle_005",
+    "json": "./puzzles_full_10/4x4x4/puzzle_005/puzzle_005_4x4x4.json",
+    "assembly": "./puzzles_full_10/4x4x4/puzzle_005/assembly_4x4x4.png",
+    "sheet": "./puzzles_full_10/4x4x4/puzzle_005/pieces_4x4x4.png",
+    "stats": {
+      "visited_nodes": 1031,
+      "solutions": 1
+    },
+    "signature": "45975e277ac8f95c11085f17111cfc1c15d01972",
+    "linear_required": true
+  },
+  {
+    "dims": "4x4x4",
+    "folder": "./puzzles_full_10/4x4x4/puzzle_002",
+    "json": "./puzzles_full_10/4x4x4/puzzle_002/puzzle_002_4x4x4.json",
+    "assembly": "./puzzles_full_10/4x4x4/puzzle_002/assembly_4x4x4.png",
+    "sheet": "./puzzles_full_10/4x4x4/puzzle_002/pieces_4x4x4.png",
+    "stats": {
+      "visited_nodes": 6550,
+      "solutions": 1
+    },
+    "signature": "ad527955e9f9684fd1260feb55341210866b6089",
+    "linear_required": true
+  },
+  {
+    "dims": "4x4x4",
+    "folder": "./puzzles_full_10/4x4x4/puzzle_007",
+    "json": "./puzzles_full_10/4x4x4/puzzle_007/puzzle_007_4x4x4.json",
+    "assembly": "./puzzles_full_10/4x4x4/puzzle_007/assembly_4x4x4.png",
+    "sheet": "./puzzles_full_10/4x4x4/puzzle_007/pieces_4x4x4.png",
+    "stats": {
+      "visited_nodes": 1050,
+      "solutions": 1
+    },
+    "signature": "8127fdf66538c96e0922b415912d6fd464c8442d",
+    "linear_required": true
+  },
+  {
+    "dims": "4x4x4",
+    "folder": "./puzzles_full_10/4x4x4/puzzle_003",
+    "json": "./puzzles_full_10/4x4x4/puzzle_003/puzzle_003_4x4x4.json",
+    "assembly": "./puzzles_full_10/4x4x4/puzzle_003/assembly_4x4x4.png",
+    "sheet": "./puzzles_full_10/4x4x4/puzzle_003/pieces_4x4x4.png",
+    "stats": {
+      "visited_nodes": 10462,
+      "solutions": 1
+    },
+    "signature": "272a31c66cbf3e2ccf3c1ba8699074c23ee1a63d",
+    "linear_required": true
+  },
+  {
+    "dims": "4x4x4",
+    "folder": "./puzzles_full_10/4x4x4/puzzle_008",
+    "json": "./puzzles_full_10/4x4x4/puzzle_008/puzzle_008_4x4x4.json",
+    "assembly": "./puzzles_full_10/4x4x4/puzzle_008/assembly_4x4x4.png",
+    "sheet": "./puzzles_full_10/4x4x4/puzzle_008/pieces_4x4x4.png",
+    "stats": {
+      "visited_nodes": 1587,
+      "solutions": 1
+    },
+    "signature": "363ab1cef2996f24ff81e20299620d9043df6b79",
+    "linear_required": true
+  },
+  {
+    "dims": "4x4x4",
+    "folder": "./puzzles_full_10/4x4x4/puzzle_001",
+    "json": "./puzzles_full_10/4x4x4/puzzle_001/puzzle_001_4x4x4.json",
+    "assembly": "./puzzles_full_10/4x4x4/puzzle_001/assembly_4x4x4.png",
+    "sheet": "./puzzles_full_10/4x4x4/puzzle_001/pieces_4x4x4.png",
+    "stats": {
+      "visited_nodes": 9056,
+      "solutions": 1
+    },
+    "signature": "dbfb40a9c01f60cc8871e9bf95cef6c7518c58ef",
+    "linear_required": true
+  },
+  {
+    "dims": "4x4x4",
+    "folder": "./puzzles_full_10/4x4x4/puzzle_006",
+    "json": "./puzzles_full_10/4x4x4/puzzle_006/puzzle_006_4x4x4.json",
+    "assembly": "./puzzles_full_10/4x4x4/puzzle_006/assembly_4x4x4.png",
+    "sheet": "./puzzles_full_10/4x4x4/puzzle_006/pieces_4x4x4.png",
+    "stats": {
+      "visited_nodes": 400,
+      "solutions": 1
+    },
+    "signature": "d395456e6fc60a866c3758460e73c2d4bac3429a",
+    "linear_required": true
+  },
+  {
+    "dims": "4x4x4",
+    "folder": "./puzzles_full_10/4x4x4/puzzle_010",
+    "json": "./puzzles_full_10/4x4x4/puzzle_010/puzzle_010_4x4x4.json",
+    "assembly": "./puzzles_full_10/4x4x4/puzzle_010/assembly_4x4x4.png",
+    "sheet": "./puzzles_full_10/4x4x4/puzzle_010/pieces_4x4x4.png",
+    "stats": {
+      "visited_nodes": 391,
+      "solutions": 1
+    },
+    "signature": "da2c4677a5b1923c0249e9fc90a31f652fea0e9d",
+    "linear_required": true
+  },
+  {
+    "dims": "4x4x4",
+    "folder": "./puzzles_full_10/4x4x4/puzzle_004",
+    "json": "./puzzles_full_10/4x4x4/puzzle_004/puzzle_004_4x4x4.json",
+    "assembly": "./puzzles_full_10/4x4x4/puzzle_004/assembly_4x4x4.png",
+    "sheet": "./puzzles_full_10/4x4x4/puzzle_004/pieces_4x4x4.png",
+    "stats": {
+      "visited_nodes": 15456,
+      "solutions": 1
+    },
+    "signature": "c0a7f4fa7708f4f8e79d4738ad6fb78c8a55ab0e",
+    "linear_required": true
+  },
+  {
+    "dims": "4x4x4",
+    "folder": "./puzzles_full_10/4x4x4/puzzle_009",
+    "json": "./puzzles_full_10/4x4x4/puzzle_009/puzzle_009_4x4x4.json",
+    "assembly": "./puzzles_full_10/4x4x4/puzzle_009/assembly_4x4x4.png",
+    "sheet": "./puzzles_full_10/4x4x4/puzzle_009/pieces_4x4x4.png",
+    "stats": {
+      "visited_nodes": 14863,
+      "solutions": 1
+    },
+    "signature": "b12b5f65c5b5133f61183d09c83884262e11b360",
+    "linear_required": true
+  }
+]
