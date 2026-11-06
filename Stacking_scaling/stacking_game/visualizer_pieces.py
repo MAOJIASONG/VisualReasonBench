@@ -10,7 +10,7 @@ from typing import List, Tuple
 from game_core import Vec3, GameState, PieceDef
 from visualizer_3d import (
     get_piece_color, draw_voxel, create_cube_vertices, create_cube_faces,
-    PIECE_COLORS
+    PIECE_COLORS, piece_sort_key
 )
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 from matplotlib.colors import to_rgba
@@ -33,7 +33,7 @@ def visualize_pieces_grid(state: GameState,
         matplotlib Figure对象
     """
     # 获取所有未放置的pieces
-    piece_ids = sorted(state.unplaced)
+    piece_ids = sorted(state.unplaced, key=piece_sort_key)
     num_pieces = len(piece_ids)
 
     if num_pieces == 0:

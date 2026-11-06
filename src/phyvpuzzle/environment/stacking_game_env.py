@@ -180,11 +180,10 @@ class StackingGameEnvironment(BaseEnvironment):
                 self.game_state,
                 title=f"{self.current_size}/{self.current_puzzle_id}",
                 show_unplaced=self.config.render_unplaced,
-                figsize=(8, 6),
-            )
+            )  # figsize: automatic (box from two cameras + every piece from two corners)
             import matplotlib.pyplot as plt  # Local import to avoid hard dependency at module load
             buf = io.BytesIO()
-            fig.savefig(buf, format="png", dpi=150)
+            fig.savefig(buf, format="png", dpi=120)
             buf.seek(0)
             img = Image.open(buf).convert("RGB")
             plt.close(fig)

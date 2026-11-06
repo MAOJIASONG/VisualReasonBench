@@ -28,7 +28,23 @@ PIECE_COLORS = [
     '#469990',  # 蓝绿
     '#FFE119',  # 黄
     '#000075',  # 深蓝
+    '#800000',  # 栗色
+    '#BFEF45',  # 黄绿
+    '#FABED4',  # 粉
+    '#A9A9A9',  # 灰
 ]
+# 16 种颜色：4x4x4 关卡最多 13 块，每块颜色都不同（原先只有 12 种，#12 与 #0 同色）
+
+
+def piece_sort_key(piece_id: str):
+    """按数字排序 piece id（'2' 在 '10' 之前），非数字 id 排在后面。"""
+    return (0, int(piece_id), '') if str(piece_id).isdigit() else (1, 0, str(piece_id))
+
+
+def label_color(color: str) -> str:
+    """标题文字颜色：浅色（黄、黄绿、粉）在白底上看不清，改用深灰。"""
+    r, g, b, _ = to_rgba(color)
+    return '#333333' if 0.299 * r + 0.587 * g + 0.114 * b > 0.72 else color
 
 
 def get_piece_color(piece_id: str) -> str:
@@ -115,6 +131,86 @@ def draw_voxel(ax: Axes3D, pos: Vec3, color: str, alpha: float = 0.8,
     ax.add_collection3d(face_collection)
 
 
+# 方块绘制。所有面放进同一个 Poly3DCollection，由 matplotlib 统一按深度排序
+# （每个体素一个 collection 时只能整块排序，会出现后面的方块盖住前面的情况）。
+#
+# CUBE_STYLE:
+#   "glass"（默认）：略透明（alpha 0.9）、单色、方块之间留 0.1 的缝、画全部 6 个面。
+#       透过去能隐约看到被挡住的棱，深度不会读反。
+#   "solid"：不透明、按方向着色（顶亮侧暗）、无缝、只画外表面。看起来更干净，但
+#       实测 gpt-6.1-sol（effort low，one-shot，15 关 x 两个随机姿态）把 piece 读成
+#       镜像的次数：glass 3-5 次，solid 14-15 次（加淡色坐标面板也没改善）；解出率
+#       glass 0.67、solid 0.53，所以不作默认。
+CUBE_STYLE = "glass"
+FACE_SHADE = {(0, 0, 1): 1.0, (0, 0, -1): 0.5,
+              (1, 0, 0): 0.80, (-1, 0, 0): 0.80,
+              (0, 1, 0): 0.64, (0, -1, 0): 0.64}
+
+
+def _face_quad(c: Tuple[int, int, int], n: Tuple[int, int, int],
+               size: float = 1.0) -> List[Tuple[float, float, float]]:
+    """1-based 格子 c（占据 [c-1, c]^3）在法向 n 一侧的面；size < 1 时向格子中心收缩。"""
+    h = size / 2.0
+    ctr = [c[0] - 0.5, c[1] - 0.5, c[2] - 0.5]
+    ax = next(i for i in range(3) if n[i] != 0)
+    u, v = [i for i in range(3) if i != ax]
+    quad = []
+    for du, dv in ((-1, -1), (1, -1), (1, 1), (-1, 1)):
+        p = [0.0, 0.0, 0.0]
+        p[ax] = ctr[ax] + (h if n[ax] > 0 else -h)
+        p[u] = ctr[u] + du * h
+        p[v] = ctr[v] + dv * h
+        quad.append(tuple(p))
+    return quad
+
+
+def draw_cells_solid(ax: Axes3D, groups, linewidth: float = 0.9,
+                     style: Optional[str] = None):
+    """
+    groups: [(cells, color, alpha), ...]，cells 为 Vec3 或 (x, y, z)（1-based）。
+    所有组的格子一起深度排序；style 默认取 CUBE_STYLE。
+    """
+    style = style or CUBE_STYLE
+    glass = style == "glass"
+    norm = []
+    occupied = set()
+    for cells, color, alpha in groups:
+        cs = [(c.x, c.y, c.z) if isinstance(c, Vec3) else tuple(c) for c in cells]
+        norm.append((cs, color, min(alpha, 0.9) if glass else alpha))
+        occupied.update(cs)
+    polys, faces, edges = [], [], []
+    for cs, color, alpha in norm:
+        r, g, b, _ = to_rgba(color)
+        # 棱线：深色（深蓝、栗色）用浅色描边，否则看不出格子
+        dark = 0.299 * r + 0.587 * g + 0.114 * b < 0.3
+        if dark:
+            er, eg, eb = 0.55 + 0.45 * r, 0.55 + 0.45 * g, 0.55 + 0.45 * b
+        elif glass:
+            er, eg, eb = 0.0, 0.0, 0.0
+        else:
+            er, eg, eb = r * 0.35, g * 0.35, b * 0.35
+        for c in cs:
+            for n, k in FACE_SHADE.items():
+                if not glass and alpha >= 0.99 and \
+                        (c[0] + n[0], c[1] + n[1], c[2] + n[2]) in occupied:
+                    continue
+                polys.append(_face_quad(c, n, 0.9 if glass else 1.0))
+                k = 1.0 if glass else k
+                faces.append((r * k, g * k, b * k, alpha))
+                edges.append((er, eg, eb, min(1.0, alpha + 0.25)))
+    if polys:
+        ax.add_collection3d(Poly3DCollection(polys, facecolors=faces, edgecolors=edges,
+                                             linewidths=linewidth))
+
+
+def draw_floor_grid(ax: Axes3D, A: int, B: int, color=(0.75, 0.75, 0.78), lw: float = 0.6):
+    """z=0 平面上的格线，每格一条，帮助读出 x / y。"""
+    for i in range(A + 1):
+        ax.plot3D([i, i], [0, B], [0, 0], color=color, linewidth=lw)
+    for j in range(B + 1):
+        ax.plot3D([0, A], [j, j], [0, 0], color=color, linewidth=lw)
+
+
 def draw_box_frame(ax: Axes3D, box_size: Tuple[int, int, int],
                    color: str = 'gray', linewidth: float = 2.0):
     """
@@ -152,127 +248,171 @@ def draw_box_frame(ax: Axes3D, box_size: Tuple[int, int, int],
         ax.plot3D(*points.T, color=color, linewidth=linewidth, alpha=0.3)
 
 
+# 两个相机：从相对的两个角往下看，盒子里每个格子至少在一个视角里可见；
+# 单个 piece 的两个小视角同样来自这两个角，被挡住的方块在另一个视角里能看到。
+BOX_VIEWS = (("front", 25, 45), ("back", 25, 225))
+THUMB_ZOOM = 1.25
+
+
 def visualize_state_3d(state: GameState,
                        title: str = "3D Polycube Puzzle",
                        show_unplaced: bool = True,
-                       figsize: Tuple[int, int] = (14, 8),
+                       figsize: Optional[Tuple[float, float]] = None,
                        keep_unplaced_initial_pose: bool = True,
                        normalize_unplaced_view: bool = False,
-                       pad_unplaced_view: int = 1) -> plt.Figure:
+                       pad_unplaced_view: int = 1,
+                       two_views: bool = True) -> plt.Figure:
     """
     可视化游戏状态(3D视图)
+
+    左侧：盒子（two_views=True 时为 front + back 两个相机，上下排列）；
+    右侧：每个 piece 一格，按 id 数字顺序排列，每格两个小视角（两个相对的角）。
 
     Args:
         state: 游戏状态
         title: 图表标题
-        show_unplaced: 是否显示未放置的piece
-        figsize: 图表大小
+        show_unplaced: 是否显示右侧 piece 面板
+        figsize: 图表大小，None 时按 piece 数自动决定
         keep_unplaced_initial_pose: 未放置piece保持加载时姿态与位置
         normalize_unplaced_view: 右侧小视角是否归一化到局部坐标
         pad_unplaced_view: 右侧小视角边界留白
+        two_views: 盒子和 piece 都画两个相对的视角（False 为旧版单视角）
 
     Returns:
         matplotlib Figure对象
     """
-    A, B, C = state.spec.box
+    box_views = BOX_VIEWS if two_views else BOX_VIEWS[:1]
+    piece_views = BOX_VIEWS if two_views else BOX_VIEWS[:1]
 
-    if show_unplaced and state.unplaced:
-        # 左侧单视角，右侧为piece的网格小视角
+    if not (show_unplaced and state.initial_placements):
+        if figsize is None:
+            figsize = (8, 8 * len(box_views))
         fig = plt.figure(figsize=figsize)
-        piece_ids = sorted(state.initial_placements.keys())
-        n_pieces = len(piece_ids)
-        right_cols = 2 if n_pieces <= 6 else 3
-        right_rows = max(1, math.ceil(n_pieces / right_cols))
+        for i, (name, elev, azim) in enumerate(box_views):
+            ax = fig.add_subplot(len(box_views), 1, i + 1, projection='3d')
+            _draw_box_view(ax, state, title if i == 0 else "", elev=elev, azim=azim,
+                           view_label=name if two_views else None)
+        fig.subplots_adjust(left=0.02, right=0.98, bottom=0.03, top=0.95)
+        return fig
 
-        # 计算所有piece的最大尺寸，用于统一缩放比例
-        max_span = 1.0
-        for pid in piece_ids:
-            placement = state.initial_placements.get(pid)
-            if placement and placement.world_cells:
-                min_x = min(c.x for c in placement.world_cells)
-                max_x = max(c.x for c in placement.world_cells)
-                min_y = min(c.y for c in placement.world_cells)
-                max_y = max(c.y for c in placement.world_cells)
-                min_z = min(c.z for c in placement.world_cells)
-                max_z = max(c.z for c in placement.world_cells)
-                max_span = max(max_span, max_x - min_x + 1, max_y - min_y + 1, max_z - min_z + 1)
-        
-        # 稍微增加一点视口余量
-        view_size = max_span + pad_unplaced_view * 0.6
-
-        gs = fig.add_gridspec(
-            nrows=1,
-            ncols=2,
-            width_ratios=[1.6, 1.0],
-            wspace=0.18,  # 增加间距，自然分隔左右两部分
-        )
-        gs_right = gs[0, 1].subgridspec(right_rows, right_cols, wspace=0.05, hspace=0.2)
-
-        # 左侧：单一视角盒子视图
-        ax1 = fig.add_subplot(gs[0, 0], projection='3d')
-        _draw_box_view(ax1, state, title, elev=20, azim=45)
-
-        # 右侧：每个piece独立小视角（已放置的标记）
-        if piece_ids:
-            for idx, pid in enumerate(piece_ids):
-                row = idx // right_cols
-                col = idx % right_cols
-                ax = fig.add_subplot(gs_right[row, col], projection='3d')
-                is_placed = pid not in state.unplaced
-                _draw_single_unplaced_piece(
-                    ax,
-                    state,
-                    pid,
-                    is_placed=is_placed,
-                    keep_initial_pose=keep_unplaced_initial_pose,
-                    normalize_view=normalize_unplaced_view,
-                    pad=pad_unplaced_view,
-                    unified_view_size=view_size,
-                    compact=right_cols > 2,
-                )
+    piece_ids = sorted(state.initial_placements.keys(), key=piece_sort_key)
+    n_pieces = len(piece_ids)
+    right_cols = 2 if n_pieces <= 6 else 3
+    right_rows = max(1, math.ceil(n_pieces / right_cols))
+    if figsize is None:
+        if two_views:
+            figsize = (8 + 4.0 * right_cols, max(10.0, 2.6 * right_rows + 0.8))
         else:
-            ax = fig.add_subplot(gs_right[0, 0], projection='3d')
-            ax.text(0.5, 0.5, 0.5, "No pieces", ha='center', va='center')
-            ax.set_axis_off()
+            figsize = (14, 8)
+    fig = plt.figure(figsize=figsize)
+    # 先定边距：下面按 gridspec 位置摆的标题要用最终坐标
+    fig.subplots_adjust(left=0.01, right=0.99, bottom=0.02, top=0.93)
 
-        # 右侧标题（移除突兀的分隔线，使用间距自然分隔）
-        fig.text(0.73, 0.97, "Pieces (initial pose)", ha="center",
-                 va="center", fontsize=11, color='#444444')
+    # 计算所有piece的最大尺寸，用于统一缩放比例
+    max_span = 1.0
+    for pid in piece_ids:
+        placement = state.initial_placements.get(pid)
+        if placement and placement.world_cells:
+            cells = placement.world_cells
+            for axis in ('x', 'y', 'z'):
+                vals = [getattr(c, axis) for c in cells]
+                max_span = max(max_span, max(vals) - min(vals) + 1)
+    view_size = max_span + 0.5   # 紧凑取景：所有 piece 同一比例
 
-    else:
-        # 只显示盒子
-        fig = plt.figure(figsize=(8, 8))
-        ax = fig.add_subplot(111, projection='3d')
-        _draw_box_view(ax, state, title, elev=20, azim=45)
+    # 左右宽度比例与 figsize 无关（调用方传小 figsize 时也不会出错）
+    gs = fig.add_gridspec(nrows=1, ncols=2,
+                          width_ratios=[8.0, 4.0 * right_cols], wspace=0.06)
+    gs_left = gs[0, 0].subgridspec(len(box_views), 1, hspace=0.16)
+    for i, (name, elev, azim) in enumerate(box_views):
+        ax = fig.add_subplot(gs_left[i, 0], projection='3d')
+        _draw_box_view(ax, state, "", elev=elev, azim=azim,
+                       view_label=name if two_views else None)
+    A, B, C = state.spec.box
+    status = "COMPLETE!" if state.is_complete() else f"{len(state.occupied)}/{A * B * C} cells"
+    left_box = gs[0, 0].get_position(fig)
+    fig.text((left_box.x0 + left_box.x1) / 2, 0.985, f"{title}   ({status})",
+             ha="center", va="top", fontsize=13)
 
-    fig.subplots_adjust(left=0.02, right=0.98, bottom=0.03, top=0.93)
+    gs_right = gs[0, 1].subgridspec(right_rows, right_cols, wspace=0.10, hspace=0.25)
+    for idx, pid in enumerate(piece_ids):
+        cell = gs_right[idx // right_cols, idx % right_cols]
+        sub = cell.subgridspec(1, len(piece_views), wspace=0.0)
+        is_placed = pid not in state.unplaced
+        for j, (name, elev, azim) in enumerate(piece_views):
+            ax = fig.add_subplot(sub[0, j], projection='3d')
+            _draw_single_unplaced_piece(
+                ax, state, pid,
+                is_placed=is_placed,
+                keep_initial_pose=keep_unplaced_initial_pose,
+                normalize_view=normalize_unplaced_view,
+                pad=pad_unplaced_view,
+                unified_view_size=view_size,
+                compact=True,
+                elev=elev, azim=azim,
+                show_title=False,
+            )
+        # 每个 piece 一个标题，居中放在它的两个小视角上方
+        bbox = cell.get_position(fig)
+        color = get_piece_color(pid)
+        n_cells = len(state.initial_placements[pid].world_cells)
+        text = f"#{pid} placed" if is_placed else f"#{pid}  ({n_cells} cells)"
+        fig.text((bbox.x0 + bbox.x1) / 2, bbox.y1 + 0.004, text,
+                 ha='center', va='bottom', fontsize=11,
+                 fontweight='normal' if is_placed else 'bold',
+                 color='#888888' if is_placed else label_color(color))
+
+    header = "Pieces (each from the front and back corner)" if two_views \
+        else "Pieces (initial pose)"
+    right_box = gs[0, 1].get_position(fig)
+    fig.text((right_box.x0 + right_box.x1) / 2, 0.985, header, ha="center",
+             va="top", fontsize=12, color='#444444')
     return fig
 
 
 def _draw_box_view(ax: Axes3D, state: GameState, title: str,
-                   elev: float = 20, azim: float = 45):
+                   elev: float = 20, azim: float = 45,
+                   view_label: Optional[str] = None):
     """绘制盒子视图"""
     A, B, C = state.spec.box
 
     # 绘制盒子线框
     draw_box_frame(ax, (A, B, C))
 
-    # 绘制已放置的pieces
-    for piece_id, placed in state.placed.items():
-        color = get_piece_color(piece_id)
-        for cell in placed.world_cells:
-            draw_voxel(ax, cell, color, alpha=0.85, linewidth=0.8)
+    draw_floor_grid(ax, A, B)
 
-    # 已放置piece的编号：标在该piece最高的、上方没有遮挡的体素上，便于
-    # pickup时引用。完全被盖住的piece不标（文字总是画在最上层，会误导）。
+    # 绘制已放置的pieces（实心、按方向着色、统一深度排序）
+    draw_cells_solid(ax, [(placed.world_cells, get_piece_color(pid), 1.0)
+                          for pid, placed in state.placed.items()])
+
+    # 已放置piece的编号：标在该piece露顶、且从当前相机看得见的体素上（文字总是
+    # 画在最上层，标在被挡住的体素上会落到别的piece上，误导）。这个视角里看不见
+    # 顶面的piece不标——另一个相机会标出它。
     occupied = {(c.x, c.y, c.z) for p in state.placed.values()
                 for c in p.world_cells}
+    e, az = math.radians(elev), math.radians(azim)
+    to_cam = (math.cos(e) * math.cos(az), math.cos(e) * math.sin(az), math.sin(e))
+
+    def top_visible(c: Vec3) -> bool:
+        # 从顶面中心朝相机走，碰到别的已占格子就是被挡住
+        p0 = (c.x - 0.5, c.y - 0.5, c.z + 0.02)
+        for k in range(1, 200):
+            t = 0.05 * k
+            q = tuple(p0[i] + t * to_cam[i] for i in range(3))
+            cell = (math.floor(q[0]) + 1, math.floor(q[1]) + 1, math.floor(q[2]) + 1)
+            if cell[2] > C:
+                return True
+            if cell in occupied:
+                return False
+        return True
+
+    sx = 1 if to_cam[0] >= 0 else -1
+    sy = 1 if to_cam[1] >= 0 else -1
     for piece_id, placed in state.placed.items():
         exposed = [c for c in placed.world_cells
-                   if (c.x, c.y, c.z + 1) not in occupied]
+                   if (c.x, c.y, c.z + 1) not in occupied and top_visible(c)]
         if not exposed:
             continue
-        top = max(exposed, key=lambda c: (c.z, c.x, -c.y))
+        top = max(exposed, key=lambda c: (c.z, sx * c.x + sy * c.y, c.x))
         ax.text(top.x - 0.5, top.y - 0.5, top.z + 0.15, str(piece_id),
                 ha='center', va='bottom', fontsize=10, fontweight='bold',
                 color='black', zorder=100,
@@ -310,7 +450,10 @@ def _draw_box_view(ax: Axes3D, state: GameState, title: str,
     occupied = len(state.occupied)
     total = A * B * C
     status = "COMPLETE!" if state.is_complete() else f"{occupied}/{total} cells"
-    ax.set_title(f"{title}\n{status}")
+    head = f"{title}\n{status}" if title else ""
+    if view_label:
+        head = (head + "\n" if head else "") + f"{view_label} view"
+    ax.set_title(head)
 
 
 def _draw_unplaced_pieces(ax: Axes3D, state: GameState):
@@ -339,7 +482,7 @@ def _draw_unplaced_pieces(ax: Axes3D, state: GameState):
     max_z = max(c.z for c in all_cells)
 
     # 绘制每个未放置的piece
-    for piece_id in sorted(state.unplaced):
+    for piece_id in sorted(state.unplaced, key=piece_sort_key):
         if piece_id not in state.initial_placements:
             continue
 
@@ -390,7 +533,9 @@ def _draw_single_unplaced_piece(ax: Axes3D, state: GameState, piece_id: str,
                                 normalize_view: bool = False,
                                 pad: int = 1,
                                 unified_view_size: Optional[float] = None,
-                                compact: bool = False):
+                                compact: bool = False,
+                                elev: float = 20, azim: float = 45,
+                                show_title: bool = True):
     """绘制单个piece的小视角（网格排布用）"""
     # keep_initial_pose: 保持初始加载姿态与位置
     # normalize_view: 归一化到局部坐标（与初始位置无关）
@@ -414,10 +559,11 @@ def _draw_single_unplaced_piece(ax: Axes3D, state: GameState, piece_id: str,
         # 保持与加载时一致的朝向与位置
         draw_cells = placement.world_cells
         
-        # 计算当前piece的中心
-        cx = (min_x + max_x) / 2
-        cy = (min_y + max_y) / 2
-        cz = (min_z + max_z) / 2
+        # 计算当前piece的中心（格子 c 占据 [c-1, c]，所以中心要减 0.5；
+        # 以前直接用 (min+max)/2，取景偏了半格，底部方块会被裁掉）
+        cx = (min_x + max_x) / 2 - 0.5
+        cy = (min_y + max_y) / 2 - 0.5
+        cz = (min_z + max_z) / 2 - 0.5
         
         if unified_view_size:
             # 使用统一的视图尺寸，居中显示
@@ -444,7 +590,7 @@ def _draw_single_unplaced_piece(ax: Axes3D, state: GameState, piece_id: str,
             size_x = max_x - min_x + 1
             size_y = max_y - min_y + 1
             size_z = max_z - min_z + 1
-            cx, cy, cz = size_x/2 + 0.5, size_y/2 + 0.5, size_z/2 + 0.5
+            cx, cy, cz = size_x / 2, size_y / 2, size_z / 2   # 格子占 [0, size]
             d = unified_view_size / 2
             x0, x1 = cx - d, cx + d
             y0, y1 = cy - d, cy + d
@@ -462,29 +608,30 @@ def _draw_single_unplaced_piece(ax: Axes3D, state: GameState, piece_id: str,
 
     if is_placed:
         # 已放置：淡化显示（原来用的 ❌ emoji 在默认字体里会渲染成方块）
-        for cell in draw_cells:
-            draw_voxel(ax, cell, color, alpha=0.18, edge_color='#999999',
-                       linewidth=0.5)
+        draw_cells_solid(ax, [(draw_cells, color, 0.22)], linewidth=0.5)
     else:
-        for cell in draw_cells:
-            draw_voxel(ax, cell, color, alpha=0.9, linewidth=0.8)
+        draw_cells_solid(ax, [(draw_cells, color, 1.0)])
 
     ax.set_xlim([x0, x1])
     ax.set_ylim([y0, y1])
     ax.set_zlim([z0, z1])
-
-    # 设置正确的空间比例，防止变形
-    ax.set_box_aspect((x1 - x0, y1 - y0, z1 - z0))
+    # 设置正确的空间比例，防止变形；小图放大（3D 轴默认留白很大）。THUMB_ZOOM
+    # 1.25 在全部 56 关（两个随机姿态）下都不裁掉方块；1.3 起开始有裁切
+    try:
+        ax.set_box_aspect((x1 - x0, y1 - y0, z1 - z0), zoom=THUMB_ZOOM if compact else 1.0)
+    except TypeError:  # matplotlib < 3.6 没有 zoom 参数
+        ax.set_box_aspect((x1 - x0, y1 - y0, z1 - z0))
 
     n_cells = len(placement.world_cells)
-    if is_placed:
+    if show_title and is_placed:
         ax.set_title(f"#{piece_id} placed", fontsize=9 if compact else 10,
                      color='#888888')
-    else:
+    elif show_title:
         label = f"#{piece_id} ({n_cells})" if compact else f"#{piece_id}  ({n_cells} cells)"
         ax.set_title(label, fontsize=9 if compact else 10,
-                     fontweight='bold', color=color)
-    ax.view_init(elev=20, azim=45)
+                     fontweight='bold', color=label_color(color))
+    ax.view_init(elev=elev, azim=azim)
+    # 保留三块淡色坐标面板（不要刻度），给出地面和墙角的参照。
     ax.set_xticks([])
     ax.set_yticks([])
     ax.set_zticks([])
@@ -492,8 +639,10 @@ def _draw_single_unplaced_piece(ax: Axes3D, state: GameState, piece_id: str,
     ax.set_ylabel('')
     ax.set_zlabel('')
     for pane in (ax.xaxis.pane, ax.yaxis.pane, ax.zaxis.pane):
-        pane.set_facecolor((1, 1, 1, 0))
-        pane.set_edgecolor((0.85, 0.85, 0.85, 1.0))
+        pane.set_facecolor((0.97, 0.97, 0.98, 1.0))
+        pane.set_edgecolor((0.72, 0.72, 0.75, 1.0))
+    for axis in (ax.xaxis, ax.yaxis, ax.zaxis):
+        axis.line.set_color((0.62, 0.62, 0.66, 1.0))
 
 
 def visualize_piece_rotations(piece: PieceDef,
