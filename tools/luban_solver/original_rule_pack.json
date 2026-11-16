@@ -1,0 +1,4868 @@
+{
+  "schema_version": 1,
+  "source_archive": "LuBanSuoEnv源码编辑器版本2022_3.rar",
+  "source_data_path": "Assets/Ass/Date/obj_datas.json",
+  "source_data_sha256": "7e5eaa33a0e0aa0f08025dc75741c27682fa4b3d35c380cfd518fb9e363776ba",
+  "original_puzzles": 36,
+  "note": "Original conditional actions only; these are not solution paths. Existing geometry and start positions must match.",
+  "levels": [
+    {
+      "level": 0,
+      "original_index": 11,
+      "original_level_sha256": "6c2e599747ef815d5b242cbcfbad2166c3bf63438e52e51c402b9bf1c292fd4f",
+      "geometry_sha256": "6c2e599747ef815d5b242cbcfbad2166c3bf63438e52e51c402b9bf1c292fd4f",
+      "moveRotates": []
+    },
+    {
+      "level": 1,
+      "original_index": 0,
+      "original_level_sha256": "e97d5360db0ff20da4ea7a8c7e289515c72db2dad0f5ea345c1ae1dd63c29781",
+      "geometry_sha256": "e97d5360db0ff20da4ea7a8c7e289515c72db2dad0f5ea345c1ae1dd63c29781",
+      "moveRotates": []
+    },
+    {
+      "level": 2,
+      "original_index": 4,
+      "original_level_sha256": "aa652df240051d2dcf6421ccf5450641cf81e90bb3e2b35aeee85718c94af1e1",
+      "geometry_sha256": "aa652df240051d2dcf6421ccf5450641cf81e90bb3e2b35aeee85718c94af1e1",
+      "moveRotates": [
+        {
+          "polyhedronIndex": 5,
+          "polyhedronConditions": [
+            {
+              "polyhedronIndex": 0,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 1600000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 0,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": 0,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 0,
+                "y": 4,
+                "z": 3
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 1,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 1300000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 300000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": 0,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 4,
+                "y": 3,
+                "z": 0
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 2,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 1600000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 300000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": 300000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 3,
+                "y": 1,
+                "z": 5
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 3,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 1600000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 300000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -300000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 2,
+                "y": 1,
+                "z": 4
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 4,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 1600000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 600000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": 0,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 0,
+                "y": 5,
+                "z": 2
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 5,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 2062130,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 300000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": 58580,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 5,
+                "y": 3,
+                "z": 1
+              },
+              "halfRotateAxis": 4
+            }
+          ],
+          "isHalf": true,
+          "rotateAxis": 3,
+          "rotateCounts": 1,
+          "positionAddScaled": {
+            "X": {
+              "Numerator": -162130,
+              "Denominator": 1
+            },
+            "Y": {
+              "Numerator": 0,
+              "Denominator": 1
+            },
+            "Z": {
+              "Numerator": -58580,
+              "Denominator": 1
+            }
+          }
+        },
+        {
+          "polyhedronIndex": 5,
+          "polyhedronConditions": [
+            {
+              "polyhedronIndex": 0,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 0,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 0,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": 0,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 0,
+                "y": 4,
+                "z": 3
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 1,
+              "positionScaled": {
+                "X": {
+                  "Numerator": -300000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 300000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": 0,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 4,
+                "y": 3,
+                "z": 0
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 2,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 0,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 300000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": 300000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 3,
+                "y": 1,
+                "z": 5
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 3,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 0,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 300000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -300000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 2,
+                "y": 1,
+                "z": 4
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 4,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 0,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 600000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": 0,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 0,
+                "y": 5,
+                "z": 2
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 5,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 300000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 300000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": 0,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 5,
+                "y": 3,
+                "z": 1
+              },
+              "halfRotateAxis": 0
+            }
+          ],
+          "isHalf": true,
+          "rotateAxis": 4,
+          "rotateCounts": 1,
+          "positionAddScaled": {
+            "X": {
+              "Numerator": 162130,
+              "Denominator": 1
+            },
+            "Y": {
+              "Numerator": 0,
+              "Denominator": 1
+            },
+            "Z": {
+              "Numerator": 58580,
+              "Denominator": 1
+            }
+          }
+        },
+        {
+          "polyhedronIndex": 5,
+          "polyhedronConditions": [
+            {
+              "polyhedronIndex": 0,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 1100000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 300000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1600000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 3,
+                "y": 1,
+                "z": 5
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 1,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 1100000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 0,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1900000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 0,
+                "y": 4,
+                "z": 3
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 2,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 1100000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 300000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -2200000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 3,
+                "y": 0,
+                "z": 4
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 3,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 1400000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 300000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1900000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 5,
+                "y": 3,
+                "z": 1
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 4,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 1100000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 600000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1900000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 0,
+                "y": 5,
+                "z": 2
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 5,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 637870,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 300000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1841420,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 4,
+                "y": 2,
+                "z": 1
+              },
+              "halfRotateAxis": 3
+            }
+          ],
+          "isHalf": true,
+          "rotateAxis": 4,
+          "rotateCounts": 1,
+          "positionAddScaled": {
+            "X": {
+              "Numerator": 162130,
+              "Denominator": 1
+            },
+            "Y": {
+              "Numerator": 0,
+              "Denominator": 1
+            },
+            "Z": {
+              "Numerator": -58580,
+              "Denominator": 1
+            }
+          }
+        },
+        {
+          "polyhedronIndex": 5,
+          "polyhedronConditions": [
+            {
+              "polyhedronIndex": 0,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 1100000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 300000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1600000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 3,
+                "y": 1,
+                "z": 5
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 1,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 1100000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 0,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1900000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 0,
+                "y": 4,
+                "z": 3
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 2,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 1100000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 300000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -2200000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 3,
+                "y": 0,
+                "z": 4
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 3,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 1400000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 300000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1900000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 5,
+                "y": 3,
+                "z": 1
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 4,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 1100000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 600000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1900000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 0,
+                "y": 5,
+                "z": 2
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 5,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 800000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 300000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1900000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 4,
+                "y": 2,
+                "z": 1
+              },
+              "halfRotateAxis": 0
+            }
+          ],
+          "isHalf": true,
+          "rotateAxis": 3,
+          "rotateCounts": 1,
+          "positionAddScaled": {
+            "X": {
+              "Numerator": -162130,
+              "Denominator": 1
+            },
+            "Y": {
+              "Numerator": 0,
+              "Denominator": 1
+            },
+            "Z": {
+              "Numerator": 58580,
+              "Denominator": 1
+            }
+          }
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "original_index": 1,
+      "original_level_sha256": "ff18fe61c85b09a83c726de2aad2f66226f365ea082dc1d01c268ca65093e9fc",
+      "geometry_sha256": "ff18fe61c85b09a83c726de2aad2f66226f365ea082dc1d01c268ca65093e9fc",
+      "moveRotates": []
+    },
+    {
+      "level": 4,
+      "original_index": 5,
+      "original_level_sha256": "645fd98655390cb58fe498e0636dfca52bcfd3fb66f398aa4b12f24edb7a3c0d",
+      "geometry_sha256": "645fd98655390cb58fe498e0636dfca52bcfd3fb66f398aa4b12f24edb7a3c0d",
+      "moveRotates": [
+        {
+          "polyhedronIndex": 2,
+          "polyhedronConditions": [
+            {
+              "polyhedronIndex": 0,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 0,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 800000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1400000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 4,
+                "y": 1,
+                "z": 3
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 1,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 0,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 800000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1400000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 5,
+                "y": 3,
+                "z": 1
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 2,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 0,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 600000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1400000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 2,
+                "y": 1,
+                "z": 4
+              },
+              "halfRotateAxis": 0
+            }
+          ],
+          "isHalf": false,
+          "rotateAxis": 2,
+          "rotateCounts": 1,
+          "positionAddScaled": {
+            "X": {
+              "Numerator": 0,
+              "Denominator": 1
+            },
+            "Y": {
+              "Numerator": 200000,
+              "Denominator": 1
+            },
+            "Z": {
+              "Numerator": 0,
+              "Denominator": 1
+            }
+          }
+        },
+        {
+          "polyhedronIndex": 2,
+          "polyhedronConditions": [
+            {
+              "polyhedronIndex": 0,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 0,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 800000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1400000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 4,
+                "y": 1,
+                "z": 3
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 1,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 0,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 800000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1400000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 5,
+                "y": 3,
+                "z": 1
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 2,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 0,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 800000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1400000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 2,
+                "y": 4,
+                "z": 0
+              },
+              "halfRotateAxis": 0
+            }
+          ],
+          "isHalf": false,
+          "rotateAxis": 1,
+          "rotateCounts": 1,
+          "positionAddScaled": {
+            "X": {
+              "Numerator": 0,
+              "Denominator": 1
+            },
+            "Y": {
+              "Numerator": -200000,
+              "Denominator": 1
+            },
+            "Z": {
+              "Numerator": 0,
+              "Denominator": 1
+            }
+          }
+        },
+        {
+          "polyhedronIndex": 2,
+          "polyhedronConditions": [
+            {
+              "polyhedronIndex": 0,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 800000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 800000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -400000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 0,
+                "y": 3,
+                "z": 5
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 1,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 800000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 800000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -400000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 2,
+                "y": 1,
+                "z": 4
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 2,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 800000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 600000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -400000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 1,
+                "y": 5,
+                "z": 3
+              },
+              "halfRotateAxis": 0
+            }
+          ],
+          "isHalf": false,
+          "rotateAxis": 6,
+          "rotateCounts": 1,
+          "positionAddScaled": {
+            "X": {
+              "Numerator": 0,
+              "Denominator": 1
+            },
+            "Y": {
+              "Numerator": 200000,
+              "Denominator": 1
+            },
+            "Z": {
+              "Numerator": 0,
+              "Denominator": 1
+            }
+          }
+        },
+        {
+          "polyhedronIndex": 2,
+          "polyhedronConditions": [
+            {
+              "polyhedronIndex": 0,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 800000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 800000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -400000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 0,
+                "y": 3,
+                "z": 5
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 1,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 800000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 800000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -400000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 2,
+                "y": 1,
+                "z": 4
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 2,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 800000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 800000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -400000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 5,
+                "y": 0,
+                "z": 3
+              },
+              "halfRotateAxis": 0
+            }
+          ],
+          "isHalf": false,
+          "rotateAxis": 5,
+          "rotateCounts": 1,
+          "positionAddScaled": {
+            "X": {
+              "Numerator": 0,
+              "Denominator": 1
+            },
+            "Y": {
+              "Numerator": -200000,
+              "Denominator": 1
+            },
+            "Z": {
+              "Numerator": 0,
+              "Denominator": 1
+            }
+          }
+        }
+      ]
+    },
+    {
+      "level": 5,
+      "original_index": 6,
+      "original_level_sha256": "942c259c5a6b9a1e0c1049309cb9078a28da31dc43a5e077015f49d2ee4d1d45",
+      "geometry_sha256": "942c259c5a6b9a1e0c1049309cb9078a28da31dc43a5e077015f49d2ee4d1d45",
+      "moveRotates": []
+    },
+    {
+      "level": 6,
+      "original_index": 7,
+      "original_level_sha256": "b02feefca0ea73db64a03d2a77d78be70de7f7c081a12521d0ca1d266a93d8fc",
+      "geometry_sha256": "b02feefca0ea73db64a03d2a77d78be70de7f7c081a12521d0ca1d266a93d8fc",
+      "moveRotates": []
+    },
+    {
+      "level": 7,
+      "original_index": 8,
+      "original_level_sha256": "708e3d3b0498a494a47d1709db895ba5579056c48b4f1b34fbd78544e090ad9a",
+      "geometry_sha256": "708e3d3b0498a494a47d1709db895ba5579056c48b4f1b34fbd78544e090ad9a",
+      "moveRotates": []
+    },
+    {
+      "level": 8,
+      "original_index": 9,
+      "original_level_sha256": "1e6c1eb0111aedc2abf4dba1a584132c4b9ac3ee0fbe50e424c10d2aab991fb2",
+      "geometry_sha256": "1e6c1eb0111aedc2abf4dba1a584132c4b9ac3ee0fbe50e424c10d2aab991fb2",
+      "moveRotates": [
+        {
+          "polyhedronIndex": 3,
+          "polyhedronConditions": [
+            {
+              "polyhedronIndex": 0,
+              "positionScaled": {
+                "X": {
+                  "Numerator": -1600000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 600000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -2000000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 4,
+                "y": 2,
+                "z": 1
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 1,
+              "positionScaled": {
+                "X": {
+                  "Numerator": -1600000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 600000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -2000000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 2,
+                "y": 0,
+                "z": 5
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 2,
+              "positionScaled": {
+                "X": {
+                  "Numerator": -1600000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 600000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -2000000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 0,
+                "y": 4,
+                "z": 3
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 3,
+              "positionScaled": {
+                "X": {
+                  "Numerator": -1600000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 900000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -2000000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 0,
+                "y": 4,
+                "z": 3
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 4,
+              "positionScaled": {
+                "X": {
+                  "Numerator": -1600000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 600000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1800000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 2,
+                "y": 5,
+                "z": 1
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 5,
+              "positionScaled": {
+                "X": {
+                  "Numerator": -1800000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 600000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -2000000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 0,
+                "y": 2,
+                "z": 4
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 6,
+              "positionScaled": {
+                "X": {
+                  "Numerator": -1600000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 400000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -2000000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 5,
+                "y": 0,
+                "z": 3
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 7,
+              "positionScaled": {
+                "X": {
+                  "Numerator": -1400000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 600000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -2000000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 0,
+                "y": 2,
+                "z": 4
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 8,
+              "positionScaled": {
+                "X": {
+                  "Numerator": -1600000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 600000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -2200000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 2,
+                "y": 5,
+                "z": 1
+              },
+              "halfRotateAxis": 0
+            }
+          ],
+          "isHalf": false,
+          "rotateAxis": 5,
+          "rotateCounts": 1,
+          "positionAddScaled": {
+            "X": {
+              "Numerator": 0,
+              "Denominator": 1
+            },
+            "Y": {
+              "Numerator": -100000,
+              "Denominator": 1
+            },
+            "Z": {
+              "Numerator": 0,
+              "Denominator": 1
+            }
+          }
+        },
+        {
+          "polyhedronIndex": 3,
+          "polyhedronConditions": [
+            {
+              "polyhedronIndex": 0,
+              "positionScaled": {
+                "X": {
+                  "Numerator": -1600000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 600000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -2000000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 4,
+                "y": 2,
+                "z": 1
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 1,
+              "positionScaled": {
+                "X": {
+                  "Numerator": -1600000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 600000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -2000000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 2,
+                "y": 0,
+                "z": 5
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 2,
+              "positionScaled": {
+                "X": {
+                  "Numerator": -1600000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 600000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -2000000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 0,
+                "y": 4,
+                "z": 3
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 3,
+              "positionScaled": {
+                "X": {
+                  "Numerator": -1600000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 800000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -2000000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 5,
+                "y": 0,
+                "z": 3
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 4,
+              "positionScaled": {
+                "X": {
+                  "Numerator": -1600000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 600000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1800000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 2,
+                "y": 5,
+                "z": 1
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 5,
+              "positionScaled": {
+                "X": {
+                  "Numerator": -1800000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 600000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -2000000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 0,
+                "y": 2,
+                "z": 4
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 6,
+              "positionScaled": {
+                "X": {
+                  "Numerator": -1600000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 400000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -2000000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 5,
+                "y": 0,
+                "z": 3
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 7,
+              "positionScaled": {
+                "X": {
+                  "Numerator": -1400000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 600000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -2000000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 0,
+                "y": 2,
+                "z": 4
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 8,
+              "positionScaled": {
+                "X": {
+                  "Numerator": -1600000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 600000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -2200000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 2,
+                "y": 5,
+                "z": 1
+              },
+              "halfRotateAxis": 0
+            }
+          ],
+          "isHalf": false,
+          "rotateAxis": 6,
+          "rotateCounts": 1,
+          "positionAddScaled": {
+            "X": {
+              "Numerator": 0,
+              "Denominator": 1
+            },
+            "Y": {
+              "Numerator": 100000,
+              "Denominator": 1
+            },
+            "Z": {
+              "Numerator": 0,
+              "Denominator": 1
+            }
+          }
+        }
+      ]
+    },
+    {
+      "level": 9,
+      "original_index": 12,
+      "original_level_sha256": "23193ed0464ecf4593338dc63aa6721aa75952bfd67474b47f886e4ebd36d83c",
+      "geometry_sha256": "23193ed0464ecf4593338dc63aa6721aa75952bfd67474b47f886e4ebd36d83c",
+      "moveRotates": []
+    },
+    {
+      "level": 10,
+      "original_index": 13,
+      "original_level_sha256": "0d15db08d24ed747da91be898be1f46abe60fc32612a52d4ada221c067eea4d7",
+      "geometry_sha256": "0d15db08d24ed747da91be898be1f46abe60fc32612a52d4ada221c067eea4d7",
+      "moveRotates": [
+        {
+          "polyhedronIndex": 14,
+          "polyhedronConditions": [
+            {
+              "polyhedronIndex": 0,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 200000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 0,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1600000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 2,
+                "y": 1,
+                "z": 4
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 1,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 200000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 0,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1600000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 0,
+                "y": 5,
+                "z": 2
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 2,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 200000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 0,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1600000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 4,
+                "y": 3,
+                "z": 0
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 7,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 0,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 0,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1600000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 5,
+                "y": 0,
+                "z": 3
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 8,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 400000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 0,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1600000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 4,
+                "y": 0,
+                "z": 2
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 10,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 600000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 0,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1600000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 5,
+                "y": 0,
+                "z": 3
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 14,
+              "positionScaled": {
+                "X": {
+                  "Numerator": -300000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 0,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1600000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 0,
+                "y": 4,
+                "z": 3
+              },
+              "halfRotateAxis": 0
+            }
+          ],
+          "isHalf": false,
+          "rotateAxis": 5,
+          "rotateCounts": 1,
+          "positionAddScaled": {
+            "X": {
+              "Numerator": 100000,
+              "Denominator": 1
+            },
+            "Y": {
+              "Numerator": 0,
+              "Denominator": 1
+            },
+            "Z": {
+              "Numerator": 0,
+              "Denominator": 1
+            }
+          }
+        },
+        {
+          "polyhedronIndex": 14,
+          "polyhedronConditions": [
+            {
+              "polyhedronIndex": 0,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 200000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 0,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1600000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 2,
+                "y": 1,
+                "z": 4
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 1,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 200000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 0,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1600000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 0,
+                "y": 5,
+                "z": 2
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 2,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 200000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 0,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1600000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 4,
+                "y": 3,
+                "z": 0
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 7,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 0,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 0,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1600000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 5,
+                "y": 0,
+                "z": 3
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 8,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 400000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 0,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1600000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 4,
+                "y": 0,
+                "z": 2
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 10,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 600000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 0,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1600000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 5,
+                "y": 0,
+                "z": 3
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 14,
+              "positionScaled": {
+                "X": {
+                  "Numerator": -200000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 0,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1600000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 5,
+                "y": 0,
+                "z": 3
+              },
+              "halfRotateAxis": 0
+            }
+          ],
+          "isHalf": false,
+          "rotateAxis": 6,
+          "rotateCounts": 1,
+          "positionAddScaled": {
+            "X": {
+              "Numerator": -100000,
+              "Denominator": 1
+            },
+            "Y": {
+              "Numerator": 0,
+              "Denominator": 1
+            },
+            "Z": {
+              "Numerator": 0,
+              "Denominator": 1
+            }
+          }
+        }
+      ]
+    },
+    {
+      "level": 11,
+      "original_index": 14,
+      "original_level_sha256": "85e767bb531f0900514e12b88f9dcd7da0f0724092a61900e676becda13a1ead",
+      "geometry_sha256": "85e767bb531f0900514e12b88f9dcd7da0f0724092a61900e676becda13a1ead",
+      "moveRotates": []
+    },
+    {
+      "level": 12,
+      "original_index": 15,
+      "original_level_sha256": "6eeaa6c6efb526be938bb2ade603c0edc006320b9a6da220b2d030cf06fc9ede",
+      "geometry_sha256": "6eeaa6c6efb526be938bb2ade603c0edc006320b9a6da220b2d030cf06fc9ede",
+      "moveRotates": []
+    },
+    {
+      "level": 13,
+      "original_index": 16,
+      "original_level_sha256": "067f350d222686cf5bb768c4ede6a3e3410d987621856339a5a57037120d08ed",
+      "geometry_sha256": "067f350d222686cf5bb768c4ede6a3e3410d987621856339a5a57037120d08ed",
+      "moveRotates": []
+    },
+    {
+      "level": 14,
+      "original_index": 17,
+      "original_level_sha256": "af361ce4af829a08375cedde34ed1d4f784db55ebd02e55031fb2010ddf08a95",
+      "geometry_sha256": "af361ce4af829a08375cedde34ed1d4f784db55ebd02e55031fb2010ddf08a95",
+      "moveRotates": []
+    },
+    {
+      "level": 15,
+      "original_index": 18,
+      "original_level_sha256": "a6b5518fcd199f5f33cd76928c9b1b719eca5d3ee1befe13ceed985677ecde1e",
+      "geometry_sha256": "a6b5518fcd199f5f33cd76928c9b1b719eca5d3ee1befe13ceed985677ecde1e",
+      "moveRotates": []
+    },
+    {
+      "level": 16,
+      "original_index": 19,
+      "original_level_sha256": "5cda0c57f3422456c343430ae0d99cf5952e897bef6de5acf55d4359c55ea20f",
+      "geometry_sha256": "5cda0c57f3422456c343430ae0d99cf5952e897bef6de5acf55d4359c55ea20f",
+      "moveRotates": [
+        {
+          "polyhedronIndex": 8,
+          "polyhedronConditions": [
+            {
+              "polyhedronIndex": 0,
+              "positionScaled": {
+                "X": {
+                  "Numerator": -400000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 0,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1600000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 3,
+                "y": 4,
+                "z": 1
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 1,
+              "positionScaled": {
+                "X": {
+                  "Numerator": -400000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 0,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1600000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 5,
+                "y": 0,
+                "z": 3
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 2,
+              "positionScaled": {
+                "X": {
+                  "Numerator": -400000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 0,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1600000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 1,
+                "y": 2,
+                "z": 5
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 5,
+              "positionScaled": {
+                "X": {
+                  "Numerator": -400000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 0,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1400000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 4,
+                "y": 2,
+                "z": 1
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 6,
+              "positionScaled": {
+                "X": {
+                  "Numerator": -400000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 0,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1800000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 4,
+                "y": 3,
+                "z": 0
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 7,
+              "positionScaled": {
+                "X": {
+                  "Numerator": -400000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": -200000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1600000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 3,
+                "y": 0,
+                "z": 4
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 8,
+              "positionScaled": {
+                "X": {
+                  "Numerator": -400000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 200000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1600000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 2,
+                "y": 1,
+                "z": 4
+              },
+              "halfRotateAxis": 0
+            }
+          ],
+          "isHalf": false,
+          "rotateAxis": 2,
+          "rotateCounts": 1,
+          "positionAddScaled": {
+            "X": {
+              "Numerator": 0,
+              "Denominator": 1
+            },
+            "Y": {
+              "Numerator": 100000,
+              "Denominator": 1
+            },
+            "Z": {
+              "Numerator": 0,
+              "Denominator": 1
+            }
+          }
+        },
+        {
+          "polyhedronIndex": 8,
+          "polyhedronConditions": [
+            {
+              "polyhedronIndex": 0,
+              "positionScaled": {
+                "X": {
+                  "Numerator": -400000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 0,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1600000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 3,
+                "y": 4,
+                "z": 1
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 1,
+              "positionScaled": {
+                "X": {
+                  "Numerator": -400000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 0,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1600000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 5,
+                "y": 0,
+                "z": 3
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 2,
+              "positionScaled": {
+                "X": {
+                  "Numerator": -400000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 0,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1600000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 1,
+                "y": 2,
+                "z": 5
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 5,
+              "positionScaled": {
+                "X": {
+                  "Numerator": -400000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 0,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1400000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 4,
+                "y": 2,
+                "z": 1
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 6,
+              "positionScaled": {
+                "X": {
+                  "Numerator": -400000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 0,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1800000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 4,
+                "y": 3,
+                "z": 0
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 7,
+              "positionScaled": {
+                "X": {
+                  "Numerator": -400000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": -200000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1600000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 3,
+                "y": 0,
+                "z": 4
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 8,
+              "positionScaled": {
+                "X": {
+                  "Numerator": -400000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 300000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1600000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 2,
+                "y": 4,
+                "z": 0
+              },
+              "halfRotateAxis": 0
+            }
+          ],
+          "isHalf": false,
+          "rotateAxis": 1,
+          "rotateCounts": 1,
+          "positionAddScaled": {
+            "X": {
+              "Numerator": 0,
+              "Denominator": 1
+            },
+            "Y": {
+              "Numerator": -100000,
+              "Denominator": 1
+            },
+            "Z": {
+              "Numerator": 0,
+              "Denominator": 1
+            }
+          }
+        }
+      ]
+    },
+    {
+      "level": 17,
+      "original_index": 20,
+      "original_level_sha256": "a7e41c863e37682576e4a6cb1258f0a444b9e7cd5e9843c2234379ef3ebb1405",
+      "geometry_sha256": "a7e41c863e37682576e4a6cb1258f0a444b9e7cd5e9843c2234379ef3ebb1405",
+      "moveRotates": []
+    },
+    {
+      "level": 18,
+      "original_index": 21,
+      "original_level_sha256": "89a0279199c6d0cc06cbde75c0baa29e834f1d67afff54f59f5fb6e9a9e365e3",
+      "geometry_sha256": "89a0279199c6d0cc06cbde75c0baa29e834f1d67afff54f59f5fb6e9a9e365e3",
+      "moveRotates": [
+        {
+          "polyhedronIndex": 5,
+          "polyhedronConditions": [
+            {
+              "polyhedronIndex": 0,
+              "positionScaled": {
+                "X": {
+                  "Numerator": -1500000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 300000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1600000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 1,
+                "y": 5,
+                "z": 3
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 1,
+              "positionScaled": {
+                "X": {
+                  "Numerator": -1500000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 600000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1300000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 2,
+                "y": 1,
+                "z": 4
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 2,
+              "positionScaled": {
+                "X": {
+                  "Numerator": -1800000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 600000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1600000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 5,
+                "y": 3,
+                "z": 1
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 3,
+              "positionScaled": {
+                "X": {
+                  "Numerator": -1500000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 600000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1900000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 3,
+                "y": 1,
+                "z": 5
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 4,
+              "positionScaled": {
+                "X": {
+                  "Numerator": -1200000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 600000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1600000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 4,
+                "y": 3,
+                "z": 0
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 5,
+              "positionScaled": {
+                "X": {
+                  "Numerator": -1500000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 1000000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1600000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 4,
+                "y": 1,
+                "z": 3
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 6,
+              "positionScaled": {
+                "X": {
+                  "Numerator": -1400000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 600000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1600000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 5,
+                "y": 3,
+                "z": 1
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 7,
+              "positionScaled": {
+                "X": {
+                  "Numerator": -1500000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 700000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1600000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 1,
+                "y": 5,
+                "z": 3
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 8,
+              "positionScaled": {
+                "X": {
+                  "Numerator": -1500000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 500000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1600000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 0,
+                "y": 4,
+                "z": 3
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 9,
+              "positionScaled": {
+                "X": {
+                  "Numerator": -1500000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 600000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1700000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 2,
+                "y": 1,
+                "z": 4
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 10,
+              "positionScaled": {
+                "X": {
+                  "Numerator": -1500000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 600000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1500000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 2,
+                "y": 0,
+                "z": 5
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 11,
+              "positionScaled": {
+                "X": {
+                  "Numerator": -1600000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 600000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1600000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 4,
+                "y": 3,
+                "z": 0
+              },
+              "halfRotateAxis": 0
+            }
+          ],
+          "isHalf": false,
+          "rotateAxis": 6,
+          "rotateCounts": 1,
+          "positionAddScaled": {
+            "X": {
+              "Numerator": 0,
+              "Denominator": 1
+            },
+            "Y": {
+              "Numerator": -100000,
+              "Denominator": 1
+            },
+            "Z": {
+              "Numerator": 0,
+              "Denominator": 1
+            }
+          }
+        },
+        {
+          "polyhedronIndex": 5,
+          "polyhedronConditions": [
+            {
+              "polyhedronIndex": 0,
+              "positionScaled": {
+                "X": {
+                  "Numerator": -1500000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 300000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1600000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 1,
+                "y": 5,
+                "z": 3
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 1,
+              "positionScaled": {
+                "X": {
+                  "Numerator": -1500000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 600000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1300000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 2,
+                "y": 1,
+                "z": 4
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 2,
+              "positionScaled": {
+                "X": {
+                  "Numerator": -1800000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 600000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1600000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 5,
+                "y": 3,
+                "z": 1
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 3,
+              "positionScaled": {
+                "X": {
+                  "Numerator": -1500000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 600000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1900000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 3,
+                "y": 1,
+                "z": 5
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 4,
+              "positionScaled": {
+                "X": {
+                  "Numerator": -1200000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 600000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1600000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 4,
+                "y": 3,
+                "z": 0
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 5,
+              "positionScaled": {
+                "X": {
+                  "Numerator": -1500000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 900000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1600000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 1,
+                "y": 5,
+                "z": 3
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 6,
+              "positionScaled": {
+                "X": {
+                  "Numerator": -1400000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 600000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1600000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 5,
+                "y": 3,
+                "z": 1
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 7,
+              "positionScaled": {
+                "X": {
+                  "Numerator": -1500000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 700000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1600000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 1,
+                "y": 5,
+                "z": 3
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 8,
+              "positionScaled": {
+                "X": {
+                  "Numerator": -1500000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 500000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1600000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 0,
+                "y": 4,
+                "z": 3
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 9,
+              "positionScaled": {
+                "X": {
+                  "Numerator": -1500000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 600000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1700000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 2,
+                "y": 1,
+                "z": 4
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 10,
+              "positionScaled": {
+                "X": {
+                  "Numerator": -1500000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 600000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1500000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 2,
+                "y": 0,
+                "z": 5
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 11,
+              "positionScaled": {
+                "X": {
+                  "Numerator": -1600000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 600000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1600000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 4,
+                "y": 3,
+                "z": 0
+              },
+              "halfRotateAxis": 0
+            }
+          ],
+          "isHalf": false,
+          "rotateAxis": 5,
+          "rotateCounts": 1,
+          "positionAddScaled": {
+            "X": {
+              "Numerator": 0,
+              "Denominator": 1
+            },
+            "Y": {
+              "Numerator": 100000,
+              "Denominator": 1
+            },
+            "Z": {
+              "Numerator": 0,
+              "Denominator": 1
+            }
+          }
+        }
+      ]
+    },
+    {
+      "level": 19,
+      "original_index": 22,
+      "original_level_sha256": "4f704f1fc8e260199cf6937a300e792c844186b17ac0727f59637308b41e97c3",
+      "geometry_sha256": "4f704f1fc8e260199cf6937a300e792c844186b17ac0727f59637308b41e97c3",
+      "moveRotates": []
+    },
+    {
+      "level": 20,
+      "original_index": 23,
+      "original_level_sha256": "4bce7279dc194289fab21cfd499a54f5cb732049799b2d7fc247cf9c0f8f263f",
+      "geometry_sha256": "4bce7279dc194289fab21cfd499a54f5cb732049799b2d7fc247cf9c0f8f263f",
+      "moveRotates": []
+    },
+    {
+      "level": 21,
+      "original_index": 25,
+      "original_level_sha256": "a0153cd9869f162e9cfd337dcb64809f7b9893513abe818b2c380f2d113233cc",
+      "geometry_sha256": "a0153cd9869f162e9cfd337dcb64809f7b9893513abe818b2c380f2d113233cc",
+      "moveRotates": []
+    },
+    {
+      "level": 22,
+      "original_index": 26,
+      "original_level_sha256": "7b12167a20f857f6e2cf0fca38cee57d5f3b0289a5f48c7b3984e9770767c50d",
+      "geometry_sha256": "7b12167a20f857f6e2cf0fca38cee57d5f3b0289a5f48c7b3984e9770767c50d",
+      "moveRotates": [
+        {
+          "polyhedronIndex": 2,
+          "polyhedronConditions": [
+            {
+              "polyhedronIndex": 0,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 800000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 100000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -2100000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 5,
+                "y": 2,
+                "z": 0
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 2,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 800000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 100000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -2100000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 5,
+                "y": 3,
+                "z": 1
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 3,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 800000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 100000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -2100000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 3,
+                "y": 1,
+                "z": 5
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 4,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 800000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 100000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -2100000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 2,
+                "y": 0,
+                "z": 5
+              },
+              "halfRotateAxis": 0
+            }
+          ],
+          "isHalf": false,
+          "rotateAxis": 6,
+          "rotateCounts": 1,
+          "positionAddScaled": {
+            "X": {
+              "Numerator": -100000,
+              "Denominator": 1
+            },
+            "Y": {
+              "Numerator": 200000,
+              "Denominator": 1
+            },
+            "Z": {
+              "Numerator": 0,
+              "Denominator": 1
+            }
+          }
+        },
+        {
+          "polyhedronIndex": 2,
+          "polyhedronConditions": [
+            {
+              "polyhedronIndex": 0,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 800000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 100000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -2100000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 5,
+                "y": 2,
+                "z": 0
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 1,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 800000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 100000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -2100000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 1,
+                "y": 5,
+                "z": 3
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 2,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 700000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 300000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -2100000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 3,
+                "y": 4,
+                "z": 1
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 3,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 800000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 100000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -2100000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 3,
+                "y": 1,
+                "z": 5
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 4,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 800000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 100000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -2100000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 2,
+                "y": 0,
+                "z": 5
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 5,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 800000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 100000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -2100000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 0,
+                "y": 5,
+                "z": 2
+              },
+              "halfRotateAxis": 0
+            }
+          ],
+          "isHalf": false,
+          "rotateAxis": 5,
+          "rotateCounts": 1,
+          "positionAddScaled": {
+            "X": {
+              "Numerator": 100000,
+              "Denominator": 1
+            },
+            "Y": {
+              "Numerator": -200000,
+              "Denominator": 1
+            },
+            "Z": {
+              "Numerator": 0,
+              "Denominator": 1
+            }
+          }
+        }
+      ]
+    },
+    {
+      "level": 23,
+      "original_index": 27,
+      "original_level_sha256": "baf44ae34015e665b8375de0e228d734b59d9e7a0e2dca2f4f1ee9e647ab4488",
+      "geometry_sha256": "baf44ae34015e665b8375de0e228d734b59d9e7a0e2dca2f4f1ee9e647ab4488",
+      "moveRotates": []
+    },
+    {
+      "level": 24,
+      "original_index": 28,
+      "original_level_sha256": "fa057250fab63263b9effc970b26e5ed84bce2e9d49061172e5670b4d0a56b9a",
+      "geometry_sha256": "fa057250fab63263b9effc970b26e5ed84bce2e9d49061172e5670b4d0a56b9a",
+      "moveRotates": []
+    },
+    {
+      "level": 25,
+      "original_index": 29,
+      "original_level_sha256": "95cbbbcd38fa12e49f6368976ccdd1443d53ccf03adf3809e5a67d97fdd56dd7",
+      "geometry_sha256": "95cbbbcd38fa12e49f6368976ccdd1443d53ccf03adf3809e5a67d97fdd56dd7",
+      "moveRotates": []
+    },
+    {
+      "level": 26,
+      "original_index": 30,
+      "original_level_sha256": "bade07e92555a0edbe6840ce9e6cb7d57996affe2adae5f20d92fa7c27444c6a",
+      "geometry_sha256": "bade07e92555a0edbe6840ce9e6cb7d57996affe2adae5f20d92fa7c27444c6a",
+      "moveRotates": []
+    },
+    {
+      "level": 27,
+      "original_index": 31,
+      "original_level_sha256": "a6c05d4f03cf094b7090023c52254df01f9a5b6d68cb8be965ca008b0a1f8754",
+      "geometry_sha256": "a6c05d4f03cf094b7090023c52254df01f9a5b6d68cb8be965ca008b0a1f8754",
+      "moveRotates": []
+    },
+    {
+      "level": 28,
+      "original_index": 32,
+      "original_level_sha256": "b41e066e0599a5466523268b02a80f0bb82e60bb3e98d93b73d4fdea2fbc2c6c",
+      "geometry_sha256": "b41e066e0599a5466523268b02a80f0bb82e60bb3e98d93b73d4fdea2fbc2c6c",
+      "moveRotates": []
+    },
+    {
+      "level": 29,
+      "original_index": 33,
+      "original_level_sha256": "1bb0557d2b4dc3bf1bb4472a2cdefc56a6db812af3ec64f8d2fc103133c1eb6a",
+      "geometry_sha256": "1bb0557d2b4dc3bf1bb4472a2cdefc56a6db812af3ec64f8d2fc103133c1eb6a",
+      "moveRotates": [
+        {
+          "polyhedronIndex": 32,
+          "polyhedronConditions": [
+            {
+              "polyhedronIndex": 0,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 800000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 2200000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -800000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 0,
+                "y": 5,
+                "z": 2
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 1,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 800000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 2200000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -800000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 2,
+                "y": 1,
+                "z": 4
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 2,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 800000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 2200000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -800000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 4,
+                "y": 3,
+                "z": 0
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 3,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 800000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 2200000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1000000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 1,
+                "y": 3,
+                "z": 4
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 4,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 800000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 2200000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -600000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 1,
+                "y": 2,
+                "z": 5
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 5,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 800000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 2000000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -800000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 2,
+                "y": 5,
+                "z": 1
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 6,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 800000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 2400000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -800000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 3,
+                "y": 4,
+                "z": 1
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 7,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 600000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 2200000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -800000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 0,
+                "y": 5,
+                "z": 2
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 8,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 1000000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 2200000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -800000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 1,
+                "y": 5,
+                "z": 3
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 9,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 800000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 1800000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -800000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 3,
+                "y": 4,
+                "z": 1
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 10,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 1000000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 2200000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -600000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 0,
+                "y": 3,
+                "z": 5
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 11,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 600000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 2200000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1000000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 1,
+                "y": 3,
+                "z": 4
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 12,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 600000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 2200000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -600000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 1,
+                "y": 3,
+                "z": 4
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 13,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 800000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 2200000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -400000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 1,
+                "y": 3,
+                "z": 4
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 14,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 800000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 2600000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -800000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 3,
+                "y": 4,
+                "z": 1
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 15,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 800000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 2200000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1200000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 1,
+                "y": 3,
+                "z": 4
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 16,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 400000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 2200000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -800000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 5,
+                "y": 0,
+                "z": 3
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 17,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 1000000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 2200000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1000000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 0,
+                "y": 3,
+                "z": 5
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 18,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 1200000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 2200000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -800000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 5,
+                "y": 0,
+                "z": 3
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 19,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 800000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 2200000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1400000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 1,
+                "y": 2,
+                "z": 5
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 20,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 1200000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 2400000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -800000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 5,
+                "y": 0,
+                "z": 3
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 21,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 800000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 1600000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -800000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 3,
+                "y": 4,
+                "z": 1
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 22,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 1000000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 2200000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1200000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 0,
+                "y": 3,
+                "z": 5
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 23,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 1200000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 2000000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -800000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 4,
+                "y": 1,
+                "z": 3
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 24,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 400000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 2000000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -800000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 4,
+                "y": 1,
+                "z": 3
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 25,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 600000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 2200000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -400000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 1,
+                "y": 2,
+                "z": 5
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 26,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 400000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 2400000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -800000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 5,
+                "y": 0,
+                "z": 3
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 27,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 600000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 2200000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1200000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 1,
+                "y": 3,
+                "z": 4
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 28,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 200000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 2200000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -800000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 5,
+                "y": 0,
+                "z": 3
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 29,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 1000000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 2200000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -400000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 0,
+                "y": 2,
+                "z": 4
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 30,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 1400000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 2200000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -800000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 5,
+                "y": 0,
+                "z": 3
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 31,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 800000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 2200000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -200000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 1,
+                "y": 2,
+                "z": 5
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 32,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 800000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 2800000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -800000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 3,
+                "y": 1,
+                "z": 5
+              },
+              "halfRotateAxis": 0
+            }
+          ],
+          "isHalf": false,
+          "rotateAxis": 1,
+          "rotateCounts": 1,
+          "positionAddScaled": {
+            "X": {
+              "Numerator": 0,
+              "Denominator": 1
+            },
+            "Y": {
+              "Numerator": 0,
+              "Denominator": 1
+            },
+            "Z": {
+              "Numerator": 0,
+              "Denominator": 1
+            }
+          }
+        },
+        {
+          "polyhedronIndex": 32,
+          "polyhedronConditions": [
+            {
+              "polyhedronIndex": 0,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 800000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 2200000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -800000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 0,
+                "y": 5,
+                "z": 2
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 1,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 800000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 2200000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -800000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 2,
+                "y": 1,
+                "z": 4
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 2,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 800000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 2200000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -800000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 4,
+                "y": 3,
+                "z": 0
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 3,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 800000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 2200000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1000000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 1,
+                "y": 3,
+                "z": 4
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 4,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 800000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 2200000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -600000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 1,
+                "y": 2,
+                "z": 5
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 5,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 800000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 2000000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -800000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 2,
+                "y": 5,
+                "z": 1
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 6,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 800000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 2400000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -800000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 3,
+                "y": 4,
+                "z": 1
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 7,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 600000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 2200000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -800000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 0,
+                "y": 5,
+                "z": 2
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 8,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 1000000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 2200000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -800000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 1,
+                "y": 5,
+                "z": 3
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 9,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 800000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 1800000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -800000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 3,
+                "y": 4,
+                "z": 1
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 10,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 1000000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 2200000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -600000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 0,
+                "y": 3,
+                "z": 5
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 11,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 600000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 2200000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1000000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 1,
+                "y": 3,
+                "z": 4
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 12,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 600000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 2200000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -600000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 1,
+                "y": 3,
+                "z": 4
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 13,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 800000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 2200000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -400000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 1,
+                "y": 3,
+                "z": 4
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 14,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 800000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 2600000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -800000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 3,
+                "y": 4,
+                "z": 1
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 15,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 800000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 2200000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1200000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 1,
+                "y": 3,
+                "z": 4
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 16,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 400000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 2200000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -800000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 5,
+                "y": 0,
+                "z": 3
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 17,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 1000000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 2200000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1000000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 0,
+                "y": 3,
+                "z": 5
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 18,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 1200000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 2200000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -800000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 5,
+                "y": 0,
+                "z": 3
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 19,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 800000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 2200000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1400000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 1,
+                "y": 2,
+                "z": 5
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 20,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 1200000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 2400000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -800000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 5,
+                "y": 0,
+                "z": 3
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 21,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 800000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 1600000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -800000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 3,
+                "y": 4,
+                "z": 1
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 22,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 1000000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 2200000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1200000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 0,
+                "y": 3,
+                "z": 5
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 23,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 1200000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 2000000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -800000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 4,
+                "y": 1,
+                "z": 3
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 24,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 400000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 2000000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -800000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 4,
+                "y": 1,
+                "z": 3
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 25,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 600000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 2200000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -400000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 1,
+                "y": 2,
+                "z": 5
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 26,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 400000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 2400000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -800000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 5,
+                "y": 0,
+                "z": 3
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 27,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 600000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 2200000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -1200000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 1,
+                "y": 3,
+                "z": 4
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 28,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 200000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 2200000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -800000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 5,
+                "y": 0,
+                "z": 3
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 29,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 1000000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 2200000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -400000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 0,
+                "y": 2,
+                "z": 4
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 30,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 1400000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 2200000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -800000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 5,
+                "y": 0,
+                "z": 3
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 31,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 800000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 2200000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -200000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 1,
+                "y": 2,
+                "z": 5
+              },
+              "halfRotateAxis": 0
+            },
+            {
+              "polyhedronIndex": 32,
+              "positionScaled": {
+                "X": {
+                  "Numerator": 800000,
+                  "Denominator": 1
+                },
+                "Y": {
+                  "Numerator": 2800000,
+                  "Denominator": 1
+                },
+                "Z": {
+                  "Numerator": -800000,
+                  "Denominator": 1
+                }
+              },
+              "switchAxisTypeXYZ": {
+                "x": 3,
+                "y": 4,
+                "z": 1
+              },
+              "halfRotateAxis": 0
+            }
+          ],
+          "isHalf": false,
+          "rotateAxis": 2,
+          "rotateCounts": 1,
+          "positionAddScaled": {
+            "X": {
+              "Numerator": 0,
+              "Denominator": 1
+            },
+            "Y": {
+              "Numerator": 0,
+              "Denominator": 1
+            },
+            "Z": {
+              "Numerator": 0,
+              "Denominator": 1
+            }
+          }
+        }
+      ]
+    },
+    {
+      "level": 30,
+      "original_index": 34,
+      "original_level_sha256": "d069b98f35d67628cc68453e2b86157a400cdde27bef20f7a43fe69627c409be",
+      "geometry_sha256": "d069b98f35d67628cc68453e2b86157a400cdde27bef20f7a43fe69627c409be",
+      "moveRotates": []
+    },
+    {
+      "level": 31,
+      "original_index": 35,
+      "original_level_sha256": "648c7a0f5624da95e3e05e5b2b9d53f79218f3a0177ed224d8048371e9fc4183",
+      "geometry_sha256": "648c7a0f5624da95e3e05e5b2b9d53f79218f3a0177ed224d8048371e9fc4183",
+      "moveRotates": []
+    }
+  ]
+}

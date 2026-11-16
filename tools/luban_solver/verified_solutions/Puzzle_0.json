@@ -1,0 +1,88 @@
+{
+  "schema_version": "luban-original-search-v4",
+  "status": "candidate_solution",
+  "level_file": "/home/tiger/.codex/worktrees/luban-exhaustive-solver/VisualReasonBench/artifacts/luban/original_rules/Puzzle_0.json",
+  "input_sha256": "8CB870D867F20CE3DC9F069634CD33077FBEF649CFB894402DE85EF52887FEA2",
+  "engine_sha256": "988078869EF95833641ED43332FF7E8B2EFA7A344696AFA847EEC5D2D6909CFC",
+  "engine_source_sha256": "955375b81731551b04ab1d83c8f96c0e67405d7659f418cbd214df6a645eda0b",
+  "search_sha256": "6D23EA6B7B78D1271F5C70903826A291A1D5F6B9C0C463DE66015F558681EBCC",
+  "independently_replayed": false,
+  "game_verified": false,
+  "initial_actions_file": null,
+  "initial_actions_sha256": "",
+  "meaning": "Candidate satisfies modeled finish zone and conservative pairwise separation; real game replay required.",
+  "search_scope": {
+    "Strategy": "best-first",
+    "Groups": "closure",
+    "Distances": "events",
+    "Pivots": "origins",
+    "Directions": "grid26",
+    "Grid": 10,
+    "MaxDistance": 600,
+    "Radius": 1200,
+    "Clearance": 0.001,
+    "MaxDepth": 80,
+    "Rotations": true,
+    "ExpansionBatch": 32,
+    "InitialActionsHash": ""
+  },
+  "goal": "At least N-1 pieces have entered original finish slabs, AND all piece AABBs are pairwise separated by positive clearance. Finished pieces stay in collision model and remain movable.",
+  "excludes_whole_assembly_move": true,
+  "completeness": "Only the explicitly configured discrete action domain and coordinate/depth bounds. Closure groups and event distances are heuristics; no physical-unsolvability or global-shortest-path claim.",
+  "states_seen": 3,
+  "nodes_expanded": 0,
+  "actions_tried": 2,
+  "actions_accepted": 2,
+  "frontier_count": 2,
+  "active_node": 0,
+  "total_seconds": 0.503,
+  "checkpoint_file": "/home/tiger/.codex/worktrees/luban-exhaustive-solver/VisualReasonBench/artifacts/luban/search_v8_all32/Puzzle_0.json.checkpoint.json",
+  "engine_error": null,
+  "failed_action": null,
+  "candidate_actions": [
+    {
+      "Kind": "move",
+      "PieceIds": [
+        1
+      ],
+      "Axis": 2,
+      "Distance": 300,
+      "Vector": null,
+      "Angle": 0,
+      "Pivot": null,
+      "RuleIndex": -1
+    }
+  ],
+  "best_progress_actions": null,
+  "terminal_state": {
+    "Pieces": [
+      {
+        "Id": 0,
+        "X": "-400000/1",
+        "Y": "1000000/1",
+        "Z": "-600000/1",
+        "Orientation": [
+          0,
+          3,
+          5
+        ],
+        "HalfRotateAxis": 0,
+        "Finished": false
+      },
+      {
+        "Id": 1,
+        "X": "-400000/1",
+        "Y": "1000000/1",
+        "Z": "2400000/1",
+        "Orientation": [
+          2,
+          1,
+          4
+        ],
+        "HalfRotateAxis": 0,
+        "Finished": true
+      }
+    ],
+    "Steps": 1
+  }
+}

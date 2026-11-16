@@ -1,0 +1,5 @@
+<Project Sdk="Microsoft.NET.Sdk">
+<PropertyGroup><TargetFramework Condition="'$(UseUnity)' != 'true'">net8.0</TargetFramework><TargetFramework Condition="'$(UseUnity)' == 'true'">netstandard2.1</TargetFramework><LangVersion>latest</LangVersion><Nullable>disable</Nullable><ImplicitUsings>disable</ImplicitUsings><NoWarn>CS0660;CS0661;CS0659</NoWarn></PropertyGroup>
+<ItemGroup><Reference Include="Newtonsoft.Json"><HintPath>../../../Luban/LuBanSuoEnv_Data/Managed/Newtonsoft.Json.dll</HintPath></Reference><Compile Remove="cli/**/*.cs;obj/**/*.cs;bin/**/*.cs" /></ItemGroup>
+<ItemGroup Condition="'$(UseUnity)' == 'true'"><Compile Remove="UnityShim.cs"/><Reference Include="UnityEngine.CoreModule"><HintPath>../../../Luban/LuBanSuoEnv_Data/Managed/UnityEngine.CoreModule.dll</HintPath></Reference></ItemGroup>
+</Project>

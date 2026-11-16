@@ -1,0 +1,414 @@
+{
+  "schema_version": "luban-original-search-v4",
+  "status": "candidate_solution",
+  "level_file": "/home/tiger/.codex/worktrees/luban-exhaustive-solver/VisualReasonBench/artifacts/luban/original_rules/Puzzle_23.json",
+  "input_sha256": "6A3EC60E66C3EDBE3E62FFCB0A0B86D1986509CE3348EFD1844DFB7893867338",
+  "engine_sha256": "988078869EF95833641ED43332FF7E8B2EFA7A344696AFA847EEC5D2D6909CFC",
+  "engine_source_sha256": "955375b81731551b04ab1d83c8f96c0e67405d7659f418cbd214df6a645eda0b",
+  "search_sha256": "D3F0C0ADBABE1A540E2BCFD57CF2DCC3C2033892AAF606A1C62B3B6E51D66950",
+  "independently_replayed": false,
+  "game_verified": false,
+  "initial_actions_file": "/tmp/luban-level23-focused/prefix_v10.json",
+  "initial_actions_sha256": "773D42ABA9EAA3757B30B1E0612E1F97788DA905B6901AF8BFC35790CB67937C",
+  "meaning": "Candidate satisfies modeled finish zone and conservative pairwise separation; real game replay required.",
+  "search_scope": {
+    "Strategy": "best-first",
+    "Groups": "closure",
+    "Distances": "grid",
+    "Pivots": "origins",
+    "Directions": "axes",
+    "Grid": 10,
+    "MaxDistance": 600,
+    "Radius": 1200,
+    "Clearance": 0.001,
+    "MaxDepth": 80,
+    "Rotations": true,
+    "ExpansionBatch": 32,
+    "InitialActionsHash": "773D42ABA9EAA3757B30B1E0612E1F97788DA905B6901AF8BFC35790CB67937C",
+    "Heuristic": "counts",
+    "ParkFinished": true,
+    "ParkComponents": true
+  },
+  "goal": "At least N-1 pieces have entered original finish slabs, AND all piece AABBs are pairwise separated by positive clearance. Finished pieces stay in collision model and remain movable.",
+  "excludes_whole_assembly_move": true,
+  "completeness": "Only the explicitly configured discrete action domain and coordinate/depth bounds. Closure groups, event distances and optional parking of separated finished pieces/chunks are heuristics; no physical-unsolvability or global-shortest-path claim.",
+  "states_seen": 266,
+  "nodes_expanded": 1,
+  "actions_tried": 1530,
+  "actions_accepted": 480,
+  "frontier_count": 260,
+  "active_node": 231,
+  "total_seconds": 1.7,
+  "checkpoint_file": "/tmp/luban-level23-focused/park_components_v10prefix.json.checkpoint.json",
+  "engine_error": null,
+  "failed_action": null,
+  "candidate_actions": [
+    {
+      "Kind": "move",
+      "PieceIds": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "Axis": 0,
+      "Distance": 420,
+      "Vector": null,
+      "Angle": 0,
+      "Pivot": null,
+      "RuleIndex": -1
+    },
+    {
+      "Kind": "move",
+      "PieceIds": [
+        5,
+        11
+      ],
+      "Axis": 0,
+      "Distance": 410,
+      "Vector": null,
+      "Angle": 0,
+      "Pivot": null,
+      "RuleIndex": -1
+    },
+    {
+      "Kind": "move",
+      "PieceIds": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "Axis": 0,
+      "Distance": 600,
+      "Vector": null,
+      "Angle": 0,
+      "Pivot": null,
+      "RuleIndex": -1
+    },
+    {
+      "Kind": "move",
+      "PieceIds": [
+        11
+      ],
+      "Axis": 2,
+      "Distance": 600,
+      "Vector": null,
+      "Angle": 0,
+      "Pivot": null,
+      "RuleIndex": -1
+    },
+    {
+      "Kind": "move",
+      "PieceIds": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        6,
+        7,
+        8,
+        9
+      ],
+      "Axis": 2,
+      "Distance": 20,
+      "Vector": null,
+      "Angle": 0,
+      "Pivot": null,
+      "RuleIndex": -1
+    },
+    {
+      "Kind": "move",
+      "PieceIds": [
+        1
+      ],
+      "Axis": 0,
+      "Distance": 10,
+      "Vector": null,
+      "Angle": 0,
+      "Pivot": null,
+      "RuleIndex": -1
+    },
+    {
+      "Kind": "move",
+      "PieceIds": [
+        10
+      ],
+      "Axis": 0,
+      "Distance": 150,
+      "Vector": null,
+      "Angle": 0,
+      "Pivot": null,
+      "RuleIndex": -1
+    },
+    {
+      "Kind": "move",
+      "PieceIds": [
+        0,
+        2,
+        3,
+        4,
+        6,
+        7,
+        8,
+        9
+      ],
+      "Axis": 1,
+      "Distance": 600,
+      "Vector": null,
+      "Angle": 0,
+      "Pivot": null,
+      "RuleIndex": -1
+    },
+    {
+      "Kind": "move",
+      "PieceIds": [
+        2,
+        3,
+        6,
+        7
+      ],
+      "Axis": 0,
+      "Distance": 180,
+      "Vector": null,
+      "Angle": 0,
+      "Pivot": null,
+      "RuleIndex": -1
+    },
+    {
+      "Kind": "move",
+      "PieceIds": [
+        8
+      ],
+      "Axis": 0,
+      "Distance": 150,
+      "Vector": null,
+      "Angle": 0,
+      "Pivot": null,
+      "RuleIndex": -1
+    },
+    {
+      "Kind": "move",
+      "PieceIds": [
+        9
+      ],
+      "Axis": 0,
+      "Distance": 150,
+      "Vector": null,
+      "Angle": 0,
+      "Pivot": null,
+      "RuleIndex": -1
+    },
+    {
+      "Kind": "move",
+      "PieceIds": [
+        0
+      ],
+      "Axis": 1,
+      "Distance": 600,
+      "Vector": null,
+      "Angle": 0,
+      "Pivot": null,
+      "RuleIndex": -1
+    },
+    {
+      "Kind": "move",
+      "PieceIds": [
+        2
+      ],
+      "Axis": 1,
+      "Distance": 590,
+      "Vector": null,
+      "Angle": 0,
+      "Pivot": null,
+      "RuleIndex": -1
+    },
+    {
+      "Kind": "move",
+      "PieceIds": [
+        3
+      ],
+      "Axis": 1,
+      "Distance": -520,
+      "Vector": null,
+      "Angle": 0,
+      "Pivot": null,
+      "RuleIndex": -1
+    }
+  ],
+  "best_progress_actions": null,
+  "terminal_state": {
+    "Pieces": [
+      {
+        "Id": 0,
+        "X": "10300000/1",
+        "Y": "12000000/1",
+        "Z": "-1500000/1",
+        "Orientation": [
+          4,
+          3,
+          0
+        ],
+        "HalfRotateAxis": 0,
+        "Finished": true
+      },
+      {
+        "Id": 1,
+        "X": "10600000/1",
+        "Y": "0/1",
+        "Z": "-1500000/1",
+        "Orientation": [
+          5,
+          2,
+          0
+        ],
+        "HalfRotateAxis": 0,
+        "Finished": true
+      },
+      {
+        "Id": 2,
+        "X": "12200000/1",
+        "Y": "12000000/1",
+        "Z": "-1500000/1",
+        "Orientation": [
+          1,
+          5,
+          3
+        ],
+        "HalfRotateAxis": 0,
+        "Finished": true
+      },
+      {
+        "Id": 3,
+        "X": "12200000/1",
+        "Y": "700000/1",
+        "Z": "-1500000/1",
+        "Orientation": [
+          0,
+          4,
+          3
+        ],
+        "HalfRotateAxis": 0,
+        "Finished": true
+      },
+      {
+        "Id": 4,
+        "X": "10400000/1",
+        "Y": "6000000/1",
+        "Z": "-1400000/1",
+        "Orientation": [
+          3,
+          1,
+          5
+        ],
+        "HalfRotateAxis": 0,
+        "Finished": true
+      },
+      {
+        "Id": 5,
+        "X": "4300000/1",
+        "Y": "0/1",
+        "Z": "-1800000/1",
+        "Orientation": [
+          2,
+          1,
+          4
+        ],
+        "HalfRotateAxis": 0,
+        "Finished": true
+      },
+      {
+        "Id": 6,
+        "X": "12200000/1",
+        "Y": "6000000/1",
+        "Z": "-1200000/1",
+        "Orientation": [
+          3,
+          0,
+          4
+        ],
+        "HalfRotateAxis": 0,
+        "Finished": true
+      },
+      {
+        "Id": 7,
+        "X": "12200000/1",
+        "Y": "6000000/1",
+        "Z": "-1800000/1",
+        "Orientation": [
+          3,
+          1,
+          5
+        ],
+        "HalfRotateAxis": 0,
+        "Finished": true
+      },
+      {
+        "Id": 8,
+        "X": "11900000/1",
+        "Y": "6300000/1",
+        "Z": "-1500000/1",
+        "Orientation": [
+          0,
+          4,
+          3
+        ],
+        "HalfRotateAxis": 0,
+        "Finished": true
+      },
+      {
+        "Id": 9,
+        "X": "11900000/1",
+        "Y": "5700000/1",
+        "Z": "-1500000/1",
+        "Orientation": [
+          1,
+          5,
+          3
+        ],
+        "HalfRotateAxis": 0,
+        "Finished": true
+      },
+      {
+        "Id": 10,
+        "X": "12200000/1",
+        "Y": "0/1",
+        "Z": "-1700000/1",
+        "Orientation": [
+          4,
+          3,
+          0
+        ],
+        "HalfRotateAxis": 0,
+        "Finished": true
+      },
+      {
+        "Id": 11,
+        "X": "4000000/1",
+        "Y": "0/1",
+        "Z": "4300000/1",
+        "Orientation": [
+          5,
+          3,
+          1
+        ],
+        "HalfRotateAxis": 0,
+        "Finished": true
+      }
+    ],
+    "Steps": 14
+  }
+}

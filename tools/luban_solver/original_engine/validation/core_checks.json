@@ -1,0 +1,53 @@
+{
+  "engine_source_fingerprint": "955375b81731551b04ab1d83c8f96c0e67405d7659f418cbd214df6a645eda0b",
+  "regressions": {
+    "Puzzle_0": [
+      "blocked action leaves state unchanged",
+      "minimal zero-distance blocker group",
+      "group translation uses requested distance",
+      "primitive diagonal vector displacement",
+      "free 45-degree rotation",
+      "two 45-degree rotations equal one 90-degree rotation",
+      "inverse 45-degree rotation",
+      "exact half-rotation snapshot restore",
+      "invalid angle leaves state unchanged",
+      "negative and fractional coordinate conversion"
+    ],
+    "Puzzle_4": [
+      "original conditional rule1 initially available",
+      "rule1 moves piece2 to expected exact pose",
+      "special exact restore",
+      "invalid rule leaves state unchanged",
+      "assembly beyond finite finish slabs is not solved"
+    ]
+  },
+  "regressions_passed": true,
+  "profile": {
+    "level": 28,
+    "concurrent_load": true,
+    "load_seconds": 10.301988,
+    "first_max_translation_ms": 204.8597,
+    "cached_max_translation_ms": 0.1687,
+    "initial_half_rotation_ms": 95.5359,
+    "initial_half_rotation_accepted": false
+  },
+  "extended_checks": {
+    "rotation_axis_sign_cases": 6,
+    "finish_zone_entry_exit_latch": true,
+    "passed": true,
+    "note": "Zone tests use isolated search-state fixtures and are not solution/gameplay receipts."
+  },
+  "parity": {
+    "native_recorded_actions": {
+      "checks": 3427,
+      "mismatches": 0,
+      "coverage": "complete levels0-26 plus7 moves oflevel27"
+    },
+    "current_exact_core": {
+      "levels": 32,
+      "checks": 2232,
+      "mismatches": 0,
+      "query_cap_logical": 600
+    }
+  }
+}

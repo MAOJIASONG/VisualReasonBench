@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net8.0</TargetFramework><ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable><InvariantGlobalization>true</InvariantGlobalization></PropertyGroup>
+  <ItemGroup><ProjectReference Include="../original_engine/OriginalEngine.csproj" /></ItemGroup>
+  <Target Name="GenerateEngineSourceFingerprint" BeforeTargets="CoreCompile">
+    <Exec Command="python3 &quot;$(MSBuildProjectDirectory)/engine_source_fingerprint.py&quot; --root &quot;$(MSBuildProjectDirectory)/../original_engine&quot; --csharp-output &quot;$(MSBuildProjectDirectory)/$(IntermediateOutputPath)EngineSourceFingerprint.g.cs&quot;" />
+    <ItemGroup><Compile Include="$(IntermediateOutputPath)EngineSourceFingerprint.g.cs" /></ItemGroup>
+  </Target>
+</Project>

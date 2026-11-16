@@ -1,0 +1,6 @@
+patcher/bin/
+patcher/obj/
+extension/bin/
+extension/obj/
+out/
+__pycache__/

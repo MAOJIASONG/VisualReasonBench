@@ -31,7 +31,9 @@ class LubanDisassemblyTask(PhysicsTask):
         self.initial_positions: Dict[int, Tuple[float, float, float]] = {}
 
     def _calculate_optimal_steps(self) -> int:
-        return 1
+        # Feasible disassembly paths do not establish a shortest-path bound.
+        # Metrics skip negative values instead of comparing every level to one move.
+        return -1
 
     def configure_environment(self, environment) -> Observation:  # type: ignore[override]
         """Configure Unity-backed environment (no PyBullet setup)."""
@@ -82,13 +84,27 @@ class LubanDisassemblyTask(PhysicsTask):
             return None
 
     def _get_initial_system_prompt(self) -> str:
-        return """You are a spatial reasoning expert solving a "Luban Lock".
+        prompt = """You are a spatial reasoning expert solving a "Luban Lock".
 OBJECTS:
 - Pieces are mechanically interlocked and must be moved via tools.
 
 GOAL:
-Identify the KEY piece (unblocked) and slide it out.
+Disassemble the lock: separate all pieces and move the released pieces out of
+the central puzzle area. Continue until the environment reports solved=true.
 """
+        environment = getattr(self, "environment", None)
+        if getattr(getattr(environment, "config", None), "action_mode", "native") == "restored_original_rules":
+            prompt += """
+AVAILABLE ACTIONS:
+- Move one piece or a selected group along an axis or an integer direction.
+- Rotate one piece or a group by 45 or 90 degrees, with an optional pivot.
+- The state lists applicable_special_rules. Each listed rule is one original
+  combined translation-and-rotation action whose conditions currently match.
+- A blocked action leaves the puzzle unchanged. Inspect the result before
+  deciding the next move. Group movement may release an assembly that still
+  needs further disassembly; moving that assembly away does not finish the task.
+"""
+        return prompt
 
     def _get_initial_instruction(self) -> str:
-        return "The puzzle is LOCKED. Find the key piece and slide it out along its free axis."
+        return "Disassemble the lock using legal moves. Separate the pieces and continue until the environment confirms success."

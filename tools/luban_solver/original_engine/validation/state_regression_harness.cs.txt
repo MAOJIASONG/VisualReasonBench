@@ -1,0 +1,23 @@
+using Luban.Original;
+using System.Text.Json;
+void Require(bool condition,string message){if(!condition)throw new Exception(message);}
+var e=OriginalEngine.LoadFromJson(File.ReadAllText(Path.Combine(args[0],"Puzzle_0.json")));
+Require(e.Apply(new ActionSpec{Kind="move",PieceIds=new[]{0},Axis=2,Distance=-300}).Success,"free piece");var origin=e.Capture();var key=e.StateKey();
+int tests=0;
+for(int axis=0;axis<3;axis++)foreach(int sign in new[]{-1,1})
+{
+ e.Restore(origin);var half=new ActionSpec{Kind="rotate",PieceIds=new[]{0},Axis=axis,Angle=45*sign};
+ Require(e.Apply(half).Success,$"half axis{axis} sign{sign}");var halfState=e.Capture();var halfKey=e.StateKey();
+ Require(e.Apply(half).Success,"second half");var doubled=e.StateKey();
+ e.Restore(origin);Require(e.Apply(new ActionSpec{Kind="rotate",PieceIds=new[]{0},Axis=axis,Angle=90*sign}).Success,"quarter");Require(e.StateKey()==doubled,"two halves mismatch quarter");
+ e.Restore(halfState);Require(e.StateKey()==halfKey,"half restore");Require(e.Apply(new ActionSpec{Kind="rotate",PieceIds=new[]{0},Axis=axis,Angle=-45*sign}).Success,"inverse half");Require(e.StateKey()==key,"inverse half state");tests++;
+}
+var z=OriginalEngine.LoadFromJson(File.ReadAllText(Path.Combine(args[0],"Puzzle_4.json")));
+// Search-state fixtures isolate zone/latch transitions; these are not gameplay receipts.
+var fixture=z.Capture();fixture.Pieces[2].X="3000000/1";z.Restore(fixture);
+Require(z.Apply(new ActionSpec{Kind="move",PieceIds=new[]{2},Axis=0,Distance=1}).Success,"zone entry action");Require(z.FinishedCount==1&&!z.Solved,"single entry should not latch");
+Require(z.Apply(new ActionSpec{Kind="move",PieceIds=new[]{2},Axis=0,Distance=600}).Success,"zone leave action");Require(z.FinishedCount==0&&!z.Solved,"leaving pre-victory must remove flag");
+fixture=z.Capture();fixture.Pieces[1].X="3000000/1";fixture.Pieces[2].X="-3000000/1";z.Restore(fixture);
+Require(z.Apply(new ActionSpec{Kind="move",PieceIds=new[]{2},Axis=0,Distance=-1}).Success,"victory fixture action");Require(z.FinishedCount==2&&z.Solved,"N-1 should latch");
+Require(z.Apply(new ActionSpec{Kind="move",PieceIds=new[]{2},Axis=0,Distance=-600}).Success,"post-victory leave action");Require(z.FinishedCount==2&&z.Solved,"victory must remain latched");
+Console.WriteLine(JsonSerializer.Serialize(new{rotation_axis_sign_cases=tests,finish_zone_entry_exit_latch=true,passed=true}));

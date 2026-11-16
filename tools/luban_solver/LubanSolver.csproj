@@ -8,4 +8,7 @@
     <NoWarn>CS0108;CS0114;CS0162;CS0168;CS0219;CS0414;CS0649;CS0659;CS0660;CS0661;CS8981</NoWarn>
     <InvariantGlobalization>true</InvariantGlobalization>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="original_engine/**;search/**" />
+  </ItemGroup>
 </Project>

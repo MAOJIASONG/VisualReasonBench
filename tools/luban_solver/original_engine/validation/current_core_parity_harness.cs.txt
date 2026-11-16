@@ -1,0 +1,52 @@
+using System.Numerics;
+using System.Text.Json;
+using Luban.Original;
+using LuBanSuo.Core;
+using LuBanSuo.Data;
+using LuBanSuo.Logic;
+var results=new List<object>();int checkedCount=0,mismatches=0;
+foreach(int level in Enumerable.Range(0,32))
+{
+ var json=File.ReadAllText(Path.Combine(args[0],$"Puzzle_{level}.json"));
+ var original=OriginalEngine.LoadFromJson(json);
+ var data=JsonSerializer.Deserialize<PuzzleData>(json,new JsonSerializerOptions{IncludeFields=true});
+ var pieces=Load(data);var rows=new List<object>();int failed=0;
+ for(int piece=0;piece<pieces.Count;piece++)for(int axis=0;axis<3;axis++)foreach(int sign in new[]{1,-1})
+ {
+  var d=new int[3];d[axis]=sign;var dir=new Direction(d[0],d[1],d[2]);
+  var limit=new BigFraction(new BigInteger(6000000));
+  foreach(var other in pieces)
+  {
+   if(other.Index==piece)continue;
+   var hit=Polyhedron.MoveBeforeIntersection(pieces[piece],other,dir);
+   if(hit!=null&&hit.CompareTo(limit)<0)limit=hit;
+  }
+  double current=(double)limit.Numerator/(double)limit.Denominator/10000;
+  double restored=original.MaxTranslation(new[]{piece},axis,sign,600);
+  bool match=Math.Abs(current-restored)<1e-8;checkedCount++;if(!match){failed++;mismatches++;}
+  rows.Add(new{piece,axis,sign,current,restored,match});
+ }
+ results.Add(new{level,failed,rows});Console.WriteLine($"level={level} checks={pieces.Count*6} mismatches={failed}");
+ File.WriteAllText(args[1],JsonSerializer.Serialize(new{checkedCount,mismatches,levels=results},new JsonSerializerOptions{WriteIndented=true}));
+}
+static List<Polyhedron> Load(PuzzleData data)
+{
+ var pieces=new List<Polyhedron>();
+ for(int i=0;i<data.polyhedrons.Count;i++)
+ {
+  var pd=data.polyhedrons[i];var src=pd.vertexes.Select((v,k)=>new Point(k,-v.x,v.y,v.z,fromJson:true)).ToList();
+  var faces=pd.faces.Select(f=>f.vertexIndexes.ToList()).ToList();
+  var convex=pd.convexPolyhedrons.Select(c=>c.faces.Select(f=>f.vertexIndexes.ToList()).ToList()).ToList();
+  var hulls=new AnglePolyhedron[OrientationHelper.RotateAxisTypes.Length];
+  for(int k=0;k<hulls.Length;k++)
+  {
+   var r=OrientationHelper.RotateAxisTypes[k];var rot=new SwitchAxisTypeXYZ(r[0],r[1],r[2]);
+   hulls[k]=new AnglePolyhedron(src.Select(p=>OrientationHelper.RotatePoint(p,rot)).ToList(),faces,convex);
+  }
+  pieces.Add(new Polyhedron(i,hulls,Pos(pd.position1),Pos(pd.position2),Rot(pd.switchAxisTypeXYZ1),Rot(pd.switchAxisTypeXYZ2)));
+ }
+ return pieces;
+}
+static Position Pos(PositionData p)=>new Position(Frac(p.x),Frac(p.y),Frac(p.z),fromJson:true);
+static BigFraction Frac(FractionData f)=>new BigFraction(f.Numerator,f.Denominator);
+static SwitchAxisTypeXYZ Rot(SwitchAxisTypeXYZData r)=>new SwitchAxisTypeXYZ(r.x,r.y,r.z);

@@ -1,0 +1,6 @@
+<Project>
+  <PropertyGroup>
+    <BaseIntermediateOutputPath Condition="'$(MSBuildProjectName)' == 'OriginalEngine' And '$(UseUnity)' == 'true'">obj/unity/</BaseIntermediateOutputPath>
+    <BaseIntermediateOutputPath Condition="'$(MSBuildProjectName)' == 'OriginalEngine' And '$(UseUnity)' != 'true'">obj/standalone/</BaseIntermediateOutputPath>
+  </PropertyGroup>
+</Project>

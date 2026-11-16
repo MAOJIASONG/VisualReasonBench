@@ -1,7 +1,20 @@
-# Luban (Puzzle) level solver — prototype
+# Luban solvers and verification
 
-Searches for the shortest sequence of game `move` commands that solves a Luban level
-(the 32 burr-puzzle levels of the Unity game in `Luban/`), and replays it in the game to check.
+Use [`search/`](search/README.md) for the restored original rules: group and diagonal
+translations, ±45°/±90° rotations, and conditional linked actions recovered from the
+original Unity source. Start with [`../luban_validation/`](../luban_validation/README.md)
+to prepare the runtime, search, and verify paths through the real game. The separate
+`verified_solutions/verification_index.json` records actual game verification when the
+complete solution export is present.
+
+The older translation-only prototype below is retained for comparison. Its saved
+`unsolvable_without_rotation` labels are restricted-search outcomes, **not evidence
+that those puzzles are impossible**. Neither its default greedy pruning nor the new
+best-first search establishes a global shortest solution.
+
+## Legacy translation-only prototype
+
+Searches sequences of single-piece `move` commands for the game's 32 original levels.
 
 ## How it matches the game
 
@@ -20,16 +33,17 @@ Searches for the shortest sequence of game `move` commands that solves a Luban l
 
 ## Search
 
-Breadth-first over game commands (each `move` = 1 step), so the first solution found has the
-fewest commands. To keep the state space small:
+Breadth-first over a restricted move graph (each `move` = 1 step). The default greedy
+pruning further restricts that graph, so a result must not be called globally shortest.
+To keep the state space small:
 - a piece only stops where one of its faces lines up with a face of another piece (between such
   points nothing changes for axis-aligned pieces), at its blocking point, or in the finish zone;
-- if some piece can go straight into the finish zone, only that move is taken (every piece needs
-  one such move; this keeps the shortest length unless a parked piece blocks another's exit).
-  `--no-greedy` turns this off, `--grid` stops at every grid step instead of alignments.
+- if a piece can go straight into the finish zone, greedy mode suppresses alternatives.
+  This can miss solutions when a parked piece blocks another's exit. `--no-greedy` turns
+  this off; `--grid` stops at every grid step instead of alignments.
 
-Not searched yet: **rotations** (the game checks them with Unity physics in 1° steps, not with
-the exact geometry) and moving several pieces together (the API cannot).
+This legacy prototype omits **rotations** and moving several pieces together. The restored
+solver and runtime support those actions; see the links above.
 
 ## Usage
 

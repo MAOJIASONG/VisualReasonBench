@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><TargetFramework>netstandard2.1</TargetFramework><LangVersion>latest</LangVersion><Nullable>disable</Nullable><AssemblyName>LubanOriginalRuntime</AssemblyName></PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../luban_solver/original_engine/OriginalEngine.csproj" AdditionalProperties="UseUnity=true" />
+    <Reference Include="Assembly-CSharp"><HintPath>../../../Luban/LuBanSuoEnv_Data/Managed/Assembly-CSharp.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.CoreModule"><HintPath>../../../Luban/LuBanSuoEnv_Data/Managed/UnityEngine.CoreModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.PhysicsModule"><HintPath>../../../Luban/LuBanSuoEnv_Data/Managed/UnityEngine.PhysicsModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Newtonsoft.Json"><HintPath>../../../Luban/LuBanSuoEnv_Data/Managed/Newtonsoft.Json.dll</HintPath><Private>false</Private></Reference>
+  </ItemGroup>
+</Project>

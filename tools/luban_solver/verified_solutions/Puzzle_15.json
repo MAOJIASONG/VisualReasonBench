@@ -1,0 +1,720 @@
+{
+  "schema_version": "luban-original-search-v4",
+  "status": "candidate_solution",
+  "level_file": "/home/tiger/.codex/worktrees/luban-exhaustive-solver/VisualReasonBench/artifacts/luban/original_rules/Puzzle_15.json",
+  "input_sha256": "9CFC2B27BF18213CF2F98CE22776E326AD01BCC7DEE1F51615D2EE70E73AE8C6",
+  "engine_sha256": "988078869EF95833641ED43332FF7E8B2EFA7A344696AFA847EEC5D2D6909CFC",
+  "engine_source_sha256": "955375b81731551b04ab1d83c8f96c0e67405d7659f418cbd214df6a645eda0b",
+  "search_sha256": "83532E6170D2B66B7781A5B9EAF5912703DECFCFF98D1B20E6305EAD223CFD19",
+  "independently_replayed": false,
+  "game_verified": false,
+  "initial_actions_file": null,
+  "initial_actions_sha256": "",
+  "meaning": "Candidate satisfies modeled finish zone and conservative pairwise separation; real game replay required.",
+  "search_scope": {
+    "Strategy": "best-first",
+    "Groups": "closure",
+    "Distances": "grid",
+    "Pivots": "origins",
+    "Directions": "grid26",
+    "Grid": 10,
+    "MaxDistance": 600,
+    "Radius": 1200,
+    "Clearance": 0.001,
+    "MaxDepth": 80,
+    "Rotations": true,
+    "ExpansionBatch": 32,
+    "InitialActionsHash": "",
+    "Heuristic": "counts"
+  },
+  "goal": "At least N-1 pieces have entered original finish slabs, AND all piece AABBs are pairwise separated by positive clearance. Finished pieces stay in collision model and remain movable.",
+  "excludes_whole_assembly_move": true,
+  "completeness": "Only the explicitly configured discrete action domain and coordinate/depth bounds. Closure groups and event distances are heuristics; no physical-unsolvability or global-shortest-path claim.",
+  "states_seen": 8196,
+  "nodes_expanded": 40,
+  "actions_tried": 18222,
+  "actions_accepted": 9696,
+  "frontier_count": 8155,
+  "active_node": 7423,
+  "total_seconds": 12.4,
+  "checkpoint_file": "/home/tiger/.codex/worktrees/luban-exhaustive-solver/VisualReasonBench/artifacts/luban/search_v9_focus/Puzzle_15_grid10.json.checkpoint.json",
+  "engine_error": null,
+  "failed_action": null,
+  "candidate_actions": [
+    {
+      "Kind": "move",
+      "PieceIds": [
+        1,
+        2,
+        3,
+        6,
+        7,
+        8
+      ],
+      "Axis": 1,
+      "Distance": 10,
+      "Vector": null,
+      "Angle": 0,
+      "Pivot": null,
+      "RuleIndex": -1
+    },
+    {
+      "Kind": "move",
+      "PieceIds": [
+        0,
+        4,
+        5
+      ],
+      "Axis": 1,
+      "Distance": 10,
+      "Vector": null,
+      "Angle": 0,
+      "Pivot": null,
+      "RuleIndex": -1
+    },
+    {
+      "Kind": "move",
+      "PieceIds": [
+        1,
+        2,
+        3,
+        6,
+        7,
+        8
+      ],
+      "Axis": 1,
+      "Distance": 10,
+      "Vector": null,
+      "Angle": 0,
+      "Pivot": null,
+      "RuleIndex": -1
+    },
+    {
+      "Kind": "move",
+      "PieceIds": [
+        0,
+        4,
+        5
+      ],
+      "Axis": 1,
+      "Distance": 10,
+      "Vector": null,
+      "Angle": 0,
+      "Pivot": null,
+      "RuleIndex": -1
+    },
+    {
+      "Kind": "move",
+      "PieceIds": [
+        1,
+        2,
+        3,
+        6,
+        7,
+        8
+      ],
+      "Axis": 1,
+      "Distance": 10,
+      "Vector": null,
+      "Angle": 0,
+      "Pivot": null,
+      "RuleIndex": -1
+    },
+    {
+      "Kind": "move",
+      "PieceIds": [
+        0,
+        4,
+        5
+      ],
+      "Axis": 1,
+      "Distance": 10,
+      "Vector": null,
+      "Angle": 0,
+      "Pivot": null,
+      "RuleIndex": -1
+    },
+    {
+      "Kind": "move",
+      "PieceIds": [
+        1,
+        2,
+        3,
+        6,
+        7,
+        8
+      ],
+      "Axis": 1,
+      "Distance": 10,
+      "Vector": null,
+      "Angle": 0,
+      "Pivot": null,
+      "RuleIndex": -1
+    },
+    {
+      "Kind": "move",
+      "PieceIds": [
+        0,
+        4,
+        5
+      ],
+      "Axis": 1,
+      "Distance": 10,
+      "Vector": null,
+      "Angle": 0,
+      "Pivot": null,
+      "RuleIndex": -1
+    },
+    {
+      "Kind": "move",
+      "PieceIds": [
+        1,
+        2,
+        3,
+        6,
+        7,
+        8
+      ],
+      "Axis": 1,
+      "Distance": 10,
+      "Vector": null,
+      "Angle": 0,
+      "Pivot": null,
+      "RuleIndex": -1
+    },
+    {
+      "Kind": "move",
+      "PieceIds": [
+        0,
+        4,
+        5
+      ],
+      "Axis": 1,
+      "Distance": 10,
+      "Vector": null,
+      "Angle": 0,
+      "Pivot": null,
+      "RuleIndex": -1
+    },
+    {
+      "Kind": "move",
+      "PieceIds": [
+        1,
+        2,
+        3,
+        6,
+        7,
+        8
+      ],
+      "Axis": 1,
+      "Distance": 10,
+      "Vector": null,
+      "Angle": 0,
+      "Pivot": null,
+      "RuleIndex": -1
+    },
+    {
+      "Kind": "move",
+      "PieceIds": [
+        0,
+        4,
+        5
+      ],
+      "Axis": 1,
+      "Distance": 10,
+      "Vector": null,
+      "Angle": 0,
+      "Pivot": null,
+      "RuleIndex": -1
+    },
+    {
+      "Kind": "move",
+      "PieceIds": [
+        1,
+        2,
+        3,
+        6,
+        7,
+        8
+      ],
+      "Axis": 1,
+      "Distance": 10,
+      "Vector": null,
+      "Angle": 0,
+      "Pivot": null,
+      "RuleIndex": -1
+    },
+    {
+      "Kind": "move",
+      "PieceIds": [
+        0,
+        4,
+        5
+      ],
+      "Axis": 1,
+      "Distance": 10,
+      "Vector": null,
+      "Angle": 0,
+      "Pivot": null,
+      "RuleIndex": -1
+    },
+    {
+      "Kind": "move",
+      "PieceIds": [
+        1,
+        2,
+        3,
+        6,
+        7,
+        8
+      ],
+      "Axis": 1,
+      "Distance": 10,
+      "Vector": null,
+      "Angle": 0,
+      "Pivot": null,
+      "RuleIndex": -1
+    },
+    {
+      "Kind": "move",
+      "PieceIds": [
+        0,
+        4,
+        5
+      ],
+      "Axis": 1,
+      "Distance": 10,
+      "Vector": null,
+      "Angle": 0,
+      "Pivot": null,
+      "RuleIndex": -1
+    },
+    {
+      "Kind": "move",
+      "PieceIds": [
+        1,
+        2,
+        3,
+        6,
+        7,
+        8
+      ],
+      "Axis": 1,
+      "Distance": 10,
+      "Vector": null,
+      "Angle": 0,
+      "Pivot": null,
+      "RuleIndex": -1
+    },
+    {
+      "Kind": "move",
+      "PieceIds": [
+        0,
+        4,
+        5
+      ],
+      "Axis": 1,
+      "Distance": 10,
+      "Vector": null,
+      "Angle": 0,
+      "Pivot": null,
+      "RuleIndex": -1
+    },
+    {
+      "Kind": "move",
+      "PieceIds": [
+        1,
+        2,
+        3,
+        6,
+        7,
+        8
+      ],
+      "Axis": 1,
+      "Distance": 10,
+      "Vector": null,
+      "Angle": 0,
+      "Pivot": null,
+      "RuleIndex": -1
+    },
+    {
+      "Kind": "move",
+      "PieceIds": [
+        0,
+        4,
+        5
+      ],
+      "Axis": 1,
+      "Distance": 10,
+      "Vector": null,
+      "Angle": 0,
+      "Pivot": null,
+      "RuleIndex": -1
+    },
+    {
+      "Kind": "move",
+      "PieceIds": [
+        1,
+        2,
+        3,
+        6,
+        7,
+        8
+      ],
+      "Axis": 1,
+      "Distance": 10,
+      "Vector": null,
+      "Angle": 0,
+      "Pivot": null,
+      "RuleIndex": -1
+    },
+    {
+      "Kind": "move",
+      "PieceIds": [
+        0,
+        4,
+        5
+      ],
+      "Axis": 1,
+      "Distance": 10,
+      "Vector": null,
+      "Angle": 0,
+      "Pivot": null,
+      "RuleIndex": -1
+    },
+    {
+      "Kind": "move",
+      "PieceIds": [
+        1,
+        2,
+        3,
+        6,
+        7,
+        8
+      ],
+      "Axis": 1,
+      "Distance": 12,
+      "Vector": null,
+      "Angle": 0,
+      "Pivot": null,
+      "RuleIndex": -1
+    },
+    {
+      "Kind": "move",
+      "PieceIds": [
+        8
+      ],
+      "Axis": 0,
+      "Distance": 460,
+      "Vector": null,
+      "Angle": 0,
+      "Pivot": null,
+      "RuleIndex": -1
+    },
+    {
+      "Kind": "move",
+      "PieceIds": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "Axis": 0,
+      "Distance": 410,
+      "Vector": null,
+      "Angle": 0,
+      "Pivot": null,
+      "RuleIndex": -1
+    },
+    {
+      "Kind": "move",
+      "PieceIds": [
+        2,
+        6
+      ],
+      "Axis": 1,
+      "Distance": 12,
+      "Vector": null,
+      "Angle": 0,
+      "Pivot": null,
+      "RuleIndex": -1
+    },
+    {
+      "Kind": "move",
+      "PieceIds": [
+        7
+      ],
+      "Axis": 0,
+      "Distance": 600,
+      "Vector": null,
+      "Angle": 0,
+      "Pivot": null,
+      "RuleIndex": -1
+    },
+    {
+      "Kind": "move",
+      "PieceIds": [
+        0,
+        4,
+        5
+      ],
+      "Axis": 1,
+      "Distance": 20,
+      "Vector": null,
+      "Angle": 0,
+      "Pivot": null,
+      "RuleIndex": -1
+    },
+    {
+      "Kind": "move",
+      "PieceIds": [
+        0,
+        4
+      ],
+      "Axis": 2,
+      "Distance": 12,
+      "Vector": null,
+      "Angle": 0,
+      "Pivot": null,
+      "RuleIndex": -1
+    },
+    {
+      "Kind": "move",
+      "PieceIds": [
+        5
+      ],
+      "Axis": 1,
+      "Distance": 600,
+      "Vector": null,
+      "Angle": 0,
+      "Pivot": null,
+      "RuleIndex": -1
+    },
+    {
+      "Kind": "move",
+      "PieceIds": [
+        0,
+        4
+      ],
+      "Axis": 0,
+      "Distance": 2,
+      "Vector": null,
+      "Angle": 0,
+      "Pivot": null,
+      "RuleIndex": -1
+    },
+    {
+      "Kind": "move",
+      "PieceIds": [
+        8
+      ],
+      "Axis": 0,
+      "Distance": 600,
+      "Vector": null,
+      "Angle": 0,
+      "Pivot": null,
+      "RuleIndex": -1
+    },
+    {
+      "Kind": "move",
+      "PieceIds": [
+        0,
+        4
+      ],
+      "Axis": 0,
+      "Distance": 10,
+      "Vector": null,
+      "Angle": 0,
+      "Pivot": null,
+      "RuleIndex": -1
+    },
+    {
+      "Kind": "move",
+      "PieceIds": [
+        4
+      ],
+      "Axis": 2,
+      "Distance": -600,
+      "Vector": null,
+      "Angle": 0,
+      "Pivot": null,
+      "RuleIndex": -1
+    },
+    {
+      "Kind": "move",
+      "PieceIds": [
+        2,
+        6
+      ],
+      "Axis": 0,
+      "Distance": 36,
+      "Vector": null,
+      "Angle": 0,
+      "Pivot": null,
+      "RuleIndex": -1
+    },
+    {
+      "Kind": "move",
+      "PieceIds": [
+        3
+      ],
+      "Axis": 0,
+      "Distance": 550,
+      "Vector": null,
+      "Angle": 0,
+      "Pivot": null,
+      "RuleIndex": -1
+    },
+    {
+      "Kind": "move",
+      "PieceIds": [
+        1
+      ],
+      "Axis": 1,
+      "Distance": 530,
+      "Vector": null,
+      "Angle": 0,
+      "Pivot": null,
+      "RuleIndex": -1
+    },
+    {
+      "Kind": "move",
+      "PieceIds": [
+        2
+      ],
+      "Axis": 1,
+      "Distance": 600,
+      "Vector": null,
+      "Angle": 0,
+      "Pivot": null,
+      "RuleIndex": -1
+    }
+  ],
+  "best_progress_actions": null,
+  "terminal_state": {
+    "Pieces": [
+      {
+        "Id": 0,
+        "X": "3380000/1",
+        "Y": "1660000/1",
+        "Z": "-1720000/1",
+        "Orientation": [
+          2,
+          4,
+          0
+        ],
+        "HalfRotateAxis": 0,
+        "Finished": true
+      },
+      {
+        "Id": 1,
+        "X": "3260000/1",
+        "Y": "6880000/1",
+        "Z": "-1840000/1",
+        "Orientation": [
+          1,
+          3,
+          4
+        ],
+        "HalfRotateAxis": 0,
+        "Finished": true
+      },
+      {
+        "Id": 2,
+        "X": "3620000/1",
+        "Y": "7700000/1",
+        "Z": "-1840000/1",
+        "Orientation": [
+          5,
+          0,
+          3
+        ],
+        "HalfRotateAxis": 0,
+        "Finished": true
+      },
+      {
+        "Id": 3,
+        "X": "8760000/1",
+        "Y": "1340000/1",
+        "Z": "-1840000/1",
+        "Orientation": [
+          0,
+          4,
+          3
+        ],
+        "HalfRotateAxis": 0,
+        "Finished": true
+      },
+      {
+        "Id": 4,
+        "X": "3620000/1",
+        "Y": "1660000/1",
+        "Z": "-7720000/1",
+        "Orientation": [
+          5,
+          3,
+          1
+        ],
+        "HalfRotateAxis": 0,
+        "Finished": true
+      },
+      {
+        "Id": 5,
+        "X": "3020000/1",
+        "Y": "7660000/1",
+        "Z": "-1840000/1",
+        "Orientation": [
+          5,
+          3,
+          1
+        ],
+        "HalfRotateAxis": 0,
+        "Finished": true
+      },
+      {
+        "Id": 6,
+        "X": "3620000/1",
+        "Y": "1700000/1",
+        "Z": "-2080000/1",
+        "Orientation": [
+          2,
+          1,
+          4
+        ],
+        "HalfRotateAxis": 0,
+        "Finished": true
+      },
+      {
+        "Id": 7,
+        "X": "9260000/1",
+        "Y": "1580000/1",
+        "Z": "-1600000/1",
+        "Orientation": [
+          2,
+          1,
+          4
+        ],
+        "HalfRotateAxis": 0,
+        "Finished": true
+      },
+      {
+        "Id": 8,
+        "X": "9760000/1",
+        "Y": "1820000/1",
+        "Z": "-1840000/1",
+        "Orientation": [
+          0,
+          4,
+          3
+        ],
+        "HalfRotateAxis": 0,
+        "Finished": true
+      }
+    ],
+    "Steps": 38
+  }
+}

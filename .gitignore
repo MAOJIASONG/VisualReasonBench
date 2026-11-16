@@ -237,6 +237,18 @@ tools/luban_solver/results_partial/
 !tools/luban_solver/levels/*.json
 !tools/luban_solver/results/*.json
 
+# Restored Luban engine/runtime build products and local verification artifacts
+tools/luban_solver/original_engine/**/bin/
+tools/luban_solver/original_engine/**/obj/
+tools/luban_solver/search/bin/
+tools/luban_solver/search/obj/
+tools/luban_runtime/**/bin/
+tools/luban_runtime/**/obj/
+artifacts/luban/
+!tools/luban_solver/original_rule_pack.json
+!tools/luban_solver/verified_solutions/*.json
+!tools/luban_solver/original_engine/validation/*.json
+
 # Claude Code experiment outputs
 cc_runs/
 

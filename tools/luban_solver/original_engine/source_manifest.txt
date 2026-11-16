@@ -1,0 +1,110 @@
+[
+  {
+    "name": "Position.txt",
+    "sha256": "e6403a6d4c43398d9c89a0d9eb2feea3b1b5b3dd0be079046146bcae580befb2"
+  },
+  {
+    "name": "PolyhedronInit.txt",
+    "sha256": "bbc96dcff4b23644b4ce4e3c81957ef38fab321fc24dee8ece9f79141fcce193"
+  },
+  {
+    "name": "MoveRotate.txt",
+    "sha256": "717f89a31bb02b0848009f645572c9846f4e536f9b4fb6a6fa791719787ed6ed"
+  },
+  {
+    "name": "DirectionData.txt",
+    "sha256": "d8efab0004e6e09a792fa5904108dac18f78e663f4e60026600b6cca68f203f6"
+  },
+  {
+    "name": "SwitchAxisTypeXYZ.txt",
+    "sha256": "56828b4cfa0b93b37163a4bc403f9ea5de6f42a6e24493c2ed59b08d41117515"
+  },
+  {
+    "name": "BoundXYZ.txt",
+    "sha256": "5c2c473db90feb076c20c257c915b626eed5c22d29e04199f74591e6da7245ef"
+  },
+  {
+    "name": "PuzzleData.txt",
+    "sha256": "4d3d653b24198aba96ad0574eb1ac071f2a79109a2a77312d4823c688eb2745f"
+  },
+  {
+    "name": "XYZAxisMirror.txt",
+    "sha256": "46202b2013ebfa0951f32a7ca4804be684e039693a053206106572138d50aa84"
+  },
+  {
+    "name": "ConvexPolyhedronData.txt",
+    "sha256": "40a6ea0b0e0b9c585be92e5ecf0b4c7c4babd4b37cad5a81260a23d5a4ceb95d"
+  },
+  {
+    "name": "DataTools.txt",
+    "sha256": "951e83c08fc177f25da50c48f40432074eb0bd3508f3b3f6a7f2841dcf997e14"
+  },
+  {
+    "name": "BigFraction.txt",
+    "sha256": "d3d8dadb1d5107de9ad22928a5f0455e0bf2b7956eb215af8ff1bf666b56b2a3"
+  },
+  {
+    "name": "Polyhedron.txt",
+    "sha256": "6b9ddfb9c22bdd883c3a4ccc2872224c2055e7273ecdfb082ead619ea9c465e4"
+  },
+  {
+    "name": "Point.txt",
+    "sha256": "b9e945e76c8e62b8facfda748afd345fa216a4a4dc661847f03a087ba505d078"
+  },
+  {
+    "name": "SwitchAxisType.txt",
+    "sha256": "5928d4f7f7a6f4279ba4cef634c12372b23e7e1a8a90e325a76cff2b30185fb4"
+  },
+  {
+    "name": "RotateAxis.txt",
+    "sha256": "53fe96d6f73ea6e801c4873b41f9394a2214edbe23156204a01e6d06358752f7"
+  },
+  {
+    "name": "PositionData.txt",
+    "sha256": "3613cc6655951c0d4c288d2aa89ae2c57ac5bdaedcd206107907cfee46c2c191"
+  },
+  {
+    "name": "LineSegment.txt",
+    "sha256": "a5e458a5ac514f02170b507a319b899de11c30e234f7f585791414804525debd"
+  },
+  {
+    "name": "VertexData.txt",
+    "sha256": "774c432d40f260086f6d2d5381344c7c0ef50fa161c0f33c875708a405122a98"
+  },
+  {
+    "name": "AnglePolyhedron.txt",
+    "sha256": "d1926702dd641a36294c0f19b6f30fe85a5e4e04c61303cc973c7a6a9e9a6773"
+  },
+  {
+    "name": "FaceData.txt",
+    "sha256": "62b7961cc557ccf698b6780521e1c8fdf83a0be7f9580787411cde978c072c2e"
+  },
+  {
+    "name": "ConvexPolyhedron.txt",
+    "sha256": "e3ba38e8b8f68d9d473a68dc9795580fca8d33896f40a70270da230bf8ceb140"
+  },
+  {
+    "name": "PolyhedronCondition.txt",
+    "sha256": "50f352771a5c9d60e730dd8b536e21dbd3bb08c595ae859a1b985420b5a89b78"
+  },
+  {
+    "name": "PolyhedronData.txt",
+    "sha256": "3e03767bfa505bf4ef53273d594711d18cd478468be17b5dd87f4cb1fabb6bd3"
+  },
+  {
+    "name": "PolyhedronInitAxis.txt",
+    "sha256": "96a23383c7e3267777c5e189cef02b1c8b37fd68b0ab106ae573d5aceb1ea356"
+  },
+  {
+    "name": "Polygon.txt",
+    "sha256": "a408d5c384654e46e4ddef4f81010120afd3a90ae8930e24dbd61223c6a59958"
+  },
+  {
+    "name": "BoundXYZMove.txt",
+    "sha256": "45333deadbe79e659473853244c8a7719b1b30878bb21f52d66b2f00d506a340"
+  },
+  {
+    "name": "Direction.txt",
+    "sha256": "4c546cfc8e917127d9490e65528a9b9a80b1e44a920acdc9619eb1215cbabb35"
+  }
+]
