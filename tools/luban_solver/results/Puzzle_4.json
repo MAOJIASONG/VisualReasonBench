@@ -1,0 +1,13 @@
+{
+  "level": "Puzzle_4",
+  "n_pieces": 3,
+  "grid_step": 20,
+  "escape_distance": 2000,
+  "status": "unsolvable_without_rotation",
+  "rule": "game API moves (one piece, \u002B-x/y/z, no rotation); solved = N-1 pieces in the finish zone",
+  "min_moves": null,
+  "states_expanded": 1,
+  "states_seen": 1,
+  "seconds": 0.04,
+  "moves": []
+}

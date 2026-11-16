@@ -1,0 +1,2739 @@
+{
+    "polyhedrons": [
+        {
+            "vertexes": [
+                {
+                    "x": 0.0,
+                    "y": 42.0,
+                    "z": -20.0
+                },
+                {
+                    "x": 0.0,
+                    "y": 42.0,
+                    "z": 20.0
+                },
+                {
+                    "x": 0.0,
+                    "y": -42.0,
+                    "z": 20.0
+                },
+                {
+                    "x": 20.0,
+                    "y": 22.0,
+                    "z": 0.0
+                },
+                {
+                    "x": -20.0,
+                    "y": -22.0,
+                    "z": 0.0
+                },
+                {
+                    "x": 0.0,
+                    "y": 40.0,
+                    "z": 20.0
+                },
+                {
+                    "x": -20.0,
+                    "y": -20.0,
+                    "z": 0.0
+                },
+                {
+                    "x": 0.0,
+                    "y": -40.0,
+                    "z": 20.0
+                },
+                {
+                    "x": 0.0,
+                    "y": -42.0,
+                    "z": -20.0
+                },
+                {
+                    "x": 20.0,
+                    "y": -22.0,
+                    "z": 0.0
+                },
+                {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 20.0
+                },
+                {
+                    "x": -20.0,
+                    "y": 22.0,
+                    "z": 0.0
+                },
+                {
+                    "x": 20.0,
+                    "y": -20.0,
+                    "z": 0.0
+                },
+                {
+                    "x": -20.0,
+                    "y": 20.0,
+                    "z": 0.0
+                },
+                {
+                    "x": 20.0,
+                    "y": 20.0,
+                    "z": 0.0
+                }
+            ],
+            "faces": [
+                {
+                    "vertexIndexes": [
+                        1,
+                        3,
+                        0
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        5,
+                        14,
+                        3,
+                        1
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        2,
+                        8,
+                        9
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        7,
+                        6,
+                        4,
+                        2
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        0,
+                        11,
+                        1
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        2,
+                        9,
+                        12,
+                        7
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        1,
+                        11,
+                        13,
+                        5
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        10,
+                        12,
+                        14
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        8,
+                        0,
+                        3,
+                        14,
+                        12,
+                        9
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        10,
+                        13,
+                        6
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        11,
+                        0,
+                        8,
+                        4,
+                        6,
+                        13
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        4,
+                        8,
+                        2
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        13,
+                        14,
+                        5
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        10,
+                        14,
+                        13
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        10,
+                        6,
+                        12
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        12,
+                        6,
+                        7
+                    ]
+                }
+            ],
+            "position1": {
+                "x": {
+                    "Numerator": -40,
+                    "Denominator": 1
+                },
+                "y": {
+                    "Numerator": 0,
+                    "Denominator": 1
+                },
+                "z": {
+                    "Numerator": -190,
+                    "Denominator": 1
+                }
+            },
+            "switchAxisTypeXYZ1": {
+                "x": 0,
+                "y": 4,
+                "z": 3
+            },
+            "position2": {
+                "x": {
+                    "Numerator": -40,
+                    "Denominator": 1
+                },
+                "y": {
+                    "Numerator": 0,
+                    "Denominator": 1
+                },
+                "z": {
+                    "Numerator": 0,
+                    "Denominator": 1
+                }
+            },
+            "switchAxisTypeXYZ2": {
+                "x": 0,
+                "y": 2,
+                "z": 4
+            },
+            "convexPolyhedrons": [
+                {
+                    "faces": [
+                        {
+                            "vertexIndexes": [
+                                10,
+                                12,
+                                14
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                10,
+                                13,
+                                6
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                10,
+                                14,
+                                13
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                10,
+                                6,
+                                12
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                14,
+                                12,
+                                6,
+                                13
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "faces": [
+                        {
+                            "vertexIndexes": [
+                                1,
+                                3,
+                                0
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                5,
+                                14,
+                                3,
+                                1
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                0,
+                                11,
+                                1
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                1,
+                                11,
+                                13,
+                                5
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                14,
+                                0,
+                                3
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                11,
+                                0,
+                                13
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                13,
+                                14,
+                                5
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                0,
+                                14,
+                                13
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "faces": [
+                        {
+                            "vertexIndexes": [
+                                8,
+                                0,
+                                14,
+                                12
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                8,
+                                12,
+                                6
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                14,
+                                0,
+                                13
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                13,
+                                0,
+                                8,
+                                6
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                12,
+                                14,
+                                13,
+                                6
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "faces": [
+                        {
+                            "vertexIndexes": [
+                                2,
+                                8,
+                                9
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                7,
+                                6,
+                                4,
+                                2
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                2,
+                                9,
+                                12,
+                                7
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                12,
+                                9,
+                                8
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                4,
+                                8,
+                                2
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                12,
+                                6,
+                                7
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                6,
+                                8,
+                                4
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                12,
+                                8,
+                                6
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "vertexes": [
+                {
+                    "x": 0.0,
+                    "y": 42.0,
+                    "z": -20.0
+                },
+                {
+                    "x": 0.0,
+                    "y": 42.0,
+                    "z": 20.0
+                },
+                {
+                    "x": 0.0,
+                    "y": -42.0,
+                    "z": 20.0
+                },
+                {
+                    "x": 20.0,
+                    "y": 22.0,
+                    "z": 0.0
+                },
+                {
+                    "x": -20.0,
+                    "y": -22.0,
+                    "z": 0.0
+                },
+                {
+                    "x": 0.0,
+                    "y": 40.0,
+                    "z": 20.0
+                },
+                {
+                    "x": -20.0,
+                    "y": -20.0,
+                    "z": 0.0
+                },
+                {
+                    "x": 0.0,
+                    "y": -40.0,
+                    "z": 20.0
+                },
+                {
+                    "x": 0.0,
+                    "y": -42.0,
+                    "z": -20.0
+                },
+                {
+                    "x": 20.0,
+                    "y": -22.0,
+                    "z": 0.0
+                },
+                {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 20.0
+                },
+                {
+                    "x": -20.0,
+                    "y": 22.0,
+                    "z": 0.0
+                },
+                {
+                    "x": 20.0,
+                    "y": -20.0,
+                    "z": 0.0
+                },
+                {
+                    "x": -20.0,
+                    "y": 20.0,
+                    "z": 0.0
+                },
+                {
+                    "x": 20.0,
+                    "y": 20.0,
+                    "z": 0.0
+                }
+            ],
+            "faces": [
+                {
+                    "vertexIndexes": [
+                        1,
+                        3,
+                        0
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        5,
+                        14,
+                        3,
+                        1
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        2,
+                        8,
+                        9
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        7,
+                        6,
+                        4,
+                        2
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        0,
+                        11,
+                        1
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        2,
+                        9,
+                        12,
+                        7
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        1,
+                        11,
+                        13,
+                        5
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        10,
+                        12,
+                        14
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        8,
+                        0,
+                        3,
+                        14,
+                        12,
+                        9
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        10,
+                        13,
+                        6
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        11,
+                        0,
+                        8,
+                        4,
+                        6,
+                        13
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        4,
+                        8,
+                        2
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        13,
+                        14,
+                        5
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        10,
+                        14,
+                        13
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        10,
+                        6,
+                        12
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        12,
+                        6,
+                        7
+                    ]
+                }
+            ],
+            "position1": {
+                "x": {
+                    "Numerator": -40,
+                    "Denominator": 1
+                },
+                "y": {
+                    "Numerator": 20,
+                    "Denominator": 1
+                },
+                "z": {
+                    "Numerator": -170,
+                    "Denominator": 1
+                }
+            },
+            "switchAxisTypeXYZ1": {
+                "x": 2,
+                "y": 0,
+                "z": 5
+            },
+            "position2": {
+                "x": {
+                    "Numerator": 40,
+                    "Denominator": 1
+                },
+                "y": {
+                    "Numerator": 0,
+                    "Denominator": 1
+                },
+                "z": {
+                    "Numerator": 0,
+                    "Denominator": 1
+                }
+            },
+            "switchAxisTypeXYZ2": {
+                "x": 0,
+                "y": 2,
+                "z": 4
+            },
+            "convexPolyhedrons": [
+                {
+                    "faces": [
+                        {
+                            "vertexIndexes": [
+                                10,
+                                12,
+                                14
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                10,
+                                13,
+                                6
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                10,
+                                14,
+                                13
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                10,
+                                6,
+                                12
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                14,
+                                12,
+                                6,
+                                13
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "faces": [
+                        {
+                            "vertexIndexes": [
+                                1,
+                                3,
+                                0
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                5,
+                                14,
+                                3,
+                                1
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                0,
+                                11,
+                                1
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                1,
+                                11,
+                                13,
+                                5
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                14,
+                                0,
+                                3
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                11,
+                                0,
+                                13
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                13,
+                                14,
+                                5
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                0,
+                                14,
+                                13
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "faces": [
+                        {
+                            "vertexIndexes": [
+                                8,
+                                0,
+                                14,
+                                12
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                8,
+                                12,
+                                6
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                14,
+                                0,
+                                13
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                13,
+                                0,
+                                8,
+                                6
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                12,
+                                14,
+                                13,
+                                6
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "faces": [
+                        {
+                            "vertexIndexes": [
+                                2,
+                                8,
+                                9
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                7,
+                                6,
+                                4,
+                                2
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                2,
+                                9,
+                                12,
+                                7
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                12,
+                                9,
+                                8
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                4,
+                                8,
+                                2
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                12,
+                                6,
+                                7
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                6,
+                                8,
+                                4
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                12,
+                                8,
+                                6
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "vertexes": [
+                {
+                    "x": 0.0,
+                    "y": 42.0,
+                    "z": -20.0
+                },
+                {
+                    "x": 0.0,
+                    "y": 42.0,
+                    "z": 20.0
+                },
+                {
+                    "x": 0.0,
+                    "y": -42.0,
+                    "z": 20.0
+                },
+                {
+                    "x": 20.0,
+                    "y": 22.0,
+                    "z": 0.0
+                },
+                {
+                    "x": -20.0,
+                    "y": -22.0,
+                    "z": 0.0
+                },
+                {
+                    "x": 0.0,
+                    "y": 40.0,
+                    "z": 20.0
+                },
+                {
+                    "x": -20.0,
+                    "y": -20.0,
+                    "z": 0.0
+                },
+                {
+                    "x": 0.0,
+                    "y": -40.0,
+                    "z": 20.0
+                },
+                {
+                    "x": 0.0,
+                    "y": -42.0,
+                    "z": -20.0
+                },
+                {
+                    "x": 20.0,
+                    "y": -22.0,
+                    "z": 0.0
+                },
+                {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 20.0
+                },
+                {
+                    "x": -20.0,
+                    "y": 22.0,
+                    "z": 0.0
+                },
+                {
+                    "x": 20.0,
+                    "y": -20.0,
+                    "z": 0.0
+                },
+                {
+                    "x": -20.0,
+                    "y": 20.0,
+                    "z": 0.0
+                },
+                {
+                    "x": 20.0,
+                    "y": 20.0,
+                    "z": 0.0
+                }
+            ],
+            "faces": [
+                {
+                    "vertexIndexes": [
+                        1,
+                        3,
+                        0
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        5,
+                        14,
+                        3,
+                        1
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        2,
+                        8,
+                        9
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        7,
+                        6,
+                        4,
+                        2
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        0,
+                        11,
+                        1
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        2,
+                        9,
+                        12,
+                        7
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        1,
+                        11,
+                        13,
+                        5
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        10,
+                        12,
+                        14
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        8,
+                        0,
+                        3,
+                        14,
+                        12,
+                        9
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        10,
+                        13,
+                        6
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        11,
+                        0,
+                        8,
+                        4,
+                        6,
+                        13
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        4,
+                        8,
+                        2
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        13,
+                        14,
+                        5
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        10,
+                        14,
+                        13
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        10,
+                        6,
+                        12
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        12,
+                        6,
+                        7
+                    ]
+                }
+            ],
+            "position1": {
+                "x": {
+                    "Numerator": -40,
+                    "Denominator": 1
+                },
+                "y": {
+                    "Numerator": 40,
+                    "Denominator": 1
+                },
+                "z": {
+                    "Numerator": -190,
+                    "Denominator": 1
+                }
+            },
+            "switchAxisTypeXYZ1": {
+                "x": 0,
+                "y": 5,
+                "z": 2
+            },
+            "position2": {
+                "x": {
+                    "Numerator": -120,
+                    "Denominator": 1
+                },
+                "y": {
+                    "Numerator": 0,
+                    "Denominator": 1
+                },
+                "z": {
+                    "Numerator": 0,
+                    "Denominator": 1
+                }
+            },
+            "switchAxisTypeXYZ2": {
+                "x": 0,
+                "y": 2,
+                "z": 4
+            },
+            "convexPolyhedrons": [
+                {
+                    "faces": [
+                        {
+                            "vertexIndexes": [
+                                10,
+                                12,
+                                14
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                10,
+                                13,
+                                6
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                10,
+                                14,
+                                13
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                10,
+                                6,
+                                12
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                14,
+                                12,
+                                6,
+                                13
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "faces": [
+                        {
+                            "vertexIndexes": [
+                                1,
+                                3,
+                                0
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                5,
+                                14,
+                                3,
+                                1
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                0,
+                                11,
+                                1
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                1,
+                                11,
+                                13,
+                                5
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                14,
+                                0,
+                                3
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                11,
+                                0,
+                                13
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                13,
+                                14,
+                                5
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                0,
+                                14,
+                                13
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "faces": [
+                        {
+                            "vertexIndexes": [
+                                8,
+                                0,
+                                14,
+                                12
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                8,
+                                12,
+                                6
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                14,
+                                0,
+                                13
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                13,
+                                0,
+                                8,
+                                6
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                12,
+                                14,
+                                13,
+                                6
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "faces": [
+                        {
+                            "vertexIndexes": [
+                                2,
+                                8,
+                                9
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                7,
+                                6,
+                                4,
+                                2
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                2,
+                                9,
+                                12,
+                                7
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                12,
+                                9,
+                                8
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                4,
+                                8,
+                                2
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                12,
+                                6,
+                                7
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                6,
+                                8,
+                                4
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                12,
+                                8,
+                                6
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "vertexes": [
+                {
+                    "x": 0.0,
+                    "y": 42.0,
+                    "z": -20.0
+                },
+                {
+                    "x": 0.0,
+                    "y": 42.0,
+                    "z": 20.0
+                },
+                {
+                    "x": 0.0,
+                    "y": -42.0,
+                    "z": 20.0
+                },
+                {
+                    "x": 20.0,
+                    "y": 22.0,
+                    "z": 0.0
+                },
+                {
+                    "x": -20.0,
+                    "y": -22.0,
+                    "z": 0.0
+                },
+                {
+                    "x": 0.0,
+                    "y": 40.0,
+                    "z": 20.0
+                },
+                {
+                    "x": -20.0,
+                    "y": -20.0,
+                    "z": 0.0
+                },
+                {
+                    "x": 0.0,
+                    "y": -40.0,
+                    "z": 20.0
+                },
+                {
+                    "x": 0.0,
+                    "y": -42.0,
+                    "z": -20.0
+                },
+                {
+                    "x": 20.0,
+                    "y": -22.0,
+                    "z": 0.0
+                },
+                {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 20.0
+                },
+                {
+                    "x": -20.0,
+                    "y": 22.0,
+                    "z": 0.0
+                },
+                {
+                    "x": 20.0,
+                    "y": -20.0,
+                    "z": 0.0
+                },
+                {
+                    "x": -20.0,
+                    "y": 20.0,
+                    "z": 0.0
+                },
+                {
+                    "x": 20.0,
+                    "y": 20.0,
+                    "z": 0.0
+                }
+            ],
+            "faces": [
+                {
+                    "vertexIndexes": [
+                        1,
+                        3,
+                        0
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        5,
+                        14,
+                        3,
+                        1
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        2,
+                        8,
+                        9
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        7,
+                        6,
+                        4,
+                        2
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        0,
+                        11,
+                        1
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        2,
+                        9,
+                        12,
+                        7
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        1,
+                        11,
+                        13,
+                        5
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        10,
+                        12,
+                        14
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        8,
+                        0,
+                        3,
+                        14,
+                        12,
+                        9
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        10,
+                        13,
+                        6
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        11,
+                        0,
+                        8,
+                        4,
+                        6,
+                        13
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        4,
+                        8,
+                        2
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        13,
+                        14,
+                        5
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        10,
+                        14,
+                        13
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        10,
+                        6,
+                        12
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        12,
+                        6,
+                        7
+                    ]
+                }
+            ],
+            "position1": {
+                "x": {
+                    "Numerator": -60,
+                    "Denominator": 1
+                },
+                "y": {
+                    "Numerator": 20,
+                    "Denominator": 1
+                },
+                "z": {
+                    "Numerator": -190,
+                    "Denominator": 1
+                }
+            },
+            "switchAxisTypeXYZ1": {
+                "x": 4,
+                "y": 3,
+                "z": 0
+            },
+            "position2": {
+                "x": {
+                    "Numerator": -200,
+                    "Denominator": 1
+                },
+                "y": {
+                    "Numerator": 0,
+                    "Denominator": 1
+                },
+                "z": {
+                    "Numerator": 0,
+                    "Denominator": 1
+                }
+            },
+            "switchAxisTypeXYZ2": {
+                "x": 0,
+                "y": 2,
+                "z": 4
+            },
+            "convexPolyhedrons": [
+                {
+                    "faces": [
+                        {
+                            "vertexIndexes": [
+                                10,
+                                12,
+                                14
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                10,
+                                13,
+                                6
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                10,
+                                14,
+                                13
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                10,
+                                6,
+                                12
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                14,
+                                12,
+                                6,
+                                13
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "faces": [
+                        {
+                            "vertexIndexes": [
+                                1,
+                                3,
+                                0
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                5,
+                                14,
+                                3,
+                                1
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                0,
+                                11,
+                                1
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                1,
+                                11,
+                                13,
+                                5
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                14,
+                                0,
+                                3
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                11,
+                                0,
+                                13
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                13,
+                                14,
+                                5
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                0,
+                                14,
+                                13
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "faces": [
+                        {
+                            "vertexIndexes": [
+                                8,
+                                0,
+                                14,
+                                12
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                8,
+                                12,
+                                6
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                14,
+                                0,
+                                13
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                13,
+                                0,
+                                8,
+                                6
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                12,
+                                14,
+                                13,
+                                6
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "faces": [
+                        {
+                            "vertexIndexes": [
+                                2,
+                                8,
+                                9
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                7,
+                                6,
+                                4,
+                                2
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                2,
+                                9,
+                                12,
+                                7
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                12,
+                                9,
+                                8
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                4,
+                                8,
+                                2
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                12,
+                                6,
+                                7
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                6,
+                                8,
+                                4
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                12,
+                                8,
+                                6
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "vertexes": [
+                {
+                    "x": 0.0,
+                    "y": 42.0,
+                    "z": -20.0
+                },
+                {
+                    "x": 0.0,
+                    "y": 42.0,
+                    "z": 20.0
+                },
+                {
+                    "x": 0.0,
+                    "y": -42.0,
+                    "z": 20.0
+                },
+                {
+                    "x": 20.0,
+                    "y": 22.0,
+                    "z": 0.0
+                },
+                {
+                    "x": -20.0,
+                    "y": -22.0,
+                    "z": 0.0
+                },
+                {
+                    "x": 0.0,
+                    "y": 40.0,
+                    "z": 20.0
+                },
+                {
+                    "x": -20.0,
+                    "y": -20.0,
+                    "z": 0.0
+                },
+                {
+                    "x": 0.0,
+                    "y": -40.0,
+                    "z": 20.0
+                },
+                {
+                    "x": 0.0,
+                    "y": -42.0,
+                    "z": -20.0
+                },
+                {
+                    "x": 20.0,
+                    "y": -22.0,
+                    "z": 0.0
+                },
+                {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 20.0
+                },
+                {
+                    "x": -20.0,
+                    "y": 22.0,
+                    "z": 0.0
+                },
+                {
+                    "x": 20.0,
+                    "y": -20.0,
+                    "z": 0.0
+                },
+                {
+                    "x": -20.0,
+                    "y": 20.0,
+                    "z": 0.0
+                },
+                {
+                    "x": 20.0,
+                    "y": 20.0,
+                    "z": 0.0
+                }
+            ],
+            "faces": [
+                {
+                    "vertexIndexes": [
+                        1,
+                        3,
+                        0
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        5,
+                        14,
+                        3,
+                        1
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        2,
+                        8,
+                        9
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        7,
+                        6,
+                        4,
+                        2
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        0,
+                        11,
+                        1
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        2,
+                        9,
+                        12,
+                        7
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        1,
+                        11,
+                        13,
+                        5
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        10,
+                        12,
+                        14
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        8,
+                        0,
+                        3,
+                        14,
+                        12,
+                        9
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        10,
+                        13,
+                        6
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        11,
+                        0,
+                        8,
+                        4,
+                        6,
+                        13
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        4,
+                        8,
+                        2
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        13,
+                        14,
+                        5
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        10,
+                        14,
+                        13
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        10,
+                        6,
+                        12
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        12,
+                        6,
+                        7
+                    ]
+                }
+            ],
+            "position1": {
+                "x": {
+                    "Numerator": -20,
+                    "Denominator": 1
+                },
+                "y": {
+                    "Numerator": 20,
+                    "Denominator": 1
+                },
+                "z": {
+                    "Numerator": -190,
+                    "Denominator": 1
+                }
+            },
+            "switchAxisTypeXYZ1": {
+                "x": 5,
+                "y": 3,
+                "z": 1
+            },
+            "position2": {
+                "x": {
+                    "Numerator": 120,
+                    "Denominator": 1
+                },
+                "y": {
+                    "Numerator": 0,
+                    "Denominator": 1
+                },
+                "z": {
+                    "Numerator": 0,
+                    "Denominator": 1
+                }
+            },
+            "switchAxisTypeXYZ2": {
+                "x": 0,
+                "y": 2,
+                "z": 4
+            },
+            "convexPolyhedrons": [
+                {
+                    "faces": [
+                        {
+                            "vertexIndexes": [
+                                10,
+                                12,
+                                14
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                10,
+                                13,
+                                6
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                10,
+                                14,
+                                13
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                10,
+                                6,
+                                12
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                14,
+                                12,
+                                6,
+                                13
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "faces": [
+                        {
+                            "vertexIndexes": [
+                                1,
+                                3,
+                                0
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                5,
+                                14,
+                                3,
+                                1
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                0,
+                                11,
+                                1
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                1,
+                                11,
+                                13,
+                                5
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                14,
+                                0,
+                                3
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                11,
+                                0,
+                                13
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                13,
+                                14,
+                                5
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                0,
+                                14,
+                                13
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "faces": [
+                        {
+                            "vertexIndexes": [
+                                8,
+                                0,
+                                14,
+                                12
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                8,
+                                12,
+                                6
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                14,
+                                0,
+                                13
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                13,
+                                0,
+                                8,
+                                6
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                12,
+                                14,
+                                13,
+                                6
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "faces": [
+                        {
+                            "vertexIndexes": [
+                                2,
+                                8,
+                                9
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                7,
+                                6,
+                                4,
+                                2
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                2,
+                                9,
+                                12,
+                                7
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                12,
+                                9,
+                                8
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                4,
+                                8,
+                                2
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                12,
+                                6,
+                                7
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                6,
+                                8,
+                                4
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                12,
+                                8,
+                                6
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "vertexes": [
+                {
+                    "x": 0.0,
+                    "y": 42.0,
+                    "z": -20.0
+                },
+                {
+                    "x": 0.0,
+                    "y": 42.0,
+                    "z": 20.0
+                },
+                {
+                    "x": 0.0,
+                    "y": -42.0,
+                    "z": 20.0
+                },
+                {
+                    "x": 20.0,
+                    "y": 22.0,
+                    "z": 0.0
+                },
+                {
+                    "x": -20.0,
+                    "y": -22.0,
+                    "z": 0.0
+                },
+                {
+                    "x": 0.0,
+                    "y": 40.0,
+                    "z": 20.0
+                },
+                {
+                    "x": -20.0,
+                    "y": -20.0,
+                    "z": 0.0
+                },
+                {
+                    "x": 0.0,
+                    "y": -40.0,
+                    "z": 20.0
+                },
+                {
+                    "x": 0.0,
+                    "y": -42.0,
+                    "z": -20.0
+                },
+                {
+                    "x": 20.0,
+                    "y": -22.0,
+                    "z": 0.0
+                },
+                {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 20.0
+                },
+                {
+                    "x": -20.0,
+                    "y": 22.0,
+                    "z": 0.0
+                },
+                {
+                    "x": 20.0,
+                    "y": -20.0,
+                    "z": 0.0
+                },
+                {
+                    "x": -20.0,
+                    "y": 20.0,
+                    "z": 0.0
+                },
+                {
+                    "x": 20.0,
+                    "y": 20.0,
+                    "z": 0.0
+                }
+            ],
+            "faces": [
+                {
+                    "vertexIndexes": [
+                        1,
+                        3,
+                        0
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        5,
+                        14,
+                        3,
+                        1
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        2,
+                        8,
+                        9
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        7,
+                        6,
+                        4,
+                        2
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        0,
+                        11,
+                        1
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        2,
+                        9,
+                        12,
+                        7
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        1,
+                        11,
+                        13,
+                        5
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        10,
+                        12,
+                        14
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        8,
+                        0,
+                        3,
+                        14,
+                        12,
+                        9
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        10,
+                        13,
+                        6
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        11,
+                        0,
+                        8,
+                        4,
+                        6,
+                        13
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        4,
+                        8,
+                        2
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        13,
+                        14,
+                        5
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        10,
+                        14,
+                        13
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        10,
+                        6,
+                        12
+                    ]
+                },
+                {
+                    "vertexIndexes": [
+                        12,
+                        6,
+                        7
+                    ]
+                }
+            ],
+            "position1": {
+                "x": {
+                    "Numerator": -40,
+                    "Denominator": 1
+                },
+                "y": {
+                    "Numerator": 20,
+                    "Denominator": 1
+                },
+                "z": {
+                    "Numerator": -210,
+                    "Denominator": 1
+                }
+            },
+            "switchAxisTypeXYZ1": {
+                "x": 3,
+                "y": 0,
+                "z": 4
+            },
+            "position2": {
+                "x": {
+                    "Numerator": 200,
+                    "Denominator": 1
+                },
+                "y": {
+                    "Numerator": 0,
+                    "Denominator": 1
+                },
+                "z": {
+                    "Numerator": 0,
+                    "Denominator": 1
+                }
+            },
+            "switchAxisTypeXYZ2": {
+                "x": 0,
+                "y": 2,
+                "z": 4
+            },
+            "convexPolyhedrons": [
+                {
+                    "faces": [
+                        {
+                            "vertexIndexes": [
+                                10,
+                                12,
+                                14
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                10,
+                                13,
+                                6
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                10,
+                                14,
+                                13
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                10,
+                                6,
+                                12
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                14,
+                                12,
+                                6,
+                                13
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "faces": [
+                        {
+                            "vertexIndexes": [
+                                1,
+                                3,
+                                0
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                5,
+                                14,
+                                3,
+                                1
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                0,
+                                11,
+                                1
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                1,
+                                11,
+                                13,
+                                5
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                14,
+                                0,
+                                3
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                11,
+                                0,
+                                13
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                13,
+                                14,
+                                5
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                0,
+                                14,
+                                13
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "faces": [
+                        {
+                            "vertexIndexes": [
+                                8,
+                                0,
+                                14,
+                                12
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                8,
+                                12,
+                                6
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                14,
+                                0,
+                                13
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                13,
+                                0,
+                                8,
+                                6
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                12,
+                                14,
+                                13,
+                                6
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "faces": [
+                        {
+                            "vertexIndexes": [
+                                2,
+                                8,
+                                9
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                7,
+                                6,
+                                4,
+                                2
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                2,
+                                9,
+                                12,
+                                7
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                12,
+                                9,
+                                8
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                4,
+                                8,
+                                2
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                12,
+                                6,
+                                7
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                6,
+                                8,
+                                4
+                            ]
+                        },
+                        {
+                            "vertexIndexes": [
+                                12,
+                                8,
+                                6
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "polyhedronTypes": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+    ],
+    "polyhedronBaseIndex": 0,
+    "directions": [
+        {
+            "x": 1,
+            "y": 0,
+            "z": 0
+        },
+        {
+            "x": -1,
+            "y": 0,
+            "z": 0
+        },
+        {
+            "x": 0,
+            "y": 1,
+            "z": 0
+        },
+        {
+            "x": 0,
+            "y": -1,
+            "z": 0
+        },
+        {
+            "x": 0,
+            "y": 0,
+            "z": 1
+        },
+        {
+            "x": 0,
+            "y": 0,
+            "z": -1
+        }
+    ]
+}

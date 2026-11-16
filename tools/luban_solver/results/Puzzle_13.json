@@ -1,0 +1,13 @@
+{
+  "level": "Puzzle_13",
+  "n_pieces": 12,
+  "grid_step": 10,
+  "escape_distance": 2000,
+  "status": "state_limit",
+  "rule": "game API moves (one piece, \u002B-x/y/z, no rotation); solved = N-1 pieces in the finish zone",
+  "min_moves": null,
+  "states_expanded": 606223,
+  "states_seen": 3000004,
+  "seconds": 9234.89,
+  "moves": []
+}

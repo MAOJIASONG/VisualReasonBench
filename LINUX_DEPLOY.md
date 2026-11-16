@@ -1,7 +1,9 @@
 # Running CHAIN on Linux (all 5 task families)
 
-This checkout is the `stacking_end` branch of `MAOJIASONG/VisualReasonBench`, plus the
-**Linux Unity build of the Puzzle (Luban) environment** in `Luban/`.
+This is the `stacking_end` branch of `MAOJIASONG/VisualReasonBench`. It includes the
+**Linux Unity build of the Puzzle (Luban) environment** in `Luban/` (committed; Unity's
+debug symbols `LuBanSuoEnv_BurstDebugInformation_DoNotShip/` and the screenshots the player
+saves under `LuBanSuoEnv_Data/StreamingAssets/` are not).
 
 | Task family | Code | Renderer | Needs a display? |
 |---|---|---|---|
@@ -9,13 +11,16 @@ This checkout is the `stacking_end` branch of `MAOJIASONG/VisualReasonBench`, pl
 | Stacking | `src/phyvpuzzle/environment/stacking_game_env.py` | matplotlib (Agg) | No |
 | FluidNet / Domino / PipeFit | `Stacking_scaling/type_3`, `type_3_1`, `type_2_3` via `Stacking_scaling/chain_analysis/play_cli.py` | matplotlib (Agg) | No |
 
-## 1. Copy to the Linux machine
-
-`Luban/` (~108 MB) is gitignored, so copy the whole directory rather than `git clone` on the server:
+## 1. Get the code on the Linux machine
 
 ```bash
-rsync -a --exclude logs/ /path/to/CHAIN-linux/ smu-cluster:~/programs/2026/CHAIN-linux/
+git clone -b stacking_end https://github.com/MAOJIASONG/VisualReasonBench.git CHAIN-linux
+cd CHAIN-linux && chmod +x Luban/LuBanSuoEnv.x86_64
 ```
+
+The clone includes `Luban/` (~106 MB). The Stacking puzzles (`puzzles_full_v9`, used by the
+agent harness and the Stacking oracle) are not in this repository: put them in
+`Stacking_scaling/puzzles_full_v9/` or point `STACK_PUZZLE_DIR` at them.
 
 Requirements: x86_64 Linux (not ARM), Python ≥ 3.10.
 
@@ -62,6 +67,17 @@ python -m chain_analysis.play_cli tools fluidnet
 python -m chain_analysis.play_cli start type_3/puzzles_50/<level_dir> /tmp/sess1
 python -m chain_analysis.play_cli act /tmp/sess1 '<json action>'
 ```
+
+Puzzle with the agent harnesses (Claude Code / Codex CLI) on a Slurm cluster: one Unity
+player per job serves up to 8 agents in parallel (env_id 1–8), under the `Xvfb` module:
+
+```bash
+sbatch --chdir=cc_runs/luban32 Stacking_scaling/chain_analysis/cc_harness/luban/run_luban_lanes.sbatch \
+    0-31 luban32 base claude:opus claude:sonnet codex:gpt-6.1-sol:high
+```
+
+Shortest solutions per Puzzle level (BFS over `move` commands with the game's own collision
+code, replayed in Unity to check): `tools/luban_solver/` (see its README; needs .NET 8).
 
 ## Notes
 

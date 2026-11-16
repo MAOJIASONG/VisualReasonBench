@@ -1,0 +1,50 @@
+{
+  "level": "Puzzle_1",
+  "n_pieces": 6,
+  "grid_step": 10,
+  "escape_distance": 2000,
+  "status": "solved",
+  "rule": "game API moves (one piece, \u002B-x/y/z, no rotation); solved = N-1 pieces in the finish zone",
+  "min_moves": 6,
+  "states_expanded": 25,
+  "states_seen": 41,
+  "seconds": 0.34,
+  "moves": [
+    {
+      "piece_id": 5,
+      "axis": "x",
+      "distance": 300,
+      "finishes_piece": true
+    },
+    {
+      "piece_id": 4,
+      "axis": "y",
+      "distance": 300,
+      "finishes_piece": true
+    },
+    {
+      "piece_id": 0,
+      "axis": "x",
+      "distance": 300,
+      "finishes_piece": true
+    },
+    {
+      "piece_id": 1,
+      "axis": "z",
+      "distance": -10,
+      "finishes_piece": false
+    },
+    {
+      "piece_id": 1,
+      "axis": "y",
+      "distance": -290,
+      "finishes_piece": true
+    },
+    {
+      "piece_id": 2,
+      "axis": "x",
+      "distance": 300,
+      "finishes_piece": true
+    }
+  ]
+}

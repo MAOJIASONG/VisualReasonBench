@@ -1,0 +1,20 @@
+{
+  "level": "Puzzle_0",
+  "n_pieces": 2,
+  "grid_step": 10,
+  "escape_distance": 2000,
+  "status": "solved",
+  "rule": "game API moves (one piece, \u002B-x/y/z, no rotation); solved = N-1 pieces in the finish zone",
+  "min_moves": 1,
+  "states_expanded": 1,
+  "states_seen": 2,
+  "seconds": 0.01,
+  "moves": [
+    {
+      "piece_id": 0,
+      "axis": "z",
+      "distance": -300,
+      "finishes_piece": true
+    }
+  ]
+}
