@@ -164,10 +164,10 @@ GAMES = (("type_3", audit_fluidnet), ("type_3_1", audit_domino),
          ("type_2_3", audit_pipefit))
 
 
-def main() -> int:
+def main(level_set: str = "puzzles_50") -> int:
     bad = 0
     for game, fn in GAMES:
-        dirs = sorted(glob.glob(os.path.join(game, "puzzles_50", "*_hard_*")))
+        dirs = sorted(glob.glob(os.path.join(game, level_set, "*_hard_*")))
         print(f"== {game}: {len(dirs)} hard levels")
         for d in dirs:
             r = fn(d)
@@ -290,4 +290,5 @@ def selftest(n_levels: int = 3) -> int:
 
 
 if __name__ == "__main__":
-    sys.exit(selftest() if "--selftest" in sys.argv else main())
+    sys.exit(selftest() if "--selftest" in sys.argv
+             else main(sys.argv[sys.argv.index("--set") + 1] if "--set" in sys.argv else "puzzles_50"))
