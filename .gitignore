@@ -219,10 +219,23 @@ Stacking_scaling/puzzles_full_10/2x3x3/_signatures/e9745972dd02427d17be8e8509c90
 !Stacking_scaling/type_*/analysis_exp*/*.json
 !Stacking_scaling/chain_analysis/model_runs/**/*.json
 
-# Unity Luban build (binary, ~100MB) — deployed per-machine, not committed.
-# Anchored to the repo root: on case-insensitive file systems a bare `Luban/`
-# also hid Stacking_scaling/chain_analysis/cc_harness/luban/.
-/Luban/
+# Unity Luban build for Linux (Luban/, ~106 MB) is committed so the Puzzle env runs from a
+# clone.  Not committed: Unity's debug symbols, and the screenshots the player saves at runtime.
+/Luban/LuBanSuoEnv_BurstDebugInformation_DoNotShip/
+/Luban/LuBanSuoEnv_Data/StreamingAssets/
+/Luban/**/*.log
+!/Luban/**/*.json
+!/Luban/**/*.so
+!/Luban/**/*.png
+
+# Luban solver: build output and logs; the extracted levels and results are kept
+tools/luban_solver/bin/
+tools/luban_solver/obj/
+tools/luban_solver/publish/
+tools/luban_solver/logs/
+tools/luban_solver/results_partial/
+!tools/luban_solver/levels/*.json
+!tools/luban_solver/results/*.json
 
 # Claude Code experiment outputs
 cc_runs/
