@@ -1,0 +1,26 @@
+{
+  "level": "W1_wiring_p18_seed7085",
+  "game": "domino",
+  "model": "gpt-6.1-sol",
+  "effort": "medium",
+  "win": false,
+  "status": "lose",
+  "actions_used": 20,
+  "failed_attempts": 1,
+  "views": 2,
+  "game_calls": 22,
+  "commands": 22,
+  "audit_flags": [],
+  "no_code": true,
+  "code_violations": [],
+  "valid": true,
+  "codex_rc": 0,
+  "seconds": 721,
+  "usage": {
+    "input_tokens": 1619828,
+    "cached_input_tokens": 1562368,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 3732,
+    "reasoning_output_tokens": 1214
+  }
+}

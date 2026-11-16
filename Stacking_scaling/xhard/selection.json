@@ -1,0 +1,237 @@
+{
+  "selection_date": "2026-11-16",
+  "reference_model": "gpt-6.1-sol",
+  "reference_effort": "medium",
+  "reference_action_budget": 40,
+  "reference_no_code": true,
+  "source_total_runs": 78,
+  "source_results_path": "chain_analysis/model_runs/agentic_codex/results.csv",
+  "source_results_sha256": "6efc8b6e16e17e87707e8b05288a314547d983e49bc8977f7fee152cf3ba3c53",
+  "levels": [
+    {
+      "id": "F1",
+      "game": "fluidnet",
+      "path": "type_3/puzzles_xhard/F1_tangle_plan16_seed38",
+      "solution_actions": 16,
+      "reference_win": false,
+      "reference_actions_used": 30,
+      "reference_status": "lose",
+      "sha256": {
+        "level.json": "d3ae20d4480fe884a4eb63a3bfaa6900560adafe3fffa6f51d1eb053c5fcd9c3",
+        "solution.txt": "667c3be10edf5177f02537fe68720b3b61be08b095012fbefbbd57ae84686169",
+        "00_initial_front.png": "6984540035cbe9d7b3574eb923fd7e6eb74fa2163b1fbbff7485f5430a9ffbab",
+        "00_initial_back.png": "636188f39ead9258c807740c7d8053354e28229c73498b9400888487477bfab1"
+      }
+    },
+    {
+      "id": "F2",
+      "game": "fluidnet",
+      "path": "type_3/puzzles_xhard/F2_tangle_plan15_seed18",
+      "solution_actions": 15,
+      "reference_win": false,
+      "reference_actions_used": 31,
+      "reference_status": "playing",
+      "sha256": {
+        "level.json": "3fd8b446c8c1bd7c278a869597be5eb2d0b7566fc62d9aa42eed759770068df2",
+        "solution.txt": "7ded3305d5253704be6250fdff6d907497e5337f790eeaf5a8a3731f6843328a",
+        "00_initial_front.png": "573f98cac4785caf249a97ca81adbf72fc4ebe12da4826159e0c402ec16bb2f8",
+        "00_initial_back.png": "0fa731d33b0298b8820c8aece539194c6c2e1c5d548c77cf621c6c249d164e46"
+      }
+    },
+    {
+      "id": "F3",
+      "game": "fluidnet",
+      "path": "type_3/puzzles_xhard/F3_tangle_plan15_seed28",
+      "solution_actions": 15,
+      "reference_win": false,
+      "reference_actions_used": 36,
+      "reference_status": "lose",
+      "sha256": {
+        "level.json": "8fc87c32065d380bb7a693a6a46b9d10494c757b98f45a2acffc0d398062c9ba",
+        "solution.txt": "7763c62a5637a429b833c406dba8551eb96010843a04a65f3806e182d104aaa6",
+        "00_initial_front.png": "f418099af20772ed31c3d6e7dafe052ac98c8fd849a23825d28b844960780a12",
+        "00_initial_back.png": "ffd3ccaea3094b614ac65a92444bf631837eb2f156bbc6d46fa65d6afd61bb35"
+      }
+    },
+    {
+      "id": "F4",
+      "game": "fluidnet",
+      "path": "type_3/puzzles_xhard/F4_tangle_plan17_seed47",
+      "solution_actions": 17,
+      "reference_win": false,
+      "reference_actions_used": 32,
+      "reference_status": "lose",
+      "sha256": {
+        "level.json": "d0a05fa4172d69167cab69741e6b1b80b96873fd1eae6d788aabe5f005dfc40d",
+        "solution.txt": "02de86763b2c6917cb2f77bf087da736c3a6fb8f6b989e46cab5774dd333da58",
+        "00_initial_front.png": "3e87ea70240041d59a87268bc59147a747f5ff97f12a6ba94f2cf066dcb48a19",
+        "00_initial_back.png": "327369b70333af7eaf273778340f7f12ea6513f66e4f1e881b5822ade9e95f6d"
+      }
+    },
+    {
+      "id": "F5",
+      "game": "fluidnet",
+      "path": "type_3/puzzles_xhard/F5_tangle_plan17_seed28",
+      "solution_actions": 17,
+      "reference_win": false,
+      "reference_actions_used": 32,
+      "reference_status": "lose",
+      "sha256": {
+        "level.json": "a0543c166af7d48b14b5a8b048ed42509e3e69dbebdc7dfeab65701d2a976b9d",
+        "solution.txt": "07836459ae73ba2c0335f0575588c28ce976124630b65243c33755853a250ddb",
+        "00_initial_front.png": "999222519096cb28a991a9058e4762b28c122083f2679f8c3455dbb17a8ab66e",
+        "00_initial_back.png": "0fe3528e845abcc6ef4b5fc0704513552f2824a887f05c57e8271c5eb29e926b"
+      }
+    },
+    {
+      "id": "U1",
+      "game": "pipefit",
+      "path": "type_2_3/puzzles_xhard/U1_unique_n1_min18_seed81100",
+      "solution_actions": 19,
+      "reference_win": false,
+      "reference_actions_used": 39,
+      "reference_status": "lose",
+      "sha256": {
+        "level.json": "e31c2403319b716fb06a81f6749bbed3b673df21c0feea9ff7fa12da851cf85d",
+        "solution.txt": "9632c0a364ca63c57e543aaaf2408b8c5400b48c0ae6a5fbeaeae3738ad53db8",
+        "00_initial_front.png": "b82bce75197dd708d6c33205dd433703f804dff38692aff9531f64870a16c641",
+        "00_initial_back.png": "ee7869acb90fd2b9eb28ba8c90829d58867066c245be9df69e0223d56475320f"
+      }
+    },
+    {
+      "id": "U2",
+      "game": "pipefit",
+      "path": "type_2_3/puzzles_xhard/U2_unique_n3_min16_seed81057",
+      "solution_actions": 18,
+      "reference_win": false,
+      "reference_actions_used": 38,
+      "reference_status": "lose",
+      "sha256": {
+        "level.json": "2eb3b03cc292c8a2e2d4fc5d6936226c937a133783d8508b092c4955c1f52695",
+        "solution.txt": "56eb2d4045849ba5858d876b0d7e3b5603f16439eed4bb6f099b924be7089c8a",
+        "00_initial_front.png": "f7016cd5fbfe6e9ada85f9fbc0b894b712f15d59edcd9b1936285f05b4f839f2",
+        "00_initial_back.png": "e5662077e8faa14c12e950a81f0be6a8a27b86f095520317dc9194b3438168fa"
+      }
+    },
+    {
+      "id": "U4",
+      "game": "pipefit",
+      "path": "type_2_3/puzzles_xhard/U4_unique_n1_min19_seed91150",
+      "solution_actions": 20,
+      "reference_win": false,
+      "reference_actions_used": 36,
+      "reference_status": "lose",
+      "sha256": {
+        "level.json": "d59c404f233820ff31f3a703c3d9144ab331e0b2ce673f0e8f6cc3b9185a616a",
+        "solution.txt": "e2c66ba9e91d2016bffee887552ef9147ccb7e318da2daf4b3be57e050f61bee",
+        "00_initial_front.png": "c584b441cba36b841fdc936099ce0188f0a7fe1a89f634ec8abfc3a71d180d32",
+        "00_initial_back.png": "bbf9daf10f105d8d9e61a0a5a58d8f4df45dd05562a3fe19e1643628f33c1e4e"
+      }
+    },
+    {
+      "id": "U5",
+      "game": "pipefit",
+      "path": "type_2_3/puzzles_xhard/U5_unique_n1_min18_seed91138",
+      "solution_actions": 19,
+      "reference_win": false,
+      "reference_actions_used": 17,
+      "reference_status": "playing",
+      "sha256": {
+        "level.json": "7f54b45e6191482969710894f3aad623ba6662701855a93adac7b68d27460ac8",
+        "solution.txt": "b8371e9f7ec7ccc88c1adeacbc73c5a8a2b3d1e429aa7fc9b0af473862bdab3f",
+        "00_initial_front.png": "ebea190efd200c1d4293aec4feafe2910e18a7371be0a49fad037b11538d48a5",
+        "00_initial_back.png": "8f3c36780b3b0bb80a80681a1a95f36dc228b98a2363f81e1eacedbcd8f5acbb"
+      }
+    },
+    {
+      "id": "U7",
+      "game": "pipefit",
+      "path": "type_2_3/puzzles_xhard/U7_unique_n1_min17_seed91122",
+      "solution_actions": 18,
+      "reference_win": true,
+      "reference_actions_used": 32,
+      "reference_status": "win",
+      "sha256": {
+        "level.json": "eb951a618d674df103ba3b3d9868465edfde18869b7e11a384d47348ffd09328",
+        "solution.txt": "7e3d7d34cd736e06af91735f2bfe5abc6fdbc231353e904a0aa2fab1de20bf3e",
+        "00_initial_front.png": "6cc3665f063b60eedf312981f2dac57d3a08c2780437c4e715382795b84fe959",
+        "00_initial_back.png": "de55259bd27fb2a1f8e41265ea7fc8d766f10fd3c9838b2698512eb849ccc560"
+      }
+    },
+    {
+      "id": "W1",
+      "game": "domino",
+      "path": "type_3_1/puzzles_xhard/W1_wiring_p18_seed7085",
+      "solution_actions": 20,
+      "reference_win": false,
+      "reference_actions_used": 20,
+      "reference_status": "lose",
+      "sha256": {
+        "level.json": "44f6b75fcd2135d979f09eb947fd76facd13d217e09e5bb352b878218327ff7a",
+        "solution.txt": "18c016146240ae9e25a5b81011d3cb4757e3d72f5c47eaad2322c295006dafa8",
+        "00_initial_front.png": "d33a389a57174f4e1c77134c442e10a51eda01ce1f3c307e897eb46e16e13bf4",
+        "00_initial_back.png": "9f5e44b098bb7bcc80534973969003e0ed643fb2ecaaee8e30905c1b44bff76b"
+      }
+    },
+    {
+      "id": "W2",
+      "game": "domino",
+      "path": "type_3_1/puzzles_xhard/W2_wiring_p18_seed7204",
+      "solution_actions": 20,
+      "reference_win": true,
+      "reference_actions_used": 20,
+      "reference_status": "win",
+      "sha256": {
+        "level.json": "f288b2fcc686431950c13442ac33fd32edbcca1f46be6f2fe957de738f025681",
+        "solution.txt": "f5ce7f065d69cf9707aca241bff7b4f80ff1b9ab4e24750441af3006f46b7233",
+        "00_initial_front.png": "96ecf55200e9d5dac681cd78c78c5b1f9f57beed642e8e4ef81f8209ac05a358",
+        "00_initial_back.png": "e944127a24a5fd39544ece37e7cf3ad1b415983044ea72d56e7dc0fde7ee73a9"
+      }
+    },
+    {
+      "id": "W3",
+      "game": "domino",
+      "path": "type_3_1/puzzles_xhard/W3_wiring_p18_seed7150",
+      "solution_actions": 20,
+      "reference_win": true,
+      "reference_actions_used": 20,
+      "reference_status": "win",
+      "sha256": {
+        "level.json": "8b90569c31eb3eed7a019452591c26b2d5210ae346002025af6b8f6abae883b5",
+        "solution.txt": "c6d7522611a963b76da8e1ca2d9df6be1f9f772cca82012428309a648a1bd0b6",
+        "00_initial_front.png": "f196e5a2b96a9b0fee0718918b4522102de8cc2c62d5dd8fd617bdc0a17f51eb",
+        "00_initial_back.png": "812b310942a21984a4d2b88eee386d9ea09b8e87db16afff468fad3bcfb10358"
+      }
+    },
+    {
+      "id": "W4",
+      "game": "domino",
+      "path": "type_3_1/puzzles_xhard/W4_wiring_p17_seed7059",
+      "solution_actions": 19,
+      "reference_win": true,
+      "reference_actions_used": 19,
+      "reference_status": "win",
+      "sha256": {
+        "level.json": "8ae91642344f8250733dcfe44a42092c37c0006dbd6a44e531f2eb719cbb0985",
+        "solution.txt": "7bb57d25aa0f4f377e4f4a4955c8f3c55c8abb7375ceec9d0319f051723590b0",
+        "00_initial_front.png": "b00ff6ccc09d1574ddc8b68b3126067bc233db981be1faefbc2b81fed763f62c",
+        "00_initial_back.png": "c9510df433ebe924ef487f6c7e83fd39b756f733cdc31d0093e8b78d8340c866"
+      }
+    },
+    {
+      "id": "W5",
+      "game": "domino",
+      "path": "type_3_1/puzzles_xhard/W5_wiring_p17_seed7326",
+      "solution_actions": 19,
+      "reference_win": true,
+      "reference_actions_used": 19,
+      "reference_status": "win",
+      "sha256": {
+        "level.json": "0b4a6c1005afe3cc9311795bd105ee7edf0329ca4105c7ae15a24356c74e6962",
+        "solution.txt": "7a27b2d634f3abcfaca91ceac9f35ad6c1335dc2f0c017b697b6bc519d28b08c",
+        "00_initial_front.png": "fdac73d1e0a4ea09de75ea1502f731405ba161fcd163cb0936d831515a5b6cb3",
+        "00_initial_back.png": "21f898a92f7a854a7e416527122435f47092e66cced3945e3e7287e22404bde9"
+      }
+    }
+  ]
+}

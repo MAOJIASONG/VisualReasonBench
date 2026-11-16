@@ -1,0 +1,26 @@
+{
+  "level": "U1_unique_n1_min18_seed81100",
+  "game": "pipefit",
+  "model": "gpt-6.1-sol",
+  "effort": "medium",
+  "win": false,
+  "status": "lose",
+  "actions_used": 39,
+  "failed_attempts": 2,
+  "views": 1,
+  "game_calls": 42,
+  "commands": 42,
+  "audit_flags": [],
+  "no_code": true,
+  "code_violations": [],
+  "valid": true,
+  "codex_rc": 0,
+  "seconds": 1226,
+  "usage": {
+    "input_tokens": 3572024,
+    "cached_input_tokens": 3488768,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 9967,
+    "reasoning_output_tokens": 5329
+  }
+}

@@ -258,3 +258,13 @@ harness_bundle/
 # Agent-harness level index and Exp 1 per-level summaries are inputs/results, keep them
 !Stacking_scaling/chain_analysis/cc_harness/stacking/levels.json
 !Stacking_scaling/chain_analysis/exp1_vs_agents/*/summary.json
+
+# Selected extra-hard CHAIN levels and their reproducible reference results
+!Stacking_scaling/type_2_3/puzzles_xhard/*/level.json
+!Stacking_scaling/type_3/puzzles_xhard/*/level.json
+!Stacking_scaling/type_3_1/puzzles_xhard/*/level.json
+!Stacking_scaling/type_2_3/puzzles_xhard/*/00_initial_*.png
+!Stacking_scaling/type_3/puzzles_xhard/*/00_initial_*.png
+!Stacking_scaling/type_3_1/puzzles_xhard/*/00_initial_*.png
+!Stacking_scaling/xhard/*.json
+!Stacking_scaling/xhard/reference_runs/*.json

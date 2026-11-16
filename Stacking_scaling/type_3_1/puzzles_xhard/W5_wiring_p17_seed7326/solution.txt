@@ -1,0 +1,22 @@
+W5_wiring_p17_seed7326
+generator: wiring-v1
+actions (19):
+["place", [2, 7, 1]]
+["place", [3, 8, 1]]
+["place", [4, 8, 1]]
+["place", [5, 9, 1]]
+["place", [5, 10, 1]]
+["place", [6, 11, 1]]
+["place", [7, 11, 1]]
+["place", [9, 5, 1]]
+["place", [9, 11, 1]]
+["place", [10, 5, 1]]
+["place", [10, 11, 1]]
+["place", [11, 3, 1]]
+["place", [11, 4, 1]]
+["place", [11, 6, 1]]
+["place", [11, 7, 1]]
+["place", [11, 9, 1]]
+["place", [11, 10, 1]]
+["submit_placement"]
+["push", "+x"]

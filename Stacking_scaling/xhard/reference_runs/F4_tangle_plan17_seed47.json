@@ -1,0 +1,26 @@
+{
+  "level": "F4_tangle_plan17_seed47",
+  "game": "fluidnet",
+  "model": "gpt-6.1-sol",
+  "effort": "medium",
+  "win": false,
+  "status": "lose",
+  "actions_used": 32,
+  "failed_attempts": 3,
+  "views": 4,
+  "game_calls": 39,
+  "commands": 39,
+  "audit_flags": [],
+  "no_code": true,
+  "code_violations": [],
+  "valid": true,
+  "codex_rc": 0,
+  "seconds": 1759,
+  "usage": {
+    "input_tokens": 10262170,
+    "cached_input_tokens": 10176768,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 29690,
+    "reasoning_output_tokens": 21468
+  }
+}

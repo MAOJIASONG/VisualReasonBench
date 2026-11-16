@@ -5,6 +5,7 @@
 ## 目录
 
 - 快速开始
+- [新增难题：FluidNet、PipeFit、Domino 各 5 道](Stacking_scaling/xhard/README.md)
 - Domino 示例配置（YAML）
 - 运行示例（example / CLI）
 - 运行基准（Benchmark：代码 / CLI）

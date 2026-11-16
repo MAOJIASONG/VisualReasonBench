@@ -1,0 +1,26 @@
+{
+  "level": "F3_tangle_plan15_seed28",
+  "game": "fluidnet",
+  "model": "gpt-6.1-sol",
+  "effort": "medium",
+  "win": false,
+  "status": "lose",
+  "actions_used": 36,
+  "failed_attempts": 3,
+  "views": 7,
+  "game_calls": 46,
+  "commands": 46,
+  "audit_flags": [],
+  "no_code": true,
+  "code_violations": [],
+  "valid": true,
+  "codex_rc": 0,
+  "seconds": 1634,
+  "usage": {
+    "input_tokens": 13858027,
+    "cached_input_tokens": 13762816,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 18123,
+    "reasoning_output_tokens": 7283
+  }
+}
