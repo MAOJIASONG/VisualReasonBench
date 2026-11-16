@@ -7,6 +7,7 @@ import json
 import os
 import socket
 import subprocess
+import sys
 import time
 from dataclasses import dataclass
 from pathlib import Path
@@ -28,6 +29,19 @@ from phyvpuzzle.utils.multi_view_renderer import MultiViewRenderer
 logger = logging.getLogger(__name__)
 
 
+def _default_luban_exe() -> str:
+    """Pick the Unity build binary for the current OS from the project's Luban/ dir.
+
+    Linux  -> LuBanSuoEnv.x86_64 ; macOS -> the .app's MacOS binary ; else .exe.
+    """
+    luban_dir = Path(__file__).resolve().parents[3] / "Luban"
+    if sys.platform.startswith("linux"):
+        return str(luban_dir / "LuBanSuoEnv.x86_64")
+    if sys.platform == "darwin":
+        return str(luban_dir / "LuBanSuoEnv.app" / "Contents" / "MacOS" / "LuBanSuoEnv")
+    return str(luban_dir / "LuBanSuoEnv.exe")
+
+
 @register_environment_config("luban")
 @dataclass
 class LubanConfig(EnvironmentConfig):
@@ -37,7 +51,7 @@ class LubanConfig(EnvironmentConfig):
     port: int = 9999
     env_id: int = 1
     level_index: int = 0
-    exe_path: str = str(Path(__file__).resolve().parents[3] / "Luban" / "LuBanSuoEnv.exe")
+    exe_path: str = _default_luban_exe()
     start_level_on_reset: bool = True
     startup_wait: float = 1.5
     connect_timeout: float = 2.0
@@ -207,7 +221,7 @@ class LubanEnvironment(BaseEnvironment):
     def _start_unity_process(self) -> None:
         exe_path = self.config.exe_path
         if not os.path.exists(exe_path):
-            raise FileNotFoundError(f"LuBanSuoEnv.exe not found at: {exe_path}")
+            raise FileNotFoundError(f"Unity Luban build not found at: {exe_path}")
         if self._process and self._process.poll() is None:
             return
         self._process = subprocess.Popen(

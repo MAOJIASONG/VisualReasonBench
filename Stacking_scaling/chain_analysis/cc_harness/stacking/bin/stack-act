@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+# Agent-facing action command:  stack-act '<one JSON action>'
+#
+# The real game session (pickled state, meta.json) lives in $STACK_PRIV, outside the
+# agent's working folder. This wrapper plays the action there, copies only the rendered
+# observation images into the agent folder ($STACK_AGENT), and logs the call privately.
+set -u
+: "${STACK_PRIV:?}" "${STACK_AGENT:?}" "${STACK_PY:?}"
+HERE="$(cd "$(dirname "$0")/.." && pwd)"
+
+if [ "$#" -ne 1 ]; then
+  echo "usage: stack-act '<one JSON action>'   (exactly one argument)"
+  exit 2
+fi
+
+# One action per shell command: every tool call runs in a fresh shell, so a second
+# stack-act from the same parent shell means several actions were chained in one command
+# (a; b / a && b / newlines). Refuse it without playing or counting it. The parent is
+# identified by pid + start time, because sandboxed runs (Codex/bubblewrap) use a new pid
+# namespace per command, where the same pid numbers come back every time.
+me="$PPID:$(cut -d' ' -f22 /proc/$PPID/stat 2>/dev/null || ps -o lstart= -p $PPID 2>/dev/null | tr -d ' ')"
+last="$(cat "$STACK_PRIV/.last_ppid" 2>/dev/null || true)"
+if [ "$last" = "$me" ]; then
+  echo "REJECTED: only one stack-act per command. This call was not played and not counted. Look at the newest observation, then send the next action as its own command."
+  printf '%s\t%s\t%s\n' "$(date -Is)" "$1" "REJECTED_CHAINED" >> "$STACK_PRIV/agent_calls.log"
+  exit 3
+fi
+echo "$me" > "$STACK_PRIV/.last_ppid"
+
+out=$("$STACK_PY" "$HERE/stack_cli.py" act "$STACK_PRIV" "$1" 2>/dev/null)
+
+for f in "$STACK_PRIV"/obs_*.png; do
+  [ -e "$f" ] || continue
+  b=$(basename "$f")
+  [ -e "$STACK_AGENT/$b" ] || cp "$f" "$STACK_AGENT/$b"
+done
+
+out=${out//"$STACK_PRIV"/.}
+printf '%s\n' "$out"
+printf '%s\t%s\t%s\n' "$(date -Is)" "$1" "$(printf '%s' "$out" | head -1)" >> "$STACK_PRIV/agent_calls.log"

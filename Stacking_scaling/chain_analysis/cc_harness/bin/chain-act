@@ -1,0 +1,67 @@
+#!/usr/bin/env bash
+# Agent-facing action command:  chain-act '<one JSON action>'
+#
+# The real game session (with the hidden .state.json) lives in $CHAIN_PRIV, outside the
+# agent's working folder. This wrapper plays the action there, copies only the rendered
+# observation images into the agent folder ($CHAIN_AGENT), replaces the private path in
+# the output, and appends the call to a private log for auditing.
+#
+# Codex runs (CHAIN_RPC_DIR set): the agent's commands run inside Codex's sandbox, where
+# the renderer (Chromium, via plotly/kaleido) cannot start. There this script only passes
+# the action to bin/chain-serve, which runs outside the sandbox and calls this script again
+# in direct mode. The sandbox then needs no write access to the session folder at all.
+set -u
+
+if [ "$#" -ne 1 ]; then
+  echo "usage: chain-act '<one JSON action>'   (exactly one argument)"
+  exit 2
+fi
+
+# Identity of the shell command that called us: pid + start time, because sandboxed runs use
+# a new pid namespace per command, where the same pid numbers come back every time.
+caller="${CHAIN_CALLER:-$PPID:$(cut -d' ' -f22 /proc/$PPID/stat 2>/dev/null || ps -o lstart= -p $PPID 2>/dev/null | tr -d ' ')}"
+
+if [ -n "${CHAIN_RPC_DIR:-}" ] && [ -z "${CHAIN_CALLER:-}" ]; then
+  id="$(date +%s%N)_$$"
+  printf '%s\n%s\n' "$caller" "$1" > "$CHAIN_RPC_DIR/.req_$id"
+  mv "$CHAIN_RPC_DIR/.req_$id" "$CHAIN_RPC_DIR/req_$id"
+  for _ in $(seq 1 3000); do                      # up to ~10 minutes
+    if [ -e "$CHAIN_RPC_DIR/done_$id" ]; then
+      cat "$CHAIN_RPC_DIR/resp_$id"
+      rc="$(cat "$CHAIN_RPC_DIR/done_$id")"
+      rm -f "$CHAIN_RPC_DIR/resp_$id" "$CHAIN_RPC_DIR/done_$id"
+      exit "${rc:-0}"
+    fi
+    sleep 0.2
+  done
+  echo "error: the game server did not answer"
+  exit 4
+fi
+
+: "${CHAIN_PRIV:?}" "${CHAIN_AGENT:?}" "${CHAIN_SS:?}" "${CHAIN_PY:?}"
+
+# One action per shell command (only when CHAIN_ONE_PER_CMD=1, used by the Codex runs; the
+# Claude Experiment 6 runs were made without this guard). A second chain-act from the same
+# parent shell means several actions were chained in one command; refuse it without playing
+# or counting it.
+if [ "${CHAIN_ONE_PER_CMD:-0}" = 1 ]; then
+  last="$(cat "$CHAIN_PRIV/.last_ppid" 2>/dev/null || true)"
+  if [ "$last" = "$caller" ]; then
+    echo "REJECTED: only one chain-act per command. This call was not played and not counted. Look at the newest observation images, then send the next action as its own command."
+    printf '%s\t%s\t%s\n' "$(date -Is)" "$1" "REJECTED_CHAINED" >> "$CHAIN_PRIV/agent_calls.log"
+    exit 3
+  fi
+  echo "$caller" > "$CHAIN_PRIV/.last_ppid"
+fi
+
+out=$(cd "$CHAIN_SS" && "$CHAIN_PY" -m chain_analysis.play_cli act "$CHAIN_PRIV" "$1" 2>&1 | grep -v "pybullet build")
+
+for f in "$CHAIN_PRIV"/obs_*.png; do
+  [ -e "$f" ] || continue
+  b=$(basename "$f")
+  [ -e "$CHAIN_AGENT/$b" ] || cp "$f" "$CHAIN_AGENT/$b"
+done
+
+out=${out//"$CHAIN_PRIV"/.}
+printf '%s\n' "$out"
+printf '%s\t%s\t%s\n' "$(date -Is)" "$1" "$(printf '%s' "$out" | head -1)" >> "$CHAIN_PRIV/agent_calls.log"

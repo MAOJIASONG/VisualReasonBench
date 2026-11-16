@@ -218,3 +218,18 @@ Stacking_scaling/puzzles_full_10/2x3x3/_signatures/e9745972dd02427d17be8e8509c90
 !Stacking_scaling/type_3_1/images_batch/**/*.json
 !Stacking_scaling/type_*/analysis_exp*/*.json
 !Stacking_scaling/chain_analysis/model_runs/**/*.json
+
+# Unity Luban build (binary, ~100MB) — deployed per-machine, not committed.
+# Anchored to the repo root: on case-insensitive file systems a bare `Luban/`
+# also hid Stacking_scaling/chain_analysis/cc_harness/luban/.
+/Luban/
+
+# Claude Code experiment outputs
+cc_runs/
+
+# Exported result bundles (regenerate with chain_analysis/export_harness_bundle.py)
+harness_bundle/
+
+# Agent-harness level index and Exp 1 per-level summaries are inputs/results, keep them
+!Stacking_scaling/chain_analysis/cc_harness/stacking/levels.json
+!Stacking_scaling/chain_analysis/exp1_vs_agents/*/summary.json

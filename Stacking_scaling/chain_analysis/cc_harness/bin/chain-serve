@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+# Game server for Codex runs:  chain-serve <rpc_dir>
+#
+# Runs outside Codex's sandbox (started by run_episode_codex.sh). Plays each action that
+# chain-act drops into <rpc_dir> as req_<id> (line 1: caller identity, line 2: the JSON
+# action), one at a time in arrival order, and answers with resp_<id> + done_<id> (exit code).
+# Needs the same CHAIN_* environment as chain-act in direct mode.
+set -u
+RPC="$1"
+ACT="$(dirname "$0")/chain-act"
+while :; do
+  for req in "$RPC"/req_*; do
+    [ -e "$req" ] || continue
+    id="${req##*/req_}"
+    caller="$(sed -n 1p "$req")"
+    action="$(tail -n +2 "$req")"
+    rm -f "$req"
+    CHAIN_CALLER="$caller" "$ACT" "$action" > "$RPC/.resp_$id" 2>&1
+    rc=$?
+    mv "$RPC/.resp_$id" "$RPC/resp_$id"
+    echo "$rc" > "$RPC/.done_$id" && mv "$RPC/.done_$id" "$RPC/done_$id"
+  done
+  sleep 0.1
+done

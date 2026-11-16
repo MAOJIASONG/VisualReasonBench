@@ -28,15 +28,25 @@ def check_server_available(host: str = "127.0.0.1", port: int = 9999, timeout: f
 def main():
     # Get project root (directory containing this script)
     project_root = Path(__file__).resolve().parent
-    exe_path = project_root / "Luban" / "LuBanSuoEnv.exe"
-    
+    luban_dir = project_root / "Luban"
+    # Pick the Unity build for the current OS.
+    if sys.platform.startswith("linux"):
+        exe_path = luban_dir / "LuBanSuoEnv.x86_64"
+    elif sys.platform == "darwin":
+        exe_path = luban_dir / "LuBanSuoEnv.app" / "Contents" / "MacOS" / "LuBanSuoEnv"
+    else:
+        exe_path = luban_dir / "LuBanSuoEnv.exe"
+
     # Check if executable exists
     if not exe_path.exists():
-        print(f"Error: LuBanSuoEnv.exe not found at: {exe_path}")
+        print(f"Error: Unity build not found at: {exe_path}")
         print("Please make sure you are running this script from the project root directory.")
         sys.exit(1)
-    
-    print(f"Starting LuBanSuoEnv.exe...")
+    if sys.platform.startswith("linux") and not os.environ.get("DISPLAY"):
+        print("Warning: DISPLAY is not set. On a headless server run under xvfb, e.g.\n"
+              "  xvfb-run -a -s '-screen 0 1280x720x24' python start_luban.py")
+
+    print(f"Starting {exe_path.name}...")
     print(f"Executable path: {exe_path}")
     
     try:

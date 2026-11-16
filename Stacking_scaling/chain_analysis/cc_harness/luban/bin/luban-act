@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+# Agent-facing action command:  luban-act '<one JSON action>'
+#
+# The game session (meta.json, logs) lives in $LUBAN_PRIV, outside the agent's working folder.
+# This wrapper plays the action there (luban_cli.py talks to the Unity player), copies only the
+# observation images into the agent folder ($LUBAN_AGENT), and logs the call privately.
+#
+# Codex runs (LUBAN_RPC_DIR set): commands run inside Codex's sandbox, which has no network, so
+# the Unity socket cannot be reached. There this script only drops the action into
+# $LUBAN_RPC_DIR; bin/luban-serve, outside the sandbox, plays it by calling this script again.
+set -u
+
+if [ "$#" -ne 1 ]; then
+  echo "usage: luban-act '<one JSON action>'   (exactly one argument)"
+  exit 2
+fi
+
+# Identity of the calling shell command (pid + start time; sandboxed runs reuse pid numbers).
+caller="${LUBAN_CALLER:-$PPID:$(cut -d' ' -f22 /proc/$PPID/stat 2>/dev/null || ps -o lstart= -p $PPID 2>/dev/null | tr -d ' ')}"
+
+if [ -n "${LUBAN_RPC_DIR:-}" ] && [ -z "${LUBAN_CALLER:-}" ]; then
+  id="$(date +%s%N)_$$"
+  printf '%s\n%s\n' "$caller" "$1" > "$LUBAN_RPC_DIR/.req_$id"
+  mv "$LUBAN_RPC_DIR/.req_$id" "$LUBAN_RPC_DIR/req_$id"
+  for _ in $(seq 1 3000); do                      # up to ~10 minutes
+    if [ -e "$LUBAN_RPC_DIR/done_$id" ]; then
+      cat "$LUBAN_RPC_DIR/resp_$id"
+      rc="$(cat "$LUBAN_RPC_DIR/done_$id")"
+      rm -f "$LUBAN_RPC_DIR/resp_$id" "$LUBAN_RPC_DIR/done_$id"
+      exit "${rc:-0}"
+    fi
+    sleep 0.2
+  done
+  echo "error: the game server did not answer"
+  exit 4
+fi
+
+: "${LUBAN_PRIV:?}" "${LUBAN_AGENT:?}" "${LUBAN_PY:?}"
+HERE="$(cd "$(dirname "$0")/.." && pwd)"
+
+# One action per shell command: a second luban-act from the same parent shell means several
+# actions were chained in one command; refuse it without playing or counting it.
+last="$(cat "$LUBAN_PRIV/.last_ppid" 2>/dev/null || true)"
+if [ "$last" = "$caller" ]; then
+  echo "REJECTED: only one luban-act per command. This call was not played and not counted. Look at the newest observation image, then send the next action as its own command."
+  printf '%s\t%s\t%s\n' "$(date -Is)" "$1" "REJECTED_CHAINED" >> "$LUBAN_PRIV/agent_calls.log"
+  exit 3
+fi
+echo "$caller" > "$LUBAN_PRIV/.last_ppid"
+
+out=$("$LUBAN_PY" "$HERE/luban_cli.py" act "$LUBAN_PRIV" "$1" 2>&1)
+rc=$?
+
+for f in "$LUBAN_PRIV"/obs_*.png; do
+  [ -e "$f" ] || continue
+  b=$(basename "$f")
+  [ -e "$LUBAN_AGENT/$b" ] || cp "$f" "$LUBAN_AGENT/$b"
+done
+
+out=${out//"$LUBAN_PRIV"/.}
+printf '%s\n' "$out"
+printf '%s\t%s\t%s\n' "$(date -Is)" "$1" "$(printf '%s' "$out" | head -1)" >> "$LUBAN_PRIV/agent_calls.log"
+exit $rc
